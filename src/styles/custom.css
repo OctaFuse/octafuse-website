@@ -264,8 +264,13 @@ html[data-theme='light'] main a:not([class]):hover {
 	color: var(--of-accent-hover);
 }
 
-/* Tables */
-main table {
+/* Tables — full width so thead/zebra backgrounds match the prose column */
+main table,
+.sl-markdown-content table {
+	box-sizing: border-box;
+	width: 100%;
+	max-width: 100%;
+	table-layout: fixed;
 	border-collapse: separate;
 	border-spacing: 0;
 	border-radius: 0.65rem;
@@ -275,26 +280,34 @@ main table {
 }
 
 main th,
-main td {
+main td,
+.sl-markdown-content th,
+.sl-markdown-content td {
 	border-color: var(--sl-color-hairline);
+	word-wrap: break-word;
+	overflow-wrap: break-word;
 }
 
-main thead th {
+main thead th,
+.sl-markdown-content thead th {
 	background: var(--of-surface-table-head);
 	color: var(--of-text-primary);
 	font-weight: 600;
 }
 
-html[data-theme='light'] main thead th {
+html[data-theme='light'] main thead th,
+html[data-theme='light'] .sl-markdown-content thead th {
 	background: var(--of-surface-table-head);
 	color: var(--of-text-primary);
 }
 
-main tbody tr:nth-child(even) {
+main tbody tr:nth-child(even),
+.sl-markdown-content tbody tr:nth-child(even) {
 	background: var(--of-surface-table-stripe);
 }
 
-html[data-theme='light'] main tbody tr:nth-child(even) {
+html[data-theme='light'] main tbody tr:nth-child(even),
+html[data-theme='light'] .sl-markdown-content tbody tr:nth-child(even) {
 	background: var(--of-surface-table-stripe);
 }
 
@@ -365,6 +378,32 @@ html[data-theme='light'] .of-hero-title {
 	);
 	-webkit-background-clip: text;
 	background-clip: text;
+}
+
+/* Splash hero CTAs: Starlight renders [label][icon]; reverse flex so icon leads */
+.hero .actions .sl-link-button {
+	flex-direction: row-reverse;
+}
+
+.hero .actions .sl-link-button.secondary {
+	border-color: var(--sl-color-hairline);
+	background: var(--of-surface-card);
+}
+
+.hero .actions .sl-link-button.secondary:hover {
+	border-color: var(--of-card-border-hover);
+	background: var(--of-surface-card-solid);
+}
+
+html[data-theme='light'] .hero .actions .sl-link-button.secondary {
+	background: var(--of-surface-card);
+	border-color: var(--of-border-default);
+	color: var(--of-text-primary);
+}
+
+html[data-theme='light'] .hero .actions .sl-link-button.secondary:hover {
+	border-color: var(--of-accent);
+	color: var(--of-accent-hover);
 }
 
 /* Cards */

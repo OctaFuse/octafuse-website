@@ -1,67 +1,80 @@
 ---
 title: OctaFuse
-description: Unified AI model access and governance for teams and enterprises — controlled usage, managed routing, flexible deployment.
+description: AI gateway for teams and enterprises—unified model access across common client ecosystems, keys and budgets, resilient routing, multi-lens cost views, and operator tooling. Cloud-hosted or self-hosted. AGPLv3.
 template: splash
 sidebar:
   hidden: true
 hero:
   title: '<span class="of-hero-kicker">AI Gateway</span><span class="of-hero-title">OctaFuse</span>'
-  tagline: A shared platform layer—connect models, control cost, stay reliable, and stay traceable—without rebuilding the same plumbing in every product.
+  tagline: One governed layer for model traffic—connect models, control spend, stay reliable, and stay traceable—so every product line does not rebuild the same plumbing.
   image:
     html: '<img src="/favicon.svg" class="of-hero-logo" width="200" height="200" alt="" />'
   actions:
     - text: Read the docs
       link: /en/docs/
-      icon: right-arrow
+      icon: open-book
       variant: primary
     - text: GitHub
       link: https://github.com/OctaFuse/octafuse-gateway
-      icon: external
-      variant: minimal
+      icon: github
+      variant: secondary
 ---
 
 import { Card, CardGrid } from '@astrojs/starlight/components';
 
-## Problems we focus on
+## Product overview
 
-When many products or teams need LLMs, friction tends to pile up:
+**OctaFuse** is an **AI gateway** for teams and enterprises: a single place to expose model traffic to your products while centralizing how you **authenticate, budget, route, meter, and observe** that traffic. Teams keep familiar chat and completion calling patterns; operators get consistent controls and reporting instead of duplicating glue in every service.
 
-- **Repeated work**: each service wires providers, keys, and limits on its own—hard to standardize and expensive to maintain.
-- **Fragmented ecosystems**: different clients and vendors mean more adapters, more surprises, and more operational load.
-- **Cost and risk**: without a single view of “who used what, how much, and why,” budgeting, investigations, and governance get painful.
-- **Reliability pressure**: upstream changes, model swaps, and safe rollouts are much harder without a central place to govern routing.
+It fits organizations juggling **multiple providers, models, and business lines** but wanting **one governance and operations story**.
 
-**OctaFuse** is an **AI gateway platform** for teams and organizations: it centralizes model access, routing policy, budgets and usage, and operator tooling so product teams can stay focused on what they ship—not on re-implementing gateway plumbing everywhere.
+## Why OctaFuse
 
-## Product capabilities
+- **Less duplicated work**: stop re-implementing vendor wiring, keys, and limits in every app.
+- **Meet clients where they are**: support common OpenAI-, Anthropic-, and Gemini-shaped calling styles so migrations and coexistence are smoother.
+- **Clearer cost and risk**: budgets, usage, and investigations share a single lens; tiered cost views support capacity planning and reconciliation conversations.
+- **More operable resilience**: central routing priorities and safer failover paths when upstreams change or wobble—without every team patching ad hoc.
+
+## Features
 
 <CardGrid stagger>
-	<Card title="One front door, many client habits" icon="laptop">
-		Serve common chat and completion calling patterns through one gateway, cutting duplicate vendor integrations and long-term glue code across services.
+	<Card title="Multi-ecosystem compatibility" icon="laptop">
+		Serve common chat and completion habits through one gateway, cutting duplicate vendor integrations and long-term adapter sprawl.
 	</Card>
 	<Card title="Keys, budgets, and periods" icon="setting">
-		Centralize identities and budget rules with caps and period resets—by user, product line, or tenant—so overspend and abuse are easier to prevent.
+		Centralize identities and budget rules with caps and period resets—by user, product line, or tenant—with self-serve visibility into quota state.
 	</Card>
-	<Card title="Routing policy and resilience" icon="random">
-		Model priorities and policies live in one place; when upstreams wobble, you get safer switching and degradation paths instead of hard-binding every app to a single model.
+	<Card title="Smart routing and resilience" icon="random">
+		Model priorities and policies live in one place; when upstreams degrade, you get safer switching and degradation paths instead of hard-binding every app to a single model.
 	</Card>
-	<Card title="Operator visibility and self-checks" icon="analytics">
-		Usage and reliability summaries in Admin, plus test calls and client-like simulations, help pre-flight checks, production debugging, and cross-team reconciliation conversations.
+	<Card title="Cost lenses and reconciliation" icon="document">
+		Separate views for usage observation, standard pricing semantics, and what you actually charge—so finance, platform, and product can align on numbers.
+	</Card>
+	<Card title="Observability and dry runs" icon="analytics">
+		Usage and reliability summaries in Admin, plus test calls and browser-based simulations that exercise auth, routing, metering, and logging—ideal for pre-flight checks and production debugging.
 	</Card>
 </CardGrid>
 
-## Deployment choices
+## Deployment options
 
-Pick what fits compliance, latency, and ops: **managed cloud** (fast to ship, edge-friendly) or **self-hosted** (stricter data residency and network boundaries). See [Deployment](/en/docs/deploy/); licensing is **AGPLv3** — full text in [LICENSE](https://github.com/OctaFuse/octafuse-gateway/blob/main/LICENSE).
+Choose based on **compliance, latency, data residency, and how you want to operate infrastructure**. Step-by-step commands live in this site’s docs.
+
+- **Docker on a laptop or private network**: fastest way to try OctaFuse, run PoCs, and debug on a shared internal environment.
+- **Managed Cloudflare**: great when you want an edge-friendly footprint and a managed database backing configuration and metadata.
+- **Self-hosted on your stack**: best when you need stricter data boundaries, VPC-style networking, or alignment with existing database operations (commonly Postgres or MySQL).
+
+Read [Deployment](/en/docs/deploy/) for trade-offs and [Quick start](/en/docs/quick-start/) for the shortest path to a working setup. Licensed under **GNU AGPL v3** — see [LICENSE](https://github.com/OctaFuse/octafuse-gateway/blob/main/LICENSE).
 
 ## Who it’s for
 
-- Platform and product orgs that need **one place to govern model traffic** across many lines of business or tenants.
+- Platform and product orgs that need **one governed front door** for model traffic across many lines of business or tenants.
 - Teams that want **cost, reliability, and auditability** lifted out of application code into dedicated infrastructure.
-- Organizations that want **freedom to evolve vendors and models** without every service carrying bespoke failover logic.
+- Organizations that want **freedom to evolve vendors and models** without bespoke failover logic in every service.
 
 ## Quick links
 
-- [Quick start](/en/docs/quick-start/) — get a working environment quickly
-- [Deployment](/en/docs/deploy/) — choose cloud vs self-hosted
-- [Source & authoritative docs](https://github.com/OctaFuse/octafuse-gateway) — APIs, migrations, and ops details stay in the repository
+- [Quick start](/en/docs/quick-start/) — shortest path to a working environment
+- [Deployment](/en/docs/deploy/) — choose and land a deployment mode
+- [Source repository](https://github.com/OctaFuse/octafuse-gateway) — APIs and advanced topics stay in the repo
+- [Contributing](https://github.com/OctaFuse/octafuse-gateway/blob/main/CONTRIBUTING.md)
+

@@ -1,67 +1,79 @@
 ---
 title: OctaFuse
-description: 为企业与团队提供统一的 AI 模型接入与治理能力：用量可控、路由可管、部署可选。
+description: 面向团队与企业的 AI 网关：统一多生态模型调用、密钥与预算、智能路由与容错、多视角成本与审计，以及管理台内的用量分析与联调工具。支持云端边缘托管与自建。AGPLv3。
 template: splash
 sidebar:
   hidden: true
 hero:
   title: '<span class="of-hero-kicker">AI Gateway</span><span class="of-hero-title">OctaFuse</span>'
-  tagline: 团队共享的一层能力：统一接模型、控成本、保稳定、可追溯——不再让每个业务系统各自重复造轮子。
+  tagline: 让多条产品线共用一层「接模型、控成本、保稳定、可追溯」的能力——团队少重复造轮子，治理有统一抓手。
   image:
     html: '<img src="/favicon.svg" class="of-hero-logo" width="200" height="200" alt="" />'
   actions:
     - text: 阅读文档
       link: /zh/docs/
-      icon: right-arrow
+      icon: open-book
       variant: primary
     - text: GitHub
       link: https://github.com/OctaFuse/octafuse-gateway
-      icon: external
-      variant: minimal
+      icon: github
+      variant: secondary
 ---
 
 import { Card, CardGrid } from '@astrojs/starlight/components';
 
-## 我们解决的问题
+## 产品介绍
 
-当多个产品或业务线都要用大模型时，团队往往会遇到这些 friction：
+**OctaFuse** 是面向团队与企业场景的 **AI 网关**：为上层业务提供统一的模型调用入口与运营治理能力。你可以把它理解为组织内的「模型流量中台」——业务侧继续按熟悉的对话 / 补全习惯接入，而密钥、预算、路由、成本口径与审计留痕在网关层统一沉淀，便于协作、对账与合规。
 
-- **重复建设**：每个系统各自对接供应商、各自维护密钥与限额，协作成本高、口径难统一。
-- **协议与生态碎片化**：不同客户端、不同供应商的接入方式各异，排障与升级牵一发而动全身。
-- **成本与风险难管**：谁在用、用了多少、预算是否触顶、异常流量来自哪里——缺少统一视角时，对账与治理都很吃力。
-- **稳定性与演进压力**：上游波动、模型切换、灰度发布，如果缺少集中治理，业务侧就要反复打补丁。
+适合希望在 **多供应商、多模型、多业务线** 并存时，仍能保持 **同一套治理口径与运营视角** 的团队。
 
-**OctaFuse** 的定位，是在团队与组织内部提供一层 **AI 网关中台**：把模型接入、路由策略、预算与用量、审计与运营工具沉淀为可复用基础设施，让上层产品更专注业务创新。
+## 为什么选择 OctaFuse
 
-## 产品能力
+- **少重复建设**：不必每个系统各自对接供应商、维护密钥与限额；降低协作成本与长期维护负担。
+- **兼容常见客户端习惯**：同时覆盖常见的 OpenAI、Anthropic、Gemini 等调用形态，迁移与共存更平滑。
+- **成本与风险可见**：预算、用量与异常流量有统一视角；支持多视角成本口径，便于容量与对账讨论。
+- **稳定性更可运营**：集中配置路由与优先级，在上游波动时更容易做切换与降级，而不是每个应用各自打补丁。
+
+## 功能特性
 
 <CardGrid stagger>
-	<Card title="统一入口，兼容多生态" icon="laptop">
-		用一套网关承接团队里常见的对话与补全类调用习惯，减少「每个系统各接一遍供应商」的重复工作与长期维护成本。
+	<Card title="多生态协议兼容" icon="laptop">
+		一套网关承接团队里常见的对话与补全类调用习惯，减少「每个系统各接一遍供应商」的适配与长期维护成本。
 	</Card>
-	<Card title="密钥、额度与周期治理" icon="setting">
-		集中管理访问身份与预算口径，支持按人、按业务线或按客户维度做用量约束与周期重置，降低超支与滥用风险。
+	<Card title="密钥、额度与周期" icon="setting">
+		集中管理访问身份与预算规则；支持按人、按业务线或按客户维度做约束与周期重置，并可自助查询额度等状态。
 	</Card>
-	<Card title="路由策略与韧性" icon="random">
-		按业务需要配置模型与优先级；在上游波动或故障时，提供更有弹性的切换与降级路径，减少「单点绑死在一个模型上」的脆弱性。
+	<Card title="智能路由与韧性" icon="random">
+		按业务需要配置模型与优先级；在上游波动或故障时，提供更有弹性的切换与降级路径，降低单点绑死在某一模型上的风险。
 	</Card>
-	<Card title="运营侧可观测与自检" icon="analytics">
-		管理台汇总用量与可靠性概况，并提供试调用、联调模拟等工具，便于上线前验收、线上排障与跨团队沟通对账。
+	<Card title="成本视角与对账" icon="document">
+		区分用量观测、标准价口径与实际扣费等视角，便于做容量判断、成本感知与跨团队对账。
+	</Card>
+	<Card title="可观测与联调工具" icon="analytics">
+		管理台汇总用量与可靠性概况；提供试调用、浏览器内模拟真实应用请求等能力，便于上线前验收、线上排障与联调对齐。
 	</Card>
 </CardGrid>
 
-## 部署与形态
+## 支持的部署模式
 
-可按合规、延迟与运维习惯选择：**云端托管**（适合快速上线与全球边缘）或 **企业内网自建**（适合数据落点与网络边界要求更严格的场景）。具体路径与命令见 [部署指南](/zh/docs/deploy/)；开源协议为 **AGPLv3**，许可全文见主仓 [LICENSE](https://github.com/OctaFuse/octafuse-gateway/blob/main/LICENSE)。
+可按 **合规、延迟、运维习惯与数据落点** 选择部署方式；具体操作与命令见站内文档。
+
+- **本地 / 内网 Docker 体验**：适合快速跑通、PoC 与内网联调，一条 Compose 拉起推理与管理界面。
+- **Cloudflare 托管**：适合希望贴近全球边缘、降低自有机器运维面，并将元数据与配置托管在平台托管数据库上的场景。
+- **自有基础设施自建**：适合对数据驻留、网络边界或与现有数据库运维体系一致性要求更高的组织（常见为 Postgres / MySQL 等）。
+
+更多选型说明见 [部署指南](/zh/docs/deploy/)，上手步骤见 [快速开始](/zh/docs/quick-start/)。开源协议为 **GNU AGPL v3**，许可全文见 [LICENSE](https://github.com/OctaFuse/octafuse-gateway/blob/main/LICENSE)。
 
 ## 适合谁
 
 - 多产品线、多租户或平台型产品，希望 **统一治理模型调用** 的团队。
 - 需要把 **成本、稳定性、合规留痕** 从业务代码里抽离出来，交给专门一层基础设施的工程与平台组。
-- 希望在 **供应商与模型演进** 上保持主动权，而不是被单点集成绑死的组织。
+- 希望在 **供应商与模型演进** 上保持主动权，而不是被分散集成绑死的组织。
 
 ## 快速入口
 
-- [快速开始](/zh/docs/quick-start/) — 几分钟跑通体验路径
-- [部署指南](/zh/docs/deploy/) — 云端与自建如何选型
-- [源码与权威文档](https://github.com/OctaFuse/octafuse-gateway) — API、迁移与运维细节以仓库为准
+- [快速开始](/zh/docs/quick-start/) — 最短路径跑通体验环境
+- [部署指南](/zh/docs/deploy/) — 各部署模式如何选型与落地
+- [源码与文档仓库](https://github.com/OctaFuse/octafuse-gateway) — API 与进阶说明以仓库为准
+- [贡献指南](https://github.com/OctaFuse/octafuse-gateway/blob/main/CONTRIBUTING.md) 
