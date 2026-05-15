@@ -1,0 +1,38 @@
+---
+title: API keys
+description: Issue sk- keys for users, attach budgets and periods, and authenticate Proxy inference calls.
+---
+
+import { Aside, Steps } from '@astrojs/starlight/components';
+
+**API keys** (`sk-…`) authenticate **Proxy** calls: `Authorization: Bearer sk-…`. They usually belong to a **user** and carry **budget** metadata.
+
+<Aside type="tip" title="Prerequisite">
+	Have a [User](/en/docs/guides/users/) (or create alongside the key if the UI allows).
+</Aside>
+
+## In Admin
+
+<Steps>
+1. Open **API keys**.
+1. **Create key**: choose **user**, friendly label.
+1. **Budget**: set caps/periods per UI; overspend yields **403** on new requests (see upstream user API doc).
+1. **Copy once**: store `sk-…` securely; never commit to public repos.
+1. **Rotate**: issue new keys and retire old ones on a schedule.
+</Steps>
+
+## Quick check on Proxy
+
+```bash
+curl -sS http://localhost:8787/v1/me \
+  -H "Authorization: Bearer sk-your-api-key"
+```
+
+## Automation
+
+Admin APIs—[GitHub technical reference](/en/docs/github-reference/).
+
+## Next
+
+- [Request logs](/en/docs/guides/request-logs/)  
+- [Integration](/en/docs/guides/integration/)  

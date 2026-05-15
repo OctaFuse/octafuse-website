@@ -1,31 +1,39 @@
 ---
 title: 文档
-description: OctaFuse 官方文档阅读路径与常见任务入口。
+description: OctaFuse 文档站：快速开始、分主题使用指南、Playground/Simulator 与线上部署；实现细节回源 GitHub。
 ---
 
 import { Aside, LinkCard, CardGrid } from '@astrojs/starlight/components';
 
-OctaFuse 文档站提供产品概览与部署指引。**与 API、迁移强耦合的权威内容仍以 [octafuse-gateway](https://github.com/OctaFuse/octafuse-gateway) 仓库为准**；本站做结构化展示与导航，关键章节提供回源链接。
+文档按两级组织：**快速开始** 单页把本地跑起来；**使用指南** 按管理台任务拆分；**其他功能** 与 **线上部署** 单独成组。需要 **API 字段、迁移 SQL、排障堆栈** 时，请打开 **[GitHub 技术参考](/zh/docs/github-reference/)**。
 
-<Aside type="tip" title="阅读提示">
-	若你在找 **Admin HTTP API**、计费口径或迁移版本等细节，请优先打开下方「回源链接」对应的主仓文档，避免与门户摘要产生时差。
+<Aside type="tip" title="推荐阅读顺序">
+	1. [快速开始](/zh/docs/quick-start/)  
+	1. [供应商配置](/zh/docs/guides/providers/) → [模型配置](/zh/docs/guides/models/) → [路由配置](/zh/docs/guides/routing/)  
+	1. [用户管理](/zh/docs/guides/users/) → [API Key 管理](/zh/docs/guides/api-keys/)  
+	1. 需要排障或审计时再看 [请求日志](/zh/docs/guides/request-logs/)、[审计日志](/zh/docs/guides/audit-logs/)  
+	1. 上线前阅读 [Docker 部署](/zh/docs/deploy/docker/) 或 [Cloudflare Workers 部署](/zh/docs/deploy/cloudflare/)  
 </Aside>
 
-## 推荐阅读路径
+## 入口
 
 <CardGrid>
-	<LinkCard title="快速开始" description="Docker / Cloudflare / Node 跑通 Proxy + Admin" href="/zh/docs/quick-start/" />
-	<LinkCard title="部署指南" description="云端、混合与全自托管形态选型" href="/zh/docs/deploy/" />
-	<LinkCard title="主仓文档索引" description="架构、运维与开发契约（权威）" href="https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/README.md" />
+	<LinkCard title="快速开始" description="Docker 本地拉起 Proxy + Admin" href="/zh/docs/quick-start/" />
+	<LinkCard title="供应商配置" description="添加上游与鉴权" href="/zh/docs/guides/providers/" />
+	<LinkCard title="路由配置" description="选路与降级" href="/zh/docs/guides/routing/" />
+	<LinkCard title="系统集成" description="GATEWAY_* 与调用边界" href="/zh/docs/guides/integration/" />
 </CardGrid>
 
 ## 常见任务
 
-| 任务 | 入口 |
-| --- | --- |
-| 本地快速体验 | [快速开始 · Docker](/zh/docs/quick-start/#docker-local) |
-| Cloudflare 生产部署 | [部署指南 · Cloudflare](/zh/docs/deploy/#cloudflare) |
-| Docker / Postgres 自托管 | [部署指南 · Docker](/zh/docs/deploy/#docker-self-hosted) |
-| Admin HTTP API | [docs/api/admin.md](https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/api/admin.md) |
-| HTTP 调用示例 | [examples/README.md](https://github.com/OctaFuse/octafuse-gateway/blob/main/examples/README.md) |
-| 文档边界与敏感信息规范 | [CONVENTIONS.md](https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/CONVENTIONS.md) |
+| 我想… | 去哪 |
+|--------|------|
+| 笔记本上跑通 | [快速开始](/zh/docs/quick-start/) |
+| 配好上游与路由 | [供应商](/zh/docs/guides/providers/) · [模型](/zh/docs/guides/models/) · [路由](/zh/docs/guides/routing/) |
+| 给用户发 Key | [用户](/zh/docs/guides/users/) · [API Key](/zh/docs/guides/api-keys/) |
+| 看调用是否成功 | [请求日志](/zh/docs/guides/request-logs/) |
+| 看谁改了配置 | [审计日志](/zh/docs/guides/audit-logs/) |
+| 试一条路由 | [Playground](/zh/docs/features/playground/) |
+| 模拟真实客户端 | [Simulator](/zh/docs/features/simulator/) |
+| 上生产 | [Docker](/zh/docs/deploy/docker/) · [Cloudflare](/zh/docs/deploy/cloudflare/) |
+| 查 API / 迁移 | [GitHub 技术参考](/zh/docs/github-reference/) |

@@ -1,60 +1,67 @@
 ---
 title: Quick start
-description: Run OctaFuse Gateway with Docker, Cloudflare, or Node.
+description: Run OctaFuse locally with Docker (Proxy + Admin), verify health, and sign in to Admin—your starting point before configuration guides.
 ---
 
 import { Aside, Steps } from '@astrojs/starlight/components';
 
+This page does **one thing**: **run OctaFuse on your machine** and open Admin. For “how to configure providers, routes, keys”, follow the **[User guide](/en/docs/guides/providers/)** sections.
+
 <Aside type="note" title="Repository">
-	Run the commands below from the **[octafuse-gateway](https://github.com/OctaFuse/octafuse-gateway)** repository root. This site only provides navigation and summaries.
+	Run commands from the **[octafuse-gateway](https://github.com/OctaFuse/octafuse-gateway)** repository **root**.
 </Aside>
 
-<h2 id="prerequisites">Prerequisites</h2>
+## Prerequisites
 
-- **Docker path**: Docker Compose **v2.20+** (needs `service_completed_successfully`).
-- **Repository**: clone [octafuse-gateway](https://github.com/OctaFuse/octafuse-gateway), then run the commands below from the repo root.
+- **Docker Compose v2.20+** (needs `service_completed_successfully`).
+- Network access to GitHub (or your fork).
 
-<h2 id="docker-local">Option A: Local Docker (recommended)</h2>
+## Clone and start
 
 ```bash
 git clone https://github.com/OctaFuse/octafuse-gateway.git
 cd octafuse-gateway
 docker compose -f docker/compose/quickstart.yml up --build
+```
+
+When containers are ready, in another terminal:
+
+```bash
 curl -sS http://localhost:8787/health
 ```
 
-After you get a healthy response, follow this minimal path:
+Healthy JSON means **Proxy** is listening at **`http://localhost:8787`**.
+
+## Sign in to Admin
+
+1. Open **`http://localhost:8789`** (**Admin**) in a browser.
+2. Sign in with **`admin` / `changeme`** (**local only**—change everywhere else).
+
+## Recommended next steps (user guide order)
 
 <Steps>
-1. **Confirm endpoints**: **Proxy** at `http://localhost:8787`; **Admin** at `http://localhost:8789` (default `admin` / `changeme`).
-1. **Finish Admin setup**: **configure Provider → configure Model Route → create API Key**, then call the inference APIs.
-1. **Validate end-to-end**: run a **`curl`** sample (or your client/SDK) to confirm networking, keys, and routing.
+1. [Providers](/en/docs/guides/providers/) — wire upstream vendors  
+1. [Models](/en/docs/guides/models/) — catalog model ids the gateway understands  
+1. [Routing](/en/docs/guides/routing/) — map client `model` strings to upstreams  
+1. [Users](/en/docs/guides/users/) and [API keys](/en/docs/guides/api-keys/) — who can call and with what budget  
 </Steps>
 
-The dev seed often sets default **`MASTER_KEY`** to `sk-dev-admin-key` (`Authorization: Bearer …` for **`POST /api/admin/*`**). **Rotate in production** — see [docs/api/admin.md](https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/api/admin.md).
+## Optional: one inference smoke test
 
-End-to-end **`curl`** samples live in [examples/README.md](https://github.com/OctaFuse/octafuse-gateway/blob/main/examples/README.md). MySQL, D1-only dev, or split compose: see **`docker/compose/node-mysql.yml`** and [deployment-docker.md](https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/ops/deployment-docker.md).
-
-<h2 id="cloudflare">Option B: Cloudflare</h2>
-
-Connect the repo as **Proxy** Worker and **Admin** Pages with a shared **D1** database (binding name **`DB`**). Set **`ADMIN_PASSWORD`** as a Worker **Secret**. See [Deployment · Cloudflare](/en/docs/deploy/#cloudflare) or the source doc [deployment-cloudflare.md](https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/ops/deployment-cloudflare.md).
-
-<h2 id="self-hosted-node">Option C: Self-hosted Node + Postgres / MySQL</h2>
-
-For VPS, Kubernetes, or on-prem, see [Deployment · Docker](/en/docs/deploy/#docker-self-hosted) and [deployment-docker.md](https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/ops/deployment-docker.md), [runtime-data.md](https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/architecture/runtime-data.md).
-
-<h2 id="dev-commands">Common dev commands (repo root)</h2>
+After Provider + route + API key exist in Admin, replace the key and `model` below:
 
 ```bash
-npm install
-cp .env.example .env
-
-npm run dev:proxy
-npm run dev:admin
-
-npm run db:migrate
-npm run db:migrate:pg
-npm run db:migrate:mysql
+curl -sS http://localhost:8787/v1/chat/completions \
+  -H "Authorization: Bearer sk-your-api-key" \
+  -H "Content-Type: application/json" \
+  -d '{"model":"your-route-model","messages":[{"role":"user","content":"Hello"}]}'
 ```
 
-More commands and release flow: [README.md](https://github.com/OctaFuse/octafuse-gateway/blob/main/README.md).
+## Local dev without Docker
+
+From repo root: `npm install`, `cp .env.example .env`, then `npm run dev:proxy` / `npm run dev:admin` plus migrations. See [Docker deployment](/en/docs/deploy/docker/) and [GitHub technical reference](/en/docs/github-reference/).
+
+## Production
+
+- [Docker deployment](/en/docs/deploy/docker/)  
+- [Cloudflare Workers deployment](/en/docs/deploy/cloudflare/)  

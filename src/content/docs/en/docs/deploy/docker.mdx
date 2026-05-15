@@ -1,0 +1,43 @@
+---
+title: Docker deployment
+description: Run Proxy + Admin + a database with Compose or images—laptops, private networks, VPC, or Kubernetes.
+---
+
+import { Aside, Steps } from '@astrojs/starlight/components';
+
+Docker fits **local demos**, **private networks**, and **fully self-managed Postgres/MySQL** with your existing ops practices.
+
+<Aside type="note" title="Canonical details">
+	GHCR image names, split compose, full env tables: [GitHub technical reference](/en/docs/github-reference/) → **deployment-docker**.
+</Aside>
+
+## Local quickstart
+
+Same as [Quick start](/en/docs/quick-start/):
+
+```bash
+git clone https://github.com/OctaFuse/octafuse-gateway.git
+cd octafuse-gateway
+docker compose -f docker/compose/quickstart.yml up --build
+```
+
+## Production self-host
+
+<Steps>
+1. **Provision DB**: Postgres or MySQL with dedicated credentials.
+1. **Configure env**: copy **`.env.example` → `.env`**, set **`DATABASE_URL`**, **`DATABASE_DRIVER=mysql`** when needed, **`ADMIN_USERNAME` / `ADMIN_PASSWORD`**, etc.
+1. **Migrate**: `npm run db:migrate:pg` or `npm run db:migrate:mysql` from repo root (per docs).
+1. **Run Proxy + Admin**: Dockerfiles under the repo or your orchestrator.
+1. **TLS**: terminate HTTPS in front (Nginx/Caddy); split hostnames for Admin vs Proxy.
+1. **Downstream env**: `GATEWAY_URL`, `GATEWAY_MASTER_URL`, `GATEWAY_MASTER_KEY` — [Integration](/en/docs/guides/integration/).
+</Steps>
+
+## vs Cloudflare
+
+- Need **data residency + private networking** → Docker/self-host.  
+- Need **edge + managed D1** → [Cloudflare Workers](/en/docs/deploy/cloudflare/).
+
+## See also
+
+- [Quick start](/en/docs/quick-start/)  
+- [Cloudflare Workers](/en/docs/deploy/cloudflare/)  

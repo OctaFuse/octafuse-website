@@ -1,0 +1,35 @@
+---
+title: Cloudflare Workers deployment
+description: Deploy Proxy and Admin as Workers with a shared D1 binding—typical checklist for production on Cloudflare.
+---
+
+import { Aside, Steps } from '@astrojs/starlight/components';
+
+**Proxy** and **Admin** are separate **Worker** projects sharing one **D1** database (binding commonly **`DB`**).
+
+<Aside type="note" title="Canonical details">
+	Three-file `database_id` edits, Workers Builds commands, error **10181**: [GitHub technical reference](/en/docs/github-reference/) → **deployment-cloudflare**.
+</Aside>
+
+## Checklist
+
+<Steps>
+1. Create **D1** and copy **Database ID**.
+1. Replace placeholder **`database_id`** in all **three** wrangler config locations.
+1. `npm install` + `npm run db:migrate:remote` from repo root (or CI equivalent).
+1. Deploy **Proxy** from `packages/proxy` with `wrangler deploy`.
+1. Deploy **Admin** from `packages/admin` via `npm run build:cf` + `wrangler deploy`.
+1. Store **`ADMIN_PASSWORD`** (and similar) as **Secrets**, not in Git.
+1. Attach HTTPS hostnames; align **`GATEWAY_URL` / `GATEWAY_MASTER_URL`** in downstream systems.
+1. Smoke test `/health`, Admin login, and a chat call with a test key ([Quick start](/en/docs/quick-start/)).
+</Steps>
+
+## vs Docker
+
+- **Edge + less metal** → Cloudflare.  
+- **Strict VPC / BYO DB** → [Docker](/en/docs/deploy/docker/).
+
+## See also
+
+- [Docker](/en/docs/deploy/docker/)  
+- [Integration](/en/docs/guides/integration/)  

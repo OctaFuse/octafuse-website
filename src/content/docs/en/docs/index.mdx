@@ -1,31 +1,39 @@
 ---
 title: Documentation
-description: Reading paths and common tasks for OctaFuse.
+description: Quick start, topic-based user guides, Playground/Simulator, and production deploy—implementation details on GitHub.
 ---
 
 import { Aside, LinkCard, CardGrid } from '@astrojs/starlight/components';
 
-This site provides product overview and deployment guides. **Authoritative API and migration content remains in the [octafuse-gateway](https://github.com/OctaFuse/octafuse-gateway) repository**; this site structures navigation and summaries, with links back to source docs where needed.
+Docs are organized in **two levels**: a **single Quick start** page to run locally, grouped **User guide** topics, plus **More features** and **Production deploy**. For **API fields, SQL migrations, and stack-level troubleshooting**, open **[GitHub technical reference](/en/docs/github-reference/)**.
 
-<Aside type="tip" title="How to read this site">
-	For **Admin HTTP APIs**, billing semantics, and migration versions, prefer the **source repository** links below—this portal may trail slightly behind the canonical docs.
+<Aside type="tip" title="Suggested order">
+	1. [Quick start](/en/docs/quick-start/)  
+	1. [Providers](/en/docs/guides/providers/) → [Models](/en/docs/guides/models/) → [Routing](/en/docs/guides/routing/)  
+	1. [Users](/en/docs/guides/users/) → [API keys](/en/docs/guides/api-keys/)  
+	1. Use [Request logs](/en/docs/guides/request-logs/) and [Audit logs](/en/docs/guides/audit-logs/) when debugging or auditing  
+	1. Before production, read [Docker](/en/docs/deploy/docker/) or [Cloudflare Workers](/en/docs/deploy/cloudflare/)  
 </Aside>
 
-## Suggested reading order
+## Entry points
 
 <CardGrid>
-	<LinkCard title="Quick start" description="Run Proxy + Admin with Docker, Cloudflare, or Node" href="/en/docs/quick-start/" />
-	<LinkCard title="Deployment" description="Choose cloud, hybrid, or fully self-hosted" href="/en/docs/deploy/" />
-	<LinkCard title="Main repo doc index" description="Architecture, operations, and conventions (authoritative)" href="https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/README.md" />
+	<LinkCard title="Quick start" description="Docker: Proxy + Admin locally" href="/en/docs/quick-start/" />
+	<LinkCard title="Providers" description="Upstream endpoints & auth" href="/en/docs/guides/providers/" />
+	<LinkCard title="Routing" description="Selection & failover" href="/en/docs/guides/routing/" />
+	<LinkCard title="Integration" description="GATEWAY_* and boundaries" href="/en/docs/guides/integration/" />
 </CardGrid>
 
-## Common tasks
+## Task lookup
 
-| Task | Entry |
-| --- | --- |
-| Local quick try | [Quick start · Docker](/en/docs/quick-start/#docker-local) |
-| Cloudflare production | [Deployment · Cloudflare](/en/docs/deploy/#cloudflare) |
-| Docker / Postgres self-host | [Deployment · Docker](/en/docs/deploy/#docker-self-hosted) |
-| Admin HTTP API | [docs/api/admin.md](https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/api/admin.md) |
-| HTTP examples | [examples/README.md](https://github.com/OctaFuse/octafuse-gateway/blob/main/examples/README.md) |
-| Doc boundaries & secrets | [CONVENTIONS.md](https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/CONVENTIONS.md) |
+| I want to… | Go to |
+|--------------|-------|
+| Run locally | [Quick start](/en/docs/quick-start/) |
+| Wire upstreams & routes | [Providers](/en/docs/guides/providers/) · [Models](/en/docs/guides/models/) · [Routing](/en/docs/guides/routing/) |
+| Issue keys | [Users](/en/docs/guides/users/) · [API keys](/en/docs/guides/api-keys/) |
+| Inspect traffic | [Request logs](/en/docs/guides/request-logs/) |
+| Inspect config changes | [Audit logs](/en/docs/guides/audit-logs/) |
+| Test a route quickly | [Playground](/en/docs/features/playground/) |
+| Simulate a real client | [Simulator](/en/docs/features/simulator/) |
+| Go to production | [Docker](/en/docs/deploy/docker/) · [Cloudflare Workers](/en/docs/deploy/cloudflare/) |
+| API / migrations | [GitHub technical reference](/en/docs/github-reference/) |

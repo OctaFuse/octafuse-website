@@ -1,0 +1,40 @@
+---
+title: Cloudflare Workers 部署
+description: 将 Proxy 与 Admin 以 Workers 形式部署到 Cloudflare，并绑定共享 D1 数据库的典型步骤与检查项。
+---
+
+import { Aside, Steps } from '@astrojs/starlight/components';
+
+该形态下：**Proxy** 与 **Admin** 各为一个 **Worker** 项目，**共享同一 D1**（绑定名在仓库中一般为 **`DB`**）。适合希望利用 **边缘网络**、减少自有主机运维的团队。
+
+<Aside type="note" title="权威细节">
+	`database_id` 三处修改、Workers Builds 命令、常见错误 **10181** 等，见 [GitHub 技术参考](/zh/docs/github-reference/) 中 **deployment-cloudflare**。
+</Aside>
+
+## 部署前准备
+
+- Cloudflare 账号与 **`wrangler` 登录**（或 API Token）。
+- 已 Fork/克隆 [octafuse-gateway](https://github.com/OctaFuse/octafuse-gateway) 且本地 `npm install` 可通过。
+
+## 推荐操作顺序
+
+<Steps>
+1. **创建 D1**：在控制台或 `wrangler d1 create` 创建数据库，复制 **Database ID**。
+1. **写入配置**：将仓库内 **三处** Wrangler 相关文件中的 **`database_id`** 全部替换为真实 UUID（占位符会导致部署失败）。
+1. **安装依赖并迁移远程库**：仓库根执行 `npm install` 与 `npm run db:migrate:remote`（或 CI 等价物）。
+1. **部署 Proxy**：在 **`packages/proxy`** 执行 `wrangler deploy`（或 Connect to Git 指定 Root directory）。
+1. **部署 Admin**：在 **`packages/admin`** 执行 `npm run build:cf` 后 `wrangler deploy`。
+1. **配置 Secret**：**`ADMIN_PASSWORD`** 等敏感项使用 `wrangler secret put`，勿提交到 Git。
+1. **绑定域名**：为 Proxy、Admin 分别绑定 HTTPS 域名，与 **`GATEWAY_URL` / `GATEWAY_MASTER_URL`** 对齐。
+1. **验收**：`GET /health`、登录 Admin、用测试 Key 走一条聊天请求（参见 [快速开始](/zh/docs/quick-start/)）。
+</Steps>
+
+## 与 Docker 自建如何选
+
+- 更强 **数据驻留与内网** 控制 → [Docker 部署](/zh/docs/deploy/docker/)。  
+- 更强 **边缘与托管数据库** 诉求 → 本页路径。
+
+## 相关页面
+
+- [Docker 部署](/zh/docs/deploy/docker/)  
+- [系统集成](/zh/docs/guides/integration/)  

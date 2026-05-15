@@ -1,0 +1,40 @@
+---
+title: API Key 管理
+description: 为用户创建 sk- 形式的调用密钥，配置预算与周期，用于 Proxy 上的推理鉴权。
+---
+
+import { Aside, Steps } from '@astrojs/starlight/components';
+
+**API Key**（`sk-…`）是应用调用 **Proxy** 时的凭证：`Authorization: Bearer sk-…`。密钥通常挂在某一 **用户** 下，并带有 **预算上限**、**周期重置** 等属性。
+
+<Aside type="tip" title="前置">
+	建议已存在至少一个 [用户](/zh/docs/guides/users/)，或界面支持在创建 Key 时一并创建用户。
+</Aside>
+
+## 在管理台里要做什么
+
+<Steps>
+1. 打开 **API Keys / 密钥** 相关页面。
+1. **新建 Key**：选择所属 **用户**，填写显示名（便于运维识别）。
+1. **预算**：设置 **`budget_max`**（上限）、**周期**（如按月重置）等；具体字段以界面为准。超出后 Proxy 会对新请求返回 **403 预算不足**（语义见主仓用户 API 文档）。
+1. **保存后复制密钥**：`sk-…` 通常仅在创建时完整展示一次，请安全保存；勿提交到公开仓库。
+1. **轮换**：定期作废旧 Key、签发新 Key，并在业务侧同步更新。
+</Steps>
+
+## 调用侧自检
+
+```bash
+curl -sS http://localhost:8787/v1/me \
+  -H "Authorization: Bearer sk-your-api-key"
+```
+
+`/v1/me` 在 **Proxy** 上，用于查看与预算相关的摘要（字段以当前版本为准）。
+
+## 自动化
+
+批量创建、轮换、调整预算可走 **Admin API** — [GitHub 技术参考](/zh/docs/github-reference/)。
+
+## 下一步
+
+- [请求日志](/zh/docs/guides/request-logs/)  
+- [系统集成](/zh/docs/guides/integration/)  

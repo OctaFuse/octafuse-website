@@ -1,60 +1,67 @@
 ---
 title: 快速开始
-description: 用 Docker、Cloudflare 或 Node 快速跑通 OctaFuse Gateway。
+description: 在本地用 Docker 拉起 OctaFuse（Proxy + Admin），确认健康检查并登录管理台，作为后续配置起点。
 ---
 
 import { Aside, Steps } from '@astrojs/starlight/components';
 
-<Aside type="note" title="仓库位置">
-	以下命令均在 **[octafuse-gateway](https://github.com/OctaFuse/octafuse-gateway)** 仓库根目录执行；本站只提供导航与摘要。
+本页只做一件事：**在你自己的电脑上把 OctaFuse 跑起来**，并能打开管理台。更细的「怎么配供应商、路由、Key」见 **[使用指南](/zh/docs/guides/providers/)** 各章节。
+
+<Aside type="note" title="命令所在仓库">
+	以下命令在 **[octafuse-gateway](https://github.com/OctaFuse/octafuse-gateway)** 仓库**根目录**执行。
 </Aside>
 
-<h2 id="prerequisites">先决条件</h2>
+## 先决条件
 
-- **Docker 路径**：Docker Compose **v2.20+**（需支持 `service_completed_successfully`）。
-- **仓库**：克隆 [octafuse-gateway](https://github.com/OctaFuse/octafuse-gateway) 后在本页命令中于仓库根目录执行。
+- 已安装 **Docker Compose v2.20+**（需支持 `service_completed_successfully`）。
+- 可访问 GitHub 以下载源码（或你的 fork）。
 
-<h2 id="docker-local">方式 A：本地 Docker（推荐先跑通）</h2>
+## 克隆并启动
 
 ```bash
 git clone https://github.com/OctaFuse/octafuse-gateway.git
 cd octafuse-gateway
 docker compose -f docker/compose/quickstart.yml up --build
+```
+
+等待容器就绪后，新开终端执行：
+
+```bash
 curl -sS http://localhost:8787/health
 ```
 
-健康检查通过后，建议按下面顺序完成最小可用链路：
+若返回 JSON 且无报错，说明 **Proxy（推理入口）** 已监听 **`http://localhost:8787`**。
+
+## 登录管理台
+
+1. 浏览器打开 **`http://localhost:8789`**（**Admin**）。
+2. 使用默认账号登录：**`admin` / `changeme`**（**仅限本地体验**；任何对外环境都必须改掉）。
+
+## 建议的下一步（使用指南顺序）
 
 <Steps>
-1. **确认服务地址**：**Proxy** 在 `http://localhost:8787`；**Admin** 在 `http://localhost:8789`（默认账号 `admin` / `changeme`）。
-1. **在 Admin 完成三步**：**配置 Provider → 配置 Model Route → 创建 API Key**，即可开始调用推理接口。
-1. **对照示例请求**：用 **`curl`** 或现有客户端/SDK 走一遍端到端，便于确认网络、密钥与路由配置无误。
+1. [供应商配置](/zh/docs/guides/providers/) — 接入上游模型服务  
+1. [模型配置](/zh/docs/guides/models/) — 维护网关识别的模型目录  
+1. [路由配置](/zh/docs/guides/routing/) — 把客户端 `model` 映射到上游  
+1. [用户管理](/zh/docs/guides/users/) 与 [API Key 管理](/zh/docs/guides/api-keys/) — 谁可以调用、额度多少  
 </Steps>
 
-开发种子中的默认 **`MASTER_KEY`** 常为 `sk-dev-admin-key`（`Authorization: Bearer …` 调 **`POST /api/admin/*`**）；**生产务必轮换**，详见主仓 [docs/api/admin.md](https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/api/admin.md)。
+## 可选：立刻打一条测试请求
 
-端到端 **`curl`** 示例见主仓 [examples/README.md](https://github.com/OctaFuse/octafuse-gateway/blob/main/examples/README.md)。MySQL、仅 D1 开发或分拆编排见 **`docker/compose/node-mysql.yml`** 等与 [deployment-docker.md](https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/ops/deployment-docker.md)。
-
-<h2 id="cloudflare">方式 B：Cloudflare 部署</h2>
-
-将仓库关联为 **Proxy** Worker 与 **Admin** Pages，并绑定同一 **D1**（绑定名 **`DB`**），**`ADMIN_PASSWORD`** 使用 Worker **Secret**。完整步骤见 [部署指南 · Cloudflare](/zh/docs/deploy/#cloudflare) 或主仓 [deployment-cloudflare.md](https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/ops/deployment-cloudflare.md)。
-
-<h2 id="self-hosted-node">方式 C：自托管 Node + Postgres / MySQL</h2>
-
-落地到自有基础设施（Docker / K8s / VPS）时，参阅 [部署指南 · Docker](/zh/docs/deploy/#docker-self-hosted) 与主仓 [deployment-docker.md](https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/ops/deployment-docker.md)、[runtime-data.md](https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/architecture/runtime-data.md)。
-
-<h2 id="dev-commands">常用开发命令（仓库根）</h2>
+在管理台里按使用指南配好 **Provider + 路由 + API Key** 后，可将下面命令里的密钥与 `model` 换成你的真实值：
 
 ```bash
-npm install
-cp .env.example .env
-
-npm run dev:proxy
-npm run dev:admin
-
-npm run db:migrate
-npm run db:migrate:pg
-npm run db:migrate:mysql
+curl -sS http://localhost:8787/v1/chat/completions \
+  -H "Authorization: Bearer sk-your-api-key" \
+  -H "Content-Type: application/json" \
+  -d '{"model":"your-route-model","messages":[{"role":"user","content":"Hello"}]}'
 ```
 
-更多命令与发版流程见主仓 [README.zh-CN.md](https://github.com/OctaFuse/octafuse-gateway/blob/main/README.zh-CN.md)。
+## 本地开发（不用 Docker 时）
+
+在仓库根：`npm install`、`cp .env.example .env`，再 `npm run dev:proxy` / `npm run dev:admin` 与对应迁移命令。细节见 [Docker 部署](/zh/docs/deploy/docker/) 与 [GitHub 技术参考](/zh/docs/github-reference/)。
+
+## 线上环境
+
+- [Docker 部署](/zh/docs/deploy/docker/)  
+- [Cloudflare Workers 部署](/zh/docs/deploy/cloudflare/)  

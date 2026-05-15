@@ -1,0 +1,37 @@
+---
+title: 系统集成
+description: 将业务门户或控制面与 OctaFuse 对齐：环境变量、调用 Proxy、调用 Admin API 的边界说明。
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+集成通常分两类：**终端用户推理** 走 **Proxy**；**运营与开通** 走 **Admin HTTP API**。
+
+## 环境变量（常见）
+
+| 变量 | 用途 |
+|------|------|
+| `GATEWAY_URL` | **Proxy** 根 URL；App/SDK 发推理请求 |
+| `GATEWAY_MASTER_URL` | **Admin** 根 URL；管理 API 为 `{GATEWAY_MASTER_URL}/api/admin/*` |
+| `GATEWAY_MASTER_KEY` | 与库内 **Master Key** 一致的 Bearer，用于服务端调用管理 API |
+
+<Aside type="caution" title="安全">
+	**Master Key** 只能出现在服务端；**用户 API Key** 也不可暴露在不可信客户端。
+</Aside>
+
+## 推理调用（应用侧）
+
+- 协议：OpenAI 兼容 **`POST /v1/chat/completions`**，以及 Anthropic / Gemini 等形态（路径见主仓 **user.md**）。
+- 鉴权：`Authorization: Bearer sk-…`（部分协议支持额外头或 query，见主仓文档）。
+- 预算：调用前可请求 **`GET /v1/me`** 做展示型校验；最终以 Proxy 校验为准。
+
+## 控制面集成（服务端）
+
+典型流程：用户在你的门户注册成功 → 服务端用 Master Key 调 Admin API **创建/查找网关用户** → **签发 API Key** → 将 `sk-…` 安全返回给可信客户端或仅保存在服务端。
+
+端点、请求体与错误码：[GitHub 技术参考](/zh/docs/github-reference/) → **Admin API**。
+
+## 下一步
+
+- [Docker 部署](/zh/docs/deploy/docker/) / [Cloudflare Workers 部署](/zh/docs/deploy/cloudflare/)  
+- [Playground](/zh/docs/features/playground/) / [Simulator](/zh/docs/features/simulator/)  

@@ -1,0 +1,30 @@
+---
+title: Models
+description: Maintain the gateway model catalog (ids, labels) used when resolving client `model` strings.
+---
+
+import { Aside, Steps } from '@astrojs/starlight/components';
+
+**Models** are the gateway catalog: client **`model`** strings align with **model ids** here, then [Routing](/en/docs/guides/routing/) picks upstreams.
+
+<Aside type="tip" title="Prerequisite">
+	Have at least one [Provider](/en/docs/guides/providers/).
+</Aside>
+
+## In Admin
+
+<Steps>
+1. Open **Models**.
+1. **Create/import** entries: **model id**, display name, protocol flavor (per UI).
+1. **Suppliers vs routes**: models do not have to pin a single vendor; routing decides the upstream.
+1. **After saving**: create at least one **active** route in [Routing](/en/docs/guides/routing/).
+</Steps>
+
+## Route groups
+
+Clients may send **`baseId:group`** (e.g. `my-model:free`). Canonical parsing rules: [GitHub technical reference](/en/docs/github-reference/) → **User API** doc.
+
+## Next
+
+- [Routing](/en/docs/guides/routing/)  
+- [API keys](/en/docs/guides/api-keys/)  

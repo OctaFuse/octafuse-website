@@ -1,0 +1,43 @@
+---
+title: Docker 部署
+description: 使用 Compose 或镜像在自有环境部署 Proxy + Admin + 数据库，适合内网、VPC 与全自托管。
+---
+
+import { Aside, Steps } from '@astrojs/starlight/components';
+
+Docker 路径适合：**本地/内网快速体验**、**生产在自有机器或 K8s 上托管**、以及希望 **数据落在 Postgres/MySQL** 且与现有 DBA 流程一致的场景。
+
+<Aside type="note" title="权威细节">
+	镜像名、GHCR、分拆 compose、环境变量全表见 [GitHub 技术参考](/zh/docs/github-reference/) 中 **Docker / deployment-docker**。
+</Aside>
+
+## 本地一键（与快速开始相同）
+
+```bash
+git clone https://github.com/OctaFuse/octafuse-gateway.git
+cd octafuse-gateway
+docker compose -f docker/compose/quickstart.yml up --build
+```
+
+详见 [快速开始](/zh/docs/quick-start/)。
+
+## 生产自建（常见顺序）
+
+<Steps>
+1. **准备数据库**：Postgres 或 MySQL，创建专用库与用户。
+1. **配置环境**：在仓库根复制 **`.env.example` → `.env`**，填写 **`DATABASE_URL`**（MySQL 时通常设置 **`DATABASE_DRIVER=mysql`**）、**`ADMIN_USERNAME` / `ADMIN_PASSWORD`** 等。
+1. **迁移**：执行 `npm run db:migrate:pg` 或 `npm run db:migrate:mysql`（在仓库根或文档指定目录）。
+1. **启动 Proxy 与 Admin**：使用仓库 **Dockerfile** 与 **`docker/compose`** 下编排，或映射到你方的 systemd / K8s。
+1. **暴露与 TLS**：前面放置反向代理（Nginx、Caddy 等），仅对公网暴露 **443**；管理台与 Proxy 建议分域名。
+1. **对接下游**：配置 **`GATEWAY_URL` / `GATEWAY_MASTER_URL` / `GATEWAY_MASTER_KEY`**（见 [系统集成](/zh/docs/guides/integration/)）。
+</Steps>
+
+## 与 Cloudflare 方案如何选
+
+- 需要 **完全掌控数据落点、内网互通、已有容器平台** → 优先 Docker 自建。  
+- 需要 **全球边缘、少运维机器** → 见 [Cloudflare Workers 部署](/zh/docs/deploy/cloudflare/)。
+
+## 相关页面
+
+- [快速开始](/zh/docs/quick-start/)  
+- [Cloudflare Workers 部署](/zh/docs/deploy/cloudflare/)  

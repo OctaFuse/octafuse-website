@@ -1,0 +1,34 @@
+---
+title: Simulator
+description: 在浏览器中带上真实用户 API Key，按 OpenAI / Anthropic / Gemini 方式调用已部署的网关，用于联调与验收。
+---
+
+import { Aside, Steps } from '@astrojs/starlight/components';
+
+**Simulator** 用来模拟「真实应用」如何访问你的 **Proxy**：在浏览器里配置 **Base URL（Proxy）**、**用户 API Key**、协议类型与请求体，从而验证 **鉴权、选路、计费、日志** 是否与线上一致。
+
+<Aside type="tip" title="适用场景">
+	上线前验收、复现用户报错、对比不同协议头行为。
+</Aside>
+
+## 如何使用
+
+<Steps>
+1. 在 Admin 中打开 **Simulator**。
+1. 填入 **Proxy 公网或内网地址**（与 `GATEWAY_URL` 一致）及 **`sk-…` 用户 Key**。
+1. 选择协议形态（OpenAI / Anthropic / Gemini），按表单编辑请求体。
+1. **发送**并查看响应与网关侧记录（可结合 [请求日志](/zh/docs/guides/request-logs/)）。
+1. 若与 Playground 结果不一致：优先核对是否走了 **用户 Key 的预算与路由组** 规则。
+</Steps>
+
+## 与 Playground 的区别
+
+| 工具 | 鉴权 | 典型目的 |
+|------|------|----------|
+| Playground | 管理台内权限，试跑路由 | 配通上游、验证路由 JSON |
+| Simulator | **真实用户 API Key** | 联调业务侧完整链路 |
+
+## 相关页面
+
+- [API Key 管理](/zh/docs/guides/api-keys/)  
+- [系统集成](/zh/docs/guides/integration/)  

@@ -1,0 +1,30 @@
+---
+title: 模型配置
+description: 在管理台维护网关识别的模型目录（模型 ID、展示名等），供路由与客户端 model 参数解析使用。
+---
+
+import { Aside, Steps } from '@astrojs/starlight/components';
+
+**模型** 是网关内部目录：客户端请求里的 **`model` 字符串**会先与这里的 **模型 ID** 对齐，再结合 [路由配置](/zh/docs/guides/routing/) 决定走哪条上游、哪个路由组。
+
+<Aside type="tip" title="前置">
+	建议已配置至少一个 [供应商](/zh/docs/guides/providers/)。
+</Aside>
+
+## 在管理台里要做什么
+
+<Steps>
+1. 打开 **Models / 模型** 相关页面。
+1. **新增或导入模型**：填写 **模型 ID**（与路由、文档中的 `model` 命名保持一致习惯）、**显示名**、协议类型（OpenAI / Anthropic / Gemini 等，以界面为准）。
+1. **与供应商的关系**：模型本身不强制绑定单一供应商；真正「走哪家上游」由 **路由** 决定。模型目录更多承担 **解析、展示与计费维度** 的锚点。
+1. **保存后**：到 [路由配置](/zh/docs/guides/routing/) 为该模型创建至少一条 **active** 路由，否则客户端会选路失败。
+</Steps>
+
+## 路由组与 `model` 写法（概念）
+
+客户端可使用 **`基础模型ID`**，或 **`基础模型ID:路由组`**（如 `my-model:free`）显式选用某组路由。组名需与路由里配置一致；解析细节以主仓 **用户 API 文档** 为准（见 [GitHub 技术参考](/zh/docs/github-reference/)）。
+
+## 下一步
+
+- [路由配置](/zh/docs/guides/routing/)  
+- [API Key 管理](/zh/docs/guides/api-keys/)  

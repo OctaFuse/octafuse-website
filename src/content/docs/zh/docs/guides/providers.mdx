@@ -1,0 +1,36 @@
+---
+title: 供应商配置
+description: 在 OctaFuse Admin 中添加上游模型供应商（Base URL、鉴权），供路由与推理转发使用。
+---
+
+import { Aside, Steps } from '@astrojs/starlight/components';
+
+**供应商（Provider）** 描述「网关要把请求转发到哪家上游服务」：例如官方 OpenAI、Anthropic、Gemini，或兼容 OpenAI 的自建推理服务。路由与模型都依赖已配置好的供应商。
+
+<Aside type="tip" title="前置">
+	请先完成 [快速开始](/zh/docs/quick-start/)，能打开管理台。
+</Aside>
+
+## 在管理台里要做什么
+
+<Steps>
+1. 打开 **Admin** → 进入与 **Providers / 供应商** 相关的页面（菜单名称可能随版本微调）。
+1. **新建供应商**：填写 **显示名称**、**Base URL**（上游 API 根地址，注意是否含 `/v1` 等路径前缀）、**鉴权方式**（常见为 API Key 或 Bearer）。
+1. **保存并自检**：若界面提供「测试连接」或类似操作，先确认能连上；否则可在后续 [路由配置](/zh/docs/guides/routing/) 配好后用 [Playground](/zh/docs/features/playground/) 试一条请求。
+1. **多供应商**：可为同一类协议配置多条（例如主站 + 备用区域），供路由做优先级与降级。
+</Steps>
+
+## 常见注意点
+
+- **Base URL** 与上游文档一致：有的服务要求根域名，有的要求带版本前缀；填错会出现 404 / 401。
+- **密钥轮换**：更新供应商密钥后，记得在网关内同步修改，避免旧 Key 仍被路由引用。
+- **合规与数据驻留**：若业务要求数据不出某区域，应选择该区域可访问的上游端点，并在网络侧做好出口策略。
+
+## 自动化（可选）
+
+批量创建或更新供应商可走 **Admin HTTP API**。路径与请求体见 [GitHub 技术参考](/zh/docs/github-reference/) 中的 **Admin API**。
+
+## 下一步
+
+- [模型配置](/zh/docs/guides/models/)  
+- [路由配置](/zh/docs/guides/routing/)  

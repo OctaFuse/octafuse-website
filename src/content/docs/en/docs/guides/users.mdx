@@ -1,0 +1,31 @@
+---
+title: Users
+description: Manage gateway users that own API keys, budgets, and appear in logs and audits.
+---
+
+import { Aside, Steps } from '@astrojs/starlight/components';
+
+**Users** are logical identities in OctaFuse: they can own **multiple API keys**, carry **budgets/periods**, and show up in **request** and **audit** logs. Often mapped to portal accounts via `externalSystem + externalUserId`.
+
+<Aside type="tip" title="Prerequisite">
+	[Quick start](/en/docs/quick-start/) complete; Admin reachable.
+</Aside>
+
+## In Admin
+
+<Steps>
+1. Open **Users**.
+1. **Create user**: email (or org-unique id), optional **external identity** pair for idempotent SaaS linking.
+1. **Status**: enable/disable per policy.
+1. **Budget**: set caps/periods on the user if your deployment stores budgets at user scope; otherwise see [API keys](/en/docs/guides/api-keys/).
+1. **Details**: inspect linked keys and history; pair with [Audit logs](/en/docs/guides/audit-logs/).
+</Steps>
+
+## Integration
+
+After signup/login in your portal, call Admin APIs to upsert users—[GitHub technical reference](/en/docs/github-reference/).
+
+## Next
+
+- [API keys](/en/docs/guides/api-keys/)  
+- [Integration](/en/docs/guides/integration/)  

@@ -1,0 +1,35 @@
+---
+title: Providers
+description: Register upstream model vendors in OctaFuse Admin (base URL, credentials) for routing and inference.
+---
+
+import { Aside, Steps } from '@astrojs/starlight/components';
+
+A **provider** describes **where the gateway forwards traffic**: official OpenAI/Anthropic/Gemini, or an OpenAI-compatible endpoint. Routes and models depend on providers being configured first.
+
+<Aside type="tip" title="Prerequisite">
+	Finish [Quick start](/en/docs/quick-start/) so Admin is reachable.
+</Aside>
+
+## In Admin
+
+<Steps>
+1. Open the **Providers** section (exact menu label may vary by release).
+1. **Create a provider**: display name, **base URL** (watch for `/v1` prefixes), and **auth** (API key / bearer, etc.).
+1. **Validate**: use any built-in connectivity test if available; otherwise validate later via [Routing](/en/docs/guides/routing/) + [Playground](/en/docs/features/playground/).
+1. **Multiple providers**: add primaries and backups for failover policies.
+</Steps>
+
+## Notes
+
+- **Base URL** must match vendor docs—mistakes show up as 401/404.
+- **Rotate secrets** in both the vendor console and OctaFuse when keys change.
+
+## Automation
+
+Use the **Admin HTTP API** for bulk changes—see [GitHub technical reference](/en/docs/github-reference/).
+
+## Next
+
+- [Models](/en/docs/guides/models/)  
+- [Routing](/en/docs/guides/routing/)  

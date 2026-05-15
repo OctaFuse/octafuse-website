@@ -1,0 +1,30 @@
+---
+title: 请求日志
+description: 在管理台查看按 API Key、用户、模型等维度的推理请求记录，用于排障与用量对账。
+---
+
+import { Aside, Steps } from '@astrojs/starlight/components';
+
+**请求日志** 记录经过 Proxy 的调用：时间、Key、用户、模型、路由组、状态码、延迟等（以当前版本列表列为准）。用于回答「谁、在什么时候、调了哪个模型、是否成功」。
+
+<Aside type="tip" title="前置">
+	已有真实或测试流量经过 Proxy。
+</Aside>
+
+## 在管理台里要做什么
+
+<Steps>
+1. 打开 **Request logs / 请求日志**（或 **Usage / 用量** 下同类入口）。
+1. **筛选**：按时间范围、用户、Key、`model`、状态码等缩小范围。
+1. **排查失败**：对 4xx/5xx 记录查看错误摘要；若需上游返回体等细节，可结合上游控制台与网关版本说明。
+1. **导出或对接**：若界面支持导出 CSV/JSON，可用于离线对账；大规模集成可走数据库或后续分析管道（实现依部署形态而定）。
+</Steps>
+
+## 与计费字段的关系
+
+日志中可能展示 **metered / standard / charged** 等多视角成本字段，含义与计算公式以主仓文档为准（[GitHub 技术参考](/zh/docs/github-reference/)）。
+
+## 下一步
+
+- [审计日志](/zh/docs/guides/audit-logs/)  
+- [Playground](/zh/docs/features/playground/) — 不产生与真实业务完全相同的计费记录时用于试调用  

@@ -1,0 +1,32 @@
+---
+title: 路由配置
+description: 为模型配置上游路由、优先级与路由组，实现选路与故障时的降级策略。
+---
+
+import { Aside, Steps } from '@astrojs/starlight/components';
+
+**模型路由** 决定：当客户端传入某个 **`model`**（及可选 **路由组**）时，网关按什么顺序尝试哪些 **供应商 + 上游模型**。
+
+<Aside type="tip" title="前置">
+	需已完成 [供应商](/zh/docs/guides/providers/) 与 [模型](/zh/docs/guides/models/) 的基础数据。
+</Aside>
+
+## 在管理台里要做什么
+
+<Steps>
+1. 打开 **Model routes / 模型路由**（或等价菜单）。
+1. **新建路由**：选择 **模型**、**供应商**、上游实际模型名（若与网关模型 ID 不同）、**路由组**（常见 `default`，另可建 `free` 等）、**优先级**（数字越小越优先，或按界面说明）。
+1. **多条路由**：为同一模型 + 同一路由组配置多条时，按优先级依次尝试，实现 **failover**。
+1. **状态**：仅 **active** 的路由参与选路；临时下线可将路由置为非 active。
+1. **保存后验证**：使用 [Playground](/zh/docs/features/playground/) 或 `curl` 发一条聊天请求，确认命中预期上游。
+</Steps>
+
+## 与客户端的关系
+
+- 客户端只需改 **`model` 字段**（及协议相关头），无需知道背后是哪一家供应商。
+- 切换上游或调整优先级时，优先改路由配置，业务代码可少改动。
+
+## 下一步
+
+- [用户管理](/zh/docs/guides/users/)  
+- [API Key 管理](/zh/docs/guides/api-keys/)  

@@ -1,0 +1,33 @@
+---
+title: Integration
+description: "Wire portals and backends to OctaFuse: env vars, Proxy inference, and Admin automation boundaries."
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+Two surfaces: **Proxy** for end-user inference, **Admin HTTP APIs** for provisioning and operations.
+
+## Common environment variables
+
+| Variable | Role |
+|----------|------|
+| `GATEWAY_URL` | **Proxy** root URL for apps/SDKs |
+| `GATEWAY_MASTER_URL` | **Admin** root URL; APIs at `{GATEWAY_MASTER_URL}/api/admin/*` |
+| `GATEWAY_MASTER_KEY` | Bearer matching the DB **master key** |
+
+<Aside type="caution" title="Security">
+	Never expose **master keys** to browsers; treat **user API keys** as secrets too.
+</Aside>
+
+## App traffic
+
+OpenAI-compatible `POST /v1/chat/completions`, plus Anthropic/Gemini fronts—canonical paths and auth headers: [GitHub technical reference](/en/docs/github-reference/) → **User API**.
+
+## Control plane
+
+Typical flow: portal signup succeeds → server calls Admin APIs to **upsert user** → **issue API key** → return `sk-…` only to trusted clients or keep server-side.
+
+## Next
+
+- [Docker](/en/docs/deploy/docker/) / [Cloudflare Workers](/en/docs/deploy/cloudflare/)  
+- [Playground](/en/docs/features/playground/) / [Simulator](/en/docs/features/simulator/)  

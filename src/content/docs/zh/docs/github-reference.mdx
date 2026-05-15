@@ -1,0 +1,45 @@
+---
+title: GitHub 技术参考
+description: octafuse-gateway 仓库中的权威工程文档：API、迁移、运维与架构。日常使用请优先阅读本站指南。
+---
+
+import { Aside, CardGrid, LinkCard } from '@astrojs/starlight/components';
+
+以下链接指向 **[octafuse-gateway](https://github.com/OctaFuse/octafuse-gateway)** 仓库内文档，**会随版本迭代**；适用于开发、运维与深度排障。若本站摘要与仓库不一致，**以仓库为准**。
+
+<Aside type="tip" title="使用路径建议">
+	**使用 OctaFuse**：请按 [快速开始](/zh/docs/quick-start/) → [管理台首次配置](/zh/docs/first-time-setup/) → [调用推理接口](/zh/docs/call-apis/) 阅读；本页不重复操作步骤。
+</Aside>
+
+## API 与示例
+
+<CardGrid>
+	<LinkCard title="用户侧 API" description="多协议入口、鉴权、路由与预算、错误语义" href="https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/api/user.md" />
+	<LinkCard title="Admin HTTP API" description="Provider、路由、密钥与配置自动化" href="https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/api/admin.md" />
+	<LinkCard title="curl 最小示例" description="健康检查、聊天、Admin health 等" href="https://github.com/OctaFuse/octafuse-gateway/blob/main/examples/quick-curl.md" />
+</CardGrid>
+
+## 运维与部署（实现细节）
+
+| 文档 | 内容 |
+|------|------|
+| [deployment.md](https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/ops/deployment.md) | 部署模式索引 |
+| [deployment-cloudflare.md](https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/ops/deployment-cloudflare.md) | Cloudflare：D1、`database_id`、Workers Builds、排障 |
+| [deployment-docker.md](https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/ops/deployment-docker.md) | Docker / GHCR / 分拆编排 |
+| [runtime-data.md](https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/architecture/runtime-data.md) | 运行时与数据面契约 |
+| [postgres-cutover.md](https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/ops/postgres-cutover.md) | D1 ↔ Postgres 切换说明 |
+
+## 迁移与计费语义
+
+- 迁移目录：`packages/core/migrations-d1/`、`migrations-postgres/`、`migrations-mysql/`（以仓库为准）
+- **`metered_cost` / `standard_cost` / `charged_cost`** 等字段定义与变更：以仓库文档与管理台说明为准。
+
+## 文档规范、索引与安全
+
+<CardGrid>
+	<LinkCard title="CONVENTIONS" description="文档边界、敏感信息与占位符规范" href="https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/CONVENTIONS.md" />
+	<LinkCard title="文档中枢" description="架构与运维索引" href="https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/README.md" />
+	<LinkCard title="贡献指南" description="CONTRIBUTING 入口" href="https://github.com/OctaFuse/octafuse-gateway/blob/main/CONTRIBUTING.md" />
+</CardGrid>
+
+- [SECURITY.md](https://github.com/OctaFuse/octafuse-gateway/blob/main/SECURITY.md)

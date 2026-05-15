@@ -1,0 +1,45 @@
+---
+title: GitHub technical reference
+description: Canonical engineering docs in octafuse-gateway—APIs, migrations, and ops. For day-to-day use, prefer this site’s guides first.
+---
+
+import { Aside, CardGrid, LinkCard } from '@astrojs/starlight/components';
+
+These links point into the **[octafuse-gateway](https://github.com/OctaFuse/octafuse-gateway)** repository. They **change with releases**—use them for development, operations, and deep troubleshooting. If this site and the repo disagree, **trust the repository**.
+
+<Aside type="tip" title="Where to start">
+	**Using OctaFuse**: follow [Quick start](/en/docs/quick-start/) → [First-time Admin setup](/en/docs/first-time-setup/) → [Calling the APIs](/en/docs/call-apis/). This page does not repeat those steps.
+</Aside>
+
+## APIs & examples
+
+<CardGrid>
+	<LinkCard title="User-facing APIs" description="OpenAI / Anthropic / Gemini fronts, auth, routing, budgets, errors" href="https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/api/user.md" />
+	<LinkCard title="Admin HTTP API" description="Automation for providers, routes, keys, and config" href="https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/api/admin.md" />
+	<LinkCard title="Examples & curl" description="Minimal checks such as quick-curl" href="https://github.com/OctaFuse/octafuse-gateway/blob/main/examples/quick-curl.md" />
+</CardGrid>
+
+## Operations & deployment (implementation detail)
+
+| Doc | What it covers |
+|-----|----------------|
+| [docs/ops/deployment.md](https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/ops/deployment.md) | Deployment patterns index |
+| [docs/ops/deployment-cloudflare.md](https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/ops/deployment-cloudflare.md) | Cloudflare: D1, `database_id`, Workers Builds, troubleshooting |
+| [docs/ops/deployment-docker.md](https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/ops/deployment-docker.md) | Docker / GHCR / split compose |
+| [docs/architecture/runtime-data.md](https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/architecture/runtime-data.md) | Runtime × database contracts |
+| [docs/ops/postgres-cutover.md](https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/ops/postgres-cutover.md) | D1 ↔ Postgres cutover notes |
+
+## Migrations & billing semantics
+
+- Migration folders: `packages/core/migrations-d1/`, `migrations-postgres/`, `migrations-mysql/` (verify in repo)
+- Cost fields such as **`metered_cost` / `standard_cost` / `charged_cost`**: canonical definitions live with the repository and Admin UI copy.
+
+## Conventions, docs hub, security
+
+<CardGrid>
+	<LinkCard title="Documentation conventions" description="What must stay in-repo and how to redact secrets" href="https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/CONVENTIONS.md" />
+	<LinkCard title="Docs hub" description="Architecture & operations index" href="https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/README.md" />
+	<LinkCard title="Contributing" description="CONTRIBUTING entry point" href="https://github.com/OctaFuse/octafuse-gateway/blob/main/CONTRIBUTING.md" />
+</CardGrid>
+
+- [SECURITY.md](https://github.com/OctaFuse/octafuse-gateway/blob/main/SECURITY.md)

@@ -1,0 +1,30 @@
+---
+title: Request logs
+description: Inspect inference traffic by key, user, model, status, and latency for debugging and reconciliation.
+---
+
+import { Aside, Steps } from '@astrojs/starlight/components';
+
+**Request logs** capture Proxy traffic: timestamps, keys, users, models, route groups, status codes, latency (columns depend on release).
+
+<Aside type="tip" title="Prerequisite">
+	Some traffic has flowed through Proxy (test or real).
+</Aside>
+
+## In Admin
+
+<Steps>
+1. Open **Request logs** / **Usage** lists.
+1. **Filter** by time, user, key, `model`, status.
+1. **Debug failures** using error summaries; pair with upstream dashboards when needed.
+1. **Export** if the UI supports CSV/JSON for offline analysis.
+</Steps>
+
+## Cost lenses
+
+Metered/standard/charged semantics: [GitHub technical reference](/en/docs/github-reference/).
+
+## Next
+
+- [Audit logs](/en/docs/guides/audit-logs/)  
+- [Playground](/en/docs/features/playground/)  

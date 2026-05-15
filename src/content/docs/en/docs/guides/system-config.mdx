@@ -1,0 +1,26 @@
+---
+title: System config
+description: Master key and global settings that affect the whole gateway—admin-only, high impact.
+---
+
+import { Aside, Steps } from '@astrojs/starlight/components';
+
+**System configuration** includes the **master key** used for **`/api/admin/*`**, plus other global switches. Mistakes can break automation or weaken security.
+
+<Aside type="caution" title="Security">
+	Rotate the **master key** to a strong random value in production; distribute only to trusted servers.
+</Aside>
+
+## In Admin
+
+<Steps>
+1. Open **Settings / Config**.
+1. Review **master key** policy: local seeds often use `sk-dev-admin-key`—**never in production**.
+1. After rotation, update every consumer of **`GATEWAY_MASTER_KEY`**.
+1. For other toggles, read upstream docs before saving—[GitHub technical reference](/en/docs/github-reference/).
+</Steps>
+
+## Next
+
+- [Integration](/en/docs/guides/integration/)  
+- [Docker](/en/docs/deploy/docker/) / [Cloudflare Workers](/en/docs/deploy/cloudflare/)  

@@ -1,0 +1,31 @@
+---
+title: Playground
+description: Send a test call to a single model route from Admin—verify upstream connectivity without consuming user key quotas.
+---
+
+import { Aside, Steps } from '@astrojs/starlight/components';
+
+**Playground** exercises one **model route** without going through a real business **user API key**—ideal after editing providers/routes.
+
+<Aside type="tip" title="When to use">
+	After route changes or vendor migrations, validate before shifting production traffic.
+</Aside>
+
+## How to use
+
+<Steps>
+1. Open **Playground** in Admin.
+1. Pick a **model route** (active routes should appear).
+1. Fill a payload matching the protocol (e.g. OpenAI `messages`).
+1. **Send** and inspect status, upstream errors, latency.
+1. On failure, revisit [Providers](/en/docs/guides/providers/) and [Routing](/en/docs/guides/routing/), then [Request logs](/en/docs/guides/request-logs/).
+</Steps>
+
+## vs real traffic
+
+Playground is operator-focused; metering may differ from real user-key calls (per release). For full client simulation, use [Simulator](/en/docs/features/simulator/).
+
+## See also
+
+- [Simulator](/en/docs/features/simulator/)  
+- [Routing](/en/docs/guides/routing/)  

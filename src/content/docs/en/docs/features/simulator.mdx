@@ -1,0 +1,27 @@
+---
+title: Simulator
+description: Call your deployed Proxy from the browser with a real user API key—OpenAI / Anthropic / Gemini shapes for end-to-end checks.
+---
+
+import { Aside, Steps } from '@astrojs/starlight/components';
+
+**Simulator** mimics a real app: set **Proxy base URL**, **`sk-…` user key**, protocol, and payload—validate **auth, routing, metering, logging** together.
+
+<Aside type="tip" title="When to use">
+	Pre-launch acceptance, reproducing user issues, comparing header behaviors across protocols.
+</Aside>
+
+## How to use
+
+<Steps>
+1. Open **Simulator** in Admin.
+1. Enter **Proxy URL** (same as `GATEWAY_URL`) and a **user API key**.
+1. Choose OpenAI / Anthropic / Gemini mode and edit the body.
+1. **Send** and compare with [Request logs](/en/docs/guides/request-logs/).
+1. If results differ from Playground, remember Simulator applies **user budgets and route groups**.
+</Steps>
+
+## See also
+
+- [API keys](/en/docs/guides/api-keys/)  
+- [Integration](/en/docs/guides/integration/)  
