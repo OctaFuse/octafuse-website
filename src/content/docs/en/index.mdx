@@ -1,6 +1,6 @@
 ---
 title: OctaFuse
-description: AI gateway for teams and enterprises—unified model access across common client ecosystems, keys and budgets, resilient routing, multi-lens cost views, and operator tooling. Cloud-hosted or self-hosted. AGPLv3.
+description: AI gateway for teams and enterprises—unified model access across common client ecosystems, keys and budgets, resilient routing, multi-lens cost views, proxy error alerts (Feishu / WeChat Work), and operator tooling. Cloud-hosted or self-hosted. AGPLv3.
 template: splash
 sidebar:
   hidden: true
@@ -34,6 +34,7 @@ It fits organizations juggling **multiple providers, models, and business lines*
 - **Meet clients where they are**: support common OpenAI-, Anthropic-, and Gemini-shaped calling styles so migrations and coexistence are smoother.
 - **Clearer cost and risk**: budgets, usage, and investigations share a single lens; tiered cost views support capacity planning and reconciliation conversations.
 - **More operable resilience**: central routing priorities and safer failover paths when upstreams change or wobble—without every team patching ad hoc.
+- **Earlier signal on live issues**: optional Feishu (Lark) and WeChat Work webhooks for Proxy forwarding errors help you distinguish upstream outages from key or quota problems quickly.
 
 ## Features
 
@@ -52,6 +53,9 @@ It fits organizations juggling **multiple providers, models, and business lines*
 	</Card>
 	<Card title="Observability and dry runs" icon="analytics">
 		Usage and reliability summaries in Admin, plus test calls and browser-based simulations that exercise auth, routing, metering, and logging—ideal for pre-flight checks and production debugging.
+	</Card>
+	<Card title="Proxy error alerts" icon="warning">
+		Optional Feishu (Lark) and WeChat Work bot webhooks notify operators when the Proxy surfaces forwarding failures—so you can catch provider incidents, quota or rate-limit pressure, and upstream API key issues that may need a top-up sooner.
 	</Card>
 </CardGrid>
 

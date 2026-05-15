@@ -1,6 +1,6 @@
 ---
 title: OctaFuse
-description: 面向团队与企业的 AI 网关：统一多生态模型调用、密钥与预算、智能路由与容错、多视角成本与审计，以及管理台内的用量分析与联调工具。支持云端边缘托管与自建。AGPLv3。
+description: 面向团队与企业的 AI 网关：统一多生态模型调用、密钥与预算、智能路由与容错、多视角成本与审计、Proxy 错误告警（飞书 / 企业微信），以及管理台内的用量分析与联调工具。支持云端边缘托管与自建。AGPLv3。
 template: splash
 sidebar:
   hidden: true
@@ -34,6 +34,7 @@ import { Card, CardGrid } from '@astrojs/starlight/components';
 - **兼容常见客户端习惯**：同时覆盖常见的 OpenAI、Anthropic、Gemini 等调用形态，迁移与共存更平滑。
 - **成本与风险可见**：预算、用量与异常流量有统一视角；支持多视角成本口径，便于容量与对账讨论。
 - **稳定性更可运营**：集中配置路由与优先级，在上游波动时更容易做切换与降级，而不是每个应用各自打补丁。
+- **线上异常更早感知**：Proxy 转发错误可推送至飞书或企业微信，便于第一时间判断是上游服务问题还是密钥/额度类问题。
 
 ## 功能特性
 
@@ -52,6 +53,9 @@ import { Card, CardGrid } from '@astrojs/starlight/components';
 	</Card>
 	<Card title="可观测与联调工具" icon="analytics">
 		管理台汇总用量与可靠性概况；提供试调用、浏览器内模拟真实应用请求等能力，便于上线前验收、线上排障与联调对齐。
+	</Card>
+	<Card title="Proxy 错误告警" icon="warning">
+		支持配置飞书、企业微信机器人 Webhook：当 Proxy 转发失败时主动通知运维侧，更快发现上游 Provider 异常、限流/配额压力，以及上游 API Key 需充值等状况。
 	</Card>
 </CardGrid>
 
