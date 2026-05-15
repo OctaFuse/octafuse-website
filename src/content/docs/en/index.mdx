@@ -24,9 +24,11 @@ import { Card, CardGrid } from '@astrojs/starlight/components';
 
 ## Overview
 
-**OctaFuse** is an **AI gateway** for teams and enterprises: a single place to expose model traffic to your products while centralizing how you **authenticate, budget, route, meter, and observe** that traffic. Teams keep familiar chat and completion calling patterns; operators get consistent controls and reporting instead of duplicating glue in every service.
+**OctaFuse** is an **AI Gateway** for teams and enterprises—a unified access layer between your upstream AI providers and every product line you run.
 
-It fits organizations juggling **multiple providers, models, and business lines** but wanting **one governance and operations story**.
+On the upstream side, public cloud models, third-party inference services, and self-hosted models are all wired in and managed in one place. On the downstream side, each product line calls through standard OpenAI / Anthropic / Gemini interfaces without caring which provider handles the request. Keys and budgets, routing and failover, cost metering and audit trails all live in this layer—not scattered across individual service codebases.
+
+It fits teams connecting **multiple AI providers** to **multiple product lines** and wanting reliability, cost visibility, and audit coverage lifted out of application code into dedicated infrastructure.
 
 ## Why OctaFuse
 
