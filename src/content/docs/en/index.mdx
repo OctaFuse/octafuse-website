@@ -22,7 +22,7 @@ hero:
 
 import { Card, CardGrid } from '@astrojs/starlight/components';
 
-## Product overview
+## Overview
 
 **OctaFuse** is an **AI gateway** for teams and enterprises: a single place to expose model traffic to your products while centralizing how you **authenticate, budget, route, meter, and observe** that traffic. Teams keep familiar chat and completion calling patterns; operators get consistent controls and reporting instead of duplicating glue in every service.
 
@@ -30,42 +30,65 @@ It fits organizations juggling **multiple providers, models, and business lines*
 
 ## Why OctaFuse
 
-- **Less duplicated work**: stop re-implementing vendor wiring, keys, and limits in every app.
-- **Meet clients where they are**: support common OpenAI-, Anthropic-, and Gemini-shaped calling styles so migrations and coexistence are smoother.
-- **Clearer cost and risk**: budgets, usage, and investigations share a single lens; tiered cost views support capacity planning and reconciliation conversations.
-- **More operable resilience**: central routing priorities and safer failover paths when upstreams change or wobble—without every team patching ad hoc.
-- **Earlier signal on live issues**: optional Feishu (Lark) and WeChat Work webhooks for Proxy forwarding errors help you distinguish upstream outages from key or quota problems quickly.
+OctaFuse was built to **own and evolve** an in-house AI gateway for several internal SaaS systems.
+
+After reviewing many open-source and commercial options, we kept seeing the same pain points:
+
+- **Narrow provider coverage**, making it awkward to mix public cloud, private hosting, and internal models in one stack.
+- **OpenAI-only surfaces**, which force extra adapters when your stack already speaks Anthropic or Gemini.
+- **Rigid or shallow billing and audit trails**, so it is hard to model per-route, per-user, or supply-side vs user-side costs the way internal products need.
+
+OctaFuse aims to address that with more freedom:
+
+- Wire in more providers—including models you run yourself—and expose multiple client-facing protocols from one gateway.
+- Define routing, billing, and how you trace and reconcile usage across teams and routes.
+- Integrate upstream systems through a stable Admin API with less coupling.
 
 ## Features
 
 <CardGrid stagger>
-	<Card title="Multi-ecosystem compatibility" icon="laptop">
-		Serve common chat and completion habits through one gateway, cutting duplicate vendor integrations and long-term adapter sprawl.
+	<Card title="Multi-protocol surface" icon="laptop">
+		**`/v1/chat/completions`** (OpenAI), **`/v1/messages`** (Anthropic), **`/v1beta/*`** (Gemini).
 	</Card>
-	<Card title="Keys, budgets, and periods" icon="setting">
-		Centralize identities and budget rules with caps and period resets—by user, product line, or tenant—with self-serve visibility into quota state.
+	<Card title="Keys and budgets" icon="setting">
+		Users / API keys, caps and period resets, plus **`GET /v1/me`** for budget-style status from clients.
 	</Card>
-	<Card title="Smart routing and resilience" icon="random">
-		Model priorities and policies live in one place; when upstreams degrade, you get safer switching and degradation paths instead of hard-binding every app to a single model.
+	<Card title="Routing" icon="random">
+		Providers, models, and routes; **route groups** and priority-based **failover**.
 	</Card>
-	<Card title="Cost lenses and reconciliation" icon="document">
-		Separate views for usage observation, standard pricing semantics, and what you actually charge—so finance, platform, and product can align on numbers.
+	<Card title="Cost layers" icon="document">
+		**`metered_cost`**, **`standard_cost`**, and **`charged_cost`**—supply-side metering vs catalog vs what you charge users.
 	</Card>
-	<Card title="Observability and dry runs" icon="analytics">
-		Usage and reliability summaries in Admin, plus test calls and browser-based simulations that exercise auth, routing, metering, and logging—ideal for pre-flight checks and production debugging.
+	<Card title="Audit and observability" icon="magnifier">
+		Global and **per-key** request logs, plus **user-level audit trails** for traceability and investigations.
 	</Card>
 	<Card title="Proxy error alerts" icon="warning">
-		Optional Feishu (Lark) and WeChat Work bot webhooks notify operators when the Proxy surfaces forwarding failures—so you can catch provider incidents, quota or rate-limit pressure, and upstream API key issues that may need a top-up sooner.
+		Optional **Feishu (Lark)** and **WeChat Work** bot webhooks in Admin—forwarding failures surface upstream incidents, quota or rate-limit pressure, and upstream API keys that may need attention or top-up.
+	</Card>
+	<Card title="Analytics" icon="chart">
+		Time-range views in Admin for model, provider, and user usage plus **reliability** summaries—capacity checks, cost awareness, and upstream health comparisons.
+	</Card>
+	<Card title="Playground" icon="approve-check">
+		Send a test call for **one model route** without spending user budgets or leaving the same metering / logs as real traffic—great for troubleshooting and pre-flight checks.
+	</Card>
+	<Card title="Simulator" icon="puzzle">
+		Call your deployed gateway from the browser with a real user API key in OpenAI / Anthropic / Gemini shapes—rehearse **auth, routing, billing, and logging** the way production clients do.
+	</Card>
+	<Card title="Runtimes" icon="rocket">
+		**Cloudflare** (Worker + Pages + **D1**) or self-hosted (**Docker / Node** + **Postgres** or **MySQL**). See the deployment sections in the docs.
+	</Card>
+	<Card title="Decoupled from apps" icon="external">
+		SaaS and portals integrate via **`/api/admin/*`** so product code stays focused on AI use cases.
 	</Card>
 </CardGrid>
 
 ## Deployment options
 
-Choose based on **compliance, latency, data residency, and how you want to operate infrastructure**. Step-by-step commands live in this site’s docs.
+Pick based on **compliance, latency, data residency, and operations**. Commands and troubleshooting live under **Deploy** on the [documentation home](/en/docs/).
 
-- **Docker on a laptop or private network**: fastest way to try OctaFuse, run PoCs, and debug on a shared internal environment.
-- **Managed Cloudflare**: great when you want an edge-friendly footprint and a managed database backing configuration and metadata.
-- **Self-hosted on your stack**: best when you need stricter data boundaries, VPC-style networking, or alignment with existing database operations (commonly Postgres or MySQL).
+- **Docker (laptop or private network)**: fastest path to try OctaFuse, PoCs, and internal debugging.
+- **Cloudflare**: edge-friendly footprint with **D1** for configuration and metadata.
+- **Self-hosted**: stricter data boundaries or alignment with existing **Postgres / MySQL** operations.
 
 Read the production section on the [documentation home](/en/docs/) for trade-offs and [Quick start](/en/docs/quick-start/) for the shortest path. Licensed under **GNU AGPL v3** — see [LICENSE](https://github.com/OctaFuse/octafuse-gateway/blob/main/LICENSE).
 
