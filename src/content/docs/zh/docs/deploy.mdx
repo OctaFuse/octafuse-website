@@ -1,0 +1,42 @@
+---
+title: 部署指南
+description: OctaFuse Gateway 的 Cloudflare 与 Docker 自托管部署总览。
+---
+
+OctaFuse 常见部署形态为 **Cloudflare Proxy Worker + Admin Pages + D1**，或 **自托管 Proxy + Admin + Postgres / MySQL**。以下为高价值摘要；逐步命令、密钥与迁移细节以主仓运维文档为准。
+
+<h2 id="deployment-modes">常见部署模式</h2>
+
+主仓 [deployment.md](https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/ops/deployment.md) 中的典型组合包括：
+
+1. **Cloudflare 全托管（默认）**：Proxy Worker + Admin Pages，共用 **D1**。
+2. **Hybrid**：Proxy 跑 Node + **Postgres**，Admin 仍托管在 Cloudflare + **D1**。
+3. **Full self-hosted Postgres**：Proxy Node + Admin Node，共用 **Postgres**。
+4. **Full self-hosted MySQL**：同上形态，**`DATABASE_DRIVER=mysql`**，迁移目录 **`migrations-mysql/`**。
+5. **纯 Docker + DB（无 Cloudflare 依赖）**：自拉 **GHCR** 镜像，迁移与编排见 Docker 专篇。
+
+本地多套环境与 D1 数据目录见 [local-testing-environments.md](https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/ops/local-testing-environments.md)。
+
+<h2 id="cloudflare">Cloudflare</h2>
+
+海外默认路径：两个 Worker（**Proxy**、**Admin**）共用同一 **D1** 库（绑定名 **`DB`**）。
+
+- 总览：[docs/ops/deployment.md](https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/ops/deployment.md)
+- Cloudflare 专篇：[docs/ops/deployment-cloudflare.md](https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/ops/deployment-cloudflare.md)
+
+典型对外地址：
+
+- **Proxy**：**`GATEWAY_URL`**（如 `https://gateway.example.com`）
+- **Admin**：**`GATEWAY_MASTER_URL`**（如 `https://gateway-admin.example.com`），管理 API 为 **`GATEWAY_MASTER_URL`** + **`/api/admin/*`**
+
+<h2 id="docker-self-hosted">Docker 自托管</h2>
+
+适合境内或自有 VPS / K8s：**Proxy** 与 **Admin** 容器化，数据库使用 **Postgres** 或 **MySQL**。
+
+- Docker 部署：[docs/ops/deployment-docker.md](https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/ops/deployment-docker.md)
+- 运行时与数据面：[docs/architecture/runtime-data.md](https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/architecture/runtime-data.md)
+- D1 ↔ Postgres 切换与对账：[postgres-cutover.md](https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/ops/postgres-cutover.md)
+
+<h2 id="source-of-truth">回源说明</h2>
+
+本站不维护第二份「唯一权威」契约。环境变量、**`metered_cost` / `standard_cost` / `charged_cost`** 计费口径、迁移版本与 **`/api/admin/*`** 细节变更时，请以 [octafuse-gateway](https://github.com/OctaFuse/octafuse-gateway) 仓库文档与 **`packages/core/migrations-*`** 为准。

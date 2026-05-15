@@ -1,0 +1,53 @@
+---
+title: 快速开始
+description: 用 Docker、Cloudflare 或 Node 快速跑通 OctaFuse Gateway。
+---
+
+<h2 id="prerequisites">先决条件</h2>
+
+- **Docker 路径**：Docker Compose **v2.20+**（需支持 `service_completed_successfully`）。
+- **仓库**：克隆 [octafuse-gateway](https://github.com/OctaFuse/octafuse-gateway) 后在本页命令中于仓库根目录执行。
+
+<h2 id="docker-local">方式 A：本地 Docker（推荐先跑通）</h2>
+
+```bash
+git clone https://github.com/OctaFuse/octafuse-gateway.git
+cd octafuse-gateway
+docker compose -f docker/compose/quickstart.yml up --build
+curl -sS http://localhost:8787/health
+```
+
+健康检查后：
+
+- **Proxy**：`http://localhost:8787`
+- **Admin**：`http://localhost:8789`（默认 `admin` / `changeme`）
+
+在 **Admin** 中完成三步：**配置 Provider → 配置 Model Route → 创建 API Key**，即可开始调用推理接口。
+
+开发种子中的默认 **`MASTER_KEY`** 常为 `sk-dev-admin-key`（`Authorization: Bearer …` 调 **`POST /api/admin/*`**）；**生产务必轮换**，详见主仓 [docs/api/admin.md](https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/api/admin.md)。
+
+端到端 **`curl`** 示例见主仓 [examples/README.md](https://github.com/OctaFuse/octafuse-gateway/blob/main/examples/README.md)。MySQL、仅 D1 开发或分拆编排见 **`docker/compose/node-mysql.yml`** 等与 [deployment-docker.md](https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/ops/deployment-docker.md)。
+
+<h2 id="cloudflare">方式 B：Cloudflare 部署</h2>
+
+将仓库关联为 **Proxy** Worker 与 **Admin** Pages，并绑定同一 **D1**（绑定名 **`DB`**），**`ADMIN_PASSWORD`** 使用 Worker **Secret**。完整步骤见 [部署指南 · Cloudflare](/zh/docs/deploy/#cloudflare) 或主仓 [deployment-cloudflare.md](https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/ops/deployment-cloudflare.md)。
+
+<h2 id="self-hosted-node">方式 C：自托管 Node + Postgres / MySQL</h2>
+
+落地到自有基础设施（Docker / K8s / VPS）时，参阅 [部署指南 · Docker](/zh/docs/deploy/#docker-self-hosted) 与主仓 [deployment-docker.md](https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/ops/deployment-docker.md)、[runtime-data.md](https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/architecture/runtime-data.md)。
+
+<h2 id="dev-commands">常用开发命令（仓库根）</h2>
+
+```bash
+npm install
+cp .env.example .env
+
+npm run dev:proxy
+npm run dev:admin
+
+npm run db:migrate
+npm run db:migrate:pg
+npm run db:migrate:mysql
+```
+
+更多命令与发版流程见主仓 [README.zh-CN.md](https://github.com/OctaFuse/octafuse-gateway/blob/main/README.zh-CN.md)。

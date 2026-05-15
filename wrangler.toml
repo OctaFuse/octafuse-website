@@ -1,0 +1,5 @@
+# Cloudflare Pages：与 octafuse-gateway 解耦；`pages deploy` / Dashboard 托管均使用 dist/。
+# account_id 可写在 Cloudflare 项目设置中；若仅用 GitHub Actions 部署，在仓库 Secrets 提供 CLOUDFLARE_ACCOUNT_ID 即可。
+name = "octafuse-website"
+compatibility_date = "2025-01-01"
+pages_build_output_dir = "dist"

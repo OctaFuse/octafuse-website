@@ -1,0 +1,33 @@
+# 仅在 octafuse-website 仓库运行：验证 Astro 构建，不触发 octafuse-gateway 的任何 CI/CD。
+name: Site CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: site-ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build site
+        run: npm run build

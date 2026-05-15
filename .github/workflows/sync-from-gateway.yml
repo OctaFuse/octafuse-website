@@ -1,0 +1,108 @@
+name: Sync from gateway
+
+on:
+  workflow_dispatch:
+    inputs:
+      gateway_ref:
+        description: octafuse-gateway git ref (branch, tag, or SHA)
+        required: false
+        default: main
+        type: string
+      dry_run:
+        description: Report drift only; do not commit
+        required: false
+        default: false
+        type: boolean
+      open_pr:
+        description: Open a PR when changes are detected (ignored when dry_run=true)
+        required: false
+        default: true
+        type: boolean
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: sync-from-gateway
+  cancel-in-progress: true
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout docs repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run sync
+        id: sync
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set +e
+          ARGS=(--ref "${{ inputs.gateway_ref }}")
+          if [ "${{ inputs.dry_run }}" = "true" ]; then
+            ARGS+=(--dry-run)
+          fi
+          node scripts/sync-from-gateway.mjs "${ARGS[@]}"
+          code=$?
+          echo "exit_code=$code" >> "$GITHUB_OUTPUT"
+          if [ "$code" -eq 2 ]; then
+            echo "has_changes=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          if [ "$code" -ne 0 ]; then
+            exit "$code"
+          fi
+          echo "has_changes=false" >> "$GITHUB_OUTPUT"
+
+      - name: Create pull request
+        if: >-
+          inputs.dry_run != true &&
+          inputs.open_pr == true &&
+          steps.sync.outputs.has_changes == 'true'
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: sync/gateway-${{ inputs.gateway_ref }}
+          delete-branch: true
+          commit-message: "chore(sync): pull gateway docs @ ${{ inputs.gateway_ref }}"
+          title: "chore(sync): gateway docs @ ${{ inputs.gateway_ref }}"
+          body: |
+            Automated sync from [octafuse-gateway](https://github.com/OctaFuse/octafuse-gateway) ref `${{ inputs.gateway_ref }}`.
+
+            ## Review checklist
+
+            - [ ] Whitelisted paths match [sync/contract.json](sync/contract.json)
+            - [ ] L1 `referenceOnly` mirrors are not pasted into site MDX as authoritative text
+            - [ ] Site pages under `src/content/docs/` updated if summaries need refresh
+            - [ ] English mirror pages reviewed for terminology (Proxy / Admin / Core, env var names)
+
+            ## Trigger
+
+            Manual `workflow_dispatch` on octafuse-website (does **not** trigger gateway CI).
+
+          labels: |
+            documentation
+            sync
+
+      - name: Sync summary
+        if: always()
+        run: |
+          if [ -f sync/manifest.json ]; then
+            echo "### Sync manifest" >> "$GITHUB_STEP_SUMMARY"
+            echo '```json' >> "$GITHUB_STEP_SUMMARY"
+            cat sync/manifest.json >> "$GITHUB_STEP_SUMMARY"
+            echo '```' >> "$GITHUB_STEP_SUMMARY"
+          fi

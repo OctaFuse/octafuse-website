@@ -1,0 +1,53 @@
+---
+title: Quick start
+description: Run OctaFuse Gateway with Docker, Cloudflare, or Node.
+---
+
+<h2 id="prerequisites">Prerequisites</h2>
+
+- **Docker path**: Docker Compose **v2.20+** (needs `service_completed_successfully`).
+- **Repository**: clone [octafuse-gateway](https://github.com/OctaFuse/octafuse-gateway), then run the commands below from the repo root.
+
+<h2 id="docker-local">Option A: Local Docker (recommended)</h2>
+
+```bash
+git clone https://github.com/OctaFuse/octafuse-gateway.git
+cd octafuse-gateway
+docker compose -f docker/compose/quickstart.yml up --build
+curl -sS http://localhost:8787/health
+```
+
+After a healthy response:
+
+- **Proxy**: `http://localhost:8787`
+- **Admin**: `http://localhost:8789` (default `admin` / `changeme`)
+
+In **Admin**, complete three steps: **configure Provider → configure Model Route → create API Key**, then call the inference APIs.
+
+The dev seed often sets default **`MASTER_KEY`** to `sk-dev-admin-key` (`Authorization: Bearer …` for **`POST /api/admin/*`**). **Rotate in production** — see [docs/api/admin.md](https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/api/admin.md).
+
+End-to-end **`curl`** samples live in [examples/README.md](https://github.com/OctaFuse/octafuse-gateway/blob/main/examples/README.md). MySQL, D1-only dev, or split compose: see **`docker/compose/node-mysql.yml`** and [deployment-docker.md](https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/ops/deployment-docker.md).
+
+<h2 id="cloudflare">Option B: Cloudflare</h2>
+
+Connect the repo as **Proxy** Worker and **Admin** Pages with a shared **D1** database (binding name **`DB`**). Set **`ADMIN_PASSWORD`** as a Worker **Secret**. See [Deployment · Cloudflare](/en/docs/deploy/#cloudflare) or the source doc [deployment-cloudflare.md](https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/ops/deployment-cloudflare.md).
+
+<h2 id="self-hosted-node">Option C: Self-hosted Node + Postgres / MySQL</h2>
+
+For VPS, Kubernetes, or on-prem, see [Deployment · Docker](/en/docs/deploy/#docker-self-hosted) and [deployment-docker.md](https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/ops/deployment-docker.md), [runtime-data.md](https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/architecture/runtime-data.md).
+
+<h2 id="dev-commands">Common dev commands (repo root)</h2>
+
+```bash
+npm install
+cp .env.example .env
+
+npm run dev:proxy
+npm run dev:admin
+
+npm run db:migrate
+npm run db:migrate:pg
+npm run db:migrate:mysql
+```
+
+More commands and release flow: [README.md](https://github.com/OctaFuse/octafuse-gateway/blob/main/README.md).
