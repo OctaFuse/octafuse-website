@@ -1,25 +1,29 @@
 ---
 title: Simulator
-description: Call your deployed Proxy from the browser with a real user API key—OpenAI / Anthropic / Gemini shapes for end-to-end checks.
+description: From the browser call your deployed Proxy with base URL and user sk- key to validate the full client path.
 ---
 
 import { Aside, Steps } from '@astrojs/starlight/components';
 
-**Simulator** mimics a real app: set **Proxy base URL**, **`sk-…` user key**, protocol, and payload—validate **auth, routing, metering, logging** together.
+Open **Inference → Simulator**. **Simulator** runs **in your browser** against the deployed **Proxy**: you enter the **Proxy base URL** and a **user `sk-…` key**, pick protocol and model options, and send — exercising **auth, routing, budget, and request logs** like a real client.
 
-<Aside type="tip" title="When to use">
-	Pre-launch acceptance, reproducing user issues, comparing header behaviors across protocols.
+This differs from [Playground](/en/docs/features/playground/), which focuses on **Admin-assisted upstream probes** for a single route.
+
+<Aside type="caution" title="Secrets">
+	The **`sk-…` key lives in the browser** — prefer staging keys or server-side reproduction for production issues.
 </Aside>
 
-## How to use
+## How to use it
 
 <Steps>
-1. Open **Simulator** in Admin.
-1. Enter **Proxy URL** (same as `GATEWAY_URL`) and a **user API key**.
-1. Choose OpenAI / Anthropic / Gemini mode and edit the body.
-1. **Send** and compare with [Request logs](/en/docs/guides/request-logs/).
-1. If results differ from Playground, remember Simulator applies **user budgets and route groups**.
+1. Open **Simulator**.
+1. Enter the **Proxy base URL** (same entry point you give apps, including `https://` and port) and the **`sk-…`** key.
+1. Choose protocol, model id, optional **route group** (must match [Routing](/en/docs/guides/routing/)).
+1. Send, then confirm rows in [Request logs](/en/docs/guides/request-logs/).
+1. If results differ from Playground: check **user budget**, **route group**, and **key status** (revoked, etc.).
 </Steps>
+
+The page may **remember** your last base URL and options **locally** in the browser for faster iteration — clear when switching machines or shared profiles.
 
 ## See also
 

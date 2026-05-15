@@ -1,36 +1,37 @@
 ---
 title: API keys
-description: Issue sk- keys for users, attach budgets and periods, and authenticate Proxy inference calls.
+description: Create and manage sk- keys in Admin, inspect status and read-only budget summaries, revoke or delete keys.
 ---
 
 import { Aside, Steps } from '@astrojs/starlight/components';
 
-**API keys** (`sk-…`) authenticate **Proxy** calls: `Authorization: Bearer sk-…`. They usually belong to a **user** and carry **budget** metadata.
+Open **User → API Keys**. **API keys** (`sk-…`) authenticate calls to the **Proxy**: **`Authorization: Bearer sk-…`**.
+
+The list shows status, last used time, and a **read-only budget summary** tied to the owning user (so you can sanity-check spend at a glance). When creating a key, choose **attach to an existing user** or **external identity** so the wizard can resolve or create the right user (follow the on-screen steps).
 
 <Aside type="tip" title="Prerequisite">
-	Have a [User](/en/docs/guides/users/) (or create alongside the key if the UI allows).
+	Create a [User](/en/docs/guides/users/) first, or use external-identity mode in the key wizard.
 </Aside>
 
-## In Admin
+## What to do in Admin
 
 <Steps>
-1. Open **API keys**.
-1. **Create key**: choose **user**, friendly label.
-1. **Budget**: set caps/periods per UI; overspend yields **403** on new requests (see upstream user API doc).
-1. **Copy once**: store `sk-…` securely; never commit to public repos.
-1. **Rotate**: issue new keys and retire old ones on a schedule.
+1. Open **API Keys**.
+1. **Create**: follow the wizard → pick or enter user info → set a display name → save and **copy** the full `sk-…` immediately (the UI usually warns it is shown only once).
+1. **Operate**: review the list; edit, revoke, or delete as needed.
+1. **Smoke test**: call **`GET /v1/me`** on your **Proxy** base URL with `Bearer sk-…` and confirm the response matches expectations.
 </Steps>
 
-## Quick check on Proxy
-
 ```bash
-curl -sS http://localhost:8787/v1/me \
+curl -sS "http://localhost:8787/v1/me" \
   -H "Authorization: Bearer sk-your-api-key"
 ```
 
+Replace the URL and key with your environment.
+
 ## Automation
 
-Admin APIs—[GitHub technical reference](/en/docs/github-reference/).
+Use the admin HTTP API from trusted servers — see the [GitHub technical reference](/en/docs/github-reference/).
 
 ## Next
 

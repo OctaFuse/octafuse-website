@@ -1,31 +1,35 @@
 ---
 title: Playground
-description: Send a test call to a single model route from Admin—verify upstream connectivity without consuming user key quotas.
+description: Pick one configured route in Admin edit a JSON body and send an upstream probe without consuming user key budget on the normal path.
 ---
 
 import { Aside, Steps } from '@astrojs/starlight/components';
 
-**Playground** exercises one **model route** without going through a real business **user API key**—ideal after editing providers/routes.
+Open **Inference → Playground**. **Playground** sends a **probe** for **one selected route** straight to its upstream, so you can verify URLs, credentials, and upstream model names **without** using a customer **`sk-…`** on the normal billing path.
+
+It does **not** create the same **request log** stream as production traffic, does **not** debit user budgets, and does **not** fully mirror **multi-route failover** inside a route group — validate that with real Proxy calls or [Simulator](/en/docs/features/simulator/).
 
 <Aside type="tip" title="When to use">
-	After route changes or vendor migrations, validate before shifting production traffic.
+	After editing providers or routes, confirm upstream connectivity here before switching live traffic.
 </Aside>
 
-## How to use
+## How to use it
 
 <Steps>
-1. Open **Playground** in Admin.
-1. Pick a **model route** (active routes should appear).
-1. Fill a payload matching the protocol (e.g. OpenAI `messages`).
-1. **Send** and inspect status, upstream errors, latency.
-1. On failure, revisit [Providers](/en/docs/guides/providers/) and [Routing](/en/docs/guides/routing/), then [Request logs](/en/docs/guides/request-logs/).
+1. Open **Playground**.
+1. Choose **one route** from the dropdown (icons indicate enabled vs disabled).
+1. Edit the JSON body for the current protocol; start from the built-in templates if helpful.
+1. Send and read status, errors, and body; check response headers for latency-style hints when troubleshooting.
 </Steps>
 
-## vs real traffic
+## Versus Simulator
 
-Playground is operator-focused; metering may differ from real user-key calls (per release). For full client simulation, use [Simulator](/en/docs/features/simulator/).
+| Tool | Typical goal |
+|------|----------------|
+| Playground | Ops/dev: **single route → upstream** wiring check |
+| [Simulator](/en/docs/features/simulator/) | Real **`sk-…`** from the browser to the **Proxy** — auth, routing, budget, logs |
 
-## See also
+## Next
 
-- [Simulator](/en/docs/features/simulator/)  
 - [Routing](/en/docs/guides/routing/)  
+- [Simulator](/en/docs/features/simulator/)  

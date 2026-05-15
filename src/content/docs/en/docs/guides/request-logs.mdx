@@ -1,30 +1,30 @@
 ---
 title: Request logs
-description: Inspect inference traffic by key, user, model, status, and latency for debugging and reconciliation.
+description: Search inference traffic in Admin by time, user, key, model, and more expand rows for JSON details.
 ---
 
 import { Aside, Steps } from '@astrojs/starlight/components';
 
-**Request logs** capture Proxy traffic: timestamps, keys, users, models, route groups, status codes, latency (columns depend on release).
+Open **User → Request Logs**. This view lists **real inference calls through the Proxy**: timestamps, keys, users, models, route groups, status, and more — useful for troubleshooting and reconciliation.
 
 <Aside type="tip" title="Prerequisite">
-	Some traffic has flowed through Proxy (test or real).
+	Traffic must hit the **Proxy**. [Playground](/en/docs/features/playground/) checks **do not** appear here; for production-like rows use a real key against the Proxy or [Simulator](/en/docs/features/simulator/).
 </Aside>
 
-## In Admin
+## What to do in Admin
 
 <Steps>
-1. Open **Request logs** / **Usage** lists.
-1. **Filter** by time, user, key, `model`, status.
-1. **Debug failures** using error summaries; pair with upstream dashboards when needed.
-1. **Export** if the UI supports CSV/JSON for offline analysis.
+1. Open **Request Logs**.
+1. Narrow results with time range, status, model, user email, API key, vendor, route group, protocol, and other filters available on the page.
+1. Expand a row to inspect billing-audit snippets, request bodies, upstream bodies, and raw usage JSON (copy when provided).
+1. When reading money and timestamps, align with your **system** timezone and billing currency settings in Admin.
 </Steps>
 
-## Cost lenses
+## Billing display
 
-Metered/standard/charged semantics: [GitHub technical reference](/en/docs/github-reference/).
+Expanded panels may include charge-related JSON summaries; for exact formulas or finance reconciliation, follow your internal policy plus upstream docs linked from the [GitHub technical reference](/en/docs/github-reference/).
 
 ## Next
 
-- [Audit logs](/en/docs/guides/audit-logs/)  
-- [Playground](/en/docs/features/playground/)  
+- [Audit logs](/en/docs/guides/audit-logs/) — budget and account-side changes  
+- [Simulator](/en/docs/features/simulator/) — browser-based calls to the Proxy with a real key  

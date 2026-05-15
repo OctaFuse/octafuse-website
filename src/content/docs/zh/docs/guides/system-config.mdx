@@ -1,30 +1,37 @@
 ---
 title: 系统配置
-description: Master Key、全局开关、与网关运行相关的核心参数；仅管理员操作。
+description: 在管理台系统页维护管理密钥、业务时区、计费币种、告警 Webhook 及其他全局项。
 ---
 
 import { Aside, Steps } from '@astrojs/starlight/components';
 
-**系统配置** 影响整站行为，例如 **Master Key**（调用 `/api/admin/*` 的 Bearer）、部分全局策略等。误改可能导致自动化脚本无法管理网关，或安全风险上升。
+在左侧 **System → Config**（界面英文为 **Config**）打开系统配置。此处集中维护影响全站行为的参数，例如：
 
-<Aside type="caution" title="权限">
-	仅让必要人员拥有修改权限；生产环境务必使用强随机 **Master Key** 并安全分发。
+- **管理密钥（Master Key）**：用于服务端调用管理接口的 Bearer，与门户或脚本里配置的 **`GATEWAY_MASTER_KEY`** 必须一致。  
+- **业务时区**、**计费币种**：影响列表与统计中的时间、金额展示口径。  
+- **告警 Webhook**（如飞书、企业微信）：可选，用于对接你们的事件通知。  
+- **自定义键值**：高级场景下可新增其他全局配置项（键名与含义请与运维约定一致）。
+
+敏感内容支持在界面上 **显示 / 隐藏** 切换，便于投屏演示时脱敏。
+
+<Aside type="caution" title="权限与安全">
+	修改管理密钥后，所有自动化脚本与门户后台必须同步更新密钥。生产环境务必使用强随机值，勿使用示例或默认口令。
 </Aside>
 
 ## 在管理台里要做什么
 
 <Steps>
-1. 打开 **Settings / 系统设置**（或 **Config**）页面。
-1. **查看当前 Master Key 策略**：本地 Docker 种子常为 `sk-dev-admin-key` — **生产必须轮换**。
-1. **修改后同步下游**：所有持有 **`GATEWAY_MASTER_KEY`** 的门户、脚本需同步更新。
-1. **其他全局项**：按组织规范逐项确认含义后再保存；不确定时先查阅 [GitHub 技术参考](/zh/docs/github-reference/) 或主仓运维文档。
+1. 打开 **Config**。
+1. 核对管理密钥、业务时区、计费币种是否符合组织规范。
+1. 按需配置或轮换告警地址。
+1. 若有约定好的其他全局项，通过 **Add**（或等价入口）新增并保存。
 </Steps>
 
-## 与 Admin API 的关系
+## 与自动化的关系
 
-自动化脚本使用 **`Authorization: Bearer <MASTER_KEY>`** 调用 **`{GATEWAY_MASTER_URL}/api/admin/*`**。完整端点列表见 [GitHub 技术参考](/zh/docs/github-reference/)。
+服务端调用管理接口时，使用 **`GATEWAY_MASTER_URL`** 作为管理台根地址，在请求头携带 **`Authorization: Bearer <与界面中管理密钥一致>`**。完整接口列表见 [GitHub 技术参考](/zh/docs/github-reference/)。
 
 ## 下一步
 
 - [系统集成](/zh/docs/guides/integration/)  
-- [线上部署](/zh/docs/deploy/docker/) — 生产环境密钥与 Secret 管理  
+- [线上部署](/zh/docs/deploy/docker/)  

@@ -1,28 +1,29 @@
 ---
 title: Models
-description: Maintain the gateway model catalog (ids, labels) used when resolving client `model` strings.
+description: Maintain the model catalog in Admin with ids, display names, vendor, tags, and tiered pricing for client model names and routing.
 ---
 
 import { Aside, Steps } from '@astrojs/starlight/components';
 
-**Models** are the gateway catalog: client **`model`** strings align with **model ids** here, then [Routing](/en/docs/guides/routing/) picks upstreams.
+Open **Inference → Models**. **Models** are catalog entries: the client **`model`** string is resolved here first, then [Routing](/en/docs/guides/routing/) picks the upstream path. You can create, edit, import presets, and edit tiered pricing; the list surfaces how routes are attached to each model.
 
 <Aside type="tip" title="Prerequisite">
-	Have at least one [Provider](/en/docs/guides/providers/).
+	Configure at least one [Provider](/en/docs/guides/providers/) first.
 </Aside>
 
-## In Admin
+## What to do in Admin
 
 <Steps>
 1. Open **Models**.
-1. **Create/import** entries: **model id**, display name, protocol flavor (per UI).
-1. **Suppliers vs routes**: models do not have to pin a single vendor; routing decides the upstream.
-1. **After saving**: create at least one **active** route in [Routing](/en/docs/guides/routing/).
+1. **Create or edit**: set the **model id** clients and routes will use, **display name**, **vendor**, and other form fields (context limits, etc.).
+1. **Import from catalog**: bulk pre-fill from the built-in catalog, then review and save.
+1. **Pricing**: use the tier editor in the page (currency display follows your global billing currency setting).
+1. After saving, add at least one **active** route in [Routing](/en/docs/guides/routing/) or clients cannot resolve the model.
 </Steps>
 
-## Route groups
+## How clients pass `model`
 
-Clients may send **`baseId:group`** (e.g. `my-model:free`). Canonical parsing rules: [GitHub technical reference](/en/docs/github-reference/) → **User API** doc.
+Use the **base model id**, or **`baseModelId:routeGroup`** (for example `my-model:free`). The route group must match what you configured in Admin. Protocol details: [GitHub technical reference](/en/docs/github-reference/).
 
 ## Next
 

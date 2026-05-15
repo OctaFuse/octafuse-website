@@ -1,34 +1,34 @@
 ---
 title: 供应商配置
-description: 在 OctaFuse Admin 中添加上游模型供应商（Base URL、鉴权），供路由与推理转发使用。
+description: 在管理台添加上游供应商：各协议访问地址与 API Key，供路由与转发使用。
 ---
 
 import { Aside, Steps } from '@astrojs/starlight/components';
 
-**供应商（Provider）** 描述「网关要把请求转发到哪家上游服务」：例如官方 OpenAI、Anthropic、Gemini，或兼容 OpenAI 的自建推理服务。路由与模型都依赖已配置好的供应商。
+在管理台左侧打开 **Inference → Providers**。**供应商**表示网关要把请求转发到哪一家上游服务：可为 **OpenAI 兼容**、**Anthropic**、**Gemini** 分别填写 **Base URL**，并配置共用的 **API Key**（保存后通常以掩码显示）。
 
 <Aside type="tip" title="前置">
-	请先完成 [快速开始](/zh/docs/quick-start/)，能打开管理台。
+	请先完成 [快速开始](/zh/docs/quick-start/)，能登录管理台。
 </Aside>
 
 ## 在管理台里要做什么
 
 <Steps>
-1. 打开 **Admin** → 进入与 **Providers / 供应商** 相关的页面（菜单名称可能随版本微调）。
-1. **新建供应商**：填写 **显示名称**、**Base URL**（上游 API 根地址，注意是否含 `/v1` 等路径前缀）、**鉴权方式**（常见为 API Key 或 Bearer）。
-1. **保存并自检**：若界面提供「测试连接」或类似操作，先确认能连上；否则可在后续 [路由配置](/zh/docs/guides/routing/) 配好后用 [Playground](/zh/docs/features/playground/) 试一条请求。
-1. **多供应商**：可为同一类协议配置多条（例如主站 + 备用区域），供路由做优先级与降级。
+1. 在侧栏 **Inference** 下进入 **Providers**。
+1. **新建或编辑**：填写标识、名称、各协议的 **Base URL**（是否与 `/v1` 等路径拼接请严格按上游文档）、**API Key**、可选说明。
+1. **从目录导入**：使用页面提供的模板目录，可快速预填各协议的访问地址；导入后仍需补全或核对 **API Key**。
+1. **保存后**：到 [路由配置](/zh/docs/guides/routing/) 把模型与供应商、协议类型关联起来；需要试连通时，可用 [Playground](/zh/docs/features/playground/) 或 [Simulator](/zh/docs/features/simulator/)。
 </Steps>
 
 ## 常见注意点
 
-- **Base URL** 与上游文档一致：有的服务要求根域名，有的要求带版本前缀；填错会出现 404 / 401。
-- **密钥轮换**：更新供应商密钥后，记得在网关内同步修改，避免旧 Key 仍被路由引用。
-- **合规与数据驻留**：若业务要求数据不出某区域，应选择该区域可访问的上游端点，并在网络侧做好出口策略。
+- **Base URL** 填错容易出现 404、401，请与上游文档逐项对照。
+- 本页**没有**「一键测试连接」按钮；连通性请在配好路由后用 Playground / Simulator 验证。
+- 上游轮换密钥后，请在本页更新并保存。
 
-## 自动化（可选）
+## 自动化与进一步阅读
 
-批量创建或更新供应商可走 **Admin HTTP API**。路径与请求体见 [GitHub 技术参考](/zh/docs/github-reference/) 中的 **Admin API**。
+批量维护可由你的服务端通过管理接口完成，清单见 [GitHub 技术参考](/zh/docs/github-reference/)。
 
 ## 下一步
 

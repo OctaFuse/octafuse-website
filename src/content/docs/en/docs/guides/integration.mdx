@@ -1,31 +1,34 @@
 ---
 title: Integration
-description: "Wire portals and backends to OctaFuse: env vars, Proxy inference, and Admin automation boundaries."
+description: Connect your product to the Proxy for inference and to Admin HTTP APIs for provisioning with env vars and security boundaries.
 ---
 
 import { Aside } from '@astrojs/starlight/components';
 
-Two surfaces: **Proxy** for end-user inference, **Admin HTTP APIs** for provisioning and operations.
+**Integration** means using both the **Proxy** (inference) and the **admin HTTP APIs** behind Admin (provisioning and operations). Admin also has **Analytics** (usage and reliability) and other menus — use them as needed alongside this flow.
 
 ## Common environment variables
 
 | Variable | Role |
 |----------|------|
-| `GATEWAY_URL` | **Proxy** root URL for apps/SDKs |
-| `GATEWAY_MASTER_URL` | **Admin** root URL; APIs at `{GATEWAY_MASTER_URL}/api/admin/*` |
-| `GATEWAY_MASTER_KEY` | Bearer matching the DB **master key** |
+| `GATEWAY_URL` | **Proxy** origin — where apps/SDKs send inference requests |
+| `GATEWAY_MASTER_URL` | **Admin** origin — where backends call **admin APIs** |
+| `GATEWAY_MASTER_KEY` | Bearer matching the **master key** in Admin **Config** — **server-side only** |
 
 <Aside type="caution" title="Security">
-	Never expose **master keys** to browsers; treat **user API keys** as secrets too.
+	Never ship the master key or user **`sk-…`** keys to untrusted browsers or public repos.
 </Aside>
 
-## App traffic
+## Inference (apps)
 
-OpenAI-compatible `POST /v1/chat/completions`, plus Anthropic/Gemini fronts—canonical paths and auth headers: [GitHub technical reference](/en/docs/github-reference/) → **User API**.
+- Paths and payloads follow the current gateway release (e.g. common OpenAI-compatible chat endpoints). Auth: **`Authorization: Bearer sk-…`**.  
+- Optional **`GET /v1/me`** on the **Proxy** with the user key returns budget-related summaries for your UI (fields vary by release).
 
-## Control plane
+## Control plane (servers)
 
-Typical flow: portal signup succeeds → server calls Admin APIs to **upsert user** → **issue API key** → return `sk-…` only to trusted clients or keep server-side.
+Typical flow: after signup, your backend uses the master key to **create or update gateway users** and **create API keys**, then returns `sk-…` only to trusted environments or stores it server-side only.
+
+API index: [GitHub technical reference](/en/docs/github-reference/).
 
 ## Next
 

@@ -1,30 +1,32 @@
 ---
 title: Audit logs
-description: Review configuration changes to users, keys, routes, and system settings for compliance and accountability.
+description: Review budget, spend, and user or key lifecycle events in Admin complements request logs.
 ---
 
 import { Aside, Steps } from '@astrojs/starlight/components';
 
-**Audit logs** focus on **who changed what** in Admin—distinct from **request logs** (inference traffic).
+Open **User → Audit Logs**. Entries here focus on **what changed for accounts and budgets**: budget updates, spend deductions, user/key lifecycle events, and Admin edits to users or keys, often correlated to a key or request context.
 
-<Aside type="tip" title="Prerequisite">
-	Appropriate read-only or auditor access.
+This is **not** a full audit trail of every **provider/route/settings** click in Admin. For configuration change governance, use your change-management process or a separate ops audit trail.
+
+<Aside type="tip" title="Versus request logs">
+	**Request logs**: per-inference HTTP traces. **Audit logs**: budget and identity/key lifecycle events.
 </Aside>
 
-## In Admin
+## What to do in Admin
 
 <Steps>
-1. Open **Audit logs**.
-1. **Filter** by actor, object type, time window.
-1. **Drill into users** when links are available.
-1. **Export / SIEM** per organizational policy.
+1. Open **Audit Logs**.
+1. Filter by time window, user email, key, event type, actor type, reason code, source, and other fields shown in the UI.
+1. Expand rows for budget notes, user snapshot deltas, and change details (fields duplicated in the table may be hidden).
+1. For a single user, you can also open [Users](/en/docs/guides/users/) → user detail for related snippets.
 </Steps>
 
-## Schema details
+## Further reading
 
-See the repository via [GitHub technical reference](/en/docs/github-reference/).
+Deeper field and event definitions live in the upstream docs index: [GitHub technical reference](/en/docs/github-reference/).
 
 ## Next
 
 - [System config](/en/docs/guides/system-config/)  
-- [Integration](/en/docs/guides/integration/)  
+- [Users](/en/docs/guides/users/)  

@@ -1,35 +1,34 @@
 ---
 title: 系统集成
-description: 将业务门户或控制面与 OctaFuse 对齐：环境变量、调用 Proxy、调用 Admin API 的边界说明。
+description: 业务门户与网关对接：推理走 Proxy，开通与运维走管理接口；环境变量与安全边界说明。
 ---
 
 import { Aside } from '@astrojs/starlight/components';
 
-集成通常分两类：**终端用户推理** 走 **Proxy**；**运营与开通** 走 **Admin HTTP API**。
+「系统集成」指你的业务系统如何同时使用 **网关 Proxy（推理）** 与 **管理台背后的管理接口（开通与运维）**。管理台左侧另有 **Analytics（用量与可靠性）** 等菜单，与本文所述接口相互独立、按需使用。
 
 ## 环境变量（常见）
 
 | 变量 | 用途 |
 |------|------|
-| `GATEWAY_URL` | **Proxy** 根 URL；App/SDK 发推理请求 |
-| `GATEWAY_MASTER_URL` | **Admin** 根 URL；管理 API 为 `{GATEWAY_MASTER_URL}/api/admin/*` |
-| `GATEWAY_MASTER_KEY` | 与库内 **Master Key** 一致的 Bearer，用于服务端调用管理 API |
+| `GATEWAY_URL` | **Proxy** 的根地址；应用或 SDK 发推理请求时使用 |
+| `GATEWAY_MASTER_URL` | **管理台** 的根地址；服务端调用其下的 **管理 API** 时使用 |
+| `GATEWAY_MASTER_KEY` | 与管理台 **系统配置** 中的管理密钥一致的 Bearer，**仅放在服务端** |
 
 <Aside type="caution" title="安全">
-	**Master Key** 只能出现在服务端；**用户 API Key** 也不可暴露在不可信客户端。
+	管理密钥与用户 **`sk-…`** 均不可下发到不可信的浏览器或公开仓库。
 </Aside>
 
-## 推理调用（应用侧）
+## 推理（应用侧）
 
-- 协议：OpenAI 兼容 **`POST /v1/chat/completions`**，以及 Anthropic / Gemini 等形态（路径见主仓 **user.md**）。
-- 鉴权：`Authorization: Bearer sk-…`（部分协议支持额外头或 query，见主仓文档）。
-- 预算：调用前可请求 **`GET /v1/me`** 做展示型校验；最终以 Proxy 校验为准。
+- 协议与路径以当前网关版本为准（例如常见的 OpenAI 兼容聊天接口等），鉴权为 **`Authorization: Bearer sk-…`**。  
+- 可使用 **`GET /v1/me`**（向 **Proxy** 发起、携带用户密钥）查看与预算相关的摘要，便于在自家产品里展示额度（字段以当前版本为准）。
 
-## 控制面集成（服务端）
+## 控制面（服务端）
 
-典型流程：用户在你的门户注册成功 → 服务端用 Master Key 调 Admin API **创建/查找网关用户** → **签发 API Key** → 将 `sk-…` 安全返回给可信客户端或仅保存在服务端。
+典型流程：用户在你的门户注册成功 → 服务端用管理密钥调用管理接口 **创建或更新网关用户** → **创建 API Key** → 将 `sk-…` 仅返回给可信环境或仅保存在服务端。
 
-端点、请求体与错误码：[GitHub 技术参考](/zh/docs/github-reference/) → **Admin API**。
+接口索引与约定见 [GitHub 技术参考](/zh/docs/github-reference/)。
 
 ## 下一步
 

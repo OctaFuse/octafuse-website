@@ -1,32 +1,29 @@
 ---
 title: Simulator
-description: 在浏览器中带上真实用户 API Key，按 OpenAI / Anthropic / Gemini 方式调用已部署的网关，用于联调与验收。
+description: 在浏览器中填写 Proxy 地址与用户 sk- 密钥，按各协议试发请求，用于联调与验收。
 ---
 
 import { Aside, Steps } from '@astrojs/starlight/components';
 
-**Simulator** 用来模拟「真实应用」如何访问你的 **Proxy**：在浏览器里配置 **Base URL（Proxy）**、**用户 API Key**、协议类型与请求体，从而验证 **鉴权、选路、计费、日志** 是否与线上一致。
+在左侧 **Inference → Simulator** 打开。**Simulator** 在 **你的浏览器里** 直接向已部署的 **Proxy** 发请求：你填写 **Proxy 根地址** 与 **用户的 `sk-…` 密钥**，选择协议与模型等选项，从而验证 **鉴权、选路、预算扣减、请求日志** 等与线上一致的行为。
 
-<Aside type="tip" title="适用场景">
-	上线前验收、复现用户报错、对比不同协议头行为。
+这与 [Playground](/zh/docs/features/playground/) 不同：Playground 侧重「管理台代你直连上游试单条路由」，而 Simulator 侧重「像真实客户端一样打网关入口」。
+
+<Aside type="caution" title="密钥">
+	**`sk-…` 会出现在浏览器里**，仅建议在测试环境或脱敏密钥下使用；生产问题优先在服务端用相同请求复现。
 </Aside>
 
 ## 如何使用
 
 <Steps>
-1. 在 Admin 中打开 **Simulator**。
-1. 填入 **Proxy 公网或内网地址**（与 `GATEWAY_URL` 一致）及 **`sk-…` 用户 Key**。
-1. 选择协议形态（OpenAI / Anthropic / Gemini），按表单编辑请求体。
-1. **发送**并查看响应与网关侧记录（可结合 [请求日志](/zh/docs/guides/request-logs/)）。
-1. 若与 Playground 结果不一致：优先核对是否走了 **用户 Key 的预算与路由组** 规则。
+1. 打开 **Simulator**。
+1. 填写 **Proxy 根地址**（与你们为应用配置的网关入口一致，含 `https://` 与端口）和 **`sk-…`**。
+1. 选择协议形态、模型标识、可选 **路由组**（需与 [路由配置](/zh/docs/guides/routing/) 中一致）。
+1. 发送请求后，到 [请求日志](/zh/docs/guides/request-logs/) 中核对是否出现对应记录。
+1. 若与 Playground 表现不一致：检查 **用户预算**、**路由组**、**密钥是否被吊销** 等常见因素。
 </Steps>
 
-## 与 Playground 的区别
-
-| 工具 | 鉴权 | 典型目的 |
-|------|------|----------|
-| Playground | 管理台内权限，试跑路由 | 配通上游、验证路由 JSON |
-| Simulator | **真实用户 API Key** | 联调业务侧完整链路 |
+页面可能会 **在本机浏览器** 记住你上次填写的地址、协议等，便于反复调试；更换环境或共用电脑时注意清理。
 
 ## 相关页面
 

@@ -1,25 +1,34 @@
 ---
 title: Routing
-description: Configure model routes, priorities, and route groups for selection and failover.
+description: Configure upstream paths per model in Admin with vendor, protocol, route group, priority, and status for selection and failover.
 ---
 
 import { Aside, Steps } from '@astrojs/starlight/components';
 
-**Model routes** map a client **`model`** (and optional **route group**) to **provider + upstream model** with **priorities** for failover.
+Open **Inference → Routes**. **Model routes** define how a client **`model`** (and optional **route group**) maps to **model + vendor + upstream model name**, and in which **priority** order to try them. Multiple routes in the same group enable automatic failover.
+
+The list supports rich filters; the current filter set is reflected in the browser address bar so you can share a link to the same view.
 
 <Aside type="tip" title="Prerequisite">
-	[Providers](/en/docs/guides/providers/) and [Models](/en/docs/guides/models/) should exist.
+	Complete [Providers](/en/docs/guides/providers/) and [Models](/en/docs/guides/models/) first.
 </Aside>
 
-## In Admin
+## What to do in Admin
 
 <Steps>
-1. Open **Model routes** (or equivalent).
-1. **Create a route**: pick **model**, **provider**, upstream model name, **route group** (often `default`, plus optional `free`, etc.), **priority**.
-1. **Multiple routes**: same model + group can have ordered rows for failover.
-1. **Status**: only **active** routes participate.
-1. **Verify**: [Playground](/en/docs/features/playground/) or `curl` after issuing a key.
+1. Open **Routes**.
+1. **Create a route**: pick model, vendor, upstream model name, **protocol** (must match the base URL you configured for that protocol on the provider), **route group** (often `default`), **priority** (lower tries first), **status** (only **active** routes serve production traffic).
+1. **Pricing**: override defaults with the tier editor when needed (follow the UI).
+1. After saving, use [Playground](/en/docs/features/playground/) for a single-route upstream check; use [Simulator](/en/docs/features/simulator/) to exercise the full Proxy path with a real `sk-` key.
 </Steps>
+
+## Client impact
+
+Clients only send **`model`** and protocol-specific payloads — no hard-coded vendor details. Prefer changing routes when switching upstreams.
+
+## Note
+
+**Playground** probes **one** route upstream and does **not** mirror full multi-route failover inside the gateway; validate failover with real Proxy calls or **Simulator**.
 
 ## Next
 

@@ -1,26 +1,37 @@
 ---
 title: System config
-description: Master key and global settings that affect the whole gateway—admin-only, high impact.
+description: Set the admin master key business timezone billing currency alert webhooks and other globals in Admin System → Config.
 ---
 
 import { Aside, Steps } from '@astrojs/starlight/components';
 
-**System configuration** includes the **master key** used for **`/api/admin/*`**, plus other global switches. Mistakes can break automation or weaken security.
+Open **System → Config** (labeled **Config** in English). This screen groups global settings such as:
+
+- **Master key** for server-to-admin API calls — must match **`GATEWAY_MASTER_KEY`** in your portal/backend.  
+- **Business timezone** and **billing currency** — affect how times and money render across Admin.  
+- **Alert webhooks** (e.g. Feishu / WeCom) — optional incident notifications.  
+- **Custom entries** — advanced globals your team agrees on (names and meanings are operational contracts).
+
+Sensitive values can be **shown or hidden** in the UI for screen-sharing.
 
 <Aside type="caution" title="Security">
-	Rotate the **master key** to a strong random value in production; distribute only to trusted servers.
+	After rotating the master key, update every script and backend that calls Admin. Use strong random values in production — not samples from docs.
 </Aside>
 
-## In Admin
+## What to do in Admin
 
 <Steps>
-1. Open **Settings / Config**.
-1. Review **master key** policy: local seeds often use `sk-dev-admin-key`—**never in production**.
-1. After rotation, update every consumer of **`GATEWAY_MASTER_KEY`**.
-1. For other toggles, read upstream docs before saving—[GitHub technical reference](/en/docs/github-reference/).
+1. Open **Config**.
+1. Verify master key, business timezone, and billing currency match your policy.
+1. Configure or rotate alert URLs if you use them.
+1. Add any other agreed global entries via **Add** (or the equivalent control) and save.
 </Steps>
+
+## Automation
+
+Backends call Admin HTTP APIs on **`GATEWAY_MASTER_URL`** with **`Authorization: Bearer <same value as the master key in this screen>`**. Endpoint index: [GitHub technical reference](/en/docs/github-reference/).
 
 ## Next
 
 - [Integration](/en/docs/guides/integration/)  
-- [Docker](/en/docs/deploy/docker/) / [Cloudflare Workers](/en/docs/deploy/cloudflare/)  
+- [Docker](/en/docs/deploy/docker/)  

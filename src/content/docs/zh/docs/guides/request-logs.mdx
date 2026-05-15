@@ -1,30 +1,30 @@
 ---
 title: 请求日志
-description: 在管理台查看按 API Key、用户、模型等维度的推理请求记录，用于排障与用量对账。
+description: 在管理台按时间、用户、密钥、模型等条件查询推理请求记录，展开查看详情 JSON。
 ---
 
 import { Aside, Steps } from '@astrojs/starlight/components';
 
-**请求日志** 记录经过 Proxy 的调用：时间、Key、用户、模型、路由组、状态码、延迟等（以当前版本列表列为准）。用于回答「谁、在什么时候、调了哪个模型、是否成功」。
+在左侧 **User → Request Logs** 打开请求日志。这里记录的是 **经 Proxy 的真实推理调用**：时间、密钥、用户、模型、路由组、状态等信息，用于排障与用量核对。
 
 <Aside type="tip" title="前置">
-	已有真实或测试流量经过 Proxy。
+	需要已有流量经过 **Proxy**。[Playground](/zh/docs/features/playground/) 的试跑方式**不会**出现在本日志中；若要产生与线上一致的记录，请用真实密钥调用 Proxy 或使用 [Simulator](/zh/docs/features/simulator/)。
 </Aside>
 
 ## 在管理台里要做什么
 
 <Steps>
-1. 打开 **Request logs / 请求日志**（或 **Usage / 用量** 下同类入口）。
-1. **筛选**：按时间范围、用户、Key、`model`、状态码等缩小范围。
-1. **排查失败**：对 4xx/5xx 记录查看错误摘要；若需上游返回体等细节，可结合上游控制台与网关版本说明。
-1. **导出或对接**：若界面支持导出 CSV/JSON，可用于离线对账；大规模集成可走数据库或后续分析管道（实现依部署形态而定）。
+1. 打开 **Request Logs**。
+1. 使用时间范围、状态、模型、用户邮箱、API Key、供应商、路由组、协议等条件缩小范围（以页面筛选项为准）。
+1. 点击展开某一行，查看计费核对摘要、入口请求体、上游请求体、用量原始 JSON 等（可复制）。
+1. 核对金额与时间时，请与你在 **系统配置** 中设置的业务时区、计费币种保持一致理解。
 </Steps>
 
-## 与计费字段的关系
+## 与计费展示的关系
 
-日志中可能展示 **metered / standard / charged** 等多视角成本字段，含义与计算公式以主仓文档为准（[GitHub 技术参考](/zh/docs/github-reference/)）。
+展开区域可能包含与扣费相关的多段 JSON 摘要；若需精确公式或与账单对账，请结合主仓库文档或内部财务口径。
 
 ## 下一步
 
-- [审计日志](/zh/docs/guides/audit-logs/)  
-- [Playground](/zh/docs/features/playground/) — 不产生与真实业务完全相同的计费记录时用于试调用  
+- [审计日志](/zh/docs/guides/audit-logs/) — 侧重预算与账户侧变更记录  
+- [Simulator](/zh/docs/features/simulator/) — 用浏览器携带密钥试打 Proxy  

@@ -1,31 +1,32 @@
 ---
 title: Users
-description: Manage gateway users that own API keys, budgets, and appear in logs and audits.
+description: Manage gateway users, budgets, and external identity links in Admin; open a user for keys and log shortcuts.
 ---
 
 import { Aside, Steps } from '@astrojs/starlight/components';
 
-**Users** are logical identities in OctaFuse: they can own **multiple API keys**, carry **budgets/periods**, and show up in **request** and **audit** logs. Often mapped to portal accounts via `externalSystem + externalUserId`.
+Open **User → Users**. A **user** is the account entity in the gateway: it owns API keys, carries **budget and billing period**, and appears across operational views. You can set email, optional external identifiers, and budget-related fields.
+
+The **user detail** page (open a row from the list) typically shows the budget plan, related **API keys**, and shortcuts into **request** and **audit-style** history for that user (layout follows the current UI).
 
 <Aside type="tip" title="Prerequisite">
-	[Quick start](/en/docs/quick-start/) complete; Admin reachable.
+	Finish [Quick start](/en/docs/quick-start/) and sign in to Admin.
 </Aside>
 
-## In Admin
+## What to do in Admin
 
 <Steps>
-1. Open **Users**.
-1. **Create user**: email (or org-unique id), optional **external identity** pair for idempotent SaaS linking.
-1. **Status**: enable/disable per policy.
-1. **Budget**: set caps/periods on the user if your deployment stores budgets at user scope; otherwise see [API keys](/en/docs/guides/api-keys/).
-1. **Details**: inspect linked keys and history; pair with [Audit logs](/en/docs/guides/audit-logs/).
+1. On **Users**, filter by email, external identity, status, and browse pages.
+1. **Create a user**: fill email, optional external system and user id, budget caps/base, billing period, optional **metadata** (usually JSON for your own labels).
+1. **Review a user**: open the detail view to check budget, keys, and logs.
+1. **Issue keys**: create keys under [API keys](/en/docs/guides/api-keys/) for this user, or use the external-identity path in the key wizard.
 </Steps>
 
-## Integration
+## Portal integration
 
-After signup/login in your portal, call Admin APIs to upsert users—[GitHub technical reference](/en/docs/github-reference/).
+After signup, your backend can call the admin HTTP API to create users and keys — see [Integration](/en/docs/guides/integration/) and the [GitHub technical reference](/en/docs/github-reference/).
 
 ## Next
 
 - [API keys](/en/docs/guides/api-keys/)  
-- [Integration](/en/docs/guides/integration/)  
+- [Audit logs](/en/docs/guides/audit-logs/)  
