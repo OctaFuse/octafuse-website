@@ -3,13 +3,21 @@ title: Documentation
 description: Reading paths and common tasks for OctaFuse.
 ---
 
+import { Aside, LinkCard, CardGrid } from '@astrojs/starlight/components';
+
 This site provides product overview and deployment guides. **Authoritative API and migration content remains in the [octafuse-gateway](https://github.com/OctaFuse/octafuse-gateway) repository**; this site structures navigation and summaries, with links back to source docs where needed.
+
+<Aside type="tip" title="How to read this site">
+	For **Admin HTTP APIs**, billing semantics, and migration versions, prefer the **source repository** links below—this portal may trail slightly behind the canonical docs.
+</Aside>
 
 ## Suggested reading order
 
-1. [Quick start](/en/docs/quick-start/) — run **Proxy** + **Admin** with Docker, Cloudflare, or Node
-2. [Deployment](/en/docs/deploy/) — choose Cloudflare, hybrid, or fully self-hosted
-3. [Main repo doc index](https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/README.md) — architecture, operations, and conventions
+<CardGrid>
+	<LinkCard title="Quick start" description="Run Proxy + Admin with Docker, Cloudflare, or Node" href="/en/docs/quick-start/" />
+	<LinkCard title="Deployment" description="Choose cloud, hybrid, or fully self-hosted" href="/en/docs/deploy/" />
+	<LinkCard title="Main repo doc index" description="Architecture, operations, and conventions (authoritative)" href="https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/README.md" />
+</CardGrid>
 
 ## Common tasks
 

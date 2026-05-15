@@ -3,13 +3,21 @@ title: 文档
 description: OctaFuse 官方文档阅读路径与常见任务入口。
 ---
 
+import { Aside, LinkCard, CardGrid } from '@astrojs/starlight/components';
+
 OctaFuse 文档站提供产品概览与部署指引。**与 API、迁移强耦合的权威内容仍以 [octafuse-gateway](https://github.com/OctaFuse/octafuse-gateway) 仓库为准**；本站做结构化展示与导航，关键章节提供回源链接。
+
+<Aside type="tip" title="阅读提示">
+	若你在找 **Admin HTTP API**、计费口径或迁移版本等细节，请优先打开下方「回源链接」对应的主仓文档，避免与门户摘要产生时差。
+</Aside>
 
 ## 推荐阅读路径
 
-1. [快速开始](/zh/docs/quick-start/) — 用 Docker、Cloudflare 或 Node 跑通 **Proxy** + **Admin**
-2. [部署指南](/zh/docs/deploy/) — 选择 Cloudflare、混合或全自托管形态
-3. [主仓文档索引](https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/README.md) — 架构、运维与开发契约
+<CardGrid>
+	<LinkCard title="快速开始" description="Docker / Cloudflare / Node 跑通 Proxy + Admin" href="/zh/docs/quick-start/" />
+	<LinkCard title="部署指南" description="云端、混合与全自托管形态选型" href="/zh/docs/deploy/" />
+	<LinkCard title="主仓文档索引" description="架构、运维与开发契约（权威）" href="https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/README.md" />
+</CardGrid>
 
 ## 常见任务
 

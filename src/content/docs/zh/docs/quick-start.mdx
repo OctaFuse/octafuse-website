@@ -3,6 +3,12 @@ title: 快速开始
 description: 用 Docker、Cloudflare 或 Node 快速跑通 OctaFuse Gateway。
 ---
 
+import { Aside, Steps } from '@astrojs/starlight/components';
+
+<Aside type="note" title="仓库位置">
+	以下命令均在 **[octafuse-gateway](https://github.com/OctaFuse/octafuse-gateway)** 仓库根目录执行；本站只提供导航与摘要。
+</Aside>
+
 <h2 id="prerequisites">先决条件</h2>
 
 - **Docker 路径**：Docker Compose **v2.20+**（需支持 `service_completed_successfully`）。
@@ -17,12 +23,13 @@ docker compose -f docker/compose/quickstart.yml up --build
 curl -sS http://localhost:8787/health
 ```
 
-健康检查后：
+健康检查通过后，建议按下面顺序完成最小可用链路：
 
-- **Proxy**：`http://localhost:8787`
-- **Admin**：`http://localhost:8789`（默认 `admin` / `changeme`）
-
-在 **Admin** 中完成三步：**配置 Provider → 配置 Model Route → 创建 API Key**，即可开始调用推理接口。
+<Steps>
+1. **确认服务地址**：**Proxy** 在 `http://localhost:8787`；**Admin** 在 `http://localhost:8789`（默认账号 `admin` / `changeme`）。
+1. **在 Admin 完成三步**：**配置 Provider → 配置 Model Route → 创建 API Key**，即可开始调用推理接口。
+1. **对照示例请求**：用 **`curl`** 或现有客户端/SDK 走一遍端到端，便于确认网络、密钥与路由配置无误。
+</Steps>
 
 开发种子中的默认 **`MASTER_KEY`** 常为 `sk-dev-admin-key`（`Authorization: Bearer …` 调 **`POST /api/admin/*`**）；**生产务必轮换**，详见主仓 [docs/api/admin.md](https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/api/admin.md)。
 

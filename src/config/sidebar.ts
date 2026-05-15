@@ -3,7 +3,7 @@ import type { StarlightUserConfig } from '@astrojs/starlight/types';
 /** Shared docs sidebar — labels use `translations` for English. */
 export const docsSidebar: StarlightUserConfig['sidebar'] = [
 	{
-		label: '官网首页',
+		label: '首页',
 		translations: { en: 'Home' },
 		slug: 'index',
 	},

@@ -5,11 +5,15 @@ template: splash
 sidebar:
   hidden: true
 hero:
-  tagline: 把「接模型、控成本、保稳定、可追溯」做成团队共享的一层能力，而不是散落在每个业务系统里各自实现。
+  title: '<span class="of-hero-kicker">AI Gateway</span><span class="of-hero-title">OctaFuse</span>'
+  tagline: 团队共享的一层能力：统一接模型、控成本、保稳定、可追溯——不再让每个业务系统各自重复造轮子。
+  image:
+    html: '<img src="/favicon.svg" class="of-hero-logo" width="200" height="200" alt="" />'
   actions:
     - text: 阅读文档
       link: /zh/docs/
       icon: right-arrow
+      variant: primary
     - text: GitHub
       link: https://github.com/OctaFuse/octafuse-gateway
       icon: external
@@ -32,16 +36,16 @@ import { Card, CardGrid } from '@astrojs/starlight/components';
 ## 产品能力
 
 <CardGrid stagger>
-	<Card title="统一入口，兼容多生态" icon="rocket">
+	<Card title="统一入口，兼容多生态" icon="laptop">
 		用一套网关承接团队里常见的对话与补全类调用习惯，减少「每个系统各接一遍供应商」的重复工作与长期维护成本。
 	</Card>
 	<Card title="密钥、额度与周期治理" icon="setting">
 		集中管理访问身份与预算口径，支持按人、按业务线或按客户维度做用量约束与周期重置，降低超支与滥用风险。
 	</Card>
-	<Card title="路由策略与韧性" icon="open-book">
+	<Card title="路由策略与韧性" icon="random">
 		按业务需要配置模型与优先级；在上游波动或故障时，提供更有弹性的切换与降级路径，减少「单点绑死在一个模型上」的脆弱性。
 	</Card>
-	<Card title="运营侧可观测与自检" icon="document">
+	<Card title="运营侧可观测与自检" icon="analytics">
 		管理台汇总用量与可靠性概况，并提供试调用、联调模拟等工具，便于上线前验收、线上排障与跨团队沟通对账。
 	</Card>
 </CardGrid>

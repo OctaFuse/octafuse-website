@@ -2,6 +2,8 @@
 
 OctaFuse 官网与文档站（[Astro](https://astro.build) + [Starlight](https://starlight.astro.build)）。与 [`octafuse-gateway`](https://github.com/OctaFuse/octafuse-gateway) **独立仓库**，构建与发布流水线互不干扰。
 
+**生产站点（canonical）**：[`https://octafuse.dev`](https://octafuse.dev) — 由根目录 `astro.config.mjs` 的 `site` 字段声明，用于 sitemap / 绝对 URL；Cloudflare Pages 自定义域名需与此一致。
+
 ## 本地开发
 
 ```bash
@@ -32,6 +34,14 @@ npm run preview
 | Node.js version | `22`（或读取 `.nvmrc`） |
 
 预览与生产构建仅在本仓库提交时触发，**不会**联动 `octafuse-gateway` 的 Worker / 镜像发布。
+
+### 自定义域名与上线验收
+
+1. 在 **Workers & Pages → 本项目 → Custom domains** 添加 **`octafuse.dev`**（及可选 **`www.octafuse.dev`**），等待状态 **Active** 与证书就绪。
+2. 按向导在 **DNS** 添加 **CNAME**（或 apex 所需的 **CNAME flattening** / **A/AAAA** 记录，以 Cloudflare 提示为准）。
+3. 选定 **规范主机名**（apex 或 `www` 二选一为主域），另一主机名配置 **301** 重定向，避免 SEO 重复收录。
+4. 若曾使用旧域名（如 `docs.octafuse.ai`），在旧 Pages 项目或 **Bulk Redirects / Redirect Rules** 配置 **301 → `https://octafuse.dev`**。
+5. 发布后抽检：`/zh/`、`/en/docs/quick-start/`、文档内外链与深色/浅色切换。
 
 ### 本仓库 CI/CD（与 gateway 完全隔离）
 

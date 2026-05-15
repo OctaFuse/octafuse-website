@@ -3,7 +3,13 @@ title: 部署指南
 description: OctaFuse Gateway 的 Cloudflare 与 Docker 自托管部署总览。
 ---
 
+import { Aside } from '@astrojs/starlight/components';
+
 OctaFuse 常见部署形态为 **Cloudflare Proxy Worker + Admin Pages + D1**，或 **自托管 Proxy + Admin + Postgres / MySQL**。以下为高价值摘要；逐步命令、密钥与迁移细节以主仓运维文档为准。
+
+<Aside type="caution" title="权威来源">
+	环境变量、**`metered_cost` / `standard_cost` / `charged_cost`** 计费口径、迁移版本与 **`/api/admin/*`** 细节变更时，请以主仓文档与 **`packages/core/migrations-*`** 为准。
+</Aside>
 
 <h2 id="deployment-modes">常见部署模式</h2>
 
@@ -39,4 +45,4 @@ OctaFuse 常见部署形态为 **Cloudflare Proxy Worker + Admin Pages + D1**，
 
 <h2 id="source-of-truth">回源说明</h2>
 
-本站不维护第二份「唯一权威」契约。环境变量、**`metered_cost` / `standard_cost` / `charged_cost`** 计费口径、迁移版本与 **`/api/admin/*`** 细节变更时，请以 [octafuse-gateway](https://github.com/OctaFuse/octafuse-gateway) 仓库文档与 **`packages/core/migrations-*`** 为准。
+更完整的契约、命令与运维清单仍以主仓为准；上文 **「权威来源」** 提示框已汇总需要优先回源查阅的类别。

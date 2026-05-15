@@ -3,7 +3,13 @@ title: Deployment
 description: Cloudflare and Docker self-hosted deployment overview for OctaFuse Gateway.
 ---
 
+import { Aside } from '@astrojs/starlight/components';
+
 Common deployments are **Cloudflare Proxy Worker + Admin Pages + D1**, or **self-hosted Proxy + Admin + Postgres / MySQL**. This page is a high-level summary; step-by-step commands, secrets, and migrations stay in the main repository.
+
+<Aside type="caution" title="Source of truth">
+	For environment variables, **`metered_cost` / `standard_cost` / `charged_cost`**, migration versions, and **`/api/admin/*`** details, follow the main repository docs and **`packages/core/migrations-*`**.
+</Aside>
 
 <h2 id="deployment-modes">Common deployment patterns</h2>
 
@@ -39,4 +45,4 @@ For regions or infrastructure you control: containerized **Proxy** and **Admin**
 
 <h2 id="source-of-truth">Source of truth</h2>
 
-This site does not maintain a second authoritative contract. For environment variables, **`metered_cost` / `standard_cost` / `charged_cost`**, migration versions, and **`/api/admin/*`** details, use [octafuse-gateway](https://github.com/OctaFuse/octafuse-gateway) and **`packages/core/migrations-*`**.
+For the full contract, commands, and ops checklists, follow the main repository. The **Source of truth** callout above lists the categories you should verify there first.

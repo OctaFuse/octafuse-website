@@ -3,6 +3,12 @@ title: Quick start
 description: Run OctaFuse Gateway with Docker, Cloudflare, or Node.
 ---
 
+import { Aside, Steps } from '@astrojs/starlight/components';
+
+<Aside type="note" title="Repository">
+	Run the commands below from the **[octafuse-gateway](https://github.com/OctaFuse/octafuse-gateway)** repository root. This site only provides navigation and summaries.
+</Aside>
+
 <h2 id="prerequisites">Prerequisites</h2>
 
 - **Docker path**: Docker Compose **v2.20+** (needs `service_completed_successfully`).
@@ -17,12 +23,13 @@ docker compose -f docker/compose/quickstart.yml up --build
 curl -sS http://localhost:8787/health
 ```
 
-After a healthy response:
+After you get a healthy response, follow this minimal path:
 
-- **Proxy**: `http://localhost:8787`
-- **Admin**: `http://localhost:8789` (default `admin` / `changeme`)
-
-In **Admin**, complete three steps: **configure Provider → configure Model Route → create API Key**, then call the inference APIs.
+<Steps>
+1. **Confirm endpoints**: **Proxy** at `http://localhost:8787`; **Admin** at `http://localhost:8789` (default `admin` / `changeme`).
+1. **Finish Admin setup**: **configure Provider → configure Model Route → create API Key**, then call the inference APIs.
+1. **Validate end-to-end**: run a **`curl`** sample (or your client/SDK) to confirm networking, keys, and routing.
+</Steps>
 
 The dev seed often sets default **`MASTER_KEY`** to `sk-dev-admin-key` (`Authorization: Bearer …` for **`POST /api/admin/*`**). **Rotate in production** — see [docs/api/admin.md](https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/api/admin.md).
 
