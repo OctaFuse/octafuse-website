@@ -1,22 +1,24 @@
 ---
 title: Quick start
-description: Run OctaFuse locally with Docker (Proxy + Admin), verify health, and sign in to Admin—your starting point before configuration guides.
+description: Run OctaFuse locally (Docker or Cloudflare local D1), verify health, and sign in to Admin—production deploy is linked separately.
 ---
 
 import { Aside, Steps } from '@astrojs/starlight/components';
 
-This page does **one thing**: **run OctaFuse on your machine** and open Admin. For “how to configure providers, routes, keys”, follow the **[User guide](/en/docs/guides/providers/)** sections.
+This page does **one thing**: **run OctaFuse on your machine** and open Admin. For “how to configure providers, routes, keys”, follow the **[User guide](/en/docs/guides/providers/)** sections. **Production or staging** is not covered here—see links at the bottom.
 
 <Aside type="note" title="Repository">
 	Run commands from the **[octafuse-gateway](https://github.com/OctaFuse/octafuse-gateway)** repository **root**.
 </Aside>
 
-## Prerequisites
+## Option A: Docker (fastest path)
+
+### Prerequisites
 
 - **Docker Compose v2.20+** (needs `service_completed_successfully`).
 - Network access to GitHub (or your fork).
 
-## Clone and start
+### Clone and start
 
 ```bash
 git clone https://github.com/OctaFuse/octafuse-gateway.git
@@ -57,9 +59,29 @@ curl -sS http://localhost:8787/v1/chat/completions \
   -d '{"model":"your-route-model","messages":[{"role":"user","content":"Hello"}]}'
 ```
 
-## Local dev without Docker
+## Option B: Cloudflare (local D1)
 
-From repo root: `npm install`, `cp .env.example .env`, then `npm run dev:proxy` / `npm run dev:admin` plus migrations. See [Docker deployment](/en/docs/deploy/docker/) and [GitHub technical reference](/en/docs/github-reference/).
+Skip Docker—or match the **Worker + D1** production stack—by running Wrangler locally. State persists under `./.wrangler/state`.
+
+**Prerequisites**: **Node.js 20+**, npm.
+
+```bash
+git clone https://github.com/OctaFuse/octafuse-gateway.git
+cd octafuse-gateway
+npm install
+npm run db:migrate          # local D1 migrations
+npm run dev:proxy           # Proxy → http://127.0.0.1:8787
+```
+
+In a second terminal:
+
+```bash
+npm run dev:admin           # Admin preview → http://127.0.0.1:8789
+```
+
+Admin API Bearer must match D1 `system_config.MASTER_KEY` (dev seed in `packages/core/migrations-d1/0002_seed.sql`).
+
+More local setups (Node + Postgres/MySQL, multiple D1 dirs, smoke tests): [GitHub · local-testing-environments](https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/ops/local-testing-environments.md).
 
 ## Production
 

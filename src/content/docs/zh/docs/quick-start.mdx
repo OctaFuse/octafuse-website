@@ -1,22 +1,24 @@
 ---
 title: 快速开始
-description: 在本地用 Docker 拉起 OctaFuse（Proxy + Admin），确认健康检查并登录管理台，作为后续配置起点。
+description: 在本地启动 OctaFuse（Docker 或 Cloudflare 本地 D1），确认健康检查并登录管理台；线上部署见单独章节。
 ---
 
 import { Aside, Steps } from '@astrojs/starlight/components';
 
-本页只做一件事：**在你自己的电脑上把 OctaFuse 跑起来**，并能打开管理台。更细的「怎么配供应商、路由、Key」见 **[使用指南](/zh/docs/guides/providers/)** 各章节。
+本页只做一件事：**在你自己的电脑上把 OctaFuse 跑起来**，并能打开管理台。更细的「怎么配供应商、路由、Key」见 **[使用指南](/zh/docs/guides/providers/)** 各章节。**生产或预发部署**不在此页展开，见文末链接。
 
 <Aside type="note" title="命令所在仓库">
 	以下命令在 **[octafuse-gateway](https://github.com/OctaFuse/octafuse-gateway)** 仓库**根目录**执行。
 </Aside>
 
-## 先决条件
+## 方式 A：Docker（最快跑通）
+
+### 先决条件
 
 - 已安装 **Docker Compose v2.20+**（需支持 `service_completed_successfully`）。
 - 可访问 GitHub 以下载源码（或你的 fork）。
 
-## 克隆并启动
+### 克隆并启动
 
 ```bash
 git clone https://github.com/OctaFuse/octafuse-gateway.git
@@ -57,9 +59,29 @@ curl -sS http://localhost:8787/v1/chat/completions \
   -d '{"model":"your-route-model","messages":[{"role":"user","content":"Hello"}]}'
 ```
 
-## 本地开发（不用 Docker 时）
+## 方式 B：Cloudflare（本地 D1）
 
-在仓库根：`npm install`、`cp .env.example .env`，再 `npm run dev:proxy` / `npm run dev:admin` 与对应迁移命令。细节见 [Docker 部署](/zh/docs/deploy/docker/) 与 [GitHub 技术参考](/zh/docs/github-reference/)。
+不想跑 Docker、或希望与 **Worker + D1** 生产形态一致时，可在本机用 Wrangler 开发。本地数据持久化在 `./.wrangler/state`。
+
+**先决条件**：**Node.js 20+**、npm。
+
+```bash
+git clone https://github.com/OctaFuse/octafuse-gateway.git
+cd octafuse-gateway
+npm install
+npm run db:migrate          # 本地 D1 迁移
+npm run dev:proxy           # Proxy → http://127.0.0.1:8787
+```
+
+另开终端：
+
+```bash
+npm run dev:admin           # Admin 预览 → http://127.0.0.1:8789
+```
+
+管理 API 的 Bearer 须与 D1 `system_config.MASTER_KEY` 一致（开发种子见仓库 `packages/core/migrations-d1/0002_seed.sql`）。
+
+更多本地组合（Node + Postgres/MySQL、多套 D1 目录、冒烟脚本）见 [GitHub 技术参考 · local-testing-environments](https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/ops/local-testing-environments.md)。
 
 ## 线上环境
 
