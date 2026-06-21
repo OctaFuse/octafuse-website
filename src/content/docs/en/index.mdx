@@ -1,110 +1,134 @@
 ---
 title: OctaFuse
-description: AI gateway for teams and enterprises—unify upstream AI vendors and deliver model capabilities across product lines, with unified model access across common client protocols, keys and budgets, resilient routing, multi-lens cost and audit views, proxy error alerts (Feishu / WeChat Work), and admin analytics and debugging tools. Cloud-hosted or self-hosted. AGPLv3.
+description: Open-source AI Gateway—one Base URL, one API Key to unify OpenAI, Claude, Gemini, coding plans, token plans, and self-hosted models. Individuals consolidate scattered providers and keys; teams wire upstream providers once and issue separate keys for departments or customers with budgets, billing, audit, and logs. Docker self-host or Cloudflare. AGPLv3.
 template: splash
 sidebar:
   hidden: true
 hero:
   title: '<span class="of-hero-heading"><img src="/favicon.svg" class="of-hero-logo" width="104" height="104" alt="" /><span class="of-hero-heading-text"><span class="of-hero-kicker">AI Gateway</span><span class="of-hero-title">OctaFuse</span></span></span>'
-  tagline: Unify your upstream AI providers and continuously deliver model capabilities to every product line.
+  tagline: One Base URL, one API Key—consolidate scattered model providers, coding plans, and token plans into a single access point.
   image:
     html: '<div class="of-model-float-cloud" aria-label="Floating model provider logos"><span class="of-model-chip"><img class="of-brand-logo" src="/brand/openai.svg" width="40" height="40" alt="OpenAI" /></span><span class="of-model-chip"><img class="of-brand-logo" src="/brand/anthropic.svg" width="40" height="40" alt="Anthropic" /></span><span class="of-model-chip"><img class="of-brand-logo" src="/brand/googlegemini.svg" width="40" height="40" alt="Google Gemini" /></span><span class="of-model-chip"><img class="of-brand-logo" src="/brand/qwen.svg" width="40" height="40" alt="Qwen" /></span><span class="of-model-chip"><img class="of-brand-logo" src="/brand/x.svg" width="40" height="40" alt="xAI" /></span><span class="of-model-chip"><img class="of-brand-logo" src="/brand/deepseek.svg" width="40" height="40" alt="DeepSeek" /></span><span class="of-model-chip"><img class="of-brand-logo" src="/brand/meta.svg" width="40" height="40" alt="Meta" /></span><span class="of-model-chip"><img class="of-brand-logo" src="/brand/mistralai.svg" width="40" height="40" alt="Mistral AI" /></span><span class="of-model-chip"><img class="of-brand-logo" src="/brand/moonshotai.svg" width="40" height="40" alt="Moonshot AI" /></span><span class="of-model-chip"><img class="of-brand-logo" src="/brand/bytedance.svg" width="40" height="40" alt="ByteDance" /></span><span class="of-model-chip"><img class="of-brand-logo" src="/brand/microsoft.svg" width="40" height="40" alt="Microsoft" /></span><span class="of-model-chip"><img class="of-brand-logo" src="/brand/nvidia.svg" width="40" height="40" alt="NVIDIA" /></span><span class="of-model-chip"><img class="of-brand-logo" src="/brand/huggingface.svg" width="40" height="40" alt="Hugging Face" /></span><span class="of-model-chip"><img class="of-brand-logo" src="/brand/perplexity.svg" width="40" height="40" alt="Perplexity" /></span><span class="of-model-chip"><img class="of-brand-logo" src="/brand/openrouter.svg" width="40" height="40" alt="OpenRouter" /></span><span class="of-model-chip"><img class="of-brand-logo" src="/brand/ollama.svg" width="40" height="40" alt="Ollama" /></span></div>'
   actions:
+    - text: Quick start
+      link: /en/docs/quick-start/
+      icon: rocket
+      variant: primary
     - text: Read the docs
       link: /en/docs/
       icon: open-book
-      variant: primary
+      variant: secondary
     - text: GitHub
       link: https://github.com/OctaFuse/octafuse-gateway
       icon: github
-      variant: secondary
+      variant: minimal
 ---
 
 import { Card, CardGrid } from '@astrojs/starlight/components';
 
 ## Overview
 
-**OctaFuse** is an **AI Gateway** for teams and enterprises—a unified access layer between your upstream AI providers and every product line you run.
+**OctaFuse** is an open-source **AI Gateway** that consolidates model access scattered across vendors and plans into **one calling surface**.
 
-On the upstream side, public cloud models, third-party inference services, and self-hosted models are all wired in and managed in one place. On the downstream side, each product line calls through standard OpenAI / Anthropic / Gemini interfaces without caring which provider handles the request. Keys and budgets, routing and failover, cost metering and audit trails all live in this layer—not scattered across individual service codebases.
+- **Upstream**: OpenAI, Anthropic, Gemini, OpenRouter, coding / token / agent plans, plus Ollama, vLLM, and other self-hosted models—all wired in at the gateway layer.
+- **Downstream**: clients need only **one Base URL** and **one API Key**, calling through familiar OpenAI / Anthropic / Gemini shapes without caring which provider handles the request.
 
-It fits teams connecting **multiple AI providers** to **multiple product lines** and wanting reliability, cost visibility, and audit coverage lifted out of application code into dedicated infrastructure.
+Whether you are an individual juggling multiple plans and keys, or a team issuing separate keys for departments or customers with budgets and audit trails, OctaFuse runs on the same gateway stack.
+
+## Typical scenarios
+
+<CardGrid stagger>
+	<Card title="Individual developers" icon="add-document">
+		Subscribed to several coding plans, token plans, or agent bundles—and now juggle different **Base URLs** and **API Keys**? OctaFuse rolls upstream vendors into **one gateway** so your tools point at a single endpoint to switch models, degrade gracefully, or fail over.
+	</Card>
+	<Card title="Teams and enterprises" icon="group">
+		Wire **Providers** once, then issue separate **API Keys** for departments, projects, or external customers—with budgets, billing lenses, request logs, and audit trails—so model governance lives outside application code.
+	</Card>
+</CardGrid>
+
+## More use cases
+
+- **AI app and agent builders**: keep product code on one protocol and Base URL; handle model swaps, canaries, degradation, and failover at the gateway.
+- **API resellers and proxy operators**: connect multiple upstream providers and give each downstream customer its own key, budget, billing view, and logs.
+- **Private and hybrid model stacks**: put Ollama, vLLM, or internal inference next to public cloud models behind the same gateway.
+- **Labs, classrooms, and small teams**: admins configure models and quotas once; members share one key instead of maintaining vendor accounts individually.
+- **Cost- and reliability-conscious teams**: compare spend and upstream health through routing, logs, and Analytics before picking defaults and backups.
 
 ## Why OctaFuse
 
-OctaFuse was built to **own and evolve** an in-house AI gateway for several internal SaaS systems.
+Model supply keeps fragmenting—endpoints, API keys, quotas, invoices, and logs sit in different vendor consoles and tools. Switching models or debugging an incident means touching many places.
 
 After reviewing many open-source and commercial options, we kept seeing the same pain points:
 
-- **Narrow provider coverage**, making it awkward to mix public cloud, private hosting, and internal models in one stack.
-- **OpenAI-only surfaces**, which force extra adapters when your stack already speaks Anthropic or Gemini.
-- **Rigid or shallow billing and audit trails**, so it is hard to model per-route, per-user, or supply-side vs user-side costs the way internal products need.
+- **Narrow provider coverage**, making it awkward to mix public cloud, third-party inference, and self-hosted models.
+- **Single-protocol surfaces**, forcing extra adapters when your stack already speaks Anthropic or Gemini.
+- **Shallow billing and audit**, so it is hard to model per-route, per-user, or supply-side vs user-side costs.
 
-OctaFuse aims to address that with more freedom:
+OctaFuse addresses that as a gateway you can **own and evolve**:
 
-- Wire in more providers—including models you run yourself—and expose multiple client-facing protocols from one gateway.
-- Define routing, billing, and how you trace and reconcile usage across teams and routes.
-- Integrate upstream systems through a stable Admin API with less coupling.
+- Wire in more upstream vendors—including plans and local / internal models—and expose multiple client protocols from one place.
+- Define routing, billing lenses, and audit the way your workflow needs—whether you are consolidating personal keys or reconciling across teams.
+- Integrate portals and apps through a stable **Admin API** with less coupling to vendor details.
 
-## Features
+## Core capabilities
 
 <CardGrid stagger>
-	<Card title="Multi-protocol surface" icon="laptop">
-		**`/v1/chat/completions`** (OpenAI), **`/v1/messages`** (Anthropic), **`/v1beta/*`** (Gemini).
+	<Card title="One access surface" icon="laptop">
+		Clients need one **Base URL** and one **API Key**. The gateway speaks OpenAI, Anthropic, Gemini, and other common shapes while routing to any configured upstream.
 	</Card>
 	<Card title="Keys and budgets" icon="setting">
-		Users / API keys, caps and period resets, plus **`GET /v1/me`** for budget-style status from clients.
+		Issue **API Keys** per user or downstream scenario, set caps and period resets, and let clients check quota-style status via **`GET /v1/me`**.
 	</Card>
-	<Card title="Routing" icon="random">
-		Providers, models, and routes; **route groups** and priority-based **failover**.
+	<Card title="Routing and failover" icon="random">
+		Manage **Providers, models, and routes**; use **route groups** and priority-based **failover** when an upstream misbehaves.
 	</Card>
-	<Card title="Cost layers" icon="document">
-		**`metered_cost`**, **`standard_cost`**, and **`charged_cost`**—supply-side metering vs catalog vs what you charge users.
+	<Card title="Billing and reconciliation" icon="document">
+		**metered_cost**, **standard_cost**, and **charged_cost**—align supply-side metering, catalog pricing, and what you actually charge users.
 	</Card>
 	<Card title="Audit and observability" icon="magnifier">
-		Global and **per-key** request logs, plus **user-level audit trails** for traceability and investigations.
+		Global and **per-key** request logs plus **user-level audit trails** for traceability and investigations.
 	</Card>
-	<Card title="Proxy error alerts" icon="warning">
-		Optional **Feishu (Lark)** and **WeChat Work** bot webhooks in Admin—forwarding failures surface upstream incidents, quota or rate-limit pressure, and upstream API keys that may need attention or top-up.
+	<Card title="Error alerts" icon="warning">
+		Optional **Feishu (Lark)** and **WeChat Work** bot webhooks in Admin—forwarding failures surface upstream incidents, rate limits, or keys that need attention.
 	</Card>
-	<Card title="Analytics" icon="chart">
-		Time-range views in Admin for model, provider, and user usage plus **reliability** summaries—capacity checks, cost awareness, and upstream health comparisons.
+	<Card title="Usage analytics" icon="chart">
+		Time-range views in Admin for model, provider, and user usage plus **reliability** summaries—cost awareness and upstream health at a glance.
 	</Card>
-	<Card title="Playground" icon="approve-check">
-		Send a test call for **one model route** without spending user budgets or leaving the same metering / logs as real traffic—great for troubleshooting and pre-flight checks.
+	<Card title="Debug and rehearsal" icon="approve-check">
+		**Playground** for single-route test calls without spending user budgets; **Simulator** to rehearse auth, routing, billing, and logging from the browser with a real key.
 	</Card>
-	<Card title="Simulator" icon="puzzle">
-		Call your deployed gateway from the browser with a real user API key in OpenAI / Anthropic / Gemini shapes—rehearse **auth, routing, billing, and logging** the way production clients do.
+	<Card title="Flexible deployment" icon="rocket">
+		**Cloudflare** (Worker + Pages + **D1**) or self-hosted (**Docker / Node** + **Postgres** or **MySQL**). Local Docker gets you running in minutes.
 	</Card>
-	<Card title="Runtimes" icon="rocket">
-		**Cloudflare** (Worker + Pages + **D1**) or self-hosted (**Docker / Node** + **Postgres** or **MySQL**). See the deployment sections in the docs.
-	</Card>
-	<Card title="Decoupled from apps" icon="external">
-		SaaS and portals integrate via **`/api/admin/*`** so product code stays focused on AI use cases.
+	<Card title="Admin API integration" icon="external">
+		Hook portals and apps through **`/api/admin/*`**—provision users, create keys, sync budgets—so product code stays focused on AI use cases.
 	</Card>
 </CardGrid>
 
 ## Deployment options
 
-Pick based on **compliance, latency, data residency, and operations**. Commands and troubleshooting live under **Deploy** on the [documentation home](/en/docs/).
+Pick based on **compliance, latency, data residency, and operations**:
 
-- **Docker (laptop or private network)**: fastest path to try OctaFuse, PoCs, and internal debugging.
+- **Docker (laptop or private network)**: fastest path to try OctaFuse—great for PoCs, personal key consolidation, and internal debugging.
 - **Cloudflare**: edge-friendly footprint with **D1** for configuration and metadata.
 - **Self-hosted**: stricter data boundaries or alignment with existing **Postgres / MySQL** operations.
 
-Read the production section on the [documentation home](/en/docs/) for trade-offs and [Quick start](/en/docs/quick-start/) for the shortest path. Licensed under **GNU AGPL v3** — see [LICENSE](https://github.com/OctaFuse/octafuse-gateway/blob/main/LICENSE).
+See the production section on the [documentation home](/en/docs/) for trade-offs. Licensed under **GNU AGPL v3** — see [LICENSE](https://github.com/OctaFuse/octafuse-gateway/blob/main/LICENSE).
 
-## Who it’s for
+## Who it's for
 
-- Platform and product orgs that need **one governed front door** for model traffic across many lines of business or tenants.
-- Teams that want **cost, reliability, and auditability** lifted out of application code into dedicated infrastructure.
-- Organizations that want **freedom to evolve vendors and models** without bespoke failover logic in every service.
+- **Individual developers and creators** consolidating multiple plans and vendor keys behind one gateway.
+- **AI app and agent teams** that need model swaps, canaries, and degradation without vendor logic in every service.
+- **Platform and IT teams** that need one place to govern providers, keys, budgets, billing, and audit.
+- **Providers reselling AI access** who issue separate keys per customer and track usage and cost.
 
-## Quick links
+## Get running in 5 minutes
 
-- [Documentation home](/en/docs/) — map & task lookup
-- [Quick start](/en/docs/quick-start/) — local Docker or Cloudflare D1
+Local Docker is the fastest path—configure upstream providers, grab your unified Base URL and API Key, and point Cursor, CLIs, or your own apps at the gateway.
+
+- [**Quick start**](/en/docs/quick-start/) — local Docker or Cloudflare D1, step-by-step commands and troubleshooting
 - [User guide · Providers](/en/docs/guides/providers/) — start configuring upstreams
 - [Production · Docker](/en/docs/deploy/docker/) · [Cloudflare Workers](/en/docs/deploy/cloudflare/)
+- [Documentation home](/en/docs/) — map and task lookup
 - [GitHub technical reference](/en/docs/github-reference/) — APIs, migrations, ops index
 - [Source repository](https://github.com/OctaFuse/octafuse-gateway) · [Contributing](https://github.com/OctaFuse/octafuse-gateway/blob/main/CONTRIBUTING.md)

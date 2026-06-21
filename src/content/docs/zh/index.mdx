@@ -1,111 +1,134 @@
 ---
 title: OctaFuse
-description: 面向团队与企业的 AI 网关：统一对接上游 AI 供应商，向各产品线持续输送模型能力；并提供跨生态模型调用、密钥与预算、智能路由与容错、多视角成本与审计、Proxy 错误告警（飞书 / 企业微信）、管理台用量分析与联调工具。支持云端边缘托管与自建。AGPLv3。
+description: 开源 AI Gateway：一个 Base URL、一个 API Key，统一接入 OpenAI、Claude、Gemini、Coding Plan、Token Plan 与自托管模型。个人开发者可汇总分散的供应商与密钥；团队与企业可统一 Provider、为部门或客户单独发 Key，并管理预算、计费、审计与日志。支持 Docker 自建与 Cloudflare 托管。AGPLv3。
 template: splash
 sidebar:
   hidden: true
 hero:
   title: '<span class="of-hero-heading"><img src="/favicon.svg" class="of-hero-logo" width="104" height="104" alt="" /><span class="of-hero-heading-text"><span class="of-hero-kicker">AI Gateway</span><span class="of-hero-title">OctaFuse</span></span></span>'
-  tagline: 统一对接上游 AI 供应商，向你的每一条产品线持续输送模型能力。
+  tagline: 一个 Base URL，一个 API Key——把分散的模型供应商、Coding Plan 与 Token Plan 汇总成统一接入入口。
   image:
     html: '<div class="of-model-float-cloud" aria-label="浮动的模型厂商标识"><span class="of-model-chip"><img class="of-brand-logo" src="/brand/openai.svg" width="40" height="40" alt="OpenAI" /></span><span class="of-model-chip"><img class="of-brand-logo" src="/brand/anthropic.svg" width="40" height="40" alt="Anthropic" /></span><span class="of-model-chip"><img class="of-brand-logo" src="/brand/googlegemini.svg" width="40" height="40" alt="Google Gemini" /></span><span class="of-model-chip"><img class="of-brand-logo" src="/brand/qwen.svg" width="40" height="40" alt="Qwen" /></span><span class="of-model-chip"><img class="of-brand-logo" src="/brand/x.svg" width="40" height="40" alt="xAI" /></span><span class="of-model-chip"><img class="of-brand-logo" src="/brand/deepseek.svg" width="40" height="40" alt="DeepSeek" /></span><span class="of-model-chip"><img class="of-brand-logo" src="/brand/meta.svg" width="40" height="40" alt="Meta" /></span><span class="of-model-chip"><img class="of-brand-logo" src="/brand/mistralai.svg" width="40" height="40" alt="Mistral AI" /></span><span class="of-model-chip"><img class="of-brand-logo" src="/brand/moonshotai.svg" width="40" height="40" alt="Moonshot AI" /></span><span class="of-model-chip"><img class="of-brand-logo" src="/brand/bytedance.svg" width="40" height="40" alt="ByteDance" /></span><span class="of-model-chip"><img class="of-brand-logo" src="/brand/microsoft.svg" width="40" height="40" alt="Microsoft" /></span><span class="of-model-chip"><img class="of-brand-logo" src="/brand/nvidia.svg" width="40" height="40" alt="NVIDIA" /></span><span class="of-model-chip"><img class="of-brand-logo" src="/brand/huggingface.svg" width="40" height="40" alt="Hugging Face" /></span><span class="of-model-chip"><img class="of-brand-logo" src="/brand/perplexity.svg" width="40" height="40" alt="Perplexity" /></span><span class="of-model-chip"><img class="of-brand-logo" src="/brand/openrouter.svg" width="40" height="40" alt="OpenRouter" /></span><span class="of-model-chip"><img class="of-brand-logo" src="/brand/ollama.svg" width="40" height="40" alt="Ollama" /></span></div>'
   actions:
+    - text: 快速开始
+      link: /zh/docs/quick-start/
+      icon: rocket
+      variant: primary
     - text: 阅读文档
       link: /zh/docs/
       icon: open-book
-      variant: primary
+      variant: secondary
     - text: GitHub
       link: https://github.com/OctaFuse/octafuse-gateway
       icon: github
-      variant: secondary
+      variant: minimal
 ---
 
 import { Card, CardGrid } from '@astrojs/starlight/components';
 
 ## 概述
 
-**OctaFuse** 是面向团队与企业的 **AI Gateway**：在上游 AI 供应商与各条产品线之间架起一层统一的接入基础设施。
+**OctaFuse** 是开源 **AI Gateway**：把分散在不同供应商、不同计划里的模型能力，汇总成一个统一的调用入口。
 
-- 上游：无论是公有云大模型、第三方推理服务还是自托管模型——在网关层统一接入与管理；
-- 下游：各产品线按 OpenAI / Anthropic / Gemini 等标准协议调用，无需关心背后路由到哪家供应商。密钥与预算、请求路由与容错、成本计量与审计留痕，均在这一层统一承载，而不是分散在各业务代码里。
+- **上游**：OpenAI、Anthropic、Gemini、OpenRouter、各类 Coding / Token / Agent Plan，以及 Ollama、vLLM 等自托管模型——在网关层统一接入；
+- **下游**：客户端只需记住 **一个 Base URL** 和 **一个 API Key**，按 OpenAI / Anthropic / Gemini 等常用协议调用，无需关心背后路由到哪家供应商。
 
-适合同时对接 **多家 AI 供应商**、驱动 **多条产品线**，并希望把稳定性、成本与合规留痕从业务代码中抽离出来的团队与平台组。
+无论你是个人开发者管理多个 plan 与密钥，还是团队需要为部门或客户单独发 Key 并做预算与审计，OctaFuse 都能在同一套网关上承载。
+
+## 典型场景
+
+<CardGrid stagger>
+	<Card title="个人开发者" icon="add-document">
+		买了多个 Coding Plan、Token Plan 或 Agent 订阅，却要维护一堆不同的 **Base URL** 和 **API Key**？OctaFuse 把上游供应商汇总到 **一个网关**，客户端只改一处配置即可切换模型、做降级或备份路由。
+	</Card>
+	<Card title="团队与企业" icon="group">
+		在一个地方统一接入不同 **Provider**，为下游部门、项目或外部客户分别创建 **API Key**，并配套预算上限、计费口径、请求日志与审计轨迹——把模型调用的治理从业务代码里抽离出来。
+	</Card>
+</CardGrid>
+
+## 更多适用场景
+
+- **AI 应用 / Agent 开发者**：业务代码只面向统一协议与 Base URL，在网关层做模型切换、灰度、降级与 failover。
+- **API 代理 / 分销型服务商**：接入多个上游 Provider，为下游客户独立发 Key，结合预算、计费与日志做分客户管理。
+- **内网 / 私有模型聚合**：把 Ollama、vLLM 或内部模型服务与公网大模型放在同一网关后面，对外暴露统一入口。
+- **教学、实验室与小团队**：管理员统一配置模型与额度，成员只拿一个 Key 使用，避免每人单独维护供应商账号。
+- **成本与稳定性敏感团队**：通过路由、日志与 Analytics 对比不同模型 / Provider 的成本与可靠性，再决定默认路由与备用路由。
 
 ## 为什么选择 OctaFuse
 
-创建 OctaFuse 的初衷，是为了构建一套 **可自主掌控、可持续演进** 的 AI 网关能力，服务内部不同 SaaS 系统。
+模型供应越来越碎片化——调用入口、API Key、额度、账单和日志分散在不同供应商与工具里，切换模型或排查问题都要改多处配置。
 
-在调研过多个开源和商业方案后，我们发现几类共性痛点：
+在调研多个开源与商业方案后，我们反复看到几类共性痛点：
 
-- **provider 选择面偏窄**，难以同时覆盖公有云、私有部署与内部模型。
-- 不少产品 **只提供 OpenAI 形态入口**，团队已在用的 Anthropic、Gemini 等协议往往需要额外适配或二次封装。
-- **计费与审计**能力偏固定或不足，难以按路由、用户、成本口径等灵活建模与对账。
+- **Provider 覆盖偏窄**，难以同时接入公有云、第三方推理与自托管模型。
+- **协议入口单一**，团队已在用的 Anthropic、Gemini 等形态往往需要额外适配。
+- **计费与审计能力不足**，难以按路由、用户或成本口径灵活建模与对账。
 
-OctaFuse 希望通过更高自由度解决上述问题：
+OctaFuse 作为可自主部署、可持续演进的网关层来应对上述问题：
 
-- 支持接入更多不同Provider（包括各种Coding/Token/Agent Plan、本地/内部部署模型），并在同一网关上承载多种客户端常用协议。
-- 支持按业务需要定义路由、计费口径与审计 / 追溯方式，便于多产品线或对内对账。
-- 通过标准管理 API 与业务系统对接，减少耦合。
+- 支持接入更多上游供应商（含各类 Plan 与本地 / 内部模型），并在同一网关上承载多种客户端协议。
+- 支持按业务需要定义路由、计费口径与审计方式，便于个人汇总或多团队分账。
+- 通过标准 **Admin API** 与上层系统集成，减少业务代码与供应商细节的耦合。
 
-## 功能特性
+## 核心能力
 
 <CardGrid stagger>
-	<Card title="多协议兼容" icon="laptop">
-		**`/v1/chat/completions`**（OpenAI）、**`/v1/messages`**（Anthropic）、**`/v1beta/*`**（Gemini）等推理入口形态。
+	<Card title="统一接入入口" icon="laptop">
+		客户端只需一个 **Base URL** 和一个 **API Key**。网关兼容 OpenAI、Anthropic、Gemini 等常用协议形态，背后可路由到任意已配置的上游。
 	</Card>
-	<Card title="统一密钥与预算体系" icon="setting">
-		用户 / Key 管理，预算上限与周期重置；客户端可用 **`GET /v1/me`** 查询预算等状态。
+	<Card title="密钥与预算管理" icon="setting">
+		为用户或下游场景单独创建 **API Key**，设置预算上限与周期重置；客户端可通过 **`GET /v1/me`** 查询额度状态。
 	</Card>
-	<Card title="模型路由治理" icon="random">
-		**Provider / Model / Route** 管理；支持 **route group** 与按优先级的 **failover**。
+	<Card title="智能路由与容错" icon="random">
+		**Provider / Model / Route** 分层管理；支持 **route group** 与按优先级的 **failover**，在上游异常时自动切换。
 	</Card>
-	<Card title="分层计费与对账" icon="document">
-		**`metered_cost`** / **`standard_cost`** / **`charged_cost`** 三套成本口径，便于供给侧计量、目录价与实际对用户扣费的对齐。
+	<Card title="计费与对账" icon="document">
+		**metered_cost**、**standard_cost**、**charged_cost** 三套成本口径——供给侧计量、目录价与实际对用户扣费可分别对齐。
 	</Card>
 	<Card title="审计与观测" icon="magnifier">
-		全局与 **按 Key** 的**请求日志**，以及**用户级审计轨迹**，便于追溯与问题排查。
+		全局与 **按 Key** 的**请求日志**，以及**用户级审计轨迹**，便于追溯调用链路与排查问题。
 	</Card>
-	<Card title="Proxy 错误告警" icon="warning">
-		管理台可配置 **飞书**、**企业微信** 机器人 Webhook；Proxy 转发错误时主动推送，便于发现上游异常、额度/限流压力及上游 API Key 欠费、需充值等信号。
+	<Card title="错误告警" icon="warning">
+		管理台可配置 **飞书**、**企业微信** 机器人 Webhook；Proxy 转发失败时主动推送，及时发现上游异常、限流或 Key 欠费。
 	</Card>
-	<Card title="Analytics（用量与可靠性）" icon="chart">
-		管理台按时间范围汇总模型、供应商、用户用量及**可靠性概况**，便于容量观察、成本感知与上游稳定性对比。
+	<Card title="用量分析" icon="chart">
+		管理台按时间范围汇总模型、供应商、用户用量及**可靠性概况**，便于成本感知与上游稳定性对比。
 	</Card>
-	<Card title="Playground（试调用）" icon="approve-check">
-		针对**单条模型路由**发起试请求，确认能否连上供应商与配置是否正确；**不占用用户额度**，也不产生与真实业务调用相同的计费与用量记录，适合排错与上线前自检。
+	<Card title="联调与自检" icon="approve-check">
+		**Playground** 对单条路由试调用（不占用户额度）；**Simulator** 在浏览器内用真实 Key 模拟客户端调用，验收鉴权、选路、计费与日志。
 	</Card>
-	<Card title="Simulator（客户端模拟）" icon="puzzle">
-		浏览器内携带真实用户 API Key，按 OpenAI / Anthropic / Gemini 方式调用已部署网关，联调与验收**鉴权、选路、计费、日志**是否与线上一致。
+	<Card title="灵活部署" icon="rocket">
+		**Cloudflare**（Worker + Pages + **D1**）或自托管（**Docker / Node** + **Postgres** / **MySQL**）。本地 Docker 数分钟即可跑通。
 	</Card>
-	<Card title="多运行时部署" icon="rocket">
-		**Cloudflare**（Worker + Pages + **D1**）或自托管（**Docker / Node** + **Postgres** / **MySQL**）。选型与命令见站内部署文档。
-	</Card>
-	<Card title="业务系统解耦" icon="external">
-		通过 **Admin API（`/api/admin/*`）** 与上层 SaaS 对接，让业务更专注 AI 应用本身。
+	<Card title="Admin API 集成" icon="external">
+		通过 **`/api/admin/*`** 与门户、业务系统对接——自动开通用户、创建 Key、同步预算，让应用层专注 AI 能力本身。
 	</Card>
 </CardGrid>
 
 ## 支持的部署模式
 
-可按 **合规、延迟、运维习惯与数据落点** 在下述形态中取舍；逐步命令与排障见 [文档首页](/zh/docs/) 部署相关章节。
+可按 **合规、延迟、运维习惯与数据落点** 在下述形态中取舍：
 
-- **本地 / 内网 Docker**：快速跑通、PoC、内网联调。
+- **本地 / 内网 Docker**：最快上手，适合 PoC、个人汇总密钥与内网联调。
 - **Cloudflare 托管**：边缘就近、托管 D1 元数据与配置。
 - **自有基础设施**：数据驻留、网络边界或与现有 **Postgres / MySQL** 运维体系对齐。
 
-更多选型说明见 [文档首页](/zh/docs/) 中的线上部署章节，上手步骤见 [快速开始](/zh/docs/quick-start/)。开源协议为 **GNU AGPL v3**，许可全文见 [LICENSE](https://github.com/OctaFuse/octafuse-gateway/blob/main/LICENSE)。
+更多选型说明见 [文档首页](/zh/docs/) 中的线上部署章节。开源协议为 **GNU AGPL v3**，许可全文见 [LICENSE](https://github.com/OctaFuse/octafuse-gateway/blob/main/LICENSE)。
 
 ## 适合谁
 
-- 多产品线、多租户或平台型产品，希望 **统一治理模型调用** 的团队。
-- 需要把 **成本、稳定性、合规留痕** 从业务代码里抽离出来，交给专门一层基础设施的工程与平台组。
-- 希望在 **供应商与模型演进** 上保持主动权，而不是被分散集成绑死的组织。
+- **个人开发者与独立创作者**：汇总多个 plan 与供应商密钥，用一个网关统一调用。
+- **AI 应用 / Agent 团队**：需要模型切换、灰度、降级，且不想把供应商细节写进业务代码。
+- **平台工程 / IT 管理**：需要统一 Provider、分 Key、预算、计费与审计的组织。
+- **对外提供 AI 能力的服务商**：为不同客户独立发 Key 并管理用量与成本。
 
-## 快速入口
+## 5 分钟跑起来
 
-- [文档首页](/zh/docs/) — 文档地图与常见任务
-- [快速开始](/zh/docs/quick-start/) — 本地 Docker 或 Cloudflare D1
+本地 Docker 是最快的体验路径——配置上游 Provider，拿到统一 Base URL 与 API Key，即可在 Cursor、CLI 或自研应用中接入。
+
+- [**快速开始**](/zh/docs/quick-start/) — 本地 Docker 或 Cloudflare D1，逐步命令与排障
 - [使用指南 · 供应商](/zh/docs/guides/providers/) — 从配置上游开始
 - [线上部署 · Docker](/zh/docs/deploy/docker/) · [Cloudflare](/zh/docs/deploy/cloudflare/)
+- [文档首页](/zh/docs/) — 文档地图与常见任务
 - [GitHub 技术参考](/zh/docs/github-reference/) — API / 迁移 / 运维权威索引
 - [源码仓库](https://github.com/OctaFuse/octafuse-gateway) · [贡献指南](https://github.com/OctaFuse/octafuse-gateway/blob/main/CONTRIBUTING.md)

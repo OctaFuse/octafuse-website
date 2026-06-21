@@ -11,8 +11,8 @@ export default defineConfig({
 		starlight({
 			title: 'OctaFuse',
 			description:
-				'面向团队与企业场景的 AI Gateway，统一承接多业务系统的模型调用需求。',
-			tagline: '面向团队与企业场景的 AI Gateway',
+				'开源 AI Gateway：一个 Base URL、一个 API Key，统一接入多家模型供应商与各类 Plan。个人汇总分散密钥，团队与企业统一 Provider、分 Key、预算与审计。',
+			tagline: '一个 Base URL，统一接入所有 AI 模型与计划',
 			defaultLocale: 'zh',
 			logo: {
 				src: './public/favicon.svg',
