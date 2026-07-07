@@ -61,7 +61,7 @@ curl -sS http://localhost:8787/v1/chat/completions \
 
 ## 方式 B：Cloudflare（本地 D1）
 
-不想跑 Docker、或希望与 **Worker + D1** 生产形态一致时，可在本机用 Wrangler 开发。本地数据持久化在 `./.wrangler/state`。
+不想跑 Docker、或希望与 **Worker + D1** 生产形态一致时，可在本机用 Wrangler 开发。本地数据持久化在 `./.wrangler/state`。**本地开发不需要** `cloudflare-worker/*.env`；远程部署见 [Cloudflare Workers 部署](/zh/docs/deploy/cloudflare/)。
 
 **先决条件**：**Node.js 20+**、npm。
 

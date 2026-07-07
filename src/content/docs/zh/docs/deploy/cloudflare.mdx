@@ -1,40 +1,116 @@
 ---
 title: Cloudflare Workers 部署
-description: 将 Proxy 与 Admin 以 Workers 形式部署到 Cloudflare，并绑定共享 D1 数据库的典型步骤与检查项。
+description: 将 Proxy 与 Admin 以 Workers 形式部署到 Cloudflare，通过 gen-wrangler 与实例环境变量绑定共享 D1 数据库。
 ---
 
 import { Aside, Steps } from '@astrojs/starlight/components';
 
-该形态下：**Proxy** 与 **Admin** 各为一个 **Worker** 项目，**共享同一 D1**（绑定名在仓库中一般为 **`DB`**）。适合希望利用 **边缘网络**、减少自有主机运维的团队。
+该形态下：**Proxy** 与 **Admin** 各为一个 **Worker** 项目，**共享同一 D1**（绑定名 **`DB`**）。配置不再手改 Git 中的 `wrangler.jsonc`，而是由 **`npm run gen:wrangler`** 从 **Build variables** 或 **`cloudflare-worker/*.env`** 生成 gitignore 的 wrangler 配置。
 
 <Aside type="note" title="权威细节">
-	`database_id` 三处修改、Workers Builds 命令、常见错误 **10181** 等，见 [GitHub 技术参考](/zh/docs/github-reference/) 中 **deployment-cloudflare**。
+	Build watch paths、多实例 fork、错误 **10181** 等完整运维说明见 [GitHub 技术参考](/zh/docs/github-reference/) 中的 **deployment-cloudflare** 与 **cloudflare-worker/README**。
 </Aside>
 
 ## 部署前准备
 
-- Cloudflare 账号与 **`wrangler` 登录**（或 API Token）。
-- 已 Fork/克隆 [octafuse-gateway](https://github.com/OctaFuse/octafuse-gateway) 且本地 `npm install` 可通过。
+- Cloudflare 账号与 **`wrangler login`**（或 API Token）。
+- 已克隆 [octafuse-gateway](https://github.com/OctaFuse/octafuse-gateway)，仓库根目录 `npm install` 可通过。
+- 远程部署需准备 **D1 数据库**（`npx wrangler d1 create`）并将 **`D1_DATABASE_ID`** 写入 Build variables 或 gitignore 的实例 env——**生产 UUID 勿提交 Git**。
 
-## 推荐操作顺序
+## 配置模型
+
+| 层级 | 说明 |
+|------|------|
+| `packages/*/wrangler.base.jsonc` | 已提交模板（无生产 `database_id`） |
+| `packages/proxy/wrangler.jsonc` 等 | **生成产物**（gitignore），由 `gen:wrangler` 写入 |
+| [`cloudflare-worker/example.env`](https://github.com/OctaFuse/octafuse-gateway/blob/main/cloudflare-worker/example.env) | **dev 演示** canonical 配置（可提交） |
+| `cloudflare-worker/<instance>.env` | **生产/私有**（gitignore）；或仅用 Dashboard **Build variables** |
+
+`gen-wrangler` 只读 **环境变量**（`process.env`），不关心来自 Dashboard 还是 `dotenv -e` 文件。
+
+## 先选一条路径
+
+| 路径 | 何时用 | 需要 `cloudflare-worker/*.env`？ |
+|------|--------|----------------------------------|
+| **A. 本地开发** | 本机改代码、本地 D1 | ❌ 不需要 |
+| **B. dev 演示** | 公共测试 `test-api.octafuse.dev` | ✅ [`example.env`](https://github.com/OctaFuse/octafuse-gateway/blob/main/cloudflare-worker/example.env) |
+| **C. 生产** | 自有生产环境 | ❌ 不进 Git；用 **Build variables** 或 gitignore env |
+
+### 路径 A：本地 Cloudflare 开发
+
+详见 [快速开始 · 方式 B](/zh/docs/quick-start/)：仓库根执行 `npm install`、`npm run db:migrate`、`npm run dev:proxy`（`:8787`）与 `npm run dev:admin`（`:8789`）。**不需要** `cloudflare-worker/*.env`。
+
+### 路径 B：dev 演示（CLI）
+
+基于仓库 [`cloudflare-worker/example.env`](https://github.com/OctaFuse/octafuse-gateway/blob/main/cloudflare-worker/example.env)（Worker 名 `*-dev`，D1 `octafuse-gateway-dev`）。
 
 <Steps>
-1. **创建 D1**：在控制台或 `wrangler d1 create` 创建数据库，复制 **Database ID**。
-1. **写入配置**：将仓库内 **三处** Wrangler 相关文件中的 **`database_id`** 全部替换为真实 UUID（占位符会导致部署失败）。
-1. **安装依赖并迁移远程库**：仓库根执行 `npm install` 与 `npm run db:migrate:remote`（或 CI 等价物）。
-1. **部署 Proxy**：在 **`packages/proxy`** 执行 `wrangler deploy`（或 Connect to Git 指定 Root directory）。
-1. **部署 Admin**：在 **`packages/admin`** 执行 `npm run build:cf` 后 `wrangler deploy`。
-1. **配置 Secret**：**`ADMIN_PASSWORD`** 等敏感项使用 `wrangler secret put`，勿提交到 Git。
-1. **绑定域名**：为 Proxy、Admin 分别绑定 HTTPS 域名，与 **`GATEWAY_URL` / `GATEWAY_MASTER_URL`** 对齐。
-1. **验收**：`GET /health`、登录 Admin、用测试 Key 走一条聊天请求（参见 [快速开始](/zh/docs/quick-start/)）。
+1. **创建 D1**（若尚未创建）：`npx wrangler d1 create octafuse-gateway-dev`，用 `npx wrangler d1 list` 取 UUID 写入 `example.env` 的 **`D1_DATABASE_ID`**。
+1. **创建 Worker**：Dashboard 中创建与 env 一致的 **`octafuse-gateway-proxy-dev`**、**`octafuse-gateway-admin-dev`**。
+1. **配置 Secret**：`npx wrangler secret put ADMIN_PASSWORD --name octafuse-gateway-admin-dev`。
+1. **迁移并部署**（仓库根）：
+   ```bash
+   npx dotenv -e ./cloudflare-worker/example.env -- npm run db:migrate:remote
+   npx dotenv -e ./cloudflare-worker/example.env -- npm run deploy:proxy
+   npx dotenv -e ./cloudflare-worker/example.env -- npm run deploy:admin
+   ```
+1. **验收**：`GET https://test-api.octafuse.dev/health`、Admin 登录、用测试 Key 走一条聊天请求。
 </Steps>
+
+dev 演示**仅 CLI 发版**；有新 SQL 时先 `db:migrate:remote`，再 `deploy:*`。
+
+### 路径 C：生产（CLI 或 Git 自动部署）
+
+<Steps>
+1. **准备实例配置**：复制 `example.env` 为 `cloudflare-worker/<your-instance>.env`（**勿 commit**），或仅在 Dashboard 配置 **Build variables**（变量名相同）。
+1. **填写环境变量**（见下表）；**`D1_DATABASE_ID` 只放 Dashboard 或 gitignore env**。
+1. **首次 bootstrap**（可选 CLI，与 CI 相同生成逻辑）：
+   ```bash
+   npx dotenv -e ./cloudflare-worker/<instance>.env -- npm run db:migrate:remote
+   npx dotenv -e ./cloudflare-worker/<instance>.env -- npm run deploy:proxy
+   npx dotenv -e ./cloudflare-worker/<instance>.env -- npm run deploy:admin
+   ```
+1. **Connect to Git**（可选）：Proxy 与 Admin **各 Connect 一次**；**Root directory 留空**（monorepo 根），**勿**设为 `packages/proxy`。
+1. **Build variables**：两个 Worker 各配一套，与实例 env **同名同值**。
+1. **验收**：`GET /health`、Admin 登录、下游 `GATEWAY_URL` / `GATEWAY_MASTER_URL` / `GATEWAY_MASTER_KEY` 对齐（见 [系统集成](/zh/docs/guides/integration/)）。
+</Steps>
+
+## 环境变量（Build variables / 本地 `.env`）
+
+| 变量 | 说明 |
+|------|------|
+| `PROXY_WORKER_NAME` / `ADMIN_WORKER_NAME` | **须与 Dashboard Worker 名一致** |
+| `D1_DATABASE_NAME` | D1 逻辑库名 |
+| `D1_DATABASE_ID` | 远程 deploy / migrate **必填** |
+| `D1_MIGRATIONS_WORKER_NAME` | 可选；仅 D1 迁移配置名，**无需建 Worker** |
+| `PROXY_CUSTOM_DOMAIN` / `ADMIN_CUSTOM_DOMAIN` | 可选；不设则由 Dashboard 绑定域名 |
+
+## Workers Builds 命令
+
+**Root directory 留空**（monorepo 根）。`npm ci` 的 `postinstall` 会跑 `gen:wrangler`，读取 Build variables 生成 `wrangler.jsonc`。
+
+| Worker | Build command | Deploy command |
+|--------|---------------|----------------|
+| **Proxy** | `npm ci && npm run gen:wrangler` | `npm run deploy -w @octafuse/proxy` |
+| **Admin** | `npm ci && npm run gen:wrangler && npm run build:cf -w @octafuse/admin` | `cd packages/admin && npx opennextjs-cloudflare deploy` |
+
+<Aside type="caution" title="D1 迁移不在 CI">
+	Git 流水线**不会**自动跑 D1 迁移。有新 SQL 时，**先** `npm run db:migrate:remote`（带实例 env），**再** `git push` 或本地 `deploy:*`。
+</Aside>
+
+## Secrets 与下游
+
+- **`ADMIN_PASSWORD`**：`npx wrangler secret put ADMIN_PASSWORD --name <ADMIN_WORKER_NAME>`，勿写入 Git 或 wrangler `vars`。
+- 下游门户：`GATEWAY_URL`（Proxy 根 URL）、`GATEWAY_MASTER_URL`（Admin 根 URL）、`GATEWAY_MASTER_KEY`（D1 `system_config.MASTER_KEY`）。
 
 ## 与 Docker 自建如何选
 
 - 更强 **数据驻留与内网** 控制 → [Docker 部署](/zh/docs/deploy/docker/)。  
-- 更强 **边缘与托管数据库** 诉求 → 本页路径。
+- 更强 **边缘与托管 D1** 诉求 → 本页路径。
 
 ## 相关页面
 
 - [Docker 部署](/zh/docs/deploy/docker/)  
+- [快速开始](/zh/docs/quick-start/)  
 - [系统集成](/zh/docs/guides/integration/)  
+- [GitHub 技术参考](/zh/docs/github-reference/)  

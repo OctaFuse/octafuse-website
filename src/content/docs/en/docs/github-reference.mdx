@@ -8,7 +8,7 @@ import { Aside, CardGrid, LinkCard } from '@astrojs/starlight/components';
 These links point into the **[octafuse-gateway](https://github.com/OctaFuse/octafuse-gateway)** repository. They **change with releases**—use them for development, operations, and deep troubleshooting. If this site and the repo disagree, **trust the repository**.
 
 <Aside type="tip" title="Where to start">
-	**Using OctaFuse**: follow [Quick start](/en/docs/quick-start/) → [First-time Admin setup](/en/docs/first-time-setup/) → [Calling the APIs](/en/docs/call-apis/). This page does not repeat those steps.
+	**Using OctaFuse**: follow [Quick start](/en/docs/quick-start/) → [Providers](/en/docs/guides/providers/) → [Integration](/en/docs/guides/integration/). This page does not repeat those steps.
 </Aside>
 
 ## APIs & examples
@@ -24,7 +24,8 @@ These links point into the **[octafuse-gateway](https://github.com/OctaFuse/octa
 | Doc | What it covers |
 |-----|----------------|
 | [docs/ops/deployment.md](https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/ops/deployment.md) | Deployment patterns index |
-| [docs/ops/deployment-cloudflare.md](https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/ops/deployment-cloudflare.md) | Cloudflare: D1, `database_id`, Workers Builds, troubleshooting |
+| [cloudflare-worker/README.md](https://github.com/OctaFuse/octafuse-gateway/blob/main/cloudflare-worker/README.md) | Cloudflare path cheat sheet: local / dev demo / production Git, CLI commands |
+| [docs/ops/deployment-cloudflare.md](https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/ops/deployment-cloudflare.md) | Cloudflare: `gen-wrangler`, Build variables, Workers Builds, D1 migration order, troubleshooting |
 | [docs/ops/deployment-docker.md](https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/ops/deployment-docker.md) | Docker / GHCR / split compose |
 | [docs/ops/local-testing-environments.md](https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/ops/local-testing-environments.md) | Local dev: D1 / Node + SQL / Docker combos |
 | [docs/architecture/runtime-data.md](https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/architecture/runtime-data.md) | Runtime × database contracts |

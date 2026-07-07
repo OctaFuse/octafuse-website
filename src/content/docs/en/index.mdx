@@ -98,7 +98,7 @@ OctaFuse addresses that as a gateway you can **own and evolve**:
 		**Playground** for single-route test calls without spending user budgets; **Simulator** to rehearse auth, routing, billing, and logging from the browser with a real key.
 	</Card>
 	<Card title="Flexible deployment" icon="rocket">
-		**Cloudflare** (Worker + Pages + **D1**) or self-hosted (**Docker / Node** + **Postgres** or **MySQL**). Local Docker gets you running in minutes.
+		**Cloudflare** (**Worker + D1**) or self-hosted (**Docker / Node** + **Postgres** or **MySQL**). Local Docker gets you running in minutes.
 	</Card>
 	<Card title="Admin API integration" icon="external">
 		Hook portals and apps through **`/api/admin/*`**—provision users, create keys, sync budgets—so product code stays focused on AI use cases.
@@ -110,7 +110,7 @@ OctaFuse addresses that as a gateway you can **own and evolve**:
 Pick based on **compliance, latency, data residency, and operations**:
 
 - **Docker (laptop or private network)**: fastest path to try OctaFuse—great for PoCs, personal key consolidation, and internal debugging.
-- **Cloudflare**: edge-friendly footprint with **D1** for configuration and metadata.
+- **Cloudflare**: **Workers** for Proxy and Admin with **D1** for configuration and metadata.
 - **Self-hosted**: stricter data boundaries or alignment with existing **Postgres / MySQL** operations.
 
 See the production section on the [documentation home](/en/docs/) for trade-offs. Licensed under **GNU AGPL v3** — see [LICENSE](https://github.com/OctaFuse/octafuse-gateway/blob/main/LICENSE).

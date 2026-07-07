@@ -8,7 +8,7 @@ import { Aside, CardGrid, LinkCard } from '@astrojs/starlight/components';
 以下链接指向 **[octafuse-gateway](https://github.com/OctaFuse/octafuse-gateway)** 仓库内文档，**会随版本迭代**；适用于开发、运维与深度排障。若本站摘要与仓库不一致，**以仓库为准**。
 
 <Aside type="tip" title="使用路径建议">
-	**使用 OctaFuse**：请按 [快速开始](/zh/docs/quick-start/) → [管理台首次配置](/zh/docs/first-time-setup/) → [调用推理接口](/zh/docs/call-apis/) 阅读；本页不重复操作步骤。
+	**使用 OctaFuse**：请按 [快速开始](/zh/docs/quick-start/) → [供应商配置](/zh/docs/guides/providers/) → [系统集成](/zh/docs/guides/integration/) 阅读；本页不重复操作步骤。
 </Aside>
 
 ## API 与示例
@@ -24,7 +24,8 @@ import { Aside, CardGrid, LinkCard } from '@astrojs/starlight/components';
 | 文档 | 内容 |
 |------|------|
 | [deployment.md](https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/ops/deployment.md) | 部署模式索引 |
-| [deployment-cloudflare.md](https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/ops/deployment-cloudflare.md) | Cloudflare：D1、`database_id`、Workers Builds、排障 |
+| [cloudflare-worker/README.md](https://github.com/OctaFuse/octafuse-gateway/blob/main/cloudflare-worker/README.md) | Cloudflare 路径速查：本地 / dev 演示 / 生产 Git、CLI 命令清单 |
+| [deployment-cloudflare.md](https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/ops/deployment-cloudflare.md) | Cloudflare：`gen-wrangler`、Build variables、Workers Builds、D1 迁移顺序、排障 |
 | [deployment-docker.md](https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/ops/deployment-docker.md) | Docker / GHCR / 分拆编排 |
 | [local-testing-environments.md](https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/ops/local-testing-environments.md) | 本地开发：D1 / Node + SQL / Docker 组合 |
 | [runtime-data.md](https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/architecture/runtime-data.md) | 运行时与数据面契约 |

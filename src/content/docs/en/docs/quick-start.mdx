@@ -61,7 +61,7 @@ curl -sS http://localhost:8787/v1/chat/completions \
 
 ## Option B: Cloudflare (local D1)
 
-Skip Docker—or match the **Worker + D1** production stack—by running Wrangler locally. State persists under `./.wrangler/state`.
+Skip Docker—or match the **Worker + D1** production stack—by running Wrangler locally. State persists under `./.wrangler/state`. **Local dev does not need** `cloudflare-worker/*.env`; for remote deploy see [Cloudflare Workers deployment](/en/docs/deploy/cloudflare/).
 
 **Prerequisites**: **Node.js 20+**, npm.
 
