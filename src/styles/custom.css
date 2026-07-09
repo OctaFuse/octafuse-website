@@ -1080,7 +1080,7 @@ html[data-theme='light'] .hero .actions .sl-link-button.secondary:hover {
 		var(--of-surface-card) 100%
 	) !important;
 	box-shadow: var(--sl-shadow-sm);
-	transition: border-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
+	transition: border-color 0.18s ease, box-shadow 0.18s ease;
 }
 
 .card-grid .card::before {
@@ -1098,7 +1098,6 @@ html[data-theme='light'] .hero .actions .sl-link-button.secondary:hover {
 .card-grid .card:hover {
 	border-color: var(--of-card-border-hover) !important;
 	box-shadow: 0 0 0 1px var(--of-card-border-hover), 0 14px 34px hsl(184 100% 20% / 0.14), var(--sl-shadow-md);
-	transform: translateY(-1px);
 }
 
 .card-grid .card:hover::before {

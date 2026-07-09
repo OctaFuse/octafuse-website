@@ -22,109 +22,69 @@ hero:
 
 import { Card, CardGrid } from '@astrojs/starlight/components';
 
-## Overview
+Model access is getting fragmented: providers, compatible endpoints, coding plans, token plans, self-hosted models, and internal accounts all bring their own **Base URLs**, keys, quotas, pricing, and logs. Applications usually want something simpler: one stable entrypoint, controlled routing, clear budgets, and traceable request history.
 
-**OctaFuse** is an open-source **AI Gateway** that consolidates model access scattered across vendors and plans into **one calling surface**.
+Managed AI gateways usually revolve around a platform-owned model catalog, provider list, and control plane, so provider onboarding, routing policy, billing semantics, and extension points tend to stay inside that platform boundary. **OctaFuse** is designed as a self-hostable, modifiable gateway layer instead: connect official providers, third-party compatible endpoints, private model services, and multiple upstream keys while keeping routing, limits, circuit breaking, budgets, audit trails, and Admin APIs in your own system. Clients keep calling familiar OpenAI / Anthropic / Gemini-compatible APIs.
 
-- **Upstream**: OpenAI, Anthropic, Gemini, OpenRouter, coding / token / agent plans, plus Ollama, vLLM, and other self-hosted models—all wired in at the gateway layer.
-- **Downstream**: clients need only **one Base URL** and **one API Key**, calling through familiar OpenAI / Anthropic / Gemini shapes without caring which provider handles the request.
-
-Whether you are an individual juggling multiple plans and keys, or a team issuing separate keys for departments or customers with budgets and audit trails, OctaFuse runs on the same gateway stack.
-
-## Typical scenarios
+## Application Scenarios
 
 <CardGrid stagger>
 	<Card title="Individual developers" icon="add-document">
-		Subscribed to several coding plans, token plans, or agent bundles—and now juggle different **Base URLs** and **API Keys**? OctaFuse rolls upstream vendors into **one gateway** so your tools point at a single endpoint to switch models, degrade gracefully, or fail over.
+		Consolidate model subscriptions, coding plans, token plans, and backup upstreams behind one Gateway. Cursor, CLIs, scripts, and personal tools only need one Base URL and one user key.
 	</Card>
-	<Card title="Teams and enterprises" icon="group">
-		Wire **Providers** once, then issue separate **API Keys** for departments, projects, or external customers—with budgets, billing lenses, request logs, and audit trails—so model governance lives outside application code.
+	<Card title="AI apps and agents" icon="laptop">
+		Build against stable model IDs and common protocols. Move model swaps, canary routes, backup providers, degradation, and default parameters into the gateway layer.
+	</Card>
+	<Card title="Platform and IT teams" icon="setting">
+		Create separate users and API keys for departments, projects, members, or customers, with budget periods, status, and metadata outside application services.
+	</Card>
+	<Card title="API proxy businesses" icon="external">
+		Connect multiple upstream providers and key pools, issue downstream customer keys, and manage each customer through request logs, cost lenses, and audit records.
+	</Card>
+	<Card title="Private and hybrid models" icon="setting">
+		Put self-hosted compatible services, internal models, Ollama / vLLM paths, and public model providers behind one routing system with a consistent external surface.
+	</Card>
+	<Card title="Cost and reliability ops" icon="analytics">
+		Observe usage and failures by model, Provider, user, and reliability view, then tune default routes, backups, budgets, and upstream key quotas.
 	</Card>
 </CardGrid>
 
-## More use cases
-
-- **AI app and agent builders**: keep product code on one protocol and Base URL; handle model swaps, canaries, degradation, and failover at the gateway.
-- **API resellers and proxy operators**: connect multiple upstream providers and give each downstream customer its own key, budget, billing view, and logs.
-- **Private and hybrid model stacks**: put Ollama, vLLM, or internal inference next to public cloud models behind the same gateway.
-- **Labs, classrooms, and small teams**: admins configure models and quotas once; members share one key instead of maintaining vendor accounts individually.
-- **Cost- and reliability-conscious teams**: compare spend and upstream health through routing, logs, and Analytics before picking defaults and backups.
-
-## Why OctaFuse
-
-Model supply keeps fragmenting—endpoints, API keys, quotas, invoices, and logs sit in different vendor consoles and tools. Switching models or debugging an incident means touching many places.
-
-After reviewing many open-source and commercial options, we kept seeing the same pain points:
-
-- **Narrow provider coverage**, making it awkward to mix public cloud, third-party inference, and self-hosted models.
-- **Single-protocol surfaces**, forcing extra adapters when your stack already speaks Anthropic or Gemini.
-- **Shallow billing and audit**, so it is hard to model per-route, per-user, or supply-side vs user-side costs.
-
-OctaFuse addresses that as a gateway you can **own and evolve**:
-
-- Wire in more upstream vendors—including plans and local / internal models—and expose multiple client protocols from one place.
-- Define routing, billing lenses, and audit the way your workflow needs—whether you are consolidating personal keys or reconciling across teams.
-- Integrate portals and apps through a stable **Admin API** with less coupling to vendor details.
-
-## Core capabilities
+## Product Capabilities
 
 <CardGrid stagger>
-	<Card title="One access surface" icon="laptop">
-		Clients need one **Base URL** and one **API Key**. The gateway speaks OpenAI, Anthropic, Gemini, and other common shapes while routing to any configured upstream.
+	<Card title="Three protocol entrypoints" icon="external">
+		Supports OpenAI Chat Completions, Anthropic Messages, Gemini `generateContent` / `streamGenerateContent`, plus `GET /v1/models` and public catalog discovery.
 	</Card>
-	<Card title="Keys and budgets" icon="setting">
-		Issue **API Keys** per user or downstream scenario, set caps and period resets, and let clients check quota-style status via **`GET /v1/me`**.
+	<Card title="Models and route groups" icon="random">
+		Clients can use stable model IDs or select routes with `baseId:group`. One model can attach multiple upstream routes by protocol, route group, priority, and weight.
 	</Card>
-	<Card title="Routing and failover" icon="random">
-		Manage **Providers, models, and routes**; use **route groups** and priority-based **failover** when an upstream misbehaves.
+	<Card title="Provider key scheduling" icon="approve-check">
+		A Provider can hold multiple upstream keys. Scheduling combines route priority, key priority, headroom, circuit state, and sticky bindings before failover.
 	</Card>
-	<Card title="Billing and reconciliation" icon="document">
-		**metered_cost**, **standard_cost**, and **charged_cost**—align supply-side metering, catalog pricing, and what you actually charge users.
+	<Card title="Limits, circuits, sticky" icon="warning">
+		Upstream keys support **RPM / TPM / max concurrency**. 429, 401 / 403, 5xx, and network errors use separate cooldown policies; sticky bindings can improve prompt cache locality.
 	</Card>
-	<Card title="Audit and observability" icon="magnifier">
-		Global and **per-key** request logs plus **user-level audit trails** for traceability and investigations.
+	<Card title="User keys and budgets" icon="padlock">
+		Budgets and reset periods belong to Users; each user can own multiple active API keys. Proxy checks budget before forwarding and records charges after usage is parsed.
 	</Card>
-	<Card title="Error alerts" icon="warning">
-		Optional **Feishu (Lark)** and **WeChat Work** bot webhooks in Admin—forwarding failures surface upstream incidents, rate limits, or keys that need attention.
+	<Card title="Logs, audit, analytics" icon="magnifier">
+		Request logs capture protocol, model, route group, Provider, provider key, tokens, status, and costs. Audit logs track budget charges, resets, and user / key lifecycle events.
 	</Card>
-	<Card title="Usage analytics" icon="chart">
-		Time-range views in Admin for model, provider, and user usage plus **reliability** summaries—cost awareness and upstream health at a glance.
+	<Card title="Playground and Simulator" icon="open-book">
+		Playground tests a single Admin route. Simulator uses a real user key from the browser to verify auth, routing, billing, and logs.
 	</Card>
-	<Card title="Debug and rehearsal" icon="approve-check">
-		**Playground** for single-route test calls without spending user budgets; **Simulator** to rehearse auth, routing, billing, and logging from the browser with a real key.
-	</Card>
-	<Card title="Flexible deployment" icon="rocket">
-		**Cloudflare** (**Worker + D1**) or self-hosted (**Docker / Node** + **Postgres** or **MySQL**). Local Docker gets you running in minutes.
-	</Card>
-	<Card title="Admin API integration" icon="external">
-		Hook portals and apps through **`/api/admin/*`**—provision users, create keys, sync budgets—so product code stays focused on AI use cases.
+	<Card title="Deployment and integration" icon="rocket">
+		Run on Cloudflare Worker + Pages + D1, or Node / Docker with PostgreSQL or MySQL 8. External portals can provision users, keys, and budgets through **`/api/admin/*`**.
 	</Card>
 </CardGrid>
 
-## Deployment options
+## Next Steps
 
-Pick based on **compliance, latency, data residency, and operations**:
+Local Docker is the fastest path: start Proxy and Admin, configure Provider, model, and route, create a user key, then point clients at the Gateway Base URL.
 
-- **Docker (laptop or private network)**: fastest path to try OctaFuse—great for PoCs, personal key consolidation, and internal debugging.
-- **Cloudflare**: **Workers** for Proxy and Admin with **D1** for configuration and metadata.
-- **Self-hosted**: stricter data boundaries or alignment with existing **Postgres / MySQL** operations.
-
-See the production section on the [documentation home](/en/docs/) for trade-offs. Licensed under **GNU AGPL v3** — see [LICENSE](https://github.com/OctaFuse/octafuse-gateway/blob/main/LICENSE).
-
-## Who it's for
-
-- **Individual developers and creators** consolidating multiple plans and vendor keys behind one gateway.
-- **AI app and agent teams** that need model swaps, canaries, and degradation without vendor logic in every service.
-- **Platform and IT teams** that need one place to govern providers, keys, budgets, billing, and audit.
-- **Providers reselling AI access** who issue separate keys per customer and track usage and cost.
-
-## Get running in 5 minutes
-
-Local Docker is the fastest path—configure upstream providers, grab your unified Base URL and API Key, and point Cursor, CLIs, or your own apps at the gateway.
-
-- [**Quick start**](/en/docs/quick-start/) — local Docker or Cloudflare D1, step-by-step commands and troubleshooting
-- [User guide · Providers](/en/docs/guides/providers/) — start configuring upstreams
-- [Production · Docker](/en/docs/deploy/docker/) · [Cloudflare Workers](/en/docs/deploy/cloudflare/)
-- [Documentation home](/en/docs/) — map and task lookup
-- [GitHub technical reference](/en/docs/github-reference/) — APIs, migrations, ops index
+- [**Quick start**](/en/docs/quick-start/) — run the smallest local Docker or Cloudflare D1 loop
+- [Providers](/en/docs/guides/providers/) · [Models](/en/docs/guides/models/) · [Routing](/en/docs/guides/routing/)
+- [Request logs](/en/docs/guides/request-logs/) · [Audit logs](/en/docs/guides/audit-logs/) · [System config](/en/docs/guides/system-config/)
+- [Docker deployment](/en/docs/deploy/docker/) · [Cloudflare deployment](/en/docs/deploy/cloudflare/)
+- [GitHub technical reference](/en/docs/github-reference/) — APIs, architecture, migrations, and operations index
 - [Source repository](https://github.com/OctaFuse/octafuse-gateway) · [Contributing](https://github.com/OctaFuse/octafuse-gateway/blob/main/CONTRIBUTING.md)

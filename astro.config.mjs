@@ -41,6 +41,18 @@ export default defineConfig({
 						href: 'https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,400..600;1,14..32,400..600&family=JetBrains+Mono:wght@400;500&display=swap',
 					},
 				},
+				{
+					tag: 'script',
+					content: `
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?3d0ec74d9a0bb0c976f630229e1f02b6";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+`,
+				},
 			],
 			locales: {
 				zh: {
