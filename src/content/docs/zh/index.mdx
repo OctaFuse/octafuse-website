@@ -8,7 +8,7 @@ hero:
   title: '<span class="of-hero-heading"><img src="/favicon.svg" class="of-hero-logo" width="104" height="104" alt="" /><span class="of-hero-heading-text"><span class="of-hero-kicker">AI Gateway</span><span class="of-hero-title">OctaFuse</span></span></span>'
   tagline: 一个 Base URL，一个 API Key——把分散的模型供应商、Coding Plan 与 Token Plan 汇总成统一接入入口。
   image:
-    html: '<div class="of-gateway-console" aria-label="OctaFuse 网关路由控制台"><div class="of-console-top"><span></span><strong>gateway.route</strong><code>live</code></div><div class="of-console-grid"><div class="of-console-stack"><img src="/brand/openai.svg" width="28" height="28" alt="OpenAI" /><img src="/brand/anthropic.svg" width="28" height="28" alt="Anthropic" /><img src="/brand/googlegemini.svg" width="28" height="28" alt="Gemini" /><img src="/brand/deepseek.svg" width="28" height="28" alt="DeepSeek" /></div><div class="of-console-core"><span>OctaFuse</span><strong>Policy Router</strong><small>budget · failover · audit</small></div><div class="of-console-output"><code>BASE_URL</code><code>API_KEY</code><code>/v1/chat</code></div></div><div class="of-console-metrics"><span><strong>3</strong> protocols</span><span><strong>∞</strong> providers</span><span><strong>1</strong> gateway</span></div></div>'
+    html: '<div class="of-gateway-console" aria-label="OctaFuse 网关路由控制台"><div class="of-console-top"><span></span><strong>gateway.route</strong><code>live</code></div><div class="of-console-grid"><div class="of-console-stack" aria-label="上游供应商"><img src="/brand/openai.svg" width="28" height="28" alt="OpenAI" /><img src="/brand/anthropic.svg" width="28" height="28" alt="Anthropic" /><img src="/brand/googlegemini.svg" width="28" height="28" alt="Gemini" /><img src="/brand/deepseek.svg" width="28" height="28" alt="DeepSeek" /></div><div class="of-console-core"><span>OctaFuse</span><strong>Policy Router</strong><small>budget · failover · audit</small></div><div class="of-console-protocols" aria-label="客户端协议"><span><strong>OpenAI</strong><small>/v1/chat</small></span><span><strong>Anthropic</strong><small>/v1/messages</small></span><span><strong>Gemini</strong><small>/v1beta</small></span></div></div><div class="of-console-metrics"><span><strong>3</strong> protocols</span><span><strong>∞</strong> providers</span><span><strong>1</strong> gateway</span></div></div>'
   actions:
     - text: 快速开始
       link: /zh/docs/quick-start/
@@ -18,10 +18,6 @@ hero:
       link: /zh/docs/
       icon: open-book
       variant: secondary
-    - text: GitHub
-      link: https://github.com/OctaFuse/octafuse-gateway
-      icon: github
-      variant: minimal
 ---
 
 import { Card, CardGrid } from '@astrojs/starlight/components';
