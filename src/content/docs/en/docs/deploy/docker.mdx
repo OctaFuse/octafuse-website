@@ -8,12 +8,10 @@ import { Aside, Steps } from '@astrojs/starlight/components';
 Docker fits **local demos**, **private networks**, and **fully self-managed Postgres/MySQL** with your existing ops practices.
 
 <Aside type="note" title="Canonical details">
-	GHCR image names, split compose, full env tables: [GitHub technical reference](/en/docs/github-reference/) → **Docker / self-hosted**.
+	This page is the operator-facing short path. GHCR image names, MySQL/Postgres differences, timezone notes, and full env tables live in [GitHub technical reference](/en/docs/github-reference/) → **Docker / self-hosted**.
 </Aside>
 
 ## Local quickstart
-
-Same as [Quick start](/en/docs/quick-start/):
 
 ```bash
 git clone https://github.com/OctaFuse/octafuse-gateway.git
@@ -21,16 +19,88 @@ cd octafuse-gateway
 docker compose -f docker/compose/quickstart.yml up --build
 ```
 
+This compose starts **Postgres + migrate + Proxy + Admin**:
+
+- Proxy: `http://localhost:8787`
+- Admin: `http://localhost:8789`, default login `admin / changeme`
+- Default admin Bearer key: `sk-dev-admin-key`
+
+If local ports conflict, set `POSTGRES_HOST_PORT`, `GATEWAY_PROXY_HOST_PORT`, or `GATEWAY_ADMIN_HOST_PORT`. See [Quick start](/en/docs/quick-start/) for the guided path.
+
 ## Production self-host
 
+Production usually follows one of two paths: **build images locally**, or run **GHCR / private registry** images. In both cases, prefer **migrate first, then start Proxy/Admin**; alternatively enable `AUTO_MIGRATE=1` on only one service.
+
+### Option A: Local images + bundled database
+
+Postgres:
+
+```bash
+docker compose -f docker/compose/node-pg.yml up -d postgres
+docker compose -f docker/compose/node-pg.yml --profile migrate run --rm migrate
+docker compose -f docker/compose/node-pg.yml up -d gateway-proxy gateway-admin
+```
+
+MySQL 8:
+
+```bash
+docker compose -f docker/compose/node-mysql.yml up -d mysql
+docker compose -f docker/compose/node-mysql.yml --profile migrate run --rm migrate
+docker compose -f docker/compose/node-mysql.yml up -d gateway-proxy gateway-admin
+```
+
+For MySQL, set `DATABASE_DRIVER=mysql` and use a `mysql://...` `DATABASE_URL`.
+
+### Option B: Prebuilt images + external Postgres
+
+`docker/examples/` contains the production-style templates: Proxy only, Admin only, or Proxy + Admin on one host. Keep env files out of Git; `docker/deploy/` is the intended local location.
+
+```bash
+cp docker/examples/env.compose.external.example docker/deploy/.env.local
+# Edit docker/deploy/.env.local: image tags, DATABASE_URL, ADMIN_PASSWORD, etc.
+docker compose --env-file docker/deploy/.env.local -f docker/examples/gateway.compose.yml --profile migrate run --rm migrate
+docker compose --env-file docker/deploy/.env.local -f docker/examples/gateway.compose.yml up -d
+```
+
+Image names depend on your registry and repo, commonly:
+
+- `ghcr.io/<owner>/<repo>-proxy:<tag>`
+- `ghcr.io/<owner>/<repo>-admin:<tag>`
+- `ghcr.io/<owner>/<repo>-migrate:<tag>`
+
+### Option C: Build individual images
+
+From the repo root:
+
+```bash
+docker build -f Dockerfile.proxy -t octafuse-proxy:local .
+docker build -f Dockerfile.admin -t octafuse-admin:local .
+docker build -f Dockerfile.migrate -t octafuse-migrate:local .
+```
+
+`Dockerfile.migrate` is a one-shot migration job; `Dockerfile.proxy` and `Dockerfile.admin` are long-running application images.
+
+## Key environment variables
+
 <Steps>
-1. **Provision DB**: Postgres or MySQL with dedicated credentials.
-1. **Configure env**: copy **`.env.example` → `.env`**, set **`DATABASE_URL`**, **`DATABASE_DRIVER=mysql`** when needed, **`ADMIN_USERNAME` / `ADMIN_PASSWORD`**, etc.
-1. **Migrate**: `npm run db:migrate:pg` or `npm run db:migrate:mysql` from repo root (per docs).
-1. **Run Proxy + Admin**: Dockerfiles under the repo or your orchestrator.
-1. **TLS**: terminate HTTPS in front (Nginx/Caddy); split hostnames for Admin vs Proxy.
-1. **Downstream env**: `GATEWAY_URL`, `GATEWAY_MASTER_URL`, `GATEWAY_MASTER_KEY` — [Integration](/en/docs/guides/integration/).
+1. `DATABASE_URL`: Proxy, Admin, and migrate must point at the same database.
+1. `DATABASE_DRIVER`: optional for Postgres; required as `mysql` for MySQL.
+1. `ADMIN_USERNAME` / `ADMIN_PASSWORD`: Admin login, needed only by the Admin container.
+1. `AUTO_MIGRATE`: optional. When set to `1`, an app container runs idempotent migrations before startup; production can instead use a dedicated migrate job.
+1. `GATEWAY_PROXY_PORT` / `GATEWAY_ADMIN_PORT`: host port mappings only; containers still listen on `8787` / `8789`.
 </Steps>
+
+For Postgres, keep the connection/session timezone at UTC; when using `DATABASE_URL`, you can add `options=-c timezone=UTC`. For MySQL, keep the instance or session timezone at UTC as well to make request-log time windows easier to reason about.
+
+## Smoke test
+
+```bash
+curl -fsS http://127.0.0.1:8787/health
+curl -fsS http://127.0.0.1:8789/api/admin/config \
+  -H 'Authorization: Bearer sk-dev-admin-key'
+```
+
+In production, put Proxy and Admin behind a reverse proxy with separate hostnames and TLS. Downstream systems need `GATEWAY_URL`, `GATEWAY_MASTER_URL`, and `GATEWAY_MASTER_KEY`; see [Integration](/en/docs/guides/integration/).
 
 ## vs Cloudflare
 

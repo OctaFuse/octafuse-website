@@ -8,10 +8,10 @@ import { Aside, Steps } from '@astrojs/starlight/components';
 Docker 路径适合：**本地/内网快速体验**、**生产在自有机器或 K8s 上托管**、以及希望 **数据落在 Postgres/MySQL** 且与现有 DBA 流程一致的场景。
 
 <Aside type="note" title="权威细节">
-	镜像名、GHCR、分拆 compose、环境变量全表见 [GitHub 技术参考](/zh/docs/github-reference/) 中 **Docker / 自托管**。
+	本页是面向部署者的常用路径摘要。镜像名、GHCR、MySQL/Postgres 差异、时区建议与完整环境变量表见 [GitHub 技术参考](/zh/docs/github-reference/) 中 **Docker / 自托管**。
 </Aside>
 
-## 本地一键（与快速开始相同）
+## 本地一键体验
 
 ```bash
 git clone https://github.com/OctaFuse/octafuse-gateway.git
@@ -19,18 +19,88 @@ cd octafuse-gateway
 docker compose -f docker/compose/quickstart.yml up --build
 ```
 
-详见 [快速开始](/zh/docs/quick-start/)。
+该 compose 会启动 **Postgres + migrate + Proxy + Admin**：
 
-## 生产自建（常见顺序）
+- Proxy: `http://localhost:8787`
+- Admin: `http://localhost:8789`，默认登录 `admin / changeme`
+- 默认管理 Bearer Key: `sk-dev-admin-key`
+
+如果本机端口冲突，可通过 `POSTGRES_HOST_PORT`、`GATEWAY_PROXY_HOST_PORT`、`GATEWAY_ADMIN_HOST_PORT` 调整宿主机端口。详见 [快速开始](/zh/docs/quick-start/)。
+
+## 生产自建怎么跑
+
+生产通常有两种做法：**本地构建镜像**，或使用发布到 **GHCR / 私有 registry** 的预构建镜像。两种方式都建议遵循 **先 migrate，再启动 Proxy/Admin**；或者只在一个服务上启用 `AUTO_MIGRATE=1`。
+
+### 方式 A：本地构建镜像 + 内置数据库
+
+Postgres：
+
+```bash
+docker compose -f docker/compose/node-pg.yml up -d postgres
+docker compose -f docker/compose/node-pg.yml --profile migrate run --rm migrate
+docker compose -f docker/compose/node-pg.yml up -d gateway-proxy gateway-admin
+```
+
+MySQL 8：
+
+```bash
+docker compose -f docker/compose/node-mysql.yml up -d mysql
+docker compose -f docker/compose/node-mysql.yml --profile migrate run --rm migrate
+docker compose -f docker/compose/node-mysql.yml up -d gateway-proxy gateway-admin
+```
+
+MySQL 场景必须设置 `DATABASE_DRIVER=mysql`，并使用 `mysql://...` 形式的 `DATABASE_URL`。
+
+### 方式 B：预构建镜像 + 外置 Postgres
+
+`docker/examples/` 保留了生产常用的拆分模板：仅 Proxy、仅 Admin、或同机同时启动 Proxy + Admin。环境文件不要提交到 Git，建议放在 `docker/deploy/`。
+
+```bash
+cp docker/examples/env.compose.external.example docker/deploy/.env.local
+# 编辑 docker/deploy/.env.local：镜像 tag、DATABASE_URL、ADMIN_PASSWORD 等
+docker compose --env-file docker/deploy/.env.local -f docker/examples/gateway.compose.yml --profile migrate run --rm migrate
+docker compose --env-file docker/deploy/.env.local -f docker/examples/gateway.compose.yml up -d
+```
+
+镜像名随你的仓库或镜像仓库变化，格式通常是：
+
+- `ghcr.io/<owner>/<repo>-proxy:<tag>`
+- `ghcr.io/<owner>/<repo>-admin:<tag>`
+- `ghcr.io/<owner>/<repo>-migrate:<tag>`
+
+### 方式 C：单独构建镜像
+
+仓库根目录提供三个 Dockerfile：
+
+```bash
+docker build -f Dockerfile.proxy -t octafuse-proxy:local .
+docker build -f Dockerfile.admin -t octafuse-admin:local .
+docker build -f Dockerfile.migrate -t octafuse-migrate:local .
+```
+
+`Dockerfile.migrate` 是一次性迁移 Job；`Dockerfile.proxy` 与 `Dockerfile.admin` 是常驻应用进程。
+
+## 关键环境变量
 
 <Steps>
-1. **准备数据库**：Postgres 或 MySQL，创建专用库与用户。
-1. **配置环境**：在仓库根复制 **`.env.example` → `.env`**，填写 **`DATABASE_URL`**（MySQL 时通常设置 **`DATABASE_DRIVER=mysql`**）、**`ADMIN_USERNAME` / `ADMIN_PASSWORD`** 等。
-1. **迁移**：执行 `npm run db:migrate:pg` 或 `npm run db:migrate:mysql`（在仓库根或文档指定目录）。
-1. **启动 Proxy 与 Admin**：使用仓库 **Dockerfile** 与 **`docker/compose`** 下编排，或映射到你方的 systemd / K8s。
-1. **暴露与 TLS**：前面放置反向代理（Nginx、Caddy 等），仅对公网暴露 **443**；管理台与 Proxy 建议分域名。
-1. **对接下游**：配置 **`GATEWAY_URL` / `GATEWAY_MASTER_URL` / `GATEWAY_MASTER_KEY`**（见 [系统集成](/zh/docs/guides/integration/)）。
+1. `DATABASE_URL`：Proxy、Admin、migrate 必须指向同一个数据库。
+1. `DATABASE_DRIVER`：Postgres 可省略；MySQL 必须为 `mysql`。
+1. `ADMIN_USERNAME` / `ADMIN_PASSWORD`：Admin 登录账号，仅 Admin 容器需要。
+1. `AUTO_MIGRATE`：可选。设为 `1` 时应用容器启动前自动执行幂等迁移；生产也可以改用独立 migrate Job。
+1. `GATEWAY_PROXY_PORT` / `GATEWAY_ADMIN_PORT`：仅影响宿主机端口映射；容器内仍监听 `8787` / `8789`。
 </Steps>
+
+Postgres 建议让连接或实例保持 UTC；如果用 `DATABASE_URL` 控制，可附加 `options=-c timezone=UTC`。MySQL 也建议实例或会话统一为 UTC，避免时间窗口查询排障困难。
+
+## 发布后验证
+
+```bash
+curl -fsS http://127.0.0.1:8787/health
+curl -fsS http://127.0.0.1:8789/api/admin/config \
+  -H 'Authorization: Bearer sk-dev-admin-key'
+```
+
+生产环境应把 Proxy 与 Admin 放在反向代理之后，分别配置域名与 TLS。下游系统需要配置 `GATEWAY_URL`、`GATEWAY_MASTER_URL`、`GATEWAY_MASTER_KEY`，见 [系统集成](/zh/docs/guides/integration/)。
 
 ## 与 Cloudflare 方案如何选
 

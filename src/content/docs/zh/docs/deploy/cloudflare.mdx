@@ -8,7 +8,7 @@ import { Aside, Steps } from '@astrojs/starlight/components';
 该形态下：**Proxy** 与 **Admin** 各为一个 **Worker** 项目，**共享同一 D1**（绑定名 **`DB`**）。配置不再手改 Git 中的 `wrangler.jsonc`，而是由 **`npm run gen:wrangler`** 从 **Build variables** 或 **`cloudflare-worker/*.env`** 生成 gitignore 的 wrangler 配置。
 
 <Aside type="note" title="权威细节">
-	Build watch paths、多实例 fork、错误 **10181** 等完整运维说明见 [GitHub 技术参考](/zh/docs/github-reference/) 中的 **Cloudflare 部署** 与 **Cloudflare 命令速查**。
+	本页是面向部署者的常用路径摘要。Build watch paths、多实例 fork、远程部署后回到本地开发、错误 **10181** 等完整运维说明见 [GitHub 技术参考](/zh/docs/github-reference/) 中的 **Cloudflare 部署** 与 **Cloudflare 命令速查**。
 </Aside>
 
 ## 部署前准备
@@ -16,6 +16,7 @@ import { Aside, Steps } from '@astrojs/starlight/components';
 - Cloudflare 账号与 **`wrangler login`**（或 API Token）。
 - 已克隆 [octafuse-gateway](https://github.com/OctaFuse/octafuse-gateway)，仓库根目录 `npm install` 可通过。
 - 远程部署需准备 **D1 数据库**（`npx wrangler d1 create`）并将 **`D1_DATABASE_ID`** 写入 Build variables 或 gitignore 的实例 env——**生产 UUID 勿提交 Git**。
+- Admin 登录密码使用 **Worker Secret**：`npx wrangler secret put ADMIN_PASSWORD --name <ADMIN_WORKER_NAME>`，不要放进 `wrangler.jsonc` 或 Git。
 
 ## 配置模型
 
@@ -39,6 +40,10 @@ import { Aside, Steps } from '@astrojs/starlight/components';
 ### 路径 A：本地 Cloudflare 开发
 
 详见 [快速开始 · 方式 B](/zh/docs/quick-start/)：仓库根执行 `npm install`、`npm run db:migrate`、`npm run dev:proxy`（`:8787`）与 `npm run dev:admin`（`:8789`）。**不需要** `cloudflare-worker/*.env`。
+
+<Aside type="caution" title="远程部署后回到本地开发">
+	执行过 `deploy:*` 或 `db:migrate:remote` 后，本机生成的 `wrangler.jsonc` 可能带有远程 `D1_DATABASE_ID`。回到本地开发前，请在没有导出 `D1_DATABASE_ID` 的 shell 中执行 `npm run gen:wrangler`，再重启 `dev:proxy` / `dev:admin`。
+</Aside>
 
 ### 路径 B：dev 演示（CLI）
 
@@ -64,7 +69,7 @@ dev 演示**仅 CLI 发版**；有新 SQL 时先 `db:migrate:remote`，再 `depl
 <Steps>
 1. **准备实例配置**：复制 `example.env` 为 `cloudflare-worker/<your-instance>.env`（**勿 commit**），或仅在 Dashboard 配置 **Build variables**（变量名相同）。
 1. **填写环境变量**（见下表）；**`D1_DATABASE_ID` 只放 Dashboard 或 gitignore env**。
-1. **首次 bootstrap**（可选 CLI，与 CI 相同生成逻辑）：
+1. **首次 bootstrap**（可选 CLI，与 Workers Builds 使用同一套生成逻辑）：
    ```bash
    npx dotenv -e ./cloudflare-worker/<instance>.env -- npm run db:migrate:remote
    npx dotenv -e ./cloudflare-worker/<instance>.env -- npm run deploy:proxy
@@ -87,12 +92,16 @@ dev 演示**仅 CLI 发版**；有新 SQL 时先 `db:migrate:remote`，再 `depl
 
 ## Workers Builds 命令
 
-**Root directory 留空**（monorepo 根）。`npm ci` 的 `postinstall` 会跑 `gen:wrangler`，读取 Build variables 生成 `wrangler.jsonc`。
+这里是 **Dashboard → Workers Builds** 的拆分命令，和本地 CLI 的 `npm run deploy:proxy` / `npm run deploy:admin` 不是同一种入口。**Root directory 留空**（monorepo 根）。`npm ci` 的 `postinstall` 会跑 `gen:wrangler`，读取 Build variables 生成 `wrangler.jsonc`。
 
 | Worker | Build command | Deploy command |
 |--------|---------------|----------------|
 | **Proxy** | `npm ci && npm run gen:wrangler` | `npm run deploy -w @octafuse/proxy` |
 | **Admin** | `npm ci && npm run gen:wrangler && npm run build:cf -w @octafuse/admin` | `cd packages/admin && npx opennextjs-cloudflare deploy` |
+
+<Aside type="caution" title="不要把本地 deploy:* 粘到 Dashboard">
+	Workers Builds 已经把 build 与 deploy 拆开。Dashboard 的 Deploy command 不要填 `npm run deploy:proxy` 或 `npm run deploy:admin`，否则会重复生成配置，Admin 还可能重复构建。
+</Aside>
 
 <Aside type="caution" title="D1 迁移不在 CI">
 	Git 流水线**不会**自动跑 D1 迁移。有新 SQL 时，**先** `npm run db:migrate:remote`（带实例 env），**再** `git push` 或本地 `deploy:*`。

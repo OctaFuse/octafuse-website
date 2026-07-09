@@ -8,7 +8,7 @@ import { Aside, Steps } from '@astrojs/starlight/components';
 **Proxy** and **Admin** are separate **Worker** projects sharing one **D1** database (binding **`DB`**). You no longer hand-edit committed `wrangler.jsonc` files—**`npm run gen:wrangler`** generates gitignored wrangler configs from **Build variables** or **`cloudflare-worker/*.env`**.
 
 <Aside type="note" title="Canonical details">
-	Build watch paths, multi-instance forks, error **10181**, and full ops notes: [GitHub technical reference](/en/docs/github-reference/) → **Cloudflare deployment** and **Cloudflare command cheatsheet**.
+	This page is the operator-facing short path. Build watch paths, multi-instance forks, returning to local dev after remote deploys, error **10181**, and full ops notes live in [GitHub technical reference](/en/docs/github-reference/) → **Cloudflare deployment** and **Cloudflare command cheatsheet**.
 </Aside>
 
 ## Prerequisites
@@ -16,6 +16,7 @@ import { Aside, Steps } from '@astrojs/starlight/components';
 - Cloudflare account and **`wrangler login`** (or API token).
 - Cloned [octafuse-gateway](https://github.com/OctaFuse/octafuse-gateway) with working `npm install` at repo root.
 - For remote deploy: a **D1 database** (`npx wrangler d1 create`) and **`D1_DATABASE_ID`** in Build variables or a gitignored instance env—**do not commit production UUIDs to Git**.
+- Admin login password is a **Worker Secret**: `npx wrangler secret put ADMIN_PASSWORD --name <ADMIN_WORKER_NAME>`; do not put it in `wrangler.jsonc` or Git.
 
 ## Configuration model
 
@@ -39,6 +40,10 @@ import { Aside, Steps } from '@astrojs/starlight/components';
 ### Path A: Local Cloudflare development
 
 See [Quick start · Option B](/en/docs/quick-start/): from repo root run `npm install`, `npm run db:migrate`, `npm run dev:proxy` (`:8787`), and `npm run dev:admin` (`:8789`). **No** `cloudflare-worker/*.env` required.
+
+<Aside type="caution" title="Returning to local dev after remote deploys">
+	After `deploy:*` or `db:migrate:remote`, generated `wrangler.jsonc` files on your machine may include the remote `D1_DATABASE_ID`. Before local development, run `npm run gen:wrangler` from a shell without `D1_DATABASE_ID` exported, then restart `dev:proxy` / `dev:admin`.
+</Aside>
 
 ### Path B: Dev demo (CLI)
 
@@ -64,7 +69,7 @@ Dev demo uses **CLI releases only**. When new SQL lands, run `db:migrate:remote`
 <Steps>
 1. **Instance config**: copy `example.env` to `cloudflare-worker/<your-instance>.env` (**do not commit**), or set Dashboard **Build variables** only (same variable names).
 1. **Fill env vars** (table below); **`D1_DATABASE_ID` lives in Dashboard or gitignored env only**.
-1. **First bootstrap** (optional CLI, same generation as CI):
+1. **First bootstrap** (optional CLI, same generation model as Workers Builds):
    ```bash
    npx dotenv -e ./cloudflare-worker/<instance>.env -- npm run db:migrate:remote
    npx dotenv -e ./cloudflare-worker/<instance>.env -- npm run deploy:proxy
@@ -87,12 +92,16 @@ Dev demo uses **CLI releases only**. When new SQL lands, run `db:migrate:remote`
 
 ## Workers Builds commands
 
-**Leave Root directory empty** (monorepo root). `npm ci` → `postinstall` → `gen:wrangler` reads Build variables and writes `wrangler.jsonc`.
+These are **Dashboard → Workers Builds** split commands, not the same entrypoints as local CLI `npm run deploy:proxy` / `npm run deploy:admin`. **Leave Root directory empty** (monorepo root). `npm ci` → `postinstall` → `gen:wrangler` reads Build variables and writes `wrangler.jsonc`.
 
 | Worker | Build command | Deploy command |
 |--------|---------------|----------------|
 | **Proxy** | `npm ci && npm run gen:wrangler` | `npm run deploy -w @octafuse/proxy` |
 | **Admin** | `npm ci && npm run gen:wrangler && npm run build:cf -w @octafuse/admin` | `cd packages/admin && npx opennextjs-cloudflare deploy` |
+
+<Aside type="caution" title="Do not paste local deploy:* into Dashboard">
+	Workers Builds already split build and deploy. Do not set the Dashboard Deploy command to `npm run deploy:proxy` or `npm run deploy:admin`; that can regenerate config unnecessarily, and Admin may rebuild twice.
+</Aside>
 
 <Aside type="caution" title="D1 migrations are not in CI">
 	Git pipelines **do not** run D1 migrations. When new SQL ships, **`db:migrate:remote`** (with instance env) **first**, then `git push` or local `deploy:*`.
