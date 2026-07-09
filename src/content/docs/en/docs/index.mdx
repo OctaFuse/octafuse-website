@@ -1,39 +1,66 @@
 ---
 title: Documentation
-description: Quick start, topic-based user guides, Playground/Simulator, and production deploy—implementation details on GitHub.
+description: "OctaFuse docs organized by users, integrators, and operators: quickstart, configuration, debugging, deployment, and technical references."
 ---
 
 import { Aside, LinkCard, CardGrid } from '@astrojs/starlight/components';
 
-Docs are organized in **two levels**: a **single Quick start** page to run locally, grouped **User guide** topics, plus **More features** and **Production deploy**. For **API fields, SQL migrations, and stack-level troubleshooting**, open **[GitHub technical reference](/en/docs/github-reference/)**.
+<div class="of-doc-command">
+	<span>gateway.docs</span>
+	<strong>Choose your path</strong>
+	<code>users → configure → observe → deploy</code>
+</div>
+
+OctaFuse docs follow the workflow: run it locally, configure upstreams, models, routes, and keys; use Playground / Simulator and logs when debugging; open the gateway repository reference for API fields, migrations, architecture, and deep operations.
+
+<div class="of-doc-path-grid">
+	<a class="of-doc-path" href="/en/docs/quick-start/">
+		<span class="of-doc-path-index">01</span>
+		<strong>I want to run it</strong>
+		<small>Local Docker, Cloudflare local D1, Admin login, and one test request.</small>
+	</a>
+	<a class="of-doc-path" href="/en/docs/guides/integration/">
+		<span class="of-doc-path-index">02</span>
+		<strong>I am integrating a system</strong>
+		<small>Proxy vs Admin, user keys vs master keys, portal provisioning flows.</small>
+	</a>
+	<a class="of-doc-path" href="/en/docs/deploy/docker/">
+		<span class="of-doc-path-index">03</span>
+		<strong>I am going to production</strong>
+		<small>Docker, self-hosting, Cloudflare Workers, data placement, migration order.</small>
+	</a>
+</div>
 
 <Aside type="tip" title="Suggested order">
-	1. [Quick start](/en/docs/quick-start/)  
-	1. [Providers](/en/docs/guides/providers/) → [Models](/en/docs/guides/models/) → [Routing](/en/docs/guides/routing/)  
-	1. [Users](/en/docs/guides/users/) → [API keys](/en/docs/guides/api-keys/)  
-	1. Use [Request logs](/en/docs/guides/request-logs/) and [Audit logs](/en/docs/guides/audit-logs/) when debugging or auditing  
-	1. Before production, read [Docker](/en/docs/deploy/docker/) or [Cloudflare Workers](/en/docs/deploy/cloudflare/)  
+	Quick start → Providers → Models → Routes → Users → API keys → Simulator → Deploy. Open GitHub technical reference when you need fields, SQL, architecture, or troubleshooting details.
 </Aside>
 
-## Entry points
+## Configuration Pipeline
+
+<div class="of-flow">
+	<a href="/en/docs/guides/providers/"><span>1</span><strong>Providers</strong><small>Upstream endpoints and keys</small></a>
+	<a href="/en/docs/guides/models/"><span>2</span><strong>Models</strong><small>Catalog and pricing</small></a>
+	<a href="/en/docs/guides/routing/"><span>3</span><strong>Routes</strong><small>Selection, groups, failover</small></a>
+	<a href="/en/docs/guides/users/"><span>4</span><strong>Users</strong><small>Accounts, budgets, periods</small></a>
+	<a href="/en/docs/guides/api-keys/"><span>5</span><strong>API Keys</strong><small>Issue, revoke, authenticate</small></a>
+</div>
+
+## Common Entry Points
 
 <CardGrid>
 	<LinkCard title="Quick start" description="Docker or Cloudflare local D1" href="/en/docs/quick-start/" />
-	<LinkCard title="Providers" description="Upstream endpoints & auth" href="/en/docs/guides/providers/" />
-	<LinkCard title="Routing" description="Selection & failover" href="/en/docs/guides/routing/" />
-	<LinkCard title="Integration" description="GATEWAY_* and boundaries" href="/en/docs/guides/integration/" />
+	<LinkCard title="Integration" description="Proxy / Admin / key boundaries" href="/en/docs/guides/integration/" />
+	<LinkCard title="Playground" description="Probe one route upstream" href="/en/docs/features/playground/" />
+	<LinkCard title="Simulator" description="Validate the full Proxy path with a real key" href="/en/docs/features/simulator/" />
+	<LinkCard title="Docker deployment" description="Self-hosting, Postgres / MySQL, images" href="/en/docs/deploy/docker/" />
+	<LinkCard title="Cloudflare deployment" description="Worker + Admin + D1" href="/en/docs/deploy/cloudflare/" />
 </CardGrid>
 
-## Task lookup
+## Troubleshooting And Governance
 
 | I want to… | Go to |
 |--------------|-------|
-| Run locally | [Quick start](/en/docs/quick-start/) |
-| Wire upstreams & routes | [Providers](/en/docs/guides/providers/) · [Models](/en/docs/guides/models/) · [Routing](/en/docs/guides/routing/) |
-| Issue keys | [Users](/en/docs/guides/users/) · [API keys](/en/docs/guides/api-keys/) |
-| Inspect traffic | [Request logs](/en/docs/guides/request-logs/) |
-| Inspect config changes | [Audit logs](/en/docs/guides/audit-logs/) |
-| Test a route quickly | [Playground](/en/docs/features/playground/) |
-| Simulate a real client | [Simulator](/en/docs/features/simulator/) |
-| Go to production | [Docker](/en/docs/deploy/docker/) · [Cloudflare Workers](/en/docs/deploy/cloudflare/) |
-| API / migrations | [GitHub technical reference](/en/docs/github-reference/) |
+| Inspect whether a call succeeded | [Request logs](/en/docs/guides/request-logs/) |
+| Inspect budget, key lifecycle, and user-side audit | [Audit logs](/en/docs/guides/audit-logs/) |
+| Configure master key, business timezone, billing currency, alerts | [System config](/en/docs/guides/system-config/) |
+| Read APIs, migrations, architecture, billing details | [GitHub technical reference](/en/docs/github-reference/) |

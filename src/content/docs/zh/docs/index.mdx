@@ -1,39 +1,66 @@
 ---
 title: 文档
-description: OctaFuse 文档站：快速开始、分主题使用指南、Playground/Simulator 与线上部署；实现细节回源 GitHub。
+description: "OctaFuse 文档站：按使用者、集成开发者和运维者组织快速开始、配置、联调、部署与技术参考。"
 ---
 
 import { Aside, LinkCard, CardGrid } from '@astrojs/starlight/components';
 
-文档按两级组织：**快速开始** 单页把本地跑起来；**使用指南** 按管理台任务拆分；**其他功能** 与 **线上部署** 单独成组。需要 **API 字段、迁移 SQL、排障堆栈** 时，请打开 **[GitHub 技术参考](/zh/docs/github-reference/)**。
+<div class="of-doc-command">
+	<span>gateway.docs</span>
+	<strong>选择你的路径</strong>
+	<code>users → configure → observe → deploy</code>
+</div>
+
+OctaFuse 文档按工作流组织：先跑起来，再配置上游、模型、路由和 Key；需要联调时看 Playground / Simulator 和日志；需要 API、迁移、架构细节时回到 gateway 仓库的权威技术参考。
+
+<div class="of-doc-path-grid">
+	<a class="of-doc-path" href="/zh/docs/quick-start/">
+		<span class="of-doc-path-index">01</span>
+		<strong>我只想先用起来</strong>
+		<small>本地 Docker、Cloudflare 本地 D1、登录 Admin、打一条测试请求。</small>
+	</a>
+	<a class="of-doc-path" href="/zh/docs/guides/integration/">
+		<span class="of-doc-path-index">02</span>
+		<strong>我要接入自己的系统</strong>
+		<small>区分 Proxy / Admin、用户 Key / Master Key、门户后台自动开通流程。</small>
+	</a>
+	<a class="of-doc-path" href="/zh/docs/deploy/docker/">
+		<span class="of-doc-path-index">03</span>
+		<strong>我要上线到生产</strong>
+		<small>Docker、自托管、Cloudflare Workers、数据落点与迁移顺序。</small>
+	</a>
+</div>
 
 <Aside type="tip" title="推荐阅读顺序">
-	1. [快速开始](/zh/docs/quick-start/)  
-	1. [供应商配置](/zh/docs/guides/providers/) → [模型配置](/zh/docs/guides/models/) → [路由配置](/zh/docs/guides/routing/)  
-	1. [用户管理](/zh/docs/guides/users/) → [API Key 管理](/zh/docs/guides/api-keys/)  
-	1. 需要排障或审计时再看 [请求日志](/zh/docs/guides/request-logs/)、[审计日志](/zh/docs/guides/audit-logs/)  
-	1. 上线前阅读 [Docker 部署](/zh/docs/deploy/docker/) 或 [Cloudflare Workers 部署](/zh/docs/deploy/cloudflare/)  
+	快速开始 → 供应商 → 模型 → 路由 → 用户 → API Key → Simulator → 部署。需要字段、SQL、架构或排障细节时，再打开 GitHub 技术参考。
 </Aside>
 
-## 入口
+## 配置流水线
+
+<div class="of-flow">
+	<a href="/zh/docs/guides/providers/"><span>1</span><strong>Providers</strong><small>上游端点与密钥</small></a>
+	<a href="/zh/docs/guides/models/"><span>2</span><strong>Models</strong><small>模型目录与定价</small></a>
+	<a href="/zh/docs/guides/routing/"><span>3</span><strong>Routes</strong><small>选路、分组、故障切换</small></a>
+	<a href="/zh/docs/guides/users/"><span>4</span><strong>Users</strong><small>账户、预算、周期</small></a>
+	<a href="/zh/docs/guides/api-keys/"><span>5</span><strong>API Keys</strong><small>发放、吊销、调用凭证</small></a>
+</div>
+
+## 常用入口
 
 <CardGrid>
 	<LinkCard title="快速开始" description="Docker 或 Cloudflare 本地 D1" href="/zh/docs/quick-start/" />
-	<LinkCard title="供应商配置" description="添加上游与鉴权" href="/zh/docs/guides/providers/" />
-	<LinkCard title="路由配置" description="选路与降级" href="/zh/docs/guides/routing/" />
-	<LinkCard title="系统集成" description="GATEWAY_* 与调用边界" href="/zh/docs/guides/integration/" />
+	<LinkCard title="系统集成" description="Proxy / Admin / Key 边界" href="/zh/docs/guides/integration/" />
+	<LinkCard title="Playground" description="单条路由直连上游试跑" href="/zh/docs/features/playground/" />
+	<LinkCard title="Simulator" description="用真实 Key 验证完整 Proxy 链路" href="/zh/docs/features/simulator/" />
+	<LinkCard title="Docker 部署" description="自托管、Postgres / MySQL、镜像" href="/zh/docs/deploy/docker/" />
+	<LinkCard title="Cloudflare 部署" description="Worker + Admin + D1" href="/zh/docs/deploy/cloudflare/" />
 </CardGrid>
 
-## 常见任务
+## 排障与治理
 
 | 我想… | 去哪 |
 |--------|------|
-| 笔记本上跑通 | [快速开始](/zh/docs/quick-start/) |
-| 配好上游与路由 | [供应商](/zh/docs/guides/providers/) · [模型](/zh/docs/guides/models/) · [路由](/zh/docs/guides/routing/) |
-| 给用户发 Key | [用户](/zh/docs/guides/users/) · [API Key](/zh/docs/guides/api-keys/) |
 | 看调用是否成功 | [请求日志](/zh/docs/guides/request-logs/) |
-| 看谁改了配置 | [审计日志](/zh/docs/guides/audit-logs/) |
-| 试一条路由 | [Playground](/zh/docs/features/playground/) |
-| 模拟真实客户端 | [Simulator](/zh/docs/features/simulator/) |
-| 上生产 | [Docker](/zh/docs/deploy/docker/) · [Cloudflare](/zh/docs/deploy/cloudflare/) |
-| 查 API / 迁移 | [GitHub 技术参考](/zh/docs/github-reference/) |
+| 看预算、Key 生命周期和用户侧审计 | [审计日志](/zh/docs/guides/audit-logs/) |
+| 配置管理密钥、业务时区、计费币种、告警 | [系统配置](/zh/docs/guides/system-config/) |
+| 查 API、迁移、架构、计费细节 | [GitHub 技术参考](/zh/docs/github-reference/) |
