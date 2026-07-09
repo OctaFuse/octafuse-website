@@ -8,7 +8,7 @@ import { Aside, Steps } from '@astrojs/starlight/components';
 该形态下：**Proxy** 与 **Admin** 各为一个 **Worker** 项目，**共享同一 D1**（绑定名 **`DB`**）。配置不再手改 Git 中的 `wrangler.jsonc`，而是由 **`npm run gen:wrangler`** 从 **Build variables** 或 **`cloudflare-worker/*.env`** 生成 gitignore 的 wrangler 配置。
 
 <Aside type="note" title="权威细节">
-	Build watch paths、多实例 fork、错误 **10181** 等完整运维说明见 [GitHub 技术参考](/zh/docs/github-reference/) 中的 **deployment-cloudflare** 与 **cloudflare-worker/README**。
+	Build watch paths、多实例 fork、错误 **10181** 等完整运维说明见 [GitHub 技术参考](/zh/docs/github-reference/) 中的 **Cloudflare 部署** 与 **Cloudflare 命令速查**。
 </Aside>
 
 ## 部署前准备

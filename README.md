@@ -43,13 +43,13 @@ npm run preview
 4. 若曾使用旧域名（如 `docs.octafuse.ai`），在旧 Pages 项目或 **Bulk Redirects / Redirect Rules** 配置 **301 → `https://octafuse.dev`**。
 5. 发布后抽检：`/zh/`、`/en/docs/quick-start/`、文档内外链与深色/浅色切换。
 
-### 本仓库 CI/CD（与 gateway 完全隔离）
+### 本仓库 CI/CD（与 gateway 发布隔离）
 
 | Workflow | 触发 | 作用 |
 | --- | --- | --- |
 | [`.github/workflows/site-ci.yml`](.github/workflows/site-ci.yml) | `pull_request`、推送到 `main` | `npm ci` + `npm run build`，校验静态站 |
 | [`.github/workflows/pages-deploy.yml`](.github/workflows/pages-deploy.yml) | 仅 `workflow_dispatch` | 可选：用 Wrangler 将 `dist/` 推到 Pages（需仓库 Secrets，见下） |
-| [`.github/workflows/sync-from-gateway.yml`](.github/workflows/sync-from-gateway.yml) | 手动 | 从 gateway 拉取白名单文档，**不**触发 gateway CI |
+| [`.github/workflows/sync-from-gateway.yml`](.github/workflows/sync-from-gateway.yml) | 手动 | 从 gateway 白名单生成技术参考页，**不**触发 gateway CI |
 
 在 GitHub 本仓库 **Settings → Secrets and variables → Actions** 中按需配置（仅在使用 Wrangler 手动部署时需要）：
 
@@ -67,7 +67,27 @@ src/content/docs/
 - `/zh/`、`/en/` — 官网首页（splash）
 - `/zh/docs/`、`/en/docs/` — 文档首页与导航下的子页
 
-权威 API / 迁移契约仍以主仓文档为准；本站正文在 `src/content/docs/` 中**人工维护**（可配合 AI 起草），重要结论处保留指向主仓的链接即可。
+## 文档维护边界
+
+技术文档的单一事实来源在 `octafuse-gateway/docs`：
+
+- API、部署、迁移、架构、计费、审计、时间语义：维护在 `octafuse-gateway`。
+- 官网正文：维护品牌、首页、导航、SEO、多语言，以及面向使用者的轻量任务指南。
+- 官网 [GitHub 技术参考](src/content/docs/zh/docs/github-reference.mdx) 由 `sync/contract.json` 生成，避免手工维护旧路径。
+
+两个仓库并排放置时，可本地刷新技术参考页：
+
+```bash
+npm run sync:gateway -- --gateway-dir ../octafuse-gateway
+```
+
+检查是否漂移但不写文件：
+
+```bash
+npm run sync:gateway:check -- --gateway-dir ../octafuse-gateway
+```
+
+新增技术文档时，先改 `octafuse-gateway/docs`；官网只在需要展示入口时更新 `sync/contract.json`。
 
 ## 相关仓库
 

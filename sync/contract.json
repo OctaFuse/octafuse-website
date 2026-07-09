@@ -1,0 +1,220 @@
+{
+	"source": {
+		"repo": "OctaFuse/octafuse-gateway",
+		"defaultRef": "main"
+	},
+	"pages": {
+		"zh": {
+			"target": "src/content/docs/zh/docs/github-reference.mdx",
+			"title": "GitHub 技术参考",
+			"description": "octafuse-gateway 仓库中的权威工程文档：API、迁移、运维与架构。日常使用请优先阅读本站指南。",
+			"intro": "以下入口由 sync/contract.json 生成，指向 octafuse-gateway 仓库内的权威技术文档。官网只维护面向使用者的轻量指南；API、部署、迁移、架构和行为语义以 gateway 仓库为准。"
+		},
+		"en": {
+			"target": "src/content/docs/en/docs/github-reference.mdx",
+			"title": "GitHub technical reference",
+			"description": "Canonical engineering docs in octafuse-gateway—APIs, migrations, operations, and architecture. Prefer this site’s guides for day-to-day use.",
+			"intro": "This page is generated from sync/contract.json and points to canonical technical docs in the octafuse-gateway repository. This website keeps user-facing summaries; APIs, deployments, migrations, architecture, and behavior semantics live with gateway code."
+		}
+	},
+	"sections": [
+		{
+			"id": "start",
+			"title": { "zh": "读者入口", "en": "Reader entry points" },
+			"items": [
+				{
+					"path": "docs/README.md",
+					"label": { "zh": "文档总入口", "en": "Documentation index" },
+					"description": {
+						"zh": "按使用者、开发者、运维者和维护者组织的入口。",
+						"en": "Entry points organized by users, developers, operators, and maintainers."
+					}
+				},
+				{
+					"path": "docs/users/quickstart.md",
+					"label": { "zh": "快速开始", "en": "Quickstart" },
+					"description": {
+						"zh": "Docker 与 Cloudflare 本地 D1 的最小启动路径。",
+						"en": "Minimal Docker and Cloudflare local D1 startup paths."
+					}
+				},
+				{
+					"path": "docs/users/configuration.md",
+					"label": { "zh": "Admin 配置指南", "en": "Admin configuration" },
+					"description": {
+						"zh": "部署后配置 Provider、Route、用户和 API Key。",
+						"en": "Configure providers, routes, users, and API keys after deployment."
+					}
+				}
+			]
+		},
+		{
+			"id": "developers",
+			"title": { "zh": "开发者与集成", "en": "Developers and integration" },
+			"items": [
+				{
+					"path": "docs/developers/integration.md",
+					"label": { "zh": "系统集成指南", "en": "System integration" },
+					"description": {
+						"zh": "门户、后台或 SaaS 接入 Gateway 的边界、Key 类型和常见流程。",
+						"en": "Boundaries, key types, and common flows for portals, backends, or SaaS integrations."
+					}
+				},
+				{
+					"path": "docs/developers/api/README.md",
+					"label": { "zh": "API 总览", "en": "API overview" },
+					"description": {
+						"zh": "Proxy / Admin 的 Base URL、认证方式和错误形态。",
+						"en": "Proxy/Admin base URLs, authentication, and error shapes."
+					}
+				},
+				{
+					"path": "docs/developers/api/user.md",
+					"label": { "zh": "用户侧 API", "en": "User-facing APIs" },
+					"description": {
+						"zh": "OpenAI / Anthropic / Gemini 兼容入口、模型列表、预算状态。",
+						"en": "OpenAI / Anthropic / Gemini compatible fronts, model list, and budget state."
+					}
+				},
+				{
+					"path": "docs/developers/api/admin.md",
+					"label": { "zh": "Admin HTTP API", "en": "Admin HTTP API" },
+					"description": {
+						"zh": "Provider、模型、路由、用户、密钥、配置和日志自动化接口。",
+						"en": "Automation APIs for providers, models, routes, users, keys, config, and logs."
+					}
+				},
+				{
+					"path": "docs/developers/local-development.md",
+					"label": { "zh": "本地开发与测试", "en": "Local development and testing" },
+					"description": {
+						"zh": "D1、Node + Postgres、Node + MySQL、Docker 和冒烟脚本组合。",
+						"en": "D1, Node + Postgres, Node + MySQL, Docker, and smoke test combinations."
+					}
+				}
+			]
+		},
+		{
+			"id": "architecture",
+			"title": { "zh": "架构与行为语义", "en": "Architecture and behavior semantics" },
+			"items": [
+				{
+					"path": "docs/developers/architecture/runtime-data.md",
+					"label": { "zh": "运行时与数据存储架构", "en": "Runtime and data storage" },
+					"description": {
+						"zh": "Cloudflare / Node 与 D1 / Postgres / MySQL 的组合矩阵。",
+						"en": "Cloudflare / Node and D1 / Postgres / MySQL combination matrix."
+					}
+				},
+				{
+					"path": "docs/developers/architecture/proxy-request-lifecycle.md",
+					"label": { "zh": "Proxy 请求生命周期", "en": "Proxy request lifecycle" },
+					"description": {
+						"zh": "鉴权、路由、限流、熔断、粘性、failover 和异步记账。",
+						"en": "Auth, routing, rate limits, circuit breakers, stickiness, failover, and async billing."
+					}
+				},
+				{
+					"path": "docs/developers/architecture/user-keys-data-model.md",
+					"label": { "zh": "用户与 API Key 数据模型", "en": "Users and API key data model" },
+					"description": {
+						"zh": "User、API Key、预算、请求日志和审计日志的关系与约束。",
+						"en": "Relationships and constraints for users, API keys, budgets, request logs, and audit logs."
+					}
+				},
+				{
+					"path": "docs/developers/reference/streaming-billing.md",
+					"label": { "zh": "流式计费与取消", "en": "Streaming billing and cancellation" },
+					"description": {
+						"zh": "流式 Chat、客户端取消、usage 解析和扣费状态。",
+						"en": "Streaming chat, client cancellation, usage parsing, and charge state."
+					}
+				},
+				{
+					"path": "docs/developers/reference/time-and-timezone.md",
+					"label": { "zh": "时间与时区", "en": "Time and timezone" },
+					"description": {
+						"zh": "UTC 存储、API 输出、Admin 显示和业务日界。",
+						"en": "UTC storage, API output, Admin display, and business day boundaries."
+					}
+				}
+			]
+		},
+		{
+			"id": "operators",
+			"title": { "zh": "部署与运维", "en": "Deployment and operations" },
+			"items": [
+				{
+					"path": "docs/operators/deployment/README.md",
+					"label": { "zh": "部署模式索引", "en": "Deployment patterns" },
+					"description": {
+						"zh": "Cloudflare、Hybrid、Full self-hosted、MySQL 和 Zeabur 模式总览。",
+						"en": "Overview of Cloudflare, Hybrid, full self-hosted, MySQL, and Zeabur modes."
+					}
+				},
+				{
+					"path": "docs/operators/deployment/cloudflare.md",
+					"label": { "zh": "Cloudflare 部署", "en": "Cloudflare deployment" },
+					"description": {
+						"zh": "Worker、Admin、D1、Build variables、Workers Builds 和迁移顺序。",
+						"en": "Worker, Admin, D1, Build variables, Workers Builds, and migration order."
+					}
+				},
+				{
+					"path": "docs/operators/deployment/docker.md",
+					"label": { "zh": "Docker / 自托管", "en": "Docker / self-hosted" },
+					"description": {
+						"zh": "Docker 镜像、Compose、GHCR、Postgres / MySQL 和 Zeabur 注意事项。",
+						"en": "Docker images, Compose, GHCR, Postgres / MySQL, and Zeabur notes."
+					}
+				},
+				{
+					"path": "docs/operators/migrations/d1-postgres-cutover.md",
+					"label": { "zh": "D1 ↔ Postgres 切换", "en": "D1 ↔ Postgres cutover" },
+					"description": {
+						"zh": "ETL、对账、灰度、切换和回滚要点。",
+						"en": "ETL, reconciliation, canary, cutover, and rollback notes."
+					}
+				},
+				{
+					"path": "cloudflare-worker/README.md",
+					"label": { "zh": "Cloudflare 命令速查", "en": "Cloudflare command cheatsheet" },
+					"description": {
+						"zh": "Cloudflare 本地、dev 演示和生产 Git 自动部署命令清单。",
+						"en": "Commands for Cloudflare local dev, dev demo, and production Git deploy."
+					}
+				}
+			]
+		},
+		{
+			"id": "maintainers",
+			"title": { "zh": "维护者与规范", "en": "Maintainers and conventions" },
+			"items": [
+				{
+					"path": "docs/maintainers/release-versioning.md",
+					"label": { "zh": "版本治理与发版", "en": "Release and versioning" },
+					"description": {
+						"zh": "Changesets、Version PR、tag、GitHub Release 和 GHCR 镜像。",
+						"en": "Changesets, Version PRs, tags, GitHub Releases, and GHCR images."
+					}
+				},
+				{
+					"path": "docs/CONVENTIONS.md",
+					"label": { "zh": "文档边界与敏感信息规范", "en": "Documentation boundaries and secret hygiene" },
+					"description": {
+						"zh": "仓内文档分层、官网边界、占位符和禁止值。",
+						"en": "Repository docs layers, website boundaries, placeholders, and forbidden values."
+					}
+				},
+				{
+					"path": "examples/quick-curl.md",
+					"label": { "zh": "curl 最小示例", "en": "Minimal curl examples" },
+					"description": {
+						"zh": "健康检查、用户推理和 Admin 配置接口的最小 curl。",
+						"en": "Minimal curl commands for health, user inference, and Admin config."
+					}
+				}
+			]
+		}
+	]
+}

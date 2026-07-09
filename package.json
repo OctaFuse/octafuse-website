@@ -16,7 +16,9 @@
 		"start": "astro dev",
 		"build": "astro build",
 		"preview": "astro preview",
-		"astro": "astro"
+		"astro": "astro",
+		"sync:gateway": "node scripts/sync-from-gateway.mjs",
+		"sync:gateway:check": "node scripts/sync-from-gateway.mjs --dry-run"
 	},
 	"dependencies": {
 		"@astrojs/starlight": "^0.39.2",

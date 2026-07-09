@@ -1,0 +1,33 @@
+{
+  "source": "OctaFuse/octafuse-gateway",
+  "ref": "main",
+  "commit": "1874b14da748e12afb378735d65ca75216762fc5",
+  "contract": "sync/contract.json",
+  "targets": [
+    "src/content/docs/zh/docs/github-reference.mdx",
+    "src/content/docs/en/docs/github-reference.mdx"
+  ],
+  "files": [
+    "docs/README.md",
+    "docs/users/quickstart.md",
+    "docs/users/configuration.md",
+    "docs/developers/integration.md",
+    "docs/developers/api/README.md",
+    "docs/developers/api/user.md",
+    "docs/developers/api/admin.md",
+    "docs/developers/local-development.md",
+    "docs/developers/architecture/runtime-data.md",
+    "docs/developers/architecture/proxy-request-lifecycle.md",
+    "docs/developers/architecture/user-keys-data-model.md",
+    "docs/developers/reference/streaming-billing.md",
+    "docs/developers/reference/time-and-timezone.md",
+    "docs/operators/deployment/README.md",
+    "docs/operators/deployment/cloudflare.md",
+    "docs/operators/deployment/docker.md",
+    "docs/operators/migrations/d1-postgres-cutover.md",
+    "cloudflare-worker/README.md",
+    "docs/maintainers/release-versioning.md",
+    "docs/CONVENTIONS.md",
+    "examples/quick-curl.md"
+  ]
+}
