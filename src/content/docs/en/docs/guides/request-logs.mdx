@@ -7,6 +7,11 @@ import { Aside, Steps } from '@astrojs/starlight/components';
 
 Open **User → Request Logs**. This view lists **real inference calls through the Proxy**: timestamps, keys, users, models, route groups, status, and more — useful for troubleshooting and reconciliation.
 
+<figure class="of-doc-figure">
+	<img src="/screenshots/admin-request-logs.png" alt="OctaFuse Admin Request Logs page showing request status, users, models, routes, tokens, cost, and profit with emails and sensitive identifiers redacted." loading="lazy" />
+	<figcaption>Request Logs helps filter calls by time range, status, model, provider, protocol, and user. Emails and sensitive identifiers are pixelated in this screenshot.</figcaption>
+</figure>
+
 <Aside type="tip" title="Prerequisite">
 	Traffic must hit the **Proxy**. [Playground](/en/docs/features/playground/) checks **do not** appear here; for production-like rows use a real key against the Proxy or [Simulator](/en/docs/features/simulator/).
 </Aside>

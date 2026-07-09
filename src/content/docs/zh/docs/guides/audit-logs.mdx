@@ -9,6 +9,11 @@ import { Aside, Steps } from '@astrojs/starlight/components';
 
 它**不是**「在管理台里每一次改供应商、改路由菜单点击」的完整配置审计台账；若你需要配置变更追责，请结合变更管理流程或另行接入运维审计。
 
+<figure class="of-doc-figure">
+	<img src="/screenshots/admin-audit-logs.png" alt="OctaFuse Admin Audit Logs 页面展示审计事件、操作者、邮箱用户密钥、预算和变更详情；敏感标识已打码。" loading="lazy" />
+	<figcaption>Audit Logs 用来追踪管理侧用户、预算和密钥生命周期相关动作。截图中的邮箱、Key 与敏感标识已做马赛克处理。</figcaption>
+</figure>
+
 <Aside type="tip" title="与请求日志的区别">
 	**请求日志**：每一次推理 HTTP 调用轨迹。**审计日志**：与 **用户预算与身份/密钥生命周期** 相关的变更与扣减记录。
 </Aside>

@@ -9,6 +9,11 @@ Open **User → Audit Logs**. Entries here focus on **what changed for accounts 
 
 This is **not** a full audit trail of every **provider/route/settings** click in Admin. For configuration change governance, use your change-management process or a separate ops audit trail.
 
+<figure class="of-doc-figure">
+	<img src="/screenshots/admin-audit-logs.png" alt="OctaFuse Admin Audit Logs page showing audit events, actors, email user key context, budgets, and change details with sensitive identifiers redacted." loading="lazy" />
+	<figcaption>Audit Logs tracks user, budget, and key lifecycle activity in Admin. Emails, keys, and sensitive identifiers are pixelated in this screenshot.</figcaption>
+</figure>
+
 <Aside type="tip" title="Versus request logs">
 	**Request logs**: per-inference HTTP traces. **Audit logs**: budget and identity/key lifecycle events.
 </Aside>
