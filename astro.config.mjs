@@ -59,6 +59,10 @@ export default defineConfig({
 					href: 'https://github.com/OctaFuse/octafuse-gateway',
 				},
 			],
+			components: {
+				ThemeProvider: './src/components/ThemeProvider.astro',
+				ThemeSelect: './src/components/ThemeSelect.astro',
+			},
 			editLink: {
 				baseUrl: 'https://github.com/OctaFuse/octafuse-website/edit/main/',
 			},
