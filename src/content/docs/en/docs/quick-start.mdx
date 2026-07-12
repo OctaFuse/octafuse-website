@@ -1,43 +1,69 @@
 ---
 title: Quick start
-description: Run OctaFuse locally (Docker or Cloudflare local D1), verify health, and sign in to Admin—production deploy is linked separately.
+description: Run OctaFuse on the Cloudflare path (local D1 → one-command cloud deploy)—start Proxy / Admin, verify health, and open Admin.
 ---
 
 import { Aside, Steps } from '@astrojs/starlight/components';
 
-This page does **one thing**: **run OctaFuse on your machine** and open Admin. For “how to configure providers, routes, keys”, follow the **[User guide](/en/docs/guides/providers/)** sections. **Production or staging** is not covered here—see links at the bottom.
+This page does **one thing**: run OctaFuse on the **recommended Cloudflare path** and open Admin. Individuals and light traffic can usually deploy and run within the Workers / D1 **free tier**.
+
+For providers, routes, and keys, follow the **[User guide](/en/docs/guides/providers/)**. Prefer not to use Cloudflare? See [Docker deployment](/en/docs/deploy/docker/).
 
 <Aside type="note" title="Repository">
 	Run commands from the **[octafuse-gateway](https://github.com/OctaFuse/octafuse-gateway)** repository **root**.
 </Aside>
 
-## Option A: Docker (fastest path)
+## 1. Run locally (local D1)
 
 ### Prerequisites
 
-- **Docker Compose v2.20+** (needs `service_completed_successfully`).
-- Network access to GitHub (or your fork).
+- **Node.js 20+**, npm.
+- No Cloudflare account required.
 
 ### Clone and start
 
 ```bash
 git clone https://github.com/OctaFuse/octafuse-gateway.git
 cd octafuse-gateway
-docker compose -f docker/compose/quickstart.yml up --build
+npm install
+npm run db:migrate
+npm run dev:proxy
 ```
 
-When containers are ready, in another terminal:
+In a second terminal:
 
 ```bash
-curl -sS http://localhost:8787/health
+npm run dev:admin
 ```
 
-Healthy JSON means **Proxy** is listening at **`http://localhost:8787`**.
+| Service | URL / location |
+|---------|----------------|
+| Proxy | `http://127.0.0.1:8787` |
+| Admin | `http://127.0.0.1:8789` |
+| Local D1 | `./.wrangler/state` |
+| Admin API Bearer | `sk-dev-admin-key` |
+
+Health check:
+
+```bash
+curl -sS http://127.0.0.1:8787/health
+```
+
+## 2. Deploy to Cloudflare
+
+Requirements: a Cloudflare account and `npx wrangler login`.
+
+```bash
+npx wrangler login
+npm run bootstrap:cloudflare
+```
+
+Follow the CLI for `GATEWAY_URL` / `GATEWAY_MASTER_URL`, then verify with `GET $GATEWAY_URL/health`. Full steps and releases: [Cloudflare Workers deployment](/en/docs/deploy/cloudflare/).
 
 ## Sign in to Admin
 
-1. Open **`http://localhost:8789`** (**Admin**) in a browser.
-2. Sign in with **`admin` / `changeme`** (**local only**—change everywhere else).
+1. Locally open **`http://127.0.0.1:8789`** (use your Admin URL after cloud deploy).
+2. Local defaults: **`admin` / `changeme`** (local only—change everywhere else). After bootstrap, use the `ADMIN_PASSWORD` you set.
 
 <figure class="of-doc-figure">
 	<img src="/screenshots/admin-dashboard.png" alt="OctaFuse Admin Dashboard after sign-in." loading="lazy" />
@@ -58,37 +84,14 @@ Healthy JSON means **Proxy** is listening at **`http://localhost:8787`**.
 After Provider + route + API key exist in Admin, replace the key and `model` below:
 
 ```bash
-curl -sS http://localhost:8787/v1/chat/completions \
+curl -sS http://127.0.0.1:8787/v1/chat/completions \
   -H "Authorization: Bearer sk-your-api-key" \
   -H "Content-Type: application/json" \
   -d '{"model":"your-route-model","messages":[{"role":"user","content":"Hello"}]}'
 ```
 
-## Option B: Cloudflare (local D1)
+After cloud deploy, use your Proxy URL as the host.
 
-Skip Docker—or match the **Worker + D1** production stack—by running Wrangler locally. State persists under `./.wrangler/state`. **Local dev does not need** `cloudflare-worker/*.env`; for remote deploy see [Cloudflare Workers deployment](/en/docs/deploy/cloudflare/).
+## Not using Cloudflare?
 
-**Prerequisites**: **Node.js 20+**, npm.
-
-```bash
-git clone https://github.com/OctaFuse/octafuse-gateway.git
-cd octafuse-gateway
-npm install
-npm run db:migrate          # local D1 migrations
-npm run dev:proxy           # Proxy → http://127.0.0.1:8787
-```
-
-In a second terminal:
-
-```bash
-npm run dev:admin           # Admin preview → http://127.0.0.1:8789
-```
-
-Admin API Bearer must match D1 `system_config.MASTER_KEY` (dev seed in `packages/core/migrations-d1/0002_seed.sql`).
-
-More local setups (Node + Postgres/MySQL, multiple D1 dirs, smoke tests): [GitHub · local development and testing](https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/developers/local-development.md).
-
-## Production
-
-- [Docker deployment](/en/docs/deploy/docker/)  
-- [Cloudflare Workers deployment](/en/docs/deploy/cloudflare/)  
+Docker / Postgres / MySQL self-hosting: [Docker deployment](/en/docs/deploy/docker/). More local stacks (Node + SQL, smoke tests): [GitHub · local development](https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/developers/local-development.md).

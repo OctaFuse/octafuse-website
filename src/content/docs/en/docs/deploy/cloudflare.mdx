@@ -1,24 +1,42 @@
 ---
 title: Cloudflare Workers deployment
-description: Deploy Proxy and Admin as Workers with a shared D1 binding—gen-wrangler and instance env vars replace hand-edited wrangler configs.
+description: Recommended path—one CLI deploys Proxy + Admin + shared D1 to your Cloudflare account; individuals and light traffic can usually stay in the free tier.
 ---
 
-import { Aside, Steps } from '@astrojs/starlight/components';
+import { Aside } from '@astrojs/starlight/components';
 
-**Proxy** and **Admin** are separate **Worker** projects sharing one **D1** database (binding **`DB`**). You no longer hand-edit committed `wrangler.jsonc` files—**`npm run gen:wrangler`** generates gitignored wrangler configs from **Build variables** or **`cloudflare-worker/*.env`**.
+**Proxy** and **Admin** are separate **Workers** sharing one **D1** database (binding **`DB`**). This is OctaFuse’s **default production path**—individuals and light traffic can usually deploy and run within the Workers / D1 free tier.
 
-<Aside type="note" title="Canonical details">
-	This page is the operator-facing short path. Build watch paths, multi-instance forks, returning to local dev after remote deploys, error **10181**, and full ops notes live in [GitHub technical reference](/en/docs/github-reference/) → **Cloudflare deployment** and **Cloudflare command cheatsheet**.
+<Aside type="tip" title="Fastest path for external users">
+	From the repo root, `npm run bootstrap:cloudflare` creates/reuses D1, migrates, deploys both Workers, and sets the Admin Secret. Full write-up: [gateway Cloudflare quickstart](https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/operators/deployment/cloudflare-quickstart.md).
 </Aside>
 
-## Prerequisites
+<Aside type="note" title="Canonical details">
+	This page is the operator-facing short path. Workers Builds, multi-instance ops, error **10181**, and full notes live in [GitHub technical reference](/en/docs/github-reference/) → **Cloudflare deployment**.
+</Aside>
 
-- Cloudflare account and **`wrangler login`** (or API token).
-- Cloned [octafuse-gateway](https://github.com/OctaFuse/octafuse-gateway) with working `npm install` at repo root.
-- For remote deploy: a **D1 database** (`npx wrangler d1 create`) and **`D1_DATABASE_ID`** in Build variables or a gitignored instance env—**do not commit production UUIDs to Git**.
-- Admin login password is a **Worker Secret**: `npx wrangler secret put ADMIN_PASSWORD --name <ADMIN_WORKER_NAME>`; do not put it in `wrangler.jsonc` or Git.
+## One-command bootstrap (recommended)
 
-## Configuration model
+```bash
+git clone https://github.com/OctaFuse/octafuse-gateway.git
+cd octafuse-gateway
+npm install
+npx wrangler login
+npm run bootstrap:cloudflare
+```
+
+The script will: create or reuse D1 → remote migrate → deploy Proxy / Admin → put `ADMIN_PASSWORD` → print downstream `GATEWAY_*` hints.
+
+Later releases:
+
+```bash
+npm run deploy:cloudflare -- <instance> --migrate   # include when new D1 SQL lands
+npm run deploy:cloudflare -- <instance>             # redeploy only
+```
+
+Try locally without deploying: [Quick start · local](/en/docs/quick-start/).
+
+## Configuration model (deeper)
 
 | Layer | Role |
 |-------|------|
@@ -27,99 +45,46 @@ import { Aside, Steps } from '@astrojs/starlight/components';
 | [`cloudflare-worker/example.env`](https://github.com/OctaFuse/octafuse-gateway/blob/main/cloudflare-worker/example.env) | **Dev demo** canonical config (committed) |
 | `cloudflare-worker/<instance>.env` | **Production/private** (gitignored); or Dashboard **Build variables** only |
 
-`gen-wrangler` reads **environment variables** (`process.env`) only—it does not care whether they come from the Dashboard or `dotenv -e`.
+`gen-wrangler` reads **environment variables** (`process.env`) only.
 
-## Pick a path
+## Other paths
 
-| Path | When | Need `cloudflare-worker/*.env`? |
-|------|------|----------------------------------|
-| **A. Local dev** | Code on laptop, local D1 | ❌ No |
-| **B. Dev demo** | Public test `test-api.octafuse.dev` | ✅ [`example.env`](https://github.com/OctaFuse/octafuse-gateway/blob/main/cloudflare-worker/example.env) |
-| **C. Production** | Your own environment | ❌ Not in Git; use **Build variables** or gitignored env |
+| Path | When |
+|------|------|
+| **Local dev** | Laptop + local D1 ([Quick start](/en/docs/quick-start/)) |
+| **Dev demo** | Public test `test-api.octafuse.dev` (`example.env` + CLI) |
+| **Workers Builds** | Connect to Git auto-deploy (D1 migrations still manual) |
 
-### Path A: Local Cloudflare development
+### Returning to local after remote deploys
 
-See [Quick start · Option B](/en/docs/quick-start/): from repo root run `npm install`, `npm run db:migrate`, `npm run dev:proxy` (`:8787`), and `npm run dev:admin` (`:8789`). **No** `cloudflare-worker/*.env` required.
+After `deploy:*` or `db:migrate:remote`, generated `wrangler.jsonc` may include the remote `D1_DATABASE_ID`. Before local development, run `npm run gen:wrangler` from a shell without `D1_DATABASE_ID` exported, then restart `dev:proxy` / `dev:admin`.
 
-<Aside type="caution" title="Returning to local dev after remote deploys">
-	After `deploy:*` or `db:migrate:remote`, generated `wrangler.jsonc` files on your machine may include the remote `D1_DATABASE_ID`. Before local development, run `npm run gen:wrangler` from a shell without `D1_DATABASE_ID` exported, then restart `dev:proxy` / `dev:admin`.
-</Aside>
+### Workers Builds commands (optional)
 
-### Path B: Dev demo (CLI)
-
-Uses repo [`cloudflare-worker/example.env`](https://github.com/OctaFuse/octafuse-gateway/blob/main/cloudflare-worker/example.env) (Worker names `*-dev`, D1 `octafuse-gateway-dev`).
-
-<Steps>
-1. **Create D1** (if needed): `npx wrangler d1 create octafuse-gateway-dev`; use `npx wrangler d1 list` and set **`D1_DATABASE_ID`** in `example.env`.
-1. **Create Workers**: in Dashboard, create **`octafuse-gateway-proxy-dev`** and **`octafuse-gateway-admin-dev`** matching the env file.
-1. **Set Secret**: `npx wrangler secret put ADMIN_PASSWORD --name octafuse-gateway-admin-dev`.
-1. **Migrate and deploy** (repo root):
-   ```bash
-   npx dotenv -e ./cloudflare-worker/example.env -- npm run db:migrate:remote
-   npx dotenv -e ./cloudflare-worker/example.env -- npm run deploy:proxy
-   npx dotenv -e ./cloudflare-worker/example.env -- npm run deploy:admin
-   ```
-1. **Smoke test**: `GET https://test-api.octafuse.dev/health`, Admin login, one chat call with a test key.
-</Steps>
-
-Dev demo uses **CLI releases only**. When new SQL lands, run `db:migrate:remote` before `deploy:*`.
-
-### Path C: Production (CLI or Git auto-deploy)
-
-<Steps>
-1. **Instance config**: copy `example.env` to `cloudflare-worker/<your-instance>.env` (**do not commit**), or set Dashboard **Build variables** only (same variable names).
-1. **Fill env vars** (table below); **`D1_DATABASE_ID` lives in Dashboard or gitignored env only**.
-1. **First bootstrap** (optional CLI, same generation model as Workers Builds):
-   ```bash
-   npx dotenv -e ./cloudflare-worker/<instance>.env -- npm run db:migrate:remote
-   npx dotenv -e ./cloudflare-worker/<instance>.env -- npm run deploy:proxy
-   npx dotenv -e ./cloudflare-worker/<instance>.env -- npm run deploy:admin
-   ```
-1. **Connect to Git** (optional): connect **Proxy and Admin separately**; leave **Root directory empty** (monorepo root)—**do not** set it to `packages/proxy`.
-1. **Build variables**: one set per Worker, same names/values as your instance env.
-1. **Smoke test**: `GET /health`, Admin login, align downstream `GATEWAY_URL` / `GATEWAY_MASTER_URL` / `GATEWAY_MASTER_KEY` ([Integration](/en/docs/guides/integration/)).
-</Steps>
-
-## Environment variables (Build variables / local `.env`)
-
-| Variable | Purpose |
-|----------|---------|
-| `PROXY_WORKER_NAME` / `ADMIN_WORKER_NAME` | **Must match Dashboard Worker names** |
-| `D1_DATABASE_NAME` | D1 logical name |
-| `D1_DATABASE_ID` | Required for remote deploy / migrate |
-| `D1_MIGRATIONS_WORKER_NAME` | Optional; D1 migrations config name only—**no Worker to create** |
-| `PROXY_CUSTOM_DOMAIN` / `ADMIN_CUSTOM_DOMAIN` | Optional; omit to bind hostnames in Dashboard |
-
-## Workers Builds commands
-
-These are **Dashboard → Workers Builds** split commands, not the same entrypoints as local CLI `npm run deploy:proxy` / `npm run deploy:admin`. **Leave Root directory empty** (monorepo root). `npm ci` → `postinstall` → `gen:wrangler` reads Build variables and writes `wrangler.jsonc`.
+**Leave Root directory empty** (monorepo root). `npm ci` → `postinstall` → `gen:wrangler`.
 
 | Worker | Build command | Deploy command |
 |--------|---------------|----------------|
 | **Proxy** | `npm ci && npm run gen:wrangler` | `npm run deploy -w @octafuse/proxy` |
 | **Admin** | `npm ci && npm run gen:wrangler && npm run build:cf -w @octafuse/admin` | `cd packages/admin && npx opennextjs-cloudflare deploy` |
 
-<Aside type="caution" title="Do not paste local deploy:* into Dashboard">
-	Workers Builds already split build and deploy. Do not set the Dashboard Deploy command to `npm run deploy:proxy` or `npm run deploy:admin`; that can regenerate config unnecessarily, and Admin may rebuild twice.
-</Aside>
-
 <Aside type="caution" title="D1 migrations are not in CI">
-	Git pipelines **do not** run D1 migrations. When new SQL ships, **`db:migrate:remote`** (with instance env) **first**, then `git push` or local `deploy:*`.
+	Git pipelines **do not** run D1 migrations. Use `deploy:cloudflare -- <instance> --migrate` or `db:migrate:remote` first.
 </Aside>
 
 ## Secrets and downstream
 
-- **`ADMIN_PASSWORD`**: `npx wrangler secret put ADMIN_PASSWORD --name <ADMIN_WORKER_NAME>`—never commit or put in wrangler `vars`.
-- Downstream portals: `GATEWAY_URL` (Proxy root), `GATEWAY_MASTER_URL` (Admin root), `GATEWAY_MASTER_KEY` (D1 `system_config.MASTER_KEY`).
+- **`ADMIN_PASSWORD`**: set by bootstrap; or `npx wrangler secret put ADMIN_PASSWORD --name <ADMIN_WORKER_NAME>`.
+- Downstream: `GATEWAY_URL` (Proxy), `GATEWAY_MASTER_URL` (Admin), `GATEWAY_MASTER_KEY` (D1 `system_config.MASTER_KEY`). Rotate if still the seed `sk-dev-admin-key`.
 
 ## vs Docker
 
-- **Edge + managed D1** → Cloudflare (this page).  
-- **Strict VPC / BYO DB** → [Docker](/en/docs/deploy/docker/).
+- **Default / edge / no server to babysit** → this page (Cloudflare).  
+- **Data residency, VPC, BYO Postgres/MySQL** → [Docker](/en/docs/deploy/docker/).
 
 ## See also
 
-- [Docker](/en/docs/deploy/docker/)  
 - [Quick start](/en/docs/quick-start/)  
+- [Docker](/en/docs/deploy/docker/)  
 - [Integration](/en/docs/guides/integration/)  
 - [GitHub technical reference](/en/docs/github-reference/)  

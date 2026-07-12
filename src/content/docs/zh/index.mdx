@@ -1,6 +1,6 @@
 ---
 title: OctaFuse
-description: 开源 AI Gateway：一个 Base URL、一个 API Key，统一接入 OpenAI、Claude、Gemini、Coding Plan、Token Plan 与自托管模型。个人开发者可汇总分散的供应商与密钥；团队与企业可统一 Provider、为部门或客户单独发 Key，并管理预算、计费、审计与日志。支持 Docker 自建与 Cloudflare 托管。AGPLv3。
+description: 开源 AI Gateway：一个 Base URL、一个 API Key，统一接入 OpenAI、Claude、Gemini、Coding Plan、Token Plan 与自托管模型。默认 Cloudflare Workers + D1（个人与小流量通常可走免费额度），也可 Docker / Postgres / MySQL 自托管。AGPLv3。
 template: splash
 sidebar:
   hidden: true
@@ -74,17 +74,17 @@ import { Card, CardGrid } from '@astrojs/starlight/components';
 		Playground 在 Admin 内测试单条 route；Simulator 用真实用户 Key 模拟客户端调用，检查鉴权、选路、计费与日志链路。
 	</Card>
 	<Card title="部署与系统集成" icon="rocket">
-		支持 Cloudflare Worker + Pages + D1，也支持 Node / Docker + PostgreSQL 或 MySQL 8。外部门户可通过 **`/api/admin/*`** 自动开通用户、发 Key、同步预算。
+		默认 **Cloudflare Workers + D1**（个人与小流量通常可在免费额度内运行）；也可 Node / Docker + PostgreSQL 或 MySQL 8。外部门户可通过 **`/api/admin/*`** 自动开通用户、发 Key、同步预算。
 	</Card>
 </CardGrid>
 
 ## 下一步
 
-本地 Docker 是最快的体验路径：启动 Proxy 和 Admin，配置 Provider、模型与 route，创建用户 Key，然后把客户端指向 Gateway Base URL。
+默认路径是 **Cloudflare**：本机 Wrangler + 本地 D1 跑通后，用一条 CLI 部署到你的账号；再配置 Provider、模型与 route，创建用户 Key，把客户端指向 Gateway Base URL。
 
-- [**快速开始**](/zh/docs/quick-start/) — 本地 Docker 或 Cloudflare D1 跑通最小闭环
+- [**快速开始**](/zh/docs/quick-start/) — 本地 D1 → Cloudflare 上云
 - [供应商配置](/zh/docs/guides/providers/) · [模型配置](/zh/docs/guides/models/) · [路由配置](/zh/docs/guides/routing/)
 - [请求日志](/zh/docs/guides/request-logs/) · [审计日志](/zh/docs/guides/audit-logs/) · [系统配置](/zh/docs/guides/system-config/)
-- [Docker 部署](/zh/docs/deploy/docker/) · [Cloudflare 部署](/zh/docs/deploy/cloudflare/)
+- [Cloudflare 部署](/zh/docs/deploy/cloudflare/) · [Docker 部署](/zh/docs/deploy/docker/)
 - [GitHub 技术参考](/zh/docs/github-reference/) — API、架构、迁移和运维文档索引
 - [源码仓库](https://github.com/OctaFuse/octafuse-gateway) · [贡献指南](https://github.com/OctaFuse/octafuse-gateway/blob/main/CONTRIBUTING.md)

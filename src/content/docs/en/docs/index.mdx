@@ -17,17 +17,17 @@ OctaFuse docs follow the workflow: run it locally, configure upstreams, models, 
 	<a class="of-doc-path" href="/en/docs/quick-start/">
 		<span class="of-doc-path-index">01</span>
 		<strong>I want to run it</strong>
-		<small>Local Docker, Cloudflare local D1, Admin login, and one test request.</small>
+		<small>Local D1 → one-command Cloudflare deploy, Admin login, one test request.</small>
 	</a>
 	<a class="of-doc-path" href="/en/docs/guides/integration/">
 		<span class="of-doc-path-index">02</span>
 		<strong>I am integrating a system</strong>
 		<small>Proxy vs Admin, user keys vs master keys, portal provisioning flows.</small>
 	</a>
-	<a class="of-doc-path" href="/en/docs/deploy/docker/">
+	<a class="of-doc-path" href="/en/docs/deploy/cloudflare/">
 		<span class="of-doc-path-index">03</span>
 		<strong>I am going to production</strong>
-		<small>Docker, self-hosting, Cloudflare Workers, data placement, migration order.</small>
+		<small>Cloudflare Workers (default), Docker self-hosting, data placement, migration order.</small>
 	</a>
 </div>
 
@@ -65,12 +65,12 @@ OctaFuse docs follow the workflow: run it locally, configure upstreams, models, 
 ## Common Entry Points
 
 <CardGrid>
-	<LinkCard title="Quick start" description="Docker or Cloudflare local D1" href="/en/docs/quick-start/" />
+	<LinkCard title="Quick start" description="Local D1 → Cloudflare deploy" href="/en/docs/quick-start/" />
 	<LinkCard title="Integration" description="Proxy / Admin / key boundaries" href="/en/docs/guides/integration/" />
 	<LinkCard title="Playground" description="Probe one route upstream" href="/en/docs/features/playground/" />
 	<LinkCard title="Simulator" description="Validate the full Proxy path with a real key" href="/en/docs/features/simulator/" />
+	<LinkCard title="Cloudflare deployment" description="Worker + Admin + D1 (recommended)" href="/en/docs/deploy/cloudflare/" />
 	<LinkCard title="Docker deployment" description="Self-hosting, Postgres / MySQL, images" href="/en/docs/deploy/docker/" />
-	<LinkCard title="Cloudflare deployment" description="Worker + Admin + D1" href="/en/docs/deploy/cloudflare/" />
 </CardGrid>
 
 ## Troubleshooting And Governance

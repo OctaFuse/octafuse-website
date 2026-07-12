@@ -1,6 +1,6 @@
 ---
 title: OctaFuse
-description: Open-source AI Gateway—one Base URL, one API Key to unify OpenAI, Claude, Gemini, coding plans, token plans, and self-hosted models. Individuals consolidate scattered providers and keys; teams wire upstream providers once and issue separate keys for departments or customers with budgets, billing, audit, and logs. Docker self-host or Cloudflare. AGPLv3.
+description: Open-source AI Gateway—one Base URL, one API Key to unify OpenAI, Claude, Gemini, coding plans, token plans, and self-hosted models. Default Cloudflare Workers + D1 (individuals and light traffic can usually stay in the free tier); Docker / Postgres / MySQL self-hosting also supported. AGPLv3.
 template: splash
 sidebar:
   hidden: true
@@ -74,17 +74,17 @@ Managed AI gateways usually revolve around a platform-owned model catalog, provi
 		Playground tests a single Admin route. Simulator uses a real user key from the browser to verify auth, routing, billing, and logs.
 	</Card>
 	<Card title="Deployment and integration" icon="rocket">
-		Run on Cloudflare Worker + Pages + D1, or Node / Docker with PostgreSQL or MySQL 8. External portals can provision users, keys, and budgets through **`/api/admin/*`**.
+		Default **Cloudflare Workers + D1** (individuals and light traffic can usually stay in the free tier); or Node / Docker with PostgreSQL or MySQL 8. External portals can provision users, keys, and budgets through **`/api/admin/*`**.
 	</Card>
 </CardGrid>
 
 ## Next Steps
 
-Local Docker is the fastest path: start Proxy and Admin, configure Provider, model, and route, create a user key, then point clients at the Gateway Base URL.
+Default path is **Cloudflare**: try Wrangler + local D1, then one CLI onto your account; configure Provider, model, and route, create a user key, and point clients at the Gateway Base URL.
 
-- [**Quick start**](/en/docs/quick-start/) — run the smallest local Docker or Cloudflare D1 loop
+- [**Quick start**](/en/docs/quick-start/) — local D1 → Cloudflare deploy
 - [Providers](/en/docs/guides/providers/) · [Models](/en/docs/guides/models/) · [Routing](/en/docs/guides/routing/)
 - [Request logs](/en/docs/guides/request-logs/) · [Audit logs](/en/docs/guides/audit-logs/) · [System config](/en/docs/guides/system-config/)
-- [Docker deployment](/en/docs/deploy/docker/) · [Cloudflare deployment](/en/docs/deploy/cloudflare/)
+- [Cloudflare deployment](/en/docs/deploy/cloudflare/) · [Docker deployment](/en/docs/deploy/docker/)
 - [GitHub technical reference](/en/docs/github-reference/) — APIs, architecture, migrations, and operations index
 - [Source repository](https://github.com/OctaFuse/octafuse-gateway) · [Contributing](https://github.com/OctaFuse/octafuse-gateway/blob/main/CONTRIBUTING.md)

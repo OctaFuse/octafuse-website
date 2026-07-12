@@ -41,12 +41,12 @@ export const docsSidebar: StarlightUserConfig['sidebar'] = [
 		translations: { en: 'Deploy' },
 		collapsed: false,
 		items: [
-			{ label: 'Docker 部署', slug: 'docs/deploy/docker', translations: { en: 'Docker' } },
 			{
 				label: 'Cloudflare Workers 部署',
 				slug: 'docs/deploy/cloudflare',
 				translations: { en: 'Cloudflare Workers' },
 			},
+			{ label: 'Docker 部署', slug: 'docs/deploy/docker', translations: { en: 'Docker' } },
 		],
 	},
 	{

@@ -1,43 +1,69 @@
 ---
 title: 快速开始
-description: 在本地启动 OctaFuse（Docker 或 Cloudflare 本地 D1），确认健康检查并登录管理台；线上部署见单独章节。
+description: 用 Cloudflare 路径（本地 D1 → 一键上云）跑通 OctaFuse：启动 Proxy / Admin、健康检查、登录管理台。
 ---
 
 import { Aside, Steps } from '@astrojs/starlight/components';
 
-本页只做一件事：**在你自己的电脑上把 OctaFuse 跑起来**，并能打开管理台。更细的「怎么配供应商、路由、Key」见 **[使用指南](/zh/docs/guides/providers/)** 各章节。**生产或预发部署**不在此页展开，见文末链接。
+本页做一件事：按 **默认推荐的 Cloudflare 路径** 把 OctaFuse 跑起来，并能打开管理台。个人与小流量通常可在 Workers / D1 **免费额度**内完成部署与日常使用。
+
+更细的「怎么配供应商、路由、Key」见 **[使用指南](/zh/docs/guides/providers/)**。不用 Cloudflare 时见 [Docker 部署](/zh/docs/deploy/docker/)。
 
 <Aside type="note" title="命令所在仓库">
 	以下命令在 **[octafuse-gateway](https://github.com/OctaFuse/octafuse-gateway)** 仓库**根目录**执行。
 </Aside>
 
-## 方式 A：Docker（最快跑通）
+## 1. 本机启动（本地 D1）
 
 ### 先决条件
 
-- 已安装 **Docker Compose v2.20+**（需支持 `service_completed_successfully`）。
-- 可访问 GitHub 以下载源码（或你的 fork）。
+- **Node.js 20+**、npm。
+- 无需 Cloudflare 账号。
 
 ### 克隆并启动
 
 ```bash
 git clone https://github.com/OctaFuse/octafuse-gateway.git
 cd octafuse-gateway
-docker compose -f docker/compose/quickstart.yml up --build
+npm install
+npm run db:migrate
+npm run dev:proxy
 ```
 
-等待容器就绪后，新开终端执行：
+另开终端：
 
 ```bash
-curl -sS http://localhost:8787/health
+npm run dev:admin
 ```
 
-若返回 JSON 且无报错，说明 **Proxy（推理入口）** 已监听 **`http://localhost:8787`**。
+| 服务 | 地址 / 位置 |
+|------|-------------|
+| Proxy | `http://127.0.0.1:8787` |
+| Admin | `http://127.0.0.1:8789` |
+| 本地 D1 | `./.wrangler/state` |
+| Admin API Bearer | `sk-dev-admin-key` |
+
+健康检查：
+
+```bash
+curl -sS http://127.0.0.1:8787/health
+```
+
+## 2. 部署到 Cloudflare
+
+前置：Cloudflare 账号，本机已 `npx wrangler login`。
+
+```bash
+npx wrangler login
+npm run bootstrap:cloudflare
+```
+
+完成后按终端提示核对 `GATEWAY_URL` / `GATEWAY_MASTER_URL`，并用 `GET $GATEWAY_URL/health` 验证。完整步骤与发版见 [Cloudflare Workers 部署](/zh/docs/deploy/cloudflare/)。
 
 ## 登录管理台
 
-1. 浏览器打开 **`http://localhost:8789`**（**Admin**）。
-2. 使用默认账号登录：**`admin` / `changeme`**（**仅限本地体验**；任何对外环境都必须改掉）。
+1. 本地打开 **`http://127.0.0.1:8789`**（上云后用 Admin URL）。
+2. 本地默认账号：**`admin` / `changeme`**（仅限体验；对外环境必须改掉）。上云时使用 bootstrap 时设置的 `ADMIN_PASSWORD`。
 
 <figure class="of-doc-figure">
 	<img src="/screenshots/admin-dashboard.png" alt="OctaFuse Admin Dashboard 登录后的总览页面。" loading="lazy" />
@@ -55,40 +81,17 @@ curl -sS http://localhost:8787/health
 
 ## 可选：立刻打一条测试请求
 
-在管理台里按使用指南配好 **Provider + 路由 + API Key** 后，可将下面命令里的密钥与 `model` 换成你的真实值：
+在管理台里配好 **Provider + 路由 + API Key** 后，将密钥与 `model` 换成真实值：
 
 ```bash
-curl -sS http://localhost:8787/v1/chat/completions \
+curl -sS http://127.0.0.1:8787/v1/chat/completions \
   -H "Authorization: Bearer sk-your-api-key" \
   -H "Content-Type: application/json" \
   -d '{"model":"your-route-model","messages":[{"role":"user","content":"Hello"}]}'
 ```
 
-## 方式 B：Cloudflare（本地 D1）
+上云后把主机换成你的 Proxy URL。
 
-不想跑 Docker、或希望与 **Worker + D1** 生产形态一致时，可在本机用 Wrangler 开发。本地数据持久化在 `./.wrangler/state`。**本地开发不需要** `cloudflare-worker/*.env`；远程部署见 [Cloudflare Workers 部署](/zh/docs/deploy/cloudflare/)。
+## 不用 Cloudflare？
 
-**先决条件**：**Node.js 20+**、npm。
-
-```bash
-git clone https://github.com/OctaFuse/octafuse-gateway.git
-cd octafuse-gateway
-npm install
-npm run db:migrate          # 本地 D1 迁移
-npm run dev:proxy           # Proxy → http://127.0.0.1:8787
-```
-
-另开终端：
-
-```bash
-npm run dev:admin           # Admin 预览 → http://127.0.0.1:8789
-```
-
-管理 API 的 Bearer 须与 D1 `system_config.MASTER_KEY` 一致（开发种子见仓库 `packages/core/migrations-d1/0002_seed.sql`）。
-
-更多本地组合（Node + Postgres/MySQL、多套 D1 目录、冒烟脚本）见 [GitHub 技术参考 · 本地开发与测试](https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/developers/local-development.md)。
-
-## 线上环境
-
-- [Docker 部署](/zh/docs/deploy/docker/)  
-- [Cloudflare Workers 部署](/zh/docs/deploy/cloudflare/)  
+Docker / Postgres / MySQL 等自托管路径见 [Docker 部署](/zh/docs/deploy/docker/)。更多本地组合（Node + SQL、冒烟脚本）见 [GitHub · 本地开发](https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/developers/local-development.md)。
