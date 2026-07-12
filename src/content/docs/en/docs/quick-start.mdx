@@ -40,8 +40,9 @@ npm run dev:admin
 |---------|----------------|
 | Proxy | `http://127.0.0.1:8787` |
 | Admin | `http://127.0.0.1:8789` |
+| Console login | `admin` / `admin` (local default; first `dev:admin` auto-creates `packages/admin/.dev.vars`) |
 | Local D1 | `./.wrangler/state` |
-| Admin API Bearer | `sk-dev-admin-key` |
+| Admin API Bearer | `sk-dev-admin-key` (management API, not the console password) |
 
 Health check:
 
@@ -63,7 +64,7 @@ Follow the CLI for `GATEWAY_URL` / `GATEWAY_MASTER_URL`, then verify with `GET $
 ## Sign in to Admin
 
 1. Locally open **`http://127.0.0.1:8789`** (use your Admin URL after cloud deploy).
-2. Local defaults: **`admin` / `changeme`** (local only—change everywhere else). After bootstrap, use the `ADMIN_PASSWORD` you set.
+2. Local defaults: **`admin` / `admin`** (local only; edit `packages/admin/.dev.vars` to change). After bootstrap, use the `ADMIN_PASSWORD` you set. Docker one-shot local defaults are `admin` / `changeme`—see [Docker deployment](/en/docs/deploy/docker/).
 
 <figure class="of-doc-figure">
 	<img src="/screenshots/admin-dashboard.png" alt="OctaFuse Admin Dashboard after sign-in." loading="lazy" />

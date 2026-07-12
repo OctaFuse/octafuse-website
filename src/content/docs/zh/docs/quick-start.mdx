@@ -40,8 +40,9 @@ npm run dev:admin
 |------|-------------|
 | Proxy | `http://127.0.0.1:8787` |
 | Admin | `http://127.0.0.1:8789` |
+| 控制台登录 | `admin` / `admin`（本地默认；首次 `dev:admin` 会自动生成 `packages/admin/.dev.vars`） |
 | 本地 D1 | `./.wrangler/state` |
-| Admin API Bearer | `sk-dev-admin-key` |
+| Admin API Bearer | `sk-dev-admin-key`（管理 API，不是网页密码） |
 
 健康检查：
 
@@ -63,7 +64,7 @@ npm run bootstrap:cloudflare
 ## 登录管理台
 
 1. 本地打开 **`http://127.0.0.1:8789`**（上云后用 Admin URL）。
-2. 本地默认账号：**`admin` / `changeme`**（仅限体验；对外环境必须改掉）。上云时使用 bootstrap 时设置的 `ADMIN_PASSWORD`。
+2. 本地默认账号：**`admin` / `admin`**（仅本机；可改 `packages/admin/.dev.vars`）。上云时使用 bootstrap 设置的 `ADMIN_PASSWORD`。Docker 本地一键体验默认是 `admin` / `changeme`，见 [Docker 部署](/zh/docs/deploy/docker/)。
 
 <figure class="of-doc-figure">
 	<img src="/screenshots/admin-dashboard.png" alt="OctaFuse Admin Dashboard 登录后的总览页面。" loading="lazy" />
