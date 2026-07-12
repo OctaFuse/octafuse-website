@@ -45,7 +45,7 @@ Managed AI gateways usually revolve around a platform-owned model catalog, provi
 		Put self-hosted compatible services, internal models, Ollama / vLLM paths, and public model providers behind one routing system with a consistent external surface.
 	</Card>
 	<Card title="Cost and reliability ops" icon="analytics">
-		Observe usage and failures by model, Provider, user, and reliability view, then tune default routes, backups, budgets, and upstream key quotas.
+		Observe usage and failures by model, Provider, user, and reliability view, then tune default routes, backups, budgets, time-of-day pricing, and upstream key quotas.
 	</Card>
 </CardGrid>
 
@@ -64,8 +64,8 @@ Managed AI gateways usually revolve around a platform-owned model catalog, provi
 	<Card title="Limits, circuits, sticky" icon="warning">
 		Upstream keys support **RPM / TPM / max concurrency**. 429, 401 / 403, 5xx, and network errors use separate cooldown policies; sticky bindings can improve prompt cache locality.
 	</Card>
-	<Card title="User keys and budgets" icon="padlock">
-		Budgets and reset periods belong to Users; each user can own multiple active API keys. Proxy checks budget before forwarding and records charges after usage is parsed.
+	<Card title="User keys, budgets, and pricing" icon="padlock">
+		Budgets and reset periods belong to Users; each user can own multiple active API keys. Proxy checks budget before forwarding and records three amounts per request: **supplier cost**, **catalog list price**, and **charged to user**. Routes support base factors plus **daily schedule multipliers** (business-timezone peak / off-peak) for vendor time-based pricing.
 	</Card>
 	<Card title="Logs, audit, analytics" icon="magnifier">
 		Request logs capture protocol, model, route group, Provider, provider key, tokens, status, and costs. Audit logs track budget charges, resets, and user / key lifecycle events.

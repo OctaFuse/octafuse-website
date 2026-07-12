@@ -1,6 +1,6 @@
 ---
 title: Routing
-description: Configure upstream paths per model in Admin with vendor, protocol, route group, priority, and status for selection and failover.
+description: Configure upstream paths per model in Admin with vendor, protocol, route group, priority, billing factors, and daily schedule pricing for selection and failover.
 ---
 
 import { Aside, Steps } from '@astrojs/starlight/components';
@@ -23,7 +23,7 @@ The list supports rich filters; the current filter set is reflected in the brows
 <Steps>
 1. Open **Routes**.
 1. **Create a route**: pick model, vendor, upstream model name, **protocol** (must match the base URL you configured for that protocol on the provider), **route group** (often `default`), **priority** (lower tries first), **status** (only **active** routes serve production traffic).
-1. **Pricing**: override defaults with the tier editor when needed (follow the UI).
+1. **Billing**: set base multipliers for **charged to user** and **supplier cost** relative to the catalog list price. For vendor peak / off-peak rates, add a **Daily schedule** (time-of-day multipliers; timezone comes from [System config](/en/docs/guides/system-config/) business timezone).
 1. After saving, use [Playground](/en/docs/features/playground/) for a single-route upstream check; use [Simulator](/en/docs/features/simulator/) to exercise the full Proxy path with a real `sk-` key.
 </Steps>
 

@@ -1,6 +1,6 @@
 ---
 title: 路由配置
-description: 在管理台为模型配置上游路由：供应商、协议、路由组、优先级与状态，实现选路与故障切换。
+description: 在管理台为模型配置上游路由：供应商、协议、路由组、优先级、计费倍率与每日时段调价，实现选路与故障切换。
 ---
 
 import { Aside, Steps } from '@astrojs/starlight/components';
@@ -23,7 +23,7 @@ import { Aside, Steps } from '@astrojs/starlight/components';
 <Steps>
 1. 打开 **Routes**。
 1. **新建路由**：选择模型、供应商、上游实际模型名称、**协议类型**（须与供应商页为该协议配置的访问地址一致）、**路由组**（常用 `default`）、**优先级**（数字越小越优先）、**状态**（仅 **启用** 的路由参与对外选路）。
-1. **价格**：如需单独覆盖默认定价，可在表单中使用分层价格编辑器（以界面为准）。
+1. **计费**：在路由的 Billing 面板配置 **用户计费 / 供应成本** 相对目录标准价的基础倍率；如需对齐供应商高峰 / 闲时价，再配置 **Daily schedule**（每日时段倍率，时区见 [系统配置](/zh/docs/guides/system-config/) 的业务时区）。
 1. **保存后**：用 [Playground](/zh/docs/features/playground/) 针对单条路由做上游试跑；若要验证「真实密钥 + 网关入口」整条链路，请用 [Simulator](/zh/docs/features/simulator/)。
 </Steps>
 

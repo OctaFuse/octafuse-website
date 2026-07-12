@@ -45,7 +45,7 @@ import { Card, CardGrid } from '@astrojs/starlight/components';
 		把自托管兼容服务、内部模型、Ollama / vLLM 旁路和公网模型放在同一套路由体系后面，对外暴露一致的访问方式。
 	</Card>
 	<Card title="成本与稳定性运营" icon="analytics">
-		通过模型、Provider、用户和可靠性维度观察用量与失败情况，再决定默认路线、备用路线、预算策略和上游 Key 配额。
+		通过模型、Provider、用户和可靠性维度观察用量与失败情况，再决定默认路线、备用路线、预算策略、按时段调价和上游 Key 配额。
 	</Card>
 </CardGrid>
 
@@ -65,7 +65,7 @@ import { Card, CardGrid } from '@astrojs/starlight/components';
 		上游 Key 可配置 **RPM / TPM / 最大并发**。429、401 / 403、5xx 和网络错误会进入不同冷却策略；sticky 绑定可提升 prompt cache 命中率。
 	</Card>
 	<Card title="用户 Key、预算与计费" icon="padlock">
-		预算与周期归属 User，User 下可创建多把 active API Key。Proxy 转发前校验预算，流结束后按 route 价格口径写入扣费记录。
+		预算与周期归属 User，User 下可创建多把 active API Key。Proxy 转发前校验预算；每次请求同时记 **供应成本**、**目录标准价**、**用户计费** 三笔账。路由可配基础倍率与**每日时段倍率**（业务时区下的高峰 / 闲时），适配各家模型按时段定价。
 	</Card>
 	<Card title="日志、审计与 Analytics" icon="magnifier">
 		请求日志记录协议、模型、route group、Provider、Provider Key、token、状态和成本；审计日志记录预算扣减、周期重置与用户 / Key 生命周期。
