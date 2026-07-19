@@ -131,6 +131,14 @@
 					}
 				},
 				{
+					"path": "docs/developers/reference/image-models.md",
+					"label": { "zh": "文生图模型", "en": "Image models" },
+					"description": {
+						"zh": "gpt-image-2 与 Seedream：端点、参数、计费折算与运营验收。",
+						"en": "gpt-image-2 and Seedream: endpoints, parameters, billing conversion, and ops acceptance."
+					}
+				},
+				{
 					"path": "docs/developers/reference/time-and-timezone.md",
 					"label": { "zh": "时间与时区", "en": "Time and timezone" },
 					"description": {
