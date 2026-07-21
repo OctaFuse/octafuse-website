@@ -1,6 +1,6 @@
 ---
 title: Routing
-description: Configure upstream paths per model in Admin with vendor, protocol, route group, priority, billing factors, and daily schedule pricing for selection and failover.
+description: Configure upstream paths per model in Admin with vendor, protocol, route group, priority, sticky keys, billing factors, and daily schedule pricing for routing and failover.
 ---
 
 import { Aside, Steps } from '@astrojs/starlight/components';
@@ -31,9 +31,17 @@ The list supports rich filters; the current filter set is reflected in the brows
 
 Clients only send **`model`** and protocol-specific payloads — no hard-coded vendor details. Prefer changing routes when switching upstreams.
 
+## Routing boundary: priority, weight, and sticky
+
+| Layer | Controls |
+|-------|----------|
+| **Route `priority`** | Which upstream route to try first in a `route_group` (lower first). **Routes have no weight.** |
+| **Provider key `weight`** | After a route is chosen, weighted random among that Provider’s keys when headroom is nearly tied. See [Providers](/en/docs/guides/providers/). |
+| **Sticky** | Opt-in on **Models** per protocol × route group. Keeps the same user on the same upstream key when possible to improve **prompt cache** hits; short-wait on soft rate limits; still fail over on hard upstream errors. |
+
 ## Note
 
-**Playground** probes **one** route upstream and does **not** mirror full multi-route failover inside the gateway; validate failover with real Proxy calls or **Simulator**.
+**Playground** probes **one** route upstream and does **not** mirror full multi-route failover or sticky behavior; validate with real Proxy calls or **Simulator**. Image routes must use the OpenAI protocol — see [Image generation / edit](/en/docs/guides/images/).
 
 ## Next
 

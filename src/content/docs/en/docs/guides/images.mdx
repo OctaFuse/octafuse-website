@@ -1,0 +1,42 @@
+---
+title: Image generation / edit
+description: Configure OpenAI-compatible image generation and edits—token or per-image catalog pricing, OpenAI routes, and Playground / Simulator checks.
+---
+
+import { Aside, Steps } from '@astrojs/starlight/components';
+
+The gateway exposes OpenAI-compatible **`POST /v1/images/generations`** and **`POST /v1/images/edits`** (multipart). Auth matches Chat (user `sk-…`). Models need an **active OpenAI-protocol route** and Image pricing on the catalog entry.
+
+<Aside type="tip" title="Prerequisite">
+	Finish [Providers](/en/docs/guides/providers/) (with Images generations endpoints) and [Models](/en/docs/guides/models/). Field contracts live in the [GitHub reference · image-models](https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/developers/reference/image-models.md).
+</Aside>
+
+## What to do in Admin
+
+<Steps>
+1. **Provider**: add keys for OpenAI or a compatible upstream. `endpoints.openai.base` can derive `…/images/generations`, or set a full `images.generations` URL. For Seedream-style hosts without OpenAI edits, **do not** set `base` (avoids a dead derived edits URL).
+1. **Models**: import or create an image preset (`output` includes `image`). Set `image_billing_mode`:
+	- **`token`**: meter from upstream image / text token usage (e.g. GPT Image).
+	- **`per_image`**: catalog price per image (e.g. Seedream), with optional reference-image input price.
+1. **Routes**: add an **OpenAI**, **active** route for that model.
+1. **Validate**: Playground probes one route (no user billing); Simulator hits real Proxy → check [Request logs](/en/docs/guides/request-logs/) for `billing_kind` / image counts and charges.
+</Steps>
+
+## Model listing
+
+- Default authenticated **`GET /v1/models`** returns LLMs only — **not** pure image-generation models. Pass `kind=image` or `kind=all` when needed.
+- Portals should use public **`GET /catalog/models`** (no user key). It is not a drop-in replacement for `/v1/models`.
+
+## Minimal client call
+
+```bash
+curl -sS "$GATEWAY_URL/v1/images/generations" \
+  -H "Authorization: Bearer sk-your-api-key" \
+  -H "Content-Type: application/json" \
+  -d '{"model":"gpt-image-2","prompt":"a watercolor fox","size":"1024x1024"}'
+```
+
+## Next
+
+- [Agent Tools](/en/docs/guides/tools/)  
+- [Routing](/en/docs/guides/routing/) · [Simulator](/en/docs/features/simulator/)  

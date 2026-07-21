@@ -1,0 +1,43 @@
+---
+title: Analytics
+description: Use Admin Analytics to inspect usage, cost, and failure trends by model, provider, user, and reliability view.
+---
+
+import { Aside, Steps } from '@astrojs/starlight/components';
+
+Under **Analytics**, review gateway operations for cost reviews, capacity planning, and incident triage. Metrics come from real Proxy traffic (Chat, Images, Tools). [Playground](/en/docs/features/playground/) probes do **not** feed this usage pipeline.
+
+Typical views (labels follow the UI):
+
+| View | Use |
+|------|-----|
+| Models | Requests, tokens, and spend by model |
+| Providers | Usage and cost by upstream vendor |
+| Users | Consumption and activity by user / customer |
+| Reliability | Failure rates, latency, availability signals |
+
+<Aside type="tip" title="Timezone and currency">
+	Chart windows and day boundaries follow the **business timezone** in [System config](/en/docs/guides/system-config/); money amounts use the **billing currency**.
+</Aside>
+
+## What to do in Admin
+
+<Steps>
+1. Open the Analytics sub-page you need.
+1. Pick a time range; narrow by model, provider, or user when useful.
+1. Cross-check spikes or failure clusters in [Request logs](/en/docs/guides/request-logs/).
+1. Tune [route](/en/docs/guides/routing/) priority, backup providers, budgets, or the Tools Active engine based on what you find.
+</Steps>
+
+## How it relates to logs
+
+| Page | Focus |
+|------|--------|
+| Analytics | Aggregated trends and comparisons |
+| Request Logs | Per-call detail and pricing summaries |
+| Audit Logs | Budget charges and user / key lifecycle |
+
+## Next
+
+- [Request logs](/en/docs/guides/request-logs/) · [Audit logs](/en/docs/guides/audit-logs/)  
+- [Routing](/en/docs/guides/routing/)  

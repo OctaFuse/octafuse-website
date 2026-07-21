@@ -1,6 +1,6 @@
 ---
 title: 路由配置
-description: 在管理台为模型配置上游路由：供应商、协议、路由组、优先级、计费倍率与每日时段调价，实现选路与故障切换。
+description: 在管理台为模型配置上游路由：供应商、协议、路由组、优先级、粘性、计费倍率与每日时段调价，实现路由与故障切换。
 ---
 
 import { Aside, Steps } from '@astrojs/starlight/components';
@@ -22,7 +22,7 @@ import { Aside, Steps } from '@astrojs/starlight/components';
 
 <Steps>
 1. 打开 **Routes**。
-1. **新建路由**：选择模型、供应商、上游实际模型名称、**协议类型**（须与供应商页为该协议配置的访问地址一致）、**路由组**（常用 `default`）、**优先级**（数字越小越优先）、**状态**（仅 **启用** 的路由参与对外选路）。
+1. **新建路由**：选择模型、供应商、上游实际模型名称、**协议类型**（须与供应商页为该协议配置的访问地址一致）、**路由组**（常用 `default`）、**优先级**（数字越小越优先）、**状态**（仅 **启用** 的路由参与对外服务）。
 1. **计费**：在路由的 Billing 面板配置 **用户计费 / 供应成本** 相对目录标准价的基础倍率；如需对齐供应商高峰 / 闲时价，再配置 **Daily schedule**（每日时段倍率，时区见 [系统配置](/zh/docs/guides/system-config/) 的业务时区）。
 1. **保存后**：用 [Playground](/zh/docs/features/playground/) 针对单条路由做上游试跑；若要验证「真实密钥 + 网关入口」整条链路，请用 [Simulator](/zh/docs/features/simulator/)。
 </Steps>
@@ -31,9 +31,17 @@ import { Aside, Steps } from '@astrojs/starlight/components';
 
 客户端只需传 **`model`** 及协议要求的请求体，无需写死供应商信息。调整上游或优先级时，优先改路由页即可。
 
+## 路由边界：priority、weight 与粘性
+
+| 层 | 控制什么 |
+|----|----------|
+| **Route `priority`** | 同一 `route_group` 内先试哪条上游 route（数字越小越先）。**Route 没有 weight。** |
+| **Provider Key `weight`** | 命中某条 route 后，在该 Provider 的多把 Key 间、余量接近时加权随机。见 [供应商配置](/zh/docs/guides/providers/)。 |
+| **粘性（sticky）** | 在 **Models** 上按「协议 × 路由组」opt-in。开启后，同一用户尽量连续命中同一把上游 Key，提升上游 **prompt cache** 命中率；软限流可短等待，上游硬错误仍会 failover。 |
+
 ## 说明
 
-**Playground** 用于直连上游试跑单条路由，**不会**模拟网关对同组多条路由的自动切换；完整切换行为以真实 Proxy 调用为准。
+**Playground** 用于直连上游试跑单条路由，**不会**模拟网关对同组多条路由的自动切换，也 **不走** sticky；完整路由行为以真实 Proxy 调用为准。图片生成路由须为 OpenAI 协议，见 [图片生成 / 编辑](/zh/docs/guides/images/)。
 
 ## 下一步
 

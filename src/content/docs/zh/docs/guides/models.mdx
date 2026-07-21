@@ -23,14 +23,24 @@ import { Aside, Steps } from '@astrojs/starlight/components';
 1. **新建或编辑**：设置与客户端、路由中一致的 **模型标识**、**展示名称**、**厂商** 等表单字段；按需填写上下文长度、输出上限等（以界面为准）。
 1. **从目录导入**：使用内置模型目录批量预填，导入后请核对并保存。
 1. **定价**：在页面中的分层定价编辑器里维护各档位价格（界面金额单位会随全局计费币种设置变化）。
-1. **保存后**：务必在 [路由配置](/zh/docs/guides/routing/) 中为该模型添加至少一条 **启用（active）** 的路由，否则客户端无法正常选路。
+1. **保存后**：务必在 [路由配置](/zh/docs/guides/routing/) 中为该模型添加至少一条 **启用（active）** 的路由，否则客户端无法正常路由。
+1. **粘性（可选）**：若希望同一用户尽量复用同一把上游 Key（提高 prompt cache 命中），在模型上按「协议 × 路由组」开启 sticky；说明见 [路由配置](/zh/docs/guides/routing/)。
 </Steps>
 
 ## 客户端 `model` 怎么写
 
 可使用 **基础模型标识**，或使用 **`基础模型标识:路由组`**（例如 `my-model:free`）以指定路由组；路由组名称须与路由页配置一致。更完整的协议说明见 [GitHub 技术参考](/zh/docs/github-reference/)。
 
+## `/v1/models` 与 `/catalog/models`
+
+| 接口 | 鉴权 | 典型用途 |
+|------|------|----------|
+| **`GET /v1/models`** | 用户 `sk-…` | Agent / SDK；默认仅 LLM，可用 `kind=image` / `kind=all` |
+| **`GET /catalog/models`** | 无 | 门户公开 discovery；按 active 路由聚合协议与 route group |
+
+二者不是同一响应形态，请勿混用。图片生成定价见 [图片生成 / 编辑](/zh/docs/guides/images/)。
+
 ## 下一步
 
-- [路由配置](/zh/docs/guides/routing/)  
+- [路由配置](/zh/docs/guides/routing/) · [图片生成 / 编辑](/zh/docs/guides/images/)  
 - [API Key 管理](/zh/docs/guides/api-keys/)  

@@ -1,14 +1,14 @@
 ---
 title: OctaFuse
-description: 开源 AI Gateway：一个 Base URL、一个 API Key，统一接入 OpenAI、Claude、Gemini、Coding Plan、Token Plan 与自托管模型。默认 Cloudflare Workers + D1（个人与小流量通常可走免费额度），也可 Docker / Postgres / MySQL 自托管。AGPLv3。
+description: 可自托管的开源 AI 能力网关与运营控制面：统一接入 Chat、图片生成 / 编辑与可扩展 Agent Tools，集中管理路由、密钥、预算、计费和审计。支持 Cloudflare Workers + D1 及 Docker / Postgres / MySQL。AGPLv3。
 template: splash
 sidebar:
   hidden: true
 hero:
-  title: '<span class="of-hero-heading"><img src="/favicon.svg" class="of-hero-logo" width="104" height="104" alt="" /><span class="of-hero-heading-text"><span class="of-hero-kicker">AI Gateway</span><span class="of-hero-title">OctaFuse</span></span></span>'
-  tagline: 一个 Base URL，一个 API Key——把分散的模型供应商、Coding Plan 与 Token Plan 汇总成统一接入入口。
+  title: '<span class="of-hero-heading"><img src="/favicon.svg" class="of-hero-logo" width="104" height="104" alt="" /><span class="of-hero-heading-text"><span class="of-hero-kicker">AI Gateway & Control Plane</span><span class="of-hero-title">OctaFuse</span></span></span>'
+  tagline: 统一 AI 能力，掌控每一次调用。
   image:
-    html: '<div class="of-gateway-console" aria-label="OctaFuse 网关路由控制台"><div class="of-console-top"><span></span><strong>gateway.route</strong><code>live</code></div><div class="of-console-grid"><div class="of-console-stack" aria-label="上游供应商"><img src="/brand/openai.svg" width="28" height="28" alt="OpenAI" /><img src="/brand/anthropic.svg" width="28" height="28" alt="Anthropic" /><img src="/brand/googlegemini.svg" width="28" height="28" alt="Gemini" /><img src="/brand/deepseek.svg" width="28" height="28" alt="DeepSeek" /></div><div class="of-console-core"><span>OctaFuse</span><strong>Policy Router</strong><small>budget · failover · audit</small></div><div class="of-console-protocols" aria-label="客户端协议"><span><strong>OpenAI</strong><small>/v1/chat</small></span><span><strong>Anthropic</strong><small>/v1/messages</small></span><span><strong>Gemini</strong><small>/v1beta</small></span></div></div><div class="of-console-metrics"><span><strong>3</strong> protocols</span><span><strong>∞</strong> providers</span><span><strong>1</strong> gateway</span></div></div>'
+    html: '<div class="of-gateway-console" aria-label="OctaFuse 网关路由控制台"><div class="of-console-top"><span></span><strong>gateway.route</strong><code>live</code></div><div class="of-console-grid"><div class="of-console-stack" aria-label="上游供应商"><img src="/brand/openai.svg" width="28" height="28" alt="OpenAI" /><img src="/brand/anthropic.svg" width="28" height="28" alt="Anthropic" /><img src="/brand/googlegemini.svg" width="28" height="28" alt="Gemini" /><img src="/brand/deepseek.svg" width="28" height="28" alt="DeepSeek" /></div><div class="of-console-core"><span>OctaFuse</span><strong>Policy Router</strong><small>budget · failover · audit</small></div><div class="of-console-protocols" aria-label="客户端协议"><span><strong>OpenAI</strong><small>/v1/chat</small></span><span><strong>Anthropic</strong><small>/v1/messages</small></span><span><strong>Gemini</strong><small>/v1beta</small></span></div></div><div class="of-console-metrics"><span><strong>3</strong> protocols</span><span><strong>N+</strong> providers</span><span><strong>1</strong> gateway</span></div></div>'
   actions:
     - text: 快速开始
       link: /zh/docs/quick-start/
@@ -22,15 +22,15 @@ hero:
 
 import { Card, CardGrid } from '@astrojs/starlight/components';
 
-模型能力正在变得越来越分散：供应商、兼容端点、Coding Plan、Token Plan、自托管模型、团队内部账号，各有自己的 **Base URL**、密钥、额度、价格和日志。应用真正需要的却很简单：一个稳定入口、一套可控路由、清楚的预算和可追溯的调用记录。
+AI 能力正在从文本模型扩展到图片生成、Agent Tools、私有模型与更多专用服务。供应商、兼容端点、Coding Plan、自托管服务和团队内部账号，各有自己的 **Base URL**、密钥、额度、价格与日志；应用真正需要的是一个稳定入口、一套可控路由、清楚的预算和可追溯的调用记录。
 
-现有托管型 AI Gateway 通常围绕平台提供的模型目录、Provider 列表和控制面展开，接入边界、路由策略、计费口径和扩展方式都容易被平台能力限制。**OctaFuse** 更像一层可自建、可改造的开放网关：你可以接入官方 Provider、第三方兼容端点、私有模型服务和多把上游 Key，把选路、限流、熔断、预算、审计与管理 API 都掌握在自己的系统里；客户端继续按熟悉的 OpenAI / Anthropic / Gemini 协议调用即可。
+**OctaFuse 是可自托管的 AI 能力网关与运营控制面。**你可以统一接入官方 Provider、第三方兼容端点、图片生成、Agent Tools、私有模型服务与多把上游 Key，并在自己的系统里管理路由、粘性、限流、熔断、预算、计费、审计和管理 API。对客户端而言，仍然是一个 Gateway URL 和一把用户 Key。
 
 ## 应用场景
 
 <CardGrid stagger>
 	<Card title="个人开发者与工具链" icon="add-document">
-		把多个模型订阅、Coding Plan、Token Plan 或备用上游汇总成一个 Gateway。Cursor、CLI、脚本或自研工具只需要配置一个 Base URL 和一把用户 Key。
+		把模型订阅、Coding Plan、图片生成、Agent Tools 与备用上游汇总成一个 Gateway。Cursor、CLI、脚本或自研工具只需要配置一个 Gateway URL 和一把用户 Key。
 	</Card>
 	<Card title="AI 应用与 Agent 团队" icon="laptop">
 		业务代码面向稳定模型 ID 和统一协议开发。模型切换、灰度路线、备用 Provider、失败降级和默认参数都放在网关层调整。
@@ -53,16 +53,22 @@ import { Card, CardGrid } from '@astrojs/starlight/components';
 
 <CardGrid stagger>
 	<Card title="三协议统一入口" icon="external">
-		支持 OpenAI Chat Completions、Anthropic Messages、Gemini `generateContent` / `streamGenerateContent`，并提供 `GET /v1/models` 与公开模型目录。
+		支持 OpenAI Chat Completions、Anthropic Messages、Gemini `generateContent` / `streamGenerateContent`；Agent / SDK 用需鉴权的 `GET /v1/models`，门户可用公开 `GET /catalog/models`。
+	</Card>
+	<Card title="图片生成 / 编辑" icon="open-book">
+		OpenAI 兼容 `POST /v1/images/generations` 与 `edits`；目录价支持 token 分项与按张（`per_image`）。Playground / Simulator 可联调出图与计费日志。
+	</Card>
+	<Card title="Agent Tools" icon="puzzle">
+		面向 Agent 的可扩展产品 API（`/v1/tools/*`）。当前提供联网类工具（Search / Fetch / Deep Search），后续可继续接入更多工具；Admin → Tools 配置引擎 Key，按次计费、失败不扣费。
 	</Card>
 	<Card title="模型路由与 Route Group" icon="random">
-		客户端可用稳定模型 ID 调用，也可通过 `baseId:group` 选择不同路线。一个模型可以按协议、route group、优先级和权重挂多条上游 route。
+		客户端可用稳定模型 ID，也可通过 `baseId:group` 指定路由组。同一模型可按协议、route group、**route priority** 挂多条上游；**Route 没有 weight**。
 	</Card>
 	<Card title="Provider Key 池调度" icon="approve-check">
-		同一 Provider 可维护多把上游 Key。调度时综合 route priority、key priority、余量、熔断状态和 sticky 绑定，按可用性执行 failover。
+		同一 Provider 可维护多把上游 Key。命中 route 后，按 key priority、余量、**key weight**（余量接近时）、熔断与 **粘性（sticky）** 调度并 failover。
 	</Card>
-	<Card title="限流、熔断与 Sticky" icon="warning">
-		上游 Key 可配置 **RPM / TPM / 最大并发**。429、401 / 403、5xx 和网络错误会进入不同冷却策略；sticky 绑定可提升 prompt cache 命中率。
+	<Card title="限流、熔断与粘性" icon="warning">
+		上游 Key 可配置 **RPM / TPM / 最大并发**。429、401 / 403、5xx 和网络错误会进入不同冷却策略；可按模型开启粘性绑定，让同一用户尽量复用同一把 Key，提升 prompt cache 命中率。
 	</Card>
 	<Card title="用户 Key、预算与计费" icon="padlock">
 		预算与周期归属 User，User 下可创建多把 active API Key。Proxy 转发前校验预算；每次请求同时记 **供应成本**、**目录标准价**、**用户计费** 三笔账。路由可配基础倍率与**每日时段倍率**（业务时区下的高峰 / 闲时），适配各家模型按时段定价。
@@ -71,7 +77,7 @@ import { Card, CardGrid } from '@astrojs/starlight/components';
 		请求日志记录协议、模型、route group、Provider、Provider Key、token、状态和成本；审计日志记录预算扣减、周期重置与用户 / Key 生命周期。
 	</Card>
 	<Card title="Playground 与 Simulator" icon="open-book">
-		Playground 在 Admin 内测试单条 route；Simulator 用真实用户 Key 模拟客户端调用，检查鉴权、选路、计费与日志链路。
+		Playground 在 Admin 内测试单条 route；Simulator 用真实用户 Key 模拟客户端调用，检查鉴权、路由、计费与日志链路。
 	</Card>
 	<Card title="部署与系统集成" icon="rocket">
 		默认 **Cloudflare Workers + D1**（个人与小流量通常可在免费额度内运行）；也可 Node / Docker + PostgreSQL 或 MySQL 8。外部门户可通过 **`/api/admin/*`** 自动开通用户、发 Key、同步预算。
@@ -84,6 +90,7 @@ import { Card, CardGrid } from '@astrojs/starlight/components';
 
 - [**快速开始**](/zh/docs/quick-start/) — 本地 D1 → Cloudflare 上云
 - [供应商配置](/zh/docs/guides/providers/) · [模型配置](/zh/docs/guides/models/) · [路由配置](/zh/docs/guides/routing/)
+- [Images](/zh/docs/guides/images/) · [Agent Tools](/zh/docs/guides/tools/) · [Analytics](/zh/docs/guides/analytics/)
 - [请求日志](/zh/docs/guides/request-logs/) · [审计日志](/zh/docs/guides/audit-logs/) · [系统配置](/zh/docs/guides/system-config/)
 - [Cloudflare 部署](/zh/docs/deploy/cloudflare/) · [Docker 部署](/zh/docs/deploy/docker/)
 - [GitHub 技术参考](/zh/docs/github-reference/) — API、架构、迁移和运维文档索引

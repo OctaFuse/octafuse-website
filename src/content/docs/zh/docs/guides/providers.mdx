@@ -5,7 +5,7 @@ description: 在管理台添加上游供应商：各协议访问地址与 API Ke
 
 import { Aside, Steps } from '@astrojs/starlight/components';
 
-在管理台左侧打开 **Inference → Providers**。**供应商**表示网关要把请求转发到哪一家上游服务：可为 **OpenAI 兼容**、**Anthropic**、**Gemini** 分别填写 **Base URL**，并配置共用的 **API Key**（保存后通常以掩码显示）。
+在管理台左侧打开 **Inference → Providers**。**供应商**表示网关要把请求转发到哪一家上游服务：可为 **OpenAI 兼容**、**Anthropic**、**Gemini** 分别填写访问地址，并维护 **一把或多把上游 API Key**（保存后通常以掩码 / fingerprint 显示）。
 
 <Aside type="tip" title="前置">
 	请先完成 [快速开始](/zh/docs/quick-start/)，能登录管理台。
@@ -20,16 +20,17 @@ import { Aside, Steps } from '@astrojs/starlight/components';
 
 <Steps>
 1. 在侧栏 **Inference** 下进入 **Providers**。
-1. **新建或编辑**：填写标识、名称、各协议的 **Base URL**（是否与 `/v1` 等路径拼接请严格按上游文档）、**API Key**、可选说明。
-1. **从目录导入**：使用页面提供的模板目录，可快速预填各协议的访问地址；导入后仍需补全或核对 **API Key**。
+1. **新建或编辑**：填写标识、名称、各协议的访问地址（`base` 或 capability 完整 URL；是否与 `/v1` 等路径拼接请严格按上游文档）、首把 **API Key**、可选说明。
+1. **多 Key**：在同一 Provider 下继续添加上游 Key，分别为其设置名称、**priority**、可选 **weight**、RPM / TPM / 并发与状态。调度时先按 key priority / 余量，余量接近再用 weight 打散——这与 [路由](/zh/docs/guides/routing/) 的 **route priority** 不是同一层。
+1. **从目录导入**：使用页面提供的模板目录，可快速预填各协议的访问地址；导入后仍需补全或核对 **API Key**。跑 Images 时请确认 generations（及需要时的 edits）端点；见 [Images](/zh/docs/guides/images/)。
 1. **保存后**：到 [路由配置](/zh/docs/guides/routing/) 把模型与供应商、协议类型关联起来；需要试连通时，可用 [Playground](/zh/docs/features/playground/) 或 [Simulator](/zh/docs/features/simulator/)。
 </Steps>
 
 ## 常见注意点
 
-- **Base URL** 填错容易出现 404、401，请与上游文档逐项对照。
+- **Base URL / endpoints** 填错容易出现 404、401，请与上游文档逐项对照。
 - 本页**没有**「一键测试连接」按钮；连通性请在配好路由后用 Playground / Simulator 验证。
-- 上游轮换密钥后，请在本页更新并保存。
+- 上游轮换密钥后，请在本页更新并保存；可保留多把 Key 做灰度切换。
 
 ## 自动化与进一步阅读
 

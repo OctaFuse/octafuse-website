@@ -1,0 +1,47 @@
+---
+title: Agent Tools
+description: 在 Admin Tools 配置面向 Agent 的可扩展工具 API：第三方引擎 Key、单 Active、按次计费与调用记录。当前已提供联网类工具，后续可继续扩展。
+---
+
+import { Aside, Steps } from '@astrojs/starlight/components';
+
+Agent Tools 是一组 **协议无关、可扩展** 的产品 API（与 `/v1/me` 同类），挂在 `POST /v1/tools/*`，供桌面 Agent 在模型发起 tool call 后调用。它们 **不是** OpenAI / Anthropic / Gemini 推理协议的一部分。
+
+能力面会随版本继续扩展。当前已接入的联网类工具：
+
+| 工具 | 端点 | 说明 |
+|------|------|------|
+| Web Search | `POST /v1/tools/web-search` | 搜索结果列表 |
+| Web Fetch | `POST /v1/tools/web-fetch` | 抓取单个 URL 正文 |
+| Web Deep Search | `POST /v1/tools/web-deep-search` | 搜+读一体，结果常含正文，更贵、更慢 |
+
+<Aside type="caution" title="依赖与限制">
+	- 需要你自备的 **第三方引擎 API Key**（以界面白名单为准）。
+	- **每种工具同时只有一个 Active 引擎**；未配置 Key 时调用返回 **503**。
+	- **按次计费，上游失败不扣费**；扣用户预算。
+</Aside>
+
+## 在管理台里要做什么
+
+<Steps>
+1. 打开 **Tools → Configuration**。
+1. 为当前已支持的工具分别维护引擎 catalog：API Key + 单价（币种随系统计费币种）。
+1. 选择 **Active** 引擎；未保存 Key 的引擎不可激活。
+1. 用用户 `sk-…` 调用对应 `/v1/tools/*`；在 **Tools → Invocations** 或 [请求日志](/zh/docs/guides/request-logs/) 查看记录（`provider_id=octafuse-tools`）。
+</Steps>
+
+## 客户端最小示例
+
+```bash
+curl -sS "$GATEWAY_URL/v1/tools/web-search" \
+  -H "Authorization: Bearer sk-your-api-key" \
+  -H "Content-Type: application/json" \
+  -d '{"query":"OctaFuse gateway","count":5}'
+```
+
+完整字段与引擎白名单见 [GitHub · 用户 API](https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/developers/api/user.md)。
+
+## 下一步
+
+- [图片生成 / 编辑](/zh/docs/guides/images/)  
+- [系统配置](/zh/docs/guides/system-config/) · [请求日志](/zh/docs/guides/request-logs/)  

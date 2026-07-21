@@ -23,7 +23,7 @@ import { Aside, Steps } from '@astrojs/starlight/components';
 <Steps>
 1. 打开 **Playground**。
 1. 在路由下拉框中选择 **一条路由**（界面会用图标区分是否处于启用状态）。
-1. 按当前协议（OpenAI / Anthropic / Gemini）编辑 JSON 请求体；可使用页面提供的模板起步。
+1. 按当前协议（OpenAI / Anthropic / Gemini）编辑 JSON 请求体；可使用页面提供的模板起步。图片生成请选 **OpenAI** 协议且挂了 Images 的路由，见 [图片生成 / 编辑](/zh/docs/guides/images/)。
 1. 发送后查看响应状态、错误信息与正文；需要时留意响应头中的延迟等诊断信息。
 </Steps>
 
@@ -32,7 +32,7 @@ import { Aside, Steps } from '@astrojs/starlight/components';
 | 工具 | 典型用途 |
 |------|----------|
 | Playground | 运维/开发验证 **单条路由 → 上游** 是否配通 |
-| [Simulator](/zh/docs/features/simulator/) | 用真实 **`sk-…`** 从浏览器打 **Proxy**，验证鉴权、选路、预算与日志整条链路 |
+| [Simulator](/zh/docs/features/simulator/) | 用真实 **`sk-…`** 从浏览器打 **Proxy**，验证鉴权、路由、预算与日志整条链路 |
 
 ## 下一步
 

@@ -24,13 +24,23 @@ Open **Inference → Models**. **Models** are catalog entries: the client **`mod
 1. **Import from catalog**: bulk pre-fill from the built-in catalog, then review and save.
 1. **Pricing**: use the tier editor in the page (currency display follows your global billing currency setting).
 1. After saving, add at least one **active** route in [Routing](/en/docs/guides/routing/) or clients cannot resolve the model.
+1. **Sticky (optional)**: to keep the same user on the same upstream key (better prompt cache hits), enable sticky on the model per protocol × route group — see [Routing](/en/docs/guides/routing/).
 </Steps>
 
 ## How clients pass `model`
 
 Use the **base model id**, or **`baseModelId:routeGroup`** (for example `my-model:free`). The route group must match what you configured in Admin. Protocol details: [GitHub technical reference](/en/docs/github-reference/).
 
+## `/v1/models` vs `/catalog/models`
+
+| Endpoint | Auth | Typical use |
+|----------|------|-------------|
+| **`GET /v1/models`** | User `sk-…` | Agents / SDKs; LLMs by default (`kind=image` / `kind=all` when needed) |
+| **`GET /catalog/models`** | None | Public portal discovery; protocols and route groups from active routes |
+
+They are not the same response shape — do not mix them. Image pricing: [Image generation / edit](/en/docs/guides/images/).
+
 ## Next
 
-- [Routing](/en/docs/guides/routing/)  
+- [Routing](/en/docs/guides/routing/) · [Image generation / edit](/en/docs/guides/images/)  
 - [API keys](/en/docs/guides/api-keys/)  

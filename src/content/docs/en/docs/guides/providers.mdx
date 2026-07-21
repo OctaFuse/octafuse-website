@@ -5,7 +5,7 @@ description: Add upstream vendors in Admin with per-protocol base URLs and an AP
 
 import { Aside, Steps } from '@astrojs/starlight/components';
 
-In Admin, open **Inference → Providers**. A **provider** is where the gateway forwards traffic. For each record you can set **OpenAI-compatible**, **Anthropic**, and **Gemini** base URLs, plus a shared **API Key** (usually masked after save).
+In Admin, open **Inference → Providers**. A **provider** is where the gateway forwards traffic. For each record you can set **OpenAI-compatible**, **Anthropic**, and **Gemini** endpoints, and maintain **one or more upstream API keys** (usually masked / fingerprinted after save).
 
 <Aside type="tip" title="Prerequisite">
 	Finish [Quick start](/en/docs/quick-start/) so you can sign in to Admin.
@@ -20,16 +20,17 @@ In Admin, open **Inference → Providers**. A **provider** is where the gateway 
 
 <Steps>
 1. In the sidebar under **Inference**, open **Providers**.
-1. **Create or edit**: set id, display name, per-protocol **base URLs** (follow upstream docs for `/v1` and similar paths), **API Key**, optional notes.
-1. **Import from catalog**: use the built-in catalog to pre-fill endpoints; you still need a valid **API Key**.
+1. **Create or edit**: set id, display name, per-protocol endpoints (`base` or full capability URLs — follow upstream docs for `/v1` paths), the first **API Key**, optional notes.
+1. **Multiple keys**: add more upstream keys on the same Provider with labels, **priority**, optional **weight**, RPM / TPM / concurrency, and status. Scheduling uses key priority / headroom first, then weight on near ties — this is **not** the same layer as [route](/en/docs/guides/routing/) **priority**.
+1. **Import from catalog**: use the built-in catalog to pre-fill endpoints; you still need a valid **API Key**. For Images, confirm generations (and edits when needed); see [Images](/en/docs/guides/images/).
 1. After saving, go to [Routing](/en/docs/guides/routing/) to bind models to this vendor and protocol; use [Playground](/en/docs/features/playground/) or [Simulator](/en/docs/features/simulator/) to validate connectivity.
 </Steps>
 
 ## Notes
 
-- Wrong base URLs often show up as 404/401 — double-check upstream docs.
+- Wrong base URLs / endpoints often show up as 404/401 — double-check upstream docs.
 - This screen **does not** include a one-click connectivity test; validate via routes + Playground / Simulator.
-- When upstream rotates keys, update them here and save.
+- When upstream rotates keys, update them here; you can keep multiple keys for gradual cutover.
 
 ## Automation
 

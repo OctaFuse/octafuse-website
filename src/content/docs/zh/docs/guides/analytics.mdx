@@ -1,0 +1,43 @@
+---
+title: Analytics
+description: 在管理台 Analytics 按模型、供应商、用户与可靠性观察用量、成本与失败趋势。
+---
+
+import { Aside, Steps } from '@astrojs/starlight/components';
+
+在左侧 **Analytics** 下可按维度查看网关运行概况，用于成本复盘、容量规划与故障定位。数据来自经 Proxy 的真实请求（含 Chat、Images、Tools）；[Playground](/zh/docs/features/playground/) 试跑 **不会**写入这套用量。
+
+常见子页（以界面为准）：
+
+| 视图 | 用途 |
+|------|------|
+| Models | 按模型看请求量、Token / 费用趋势 |
+| Providers | 按上游供应商拆分用量与成本 |
+| Users | 按用户 / 客户观察消耗与活跃 |
+| Reliability | 失败率、延迟与可用性相关指标 |
+
+<Aside type="tip" title="时间与币种">
+	图表与列表的时间窗口、日界受 [系统配置](/zh/docs/guides/system-config/) 中的 **业务时区** 影响；金额口径与 **计费币种** 一致。
+</Aside>
+
+## 在管理台里要做什么
+
+<Steps>
+1. 打开 **Analytics** 中需要的子页。
+1. 选择时间范围；必要时用模型、供应商或用户条件缩小范围。
+1. 与 [请求日志](/zh/docs/guides/request-logs/) 交叉核对异常尖刺或失败集中段。
+1. 根据结论调整 [路由](/zh/docs/guides/routing/) 优先级、备用 Provider、预算或 Tools Active 引擎。
+</Steps>
+
+## 与日志的分工
+
+| 页面 | 侧重 |
+|------|------|
+| Analytics | 聚合趋势与对比 |
+| Request Logs | 单次调用细节与计费摘要 |
+| Audit Logs | 预算扣减、Key / 用户生命周期 |
+
+## 下一步
+
+- [请求日志](/zh/docs/guides/request-logs/) · [审计日志](/zh/docs/guides/audit-logs/)  
+- [路由配置](/zh/docs/guides/routing/)  

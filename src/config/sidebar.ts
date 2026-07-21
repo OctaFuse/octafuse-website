@@ -20,6 +20,8 @@ export const docsSidebar: StarlightUserConfig['sidebar'] = [
 			{ label: '供应商配置', slug: 'docs/guides/providers', translations: { en: 'Providers' } },
 			{ label: '模型配置', slug: 'docs/guides/models', translations: { en: 'Models' } },
 			{ label: '路由配置', slug: 'docs/guides/routing', translations: { en: 'Routing' } },
+			{ label: '图片生成 / 编辑', slug: 'docs/guides/images', translations: { en: 'Image generation / edit' } },
+			{ label: 'Agent Tools', slug: 'docs/guides/tools', translations: { en: 'Agent Tools' } },
 			{ label: '用户管理', slug: 'docs/guides/users', translations: { en: 'Users' } },
 			{ label: 'API Key 管理', slug: 'docs/guides/api-keys', translations: { en: 'API keys' } },
 			{ label: '系统配置', slug: 'docs/guides/system-config', translations: { en: 'System config' } },
@@ -34,6 +36,7 @@ export const docsSidebar: StarlightUserConfig['sidebar'] = [
 			{ label: 'Simulator', slug: 'docs/features/simulator', translations: { en: 'Simulator' } },
 			{ label: '请求日志', slug: 'docs/guides/request-logs', translations: { en: 'Request logs' } },
 			{ label: '审计日志', slug: 'docs/guides/audit-logs', translations: { en: 'Audit logs' } },
+			{ label: 'Analytics', slug: 'docs/guides/analytics', translations: { en: 'Analytics' } },
 		],
 	},
 	{
