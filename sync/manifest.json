@@ -1,7 +1,7 @@
 {
   "source": "OctaFuse/octafuse-gateway",
   "ref": "main",
-  "commit": "1874b14da748e12afb378735d65ca75216762fc5",
+  "commit": "1e6cf180434951bc5e328dfcba6ea70c7edd22e8",
   "contract": "sync/contract.json",
   "targets": [
     "src/content/docs/zh/docs/github-reference.mdx",
@@ -20,6 +20,7 @@
     "docs/developers/architecture/proxy-request-lifecycle.md",
     "docs/developers/architecture/user-keys-data-model.md",
     "docs/developers/reference/streaming-billing.md",
+    "docs/developers/reference/image-models.md",
     "docs/developers/reference/time-and-timezone.md",
     "docs/operators/deployment/README.md",
     "docs/operators/deployment/cloudflare.md",

@@ -27,6 +27,10 @@ npm run bootstrap:cloudflare
 
 脚本会：创建或复用 D1 → 远程迁移 → 部署 Proxy / Admin → 写入 `ADMIN_PASSWORD` Secret → 打印下游 `GATEWAY_*` 提示。
 
+<Aside type="caution" title="免费套餐出现 10027">
+	Workers Free 的单 Worker gzip 上限为 3 MiB。旧版 OpenNext 可能误打包未使用的 `@vercel/og` / `resvg.wasm`，导致 Admin 超限；当前 gateway 仓库已通过 `patch-package` 回移上游修复。旧 fork 请同步该补丁或升级 OpenNext，并检查部署输出中的 `Total Upload ... gzip`。
+</Aside>
+
 后续发版：
 
 ```bash
@@ -75,7 +79,7 @@ npm run deploy:cloudflare -- <instance>             # 仅重新部署
 ## Secrets 与下游
 
 - **`ADMIN_PASSWORD`**：bootstrap 会写入；也可 `npx wrangler secret put ADMIN_PASSWORD --name <ADMIN_WORKER_NAME>`。
-- 下游门户：`GATEWAY_URL`（Proxy）、`GATEWAY_MASTER_URL`（Admin）、`GATEWAY_MASTER_KEY`（D1 `system_config.MASTER_KEY`）。种子为 `sk-dev-admin-key` 时须在 Admin Config **轮换**。
+- 下游门户：`GATEWAY_URL`（Proxy）、`GATEWAY_MASTER_URL`（Admin）、`GATEWAY_MASTER_KEY`（D1 `system_config.MASTER_KEY`）。种子为 `sk-dev-admin-key` 时须在 Admin Config **立即轮换**，并确认旧 Key 已返回 401。
 
 ## 与 Docker 自建如何选
 

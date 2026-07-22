@@ -27,6 +27,10 @@ npm run bootstrap:cloudflare
 
 The script will: create or reuse D1 → remote migrate → deploy Proxy / Admin → put `ADMIN_PASSWORD` → print downstream `GATEWAY_*` hints.
 
+<Aside type="caution" title="Error 10027 on the free plan">
+	Workers Free limits each Worker to 3 MiB gzip. Older OpenNext builds may accidentally include unused `@vercel/og` / `resvg.wasm` code and push Admin over the limit. The current gateway repo backports the upstream fix with `patch-package`; old forks should sync that patch or upgrade OpenNext, then check the `Total Upload ... gzip` line.
+</Aside>
+
 Later releases:
 
 ```bash
@@ -75,7 +79,7 @@ After `deploy:*` or `db:migrate:remote`, generated `wrangler.jsonc` may include 
 ## Secrets and downstream
 
 - **`ADMIN_PASSWORD`**: set by bootstrap; or `npx wrangler secret put ADMIN_PASSWORD --name <ADMIN_WORKER_NAME>`.
-- Downstream: `GATEWAY_URL` (Proxy), `GATEWAY_MASTER_URL` (Admin), `GATEWAY_MASTER_KEY` (D1 `system_config.MASTER_KEY`). Rotate if still the seed `sk-dev-admin-key`.
+- Downstream: `GATEWAY_URL` (Proxy), `GATEWAY_MASTER_URL` (Admin), `GATEWAY_MASTER_KEY` (D1 `system_config.MASTER_KEY`). If it is still the seed `sk-dev-admin-key`, rotate it immediately and confirm the old key returns 401.
 
 ## vs Docker
 

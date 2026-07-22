@@ -13,6 +13,14 @@ Docker fits **private networks / VPC**, **self-managed hosts or Kubernetes**, an
 
 ## Local quickstart
 
+Confirm Docker, Compose, and Buildx are available; the project Dockerfiles use BuildKit cache mounts:
+
+```bash
+docker version
+docker compose version
+docker buildx version
+```
+
 ```bash
 git clone https://github.com/OctaFuse/octafuse-gateway.git
 cd octafuse-gateway
@@ -49,7 +57,7 @@ docker compose -f docker/compose/node-mysql.yml --profile migrate run --rm migra
 docker compose -f docker/compose/node-mysql.yml up -d gateway-proxy gateway-admin
 ```
 
-For MySQL, set `DATABASE_DRIVER=mysql` and use a `mysql://...` `DATABASE_URL`.
+For MySQL, set `DATABASE_DRIVER=mysql` and use a `mysql://...` `DATABASE_URL`. The current gateway fixes the MySQL 8.4 ambiguous-column error in `0002_seed.sql`; if an old fork reports `Column 'key' in field list is ambiguous`, sync the latest migration before retrying.
 
 ### Option B: Prebuilt images + external Postgres
 
@@ -87,7 +95,7 @@ docker build -f Dockerfile.migrate -t octafuse-migrate:local .
 1. `DATABASE_DRIVER`: optional for Postgres; required as `mysql` for MySQL.
 1. `ADMIN_USERNAME` / `ADMIN_PASSWORD`: Admin login, needed only by the Admin container.
 1. `AUTO_MIGRATE`: optional. When set to `1`, an app container runs idempotent migrations before startup; production can instead use a dedicated migrate job.
-1. `GATEWAY_PROXY_PORT` / `GATEWAY_ADMIN_PORT`: host port mappings only; containers still listen on `8787` / `8789`.
+1. Host ports: `docker/compose/node-*.yml` uses `GATEWAY_PROXY_HOST_PORT` / `GATEWAY_ADMIN_HOST_PORT`; `docker/examples/*.yml` uses `GATEWAY_PROXY_PORT` / `GATEWAY_ADMIN_PORT`. Containers still listen on `8787` / `8789`.
 </Steps>
 
 For Postgres, keep the connection/session timezone at UTC; when using `DATABASE_URL`, you can add `options=-c timezone=UTC`. For MySQL, keep the instance or session timezone at UTC as well to make request-log time windows easier to reason about.
