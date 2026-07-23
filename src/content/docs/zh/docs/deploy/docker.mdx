@@ -100,7 +100,9 @@ curl -fsS http://127.0.0.1:8789/api/admin/config \
   -H 'Authorization: Bearer sk-dev-admin-key'
 ```
 
-生产环境应把 Proxy 与 Admin 放在反向代理之后，分别配置域名与 TLS。下游系统需要配置 `GATEWAY_URL`、`GATEWAY_MASTER_URL`、`GATEWAY_MASTER_KEY`，见 [系统集成](/zh/docs/guides/integration/)。
+<Aside type="caution" title="生产请用 HTTPS">
+	本地与可信内网可用明文 HTTP 打开 Admin（如 `http://localhost:8789`），无需额外 Cookie 配置。生产环境请把 Proxy 与 Admin 放在反向代理之后配置 **TLS**。若已走 HTTPS，可按需设置可选加固 `ADMIN_COOKIE_SECURE=1`。下游系统需要配置 `GATEWAY_URL`、`GATEWAY_MASTER_URL`、`GATEWAY_MASTER_KEY`，见 [系统集成](/zh/docs/guides/integration/)。
+</Aside>
 
 ## 与 Cloudflare 方案如何选
 
