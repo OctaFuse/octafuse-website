@@ -20,7 +20,7 @@ import { Aside } from '@astrojs/starlight/components';
 ```bash
 git clone https://github.com/OctaFuse/octafuse-gateway.git
 cd octafuse-gateway
-npm install
+npm ci
 npx wrangler login
 npm run bootstrap:cloudflare
 ```
@@ -28,8 +28,19 @@ npm run bootstrap:cloudflare
 The script will: create or reuse D1 → remote migrate → deploy Proxy / Admin → put `ADMIN_PASSWORD` → print downstream `GATEWAY_*` hints.
 
 <Aside type="caution" title="Error 10027 on the free plan">
-	Workers Free limits each Worker to 3 MiB gzip. Older OpenNext builds may accidentally include unused `@vercel/og` / `resvg.wasm` code and push Admin over the limit. The current gateway repo backports the upstream fix with `patch-package`; old forks should sync that patch or upgrade OpenNext, then check the `Total Upload ... gzip` line.
+	Workers Free limits each Worker to 3 MiB gzip. Run `npm ci` first, confirm that the installed `@opennextjs/cloudflare` matches the current lockfile, then check the `Total Upload ... gzip` line. Stale `node_modules` can make the deployed build differ from the repository. If free-tier headroom is tight or traffic grows, [Workers Paid](https://developers.cloudflare.com/workers/platform/pricing/) (~$5/month) is a strong upgrade—generous included usage at a very low price.
 </Aside>
+
+## Verify the deployment
+
+```bash
+curl -i https://<proxy-worker>.<account-subdomain>.workers.dev/health
+curl -sS https://<proxy-worker>.<account-subdomain>.workers.dev/catalog/models
+```
+
+Proxy health should return `200`. An empty catalog is expected before the new database has an active route. Open the Admin Worker URL, sign in with the `ADMIN_PASSWORD` set during bootstrap, and confirm **System → Config** can load.
+
+Admin does not expose `/api/admin/health`. To verify Admin + D1 from a script, call `/api/admin/business-timezone` with a valid `MASTER_KEY`. The linked gateway Cloudflare quickstart covers security initialization, Provider → Model → Route → user key setup, and the first model request.
 
 Later releases:
 

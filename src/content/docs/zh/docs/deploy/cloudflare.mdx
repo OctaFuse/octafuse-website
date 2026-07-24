@@ -20,7 +20,7 @@ import { Aside } from '@astrojs/starlight/components';
 ```bash
 git clone https://github.com/OctaFuse/octafuse-gateway.git
 cd octafuse-gateway
-npm install
+npm ci
 npx wrangler login
 npm run bootstrap:cloudflare
 ```
@@ -28,8 +28,19 @@ npm run bootstrap:cloudflare
 脚本会：创建或复用 D1 → 远程迁移 → 部署 Proxy / Admin → 写入 `ADMIN_PASSWORD` Secret → 打印下游 `GATEWAY_*` 提示。
 
 <Aside type="caution" title="免费套餐出现 10027">
-	Workers Free 的单 Worker gzip 上限为 3 MiB。旧版 OpenNext 可能误打包未使用的 `@vercel/og` / `resvg.wasm`，导致 Admin 超限；当前 gateway 仓库已通过 `patch-package` 回移上游修复。旧 fork 请同步该补丁或升级 OpenNext，并检查部署输出中的 `Total Upload ... gzip`。
+	Workers Free 的单 Worker gzip 上限为 3 MiB。请先执行 `npm ci`，确认使用当前锁文件指定的 `@opennextjs/cloudflare`，再检查部署输出中的 `Total Upload ... gzip`。陈旧的 `node_modules` 可能让实际构建版本与仓库不一致。若免费额度余量吃紧或流量上来，也推荐升级 [Workers Paid](https://developers.cloudflare.com/workers/platform/pricing/)（约 $5/月）——量大管饱，性价比极高。
 </Aside>
+
+## 部署验收
+
+```bash
+curl -i https://<proxy-worker>.<account-subdomain>.workers.dev/health
+curl -sS https://<proxy-worker>.<account-subdomain>.workers.dev/catalog/models
+```
+
+Proxy 健康检查应返回 `200`；新库尚未配置 active route 时，模型目录返回空数组是正常的。再打开 Admin Worker URL，用 bootstrap 设置的 `ADMIN_PASSWORD` 登录，并确认 **System → Config** 可以读取。
+
+Admin 不提供 `/api/admin/health`。脚本化验证 Admin + D1 时，使用带有效 `MASTER_KEY` 的 `/api/admin/business-timezone`。完整的安全初始化、Provider → Model → Route → 用户 Key 和首条模型请求步骤，见文首 tip 中的 gateway 快速部署链接。
 
 后续发版：
 
