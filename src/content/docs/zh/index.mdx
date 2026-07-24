@@ -64,6 +64,9 @@ AI 能力正在从文本模型扩展到图片生成、Agent Tools、私有模型
 	<Card title="模型路由与 Route Group" icon="random">
 		客户端可用稳定模型 ID，也可通过 `baseId:group` 指定路由组。同一模型可按协议、route group、**route priority** 挂多条上游；**Route 没有 weight**。
 	</Card>
+	<Card title="预置 Provider 与 Models" icon="document">
+		Admin 可一键导入大量供应商 / 模型预设：除官方模型厂外，还覆盖聚合平台与各类 Coding / Token Plan，预填 Base URL 与模型目录价等信息，无需到处查找再手工维护。
+	</Card>
 	<Card title="Provider Key 池调度" icon="approve-check">
 		同一 Provider 可维护多把上游 Key。命中 route 后，按 key priority、余量、**key weight**（余量接近时）、熔断与 **粘性（sticky）** 调度并 failover。
 	</Card>
