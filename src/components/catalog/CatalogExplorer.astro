@@ -1,4 +1,22 @@
 ---
+import alibabaCloudLogo from '@lobehub/icons-static-svg/icons/alibabacloud.svg?url&no-inline';
+import azureAiLogo from '@lobehub/icons-static-svg/icons/azureai.svg?url&no-inline';
+import baichuanLogo from '@lobehub/icons-static-svg/icons/baichuan.svg?url&no-inline';
+import baiduCloudLogo from '@lobehub/icons-static-svg/icons/baiducloud.svg?url&no-inline';
+import cohereLogo from '@lobehub/icons-static-svg/icons/cohere.svg?url&no-inline';
+import fireworksLogo from '@lobehub/icons-static-svg/icons/fireworks.svg?url&no-inline';
+import groqLogo from '@lobehub/icons-static-svg/icons/groq.svg?url&no-inline';
+import longCatLogo from '@lobehub/icons-static-svg/icons/longcat.svg?url&no-inline';
+import minimaxLogo from '@lobehub/icons-static-svg/icons/minimax.svg?url&no-inline';
+import siliconCloudLogo from '@lobehub/icons-static-svg/icons/siliconcloud.svg?url&no-inline';
+import stepfunLogo from '@lobehub/icons-static-svg/icons/stepfun.svg?url&no-inline';
+import tencentCloudLogo from '@lobehub/icons-static-svg/icons/tencentcloud.svg?url&no-inline';
+import togetherLogo from '@lobehub/icons-static-svg/icons/together.svg?url&no-inline';
+import vertexAiLogo from '@lobehub/icons-static-svg/icons/vertexai.svg?url&no-inline';
+import volcengineLogo from '@lobehub/icons-static-svg/icons/volcengine.svg?url&no-inline';
+import xiaomiMimoLogo from '@lobehub/icons-static-svg/icons/xiaomimimo.svg?url&no-inline';
+import zaiLogo from '@lobehub/icons-static-svg/icons/zai.svg?url&no-inline';
+import zhipuLogo from '@lobehub/icons-static-svg/icons/zhipu.svg?url&no-inline';
 import modelCatalog from '../../data/catalog/models.json';
 import providerCatalog from '../../data/catalog/providers.json';
 
@@ -145,20 +163,20 @@ const copy = {
 const t = copy[locale];
 
 const vendorVisuals: Record<string, { logo?: string; accent: string; monogram?: string }> = {
-	aliyun: { logo: '/brand/qwen.svg', accent: '#ff6a00' },
+	aliyun: { logo: alibabaCloudLogo, accent: '#ff6a00' },
 	anthropic: { logo: '/brand/anthropic.svg', accent: '#d4a27f' },
-	azure: { logo: '/brand/microsoft.svg', accent: '#0078d4' },
-	baichuan: { accent: '#625bff', monogram: 'BC' },
-	baidu: { accent: '#2932e1', monogram: 'B' },
+	azure: { logo: azureAiLogo, accent: '#0078d4' },
+	baichuan: { logo: baichuanLogo, accent: '#625bff' },
+	baidu: { logo: baiduCloudLogo, accent: '#2932e1' },
 	bytedance: { logo: '/brand/bytedance.svg', accent: '#00c8d7' },
-	cohere: { accent: '#39594d', monogram: 'C' },
+	cohere: { logo: cohereLogo, accent: '#39594d' },
 	deepseek: { logo: '/brand/deepseek.svg', accent: '#4d6bfe' },
-	fireworks: { accent: '#ff5f56', monogram: 'FW' },
+	fireworks: { logo: fireworksLogo, accent: '#ff5f56' },
 	google: { logo: '/brand/googlegemini.svg', accent: '#4285f4' },
-	groq: { accent: '#f55036', monogram: 'G' },
-	meituan: { accent: '#ffd100', monogram: 'LC' },
+	groq: { logo: groqLogo, accent: '#f55036' },
+	meituan: { logo: longCatLogo, accent: '#ffd100' },
 	meta: { logo: '/brand/meta.svg', accent: '#0866ff' },
-	minimax: { accent: '#f25c54', monogram: 'M' },
+	minimax: { logo: minimaxLogo, accent: '#f25c54' },
 	mistral: { logo: '/brand/mistralai.svg', accent: '#ff7000' },
 	moonshot: { logo: '/brand/moonshotai.svg', accent: '#7c8ca1' },
 	nvidia: { logo: '/brand/nvidia.svg', accent: '#76b900' },
@@ -166,14 +184,14 @@ const vendorVisuals: Record<string, { logo?: string; accent: string; monogram?: 
 	openai: { logo: '/brand/openai.svg', accent: '#10a37f' },
 	openrouter: { logo: '/brand/openrouter.svg', accent: '#6366f1' },
 	perplexity: { logo: '/brand/perplexity.svg', accent: '#20b8cd' },
-	siliconflow: { accent: '#6d5dfc', monogram: 'SF' },
-	stepfun: { accent: '#2f6bff', monogram: 'S' },
-	tencent: { accent: '#006eff', monogram: 'T' },
-	together: { accent: '#0f62fe', monogram: 'T' },
-	volcengine: { logo: '/brand/bytedance.svg', accent: '#00c8d7' },
+	siliconflow: { logo: siliconCloudLogo, accent: '#6d5dfc' },
+	stepfun: { logo: stepfunLogo, accent: '#2f6bff' },
+	tencent: { logo: tencentCloudLogo, accent: '#006eff' },
+	together: { logo: togetherLogo, accent: '#0f62fe' },
+	volcengine: { logo: volcengineLogo, accent: '#00c8d7' },
 	xai: { logo: '/brand/x.svg', accent: '#6b7280' },
-	xiaomi: { accent: '#ff6900', monogram: 'MI' },
-	zhipu: { accent: '#1f5eff', monogram: 'GLM' },
+	xiaomi: { logo: xiaomiMimoLogo, accent: '#ff6900' },
+	zhipu: { logo: zhipuLogo, accent: '#1f5eff' },
 };
 
 const modelVendors = Array.from(
@@ -192,13 +210,29 @@ function initials(label: string) {
 		.toUpperCase();
 }
 
-function vendorVisual(key: string, label: string) {
-	const visual = vendorVisuals[key] ?? { accent: '#17c8d2' };
+function resolveVendorVisual(visual: { logo?: string; accent: string; monogram?: string }, label: string) {
 	return {
 		...visual,
 		monogram: visual.monogram ?? initials(label),
-		style: `--vendor-accent: ${visual.accent};${visual.logo ? ` --vendor-icon: url(${visual.logo});` : ''}`,
+		style: `--vendor-accent: ${visual.accent};${visual.logo ? ` --vendor-icon: url("${visual.logo.replaceAll('"', '%22')}");` : ''}`,
 	};
+}
+
+function vendorVisual(key: string, label: string) {
+	return resolveVendorVisual(vendorVisuals[key] ?? { accent: '#17c8d2' }, label);
+}
+
+function providerVisual(item: ProviderItem) {
+	if (item.name.startsWith('Qwen AI Platform')) {
+		return resolveVendorVisual({ logo: '/brand/qwen.svg', accent: '#615ced' }, item.vendor_label);
+	}
+	if (item.name.startsWith('Google Vertex AI')) {
+		return resolveVendorVisual({ logo: vertexAiLogo, accent: '#4285f4' }, item.vendor_label);
+	}
+	if (item.name.startsWith('Z.AI')) {
+		return resolveVendorVisual({ logo: zaiLogo, accent: '#1f5eff' }, item.vendor_label);
+	}
+	return vendorVisual(item.vendor_key, item.vendor_label);
 }
 
 function flattenEndpoints(item: ProviderItem) {
@@ -364,7 +398,7 @@ function contributionUrl(item: ProviderItem | ModelItem) {
 			isProviders
 				? (items as ProviderItem[]).map((item) => {
 						const endpoints = flattenEndpoints(item);
-						const visual = vendorVisual(item.vendor_key, item.vendor_label);
+						const visual = providerVisual(item);
 						const localized = item.i18n?.[locale];
 						const displayName = localized?.name || item.name;
 						const displayDescription = localized?.description || item.description || t.noDescription;

@@ -156,6 +156,12 @@
 	--sl-shadow-lg: 0 26px 56px hsl(222 34% 2% / 0.34);
 }
 
+.site-title img {
+	width: 2.1rem;
+	height: 2.1rem;
+	filter: drop-shadow(0 0 0.55rem hsl(184 100% 44% / 0.18));
+}
+
 :root[data-theme='light'],
 [data-theme='light'] ::backdrop {
 	/* Starlight light theme: `white` = ink, `black` = paper (library naming). */

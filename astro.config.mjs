@@ -15,7 +15,7 @@ export default defineConfig({
 			tagline: '统一 AI 能力，掌控每一次调用',
 			defaultLocale: 'zh',
 			logo: {
-				src: './public/favicon.svg',
+				src: './public/logo.svg',
 				alt: 'OctaFuse',
 			},
 			head: [
