@@ -4,7 +4,7 @@
   "source": {
     "repo": "OctaFuse/octafuse-gateway",
     "ref": "main",
-    "commit": "5d8ef94be548478389bdef256ad6650e0af818c8"
+    "commit": "386cd44987eb01e3b92f292222231afa3c4e4467"
   },
   "source_path": "packages/admin/lib/model-presets",
   "count": 74,
