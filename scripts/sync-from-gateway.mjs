@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import { execFileSync } from 'node:child_process';
-import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { tmpdir } from 'node:os';
 
@@ -12,15 +12,19 @@ const contract = JSON.parse(readFileSync(contractPath, 'utf8'));
 const args = parseArgs(process.argv.slice(2));
 const ref = args.ref ?? contract.source.defaultRef ?? 'main';
 const dryRun = Boolean(args.dryRun);
+const repo = contract.source.repo;
 const gatewayDir = resolveGatewayDir(args.gatewayDir, ref);
 const commit = git(gatewayDir, ['rev-parse', 'HEAD'], { fallback: ref }).trim();
-const repo = contract.source.repo;
 const blobBase = `https://github.com/${repo}/blob/${ref}`;
 
 const missing = [];
 for (const item of allItems(contract)) {
 	const file = join(gatewayDir, item.path);
 	if (!existsSync(file)) missing.push(item.path);
+}
+for (const path of catalogSourcePaths(contract)) {
+	const file = join(gatewayDir, path);
+	if (!existsSync(file)) missing.push(path);
 }
 
 if (missing.length) {
@@ -38,6 +42,7 @@ const outputs = [
 		target: contract.pages.en.target,
 		content: renderPage('en', contract, { ref, commit, blobBase }),
 	},
+	...renderCatalogOutputs(contract, gatewayDir, { repo, ref, commit }),
 	{
 		target: 'sync/manifest.json',
 		content: `${JSON.stringify(
@@ -46,8 +51,17 @@ const outputs = [
 				ref,
 				commit,
 				contract: 'sync/contract.json',
-				targets: [contract.pages.zh.target, contract.pages.en.target],
-				files: allItems(contract).map((item) => item.path),
+				targets: [
+					contract.pages.zh.target,
+					contract.pages.en.target,
+					contract.catalog.targets.providers,
+					contract.catalog.targets.models,
+				],
+				files: [
+					...allItems(contract).map((item) => item.path),
+					...catalogSourcePaths(contract),
+					`${contract.catalog.modelPresetsDir}/*.json`,
+				],
 			},
 			null,
 			2,
@@ -129,6 +143,88 @@ function git(cwd, argv, options = {}) {
 
 function allItems(data) {
 	return data.sections.flatMap((section) => section.items);
+}
+
+function catalogSourcePaths(data) {
+	return [data.catalog.providerPresets, data.catalog.modelVendors, data.catalog.modelPresetsDir];
+}
+
+function renderCatalogOutputs(data, gatewayPath, source) {
+	const vendorRows = readJson(join(gatewayPath, data.catalog.modelVendors));
+	const vendorLabels = new Map(vendorRows.map((row) => [row.key, row.label]));
+
+	const providerRows = readJson(join(gatewayPath, data.catalog.providerPresets)).map((row, index) => ({
+		catalog_key: String(index),
+		name: String(row.name ?? '').trim(),
+		vendor_key: String(row.vendor_key ?? 'other').trim() || 'other',
+		vendor_label: vendorLabels.get(row.vendor_key) ?? row.vendor_key ?? 'Other',
+		i18n: row.catalog?.i18n ?? {
+			zh: {
+				name: String(row.name ?? '').trim(),
+				description:
+					row.description != null && String(row.description).trim()
+						? String(row.description).trim()
+						: '可直接导入的 Gateway Provider 预设。',
+			},
+			en: {
+				name: String(row.name ?? '').trim(),
+				description:
+					row.description != null && String(row.description).trim()
+						? String(row.description).trim()
+						: 'A ready-to-import Gateway Provider preset.',
+			},
+		},
+		links: row.catalog?.links ?? {},
+		protocols: ['openai', 'anthropic', 'gemini'].filter((protocol) => Boolean(row.endpoints?.[protocol])),
+		endpoints: row.endpoints ?? {},
+		description: row.description != null && String(row.description).trim() ? String(row.description).trim() : null,
+		source_path: data.catalog.providerPresets,
+	}));
+
+	const modelFiles = readdirSync(join(gatewayPath, data.catalog.modelPresetsDir))
+		.filter((file) => file.endsWith('.json'))
+		.sort();
+	const modelRows = modelFiles.flatMap((file) =>
+		readJson(join(gatewayPath, data.catalog.modelPresetsDir, file)).map((row) => ({
+			...row,
+			vendor_label: vendorLabels.get(row.vendor) ?? row.vendor ?? 'Other',
+			kind: row.modalities?.output?.includes('image') ? 'image' : 'llm',
+			source_path: `${data.catalog.modelPresetsDir}/${file}`,
+		})),
+	);
+
+	return [
+		{
+			target: data.catalog.targets.providers,
+			content: stableJson({
+				schema_version: 2,
+				catalog: 'providers',
+				source,
+				source_path: data.catalog.providerPresets,
+				count: providerRows.length,
+				items: providerRows,
+			}),
+		},
+		{
+			target: data.catalog.targets.models,
+			content: stableJson({
+				schema_version: 1,
+				catalog: 'models',
+				source,
+				source_path: data.catalog.modelPresetsDir,
+				count: modelRows.length,
+				items: modelRows,
+			}),
+		},
+	];
+}
+
+function readJson(path) {
+	return JSON.parse(readFileSync(path, 'utf8'));
+}
+
+function stableJson(value) {
+	return `${JSON.stringify(value, null, 2)}\n`;
 }
 
 function renderPage(locale, data, meta) {

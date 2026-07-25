@@ -1,0 +1,1905 @@
+---
+import modelCatalog from '../../data/catalog/models.json';
+import providerCatalog from '../../data/catalog/providers.json';
+
+type CatalogKind = 'providers' | 'models';
+type Locale = 'zh' | 'en';
+type ProviderItem = (typeof providerCatalog.items)[number];
+type ModelItem = (typeof modelCatalog.items)[number];
+
+interface Props {
+	kind: CatalogKind;
+	locale: Locale;
+}
+
+const { kind, locale } = Astro.props;
+const isProviders = kind === 'providers';
+const catalog = isProviders ? providerCatalog : modelCatalog;
+const items = catalog.items;
+const sourceCommit = catalog.source.commit;
+const sourceShort = sourceCommit.slice(0, 7);
+const repo = `https://github.com/${catalog.source.repo}`;
+const downloadUrl = `/catalog/${kind}.json`;
+const editRoot = isProviders
+	? `${repo}/edit/main/${providerCatalog.source_path}`
+	: `${repo}/tree/main/${modelCatalog.source_path}`;
+const catalogSourceUrl = `${repo}/${isProviders ? 'blob' : 'tree'}/${sourceCommit}/${catalog.source_path}`;
+
+const copy = {
+	zh: {
+		eyebrow: 'IMPORT CATALOG',
+		providers: 'Provider',
+		models: 'Model',
+		browseProviders: 'Providers',
+		browseModels: 'Models',
+		customTitle: 'Catalog 是起点，不是限制',
+		customBody:
+			'这里展示的是 OctaFuse Gateway 当前内置、可在 Admin 中直接导入的静态预设。Gateway 仍支持创建任意自定义 Provider、Model 和兼容端点；未列出不代表不支持。',
+		customLink: '了解如何自定义配置',
+		searchProviders: '搜索 Provider、厂商或 Endpoint…',
+		searchModels: '搜索模型名称、ID 或厂商…',
+		searchHint: '按 / 快速搜索',
+		all: '全部',
+		allVendors: '全部厂商',
+		llm: 'LLM',
+		image: '图片',
+		newest: '最新发布',
+		name: '名称 A–Z',
+		vendor: '按厂商',
+		results: '条结果',
+		noResults: '没有匹配项',
+		noResultsBody: '换个关键词，或清除筛选后再试。',
+		clear: '清除筛选',
+		endpoints: '已预置 Endpoint',
+		noDescription: '可直接导入的 Gateway Provider 预设。',
+		base: 'Base URL',
+		copyUrl: '复制 URL',
+		copied: '已复制',
+		rawData: '查看原始数据',
+		copyJson: '复制 JSON',
+		editSource: '提交修改',
+		getApiKey: '获取 API Key',
+		visitPlatform: '访问平台',
+		context: '上下文',
+		maxOutput: '最大输出',
+		released: '发布',
+		input: '输入',
+		output: '输出',
+		pricing: '目录价',
+		perImage: '每张',
+		perMillion: '/ 1M tokens',
+		imageOutput: '图片输出',
+		priceNote: '目录价按 Gateway 静态预设展示；实际价格与可用性请以供应商为准。',
+		download: '下载完整 JSON',
+		source: '查看数据源',
+		contributeProvider: '把你的 Provider 加入 Catalog',
+		contributeProviderBody:
+			'在 Gateway 的 Provider 预设文件中补充名称、协议和 Endpoint，提交 PR 后即可进入下一次同步。',
+		contributeModel: '发现 Model 数据有误？',
+		contributeModelBody:
+			'每张模型卡片都链接到对应预设文件。修正 ID、上下文、模态或目录价后，直接提交 PR。',
+		openContribution: '前往 GitHub 贡献',
+		syncedFrom: '同步自 Gateway',
+		dataTools: '数据与贡献',
+		currency: '币种',
+	},
+	en: {
+		eyebrow: 'IMPORT CATALOG',
+		providers: 'Provider',
+		models: 'Model',
+		browseProviders: 'Providers',
+		browseModels: 'Models',
+		customTitle: 'A starting point, not a limitation',
+		customBody:
+			'This catalog lists the static presets currently bundled with OctaFuse Gateway for direct Admin import. Gateway still lets you create any custom Provider, Model, or compatible endpoint. Not listed does not mean unsupported.',
+		customLink: 'Learn about custom configuration',
+		searchProviders: 'Search providers, vendors, or endpoints…',
+		searchModels: 'Search model names, IDs, or vendors…',
+		searchHint: 'Press / to search',
+		all: 'All',
+		allVendors: 'All vendors',
+		llm: 'LLM',
+		image: 'Image',
+		newest: 'Newest release',
+		name: 'Name A–Z',
+		vendor: 'By vendor',
+		results: 'results',
+		noResults: 'No matches found',
+		noResultsBody: 'Try another keyword or clear the current filters.',
+		clear: 'Clear filters',
+		endpoints: 'Preset endpoints',
+		noDescription: 'A ready-to-import Gateway Provider preset.',
+		base: 'Base URL',
+		copyUrl: 'Copy URL',
+		copied: 'Copied',
+		rawData: 'View raw data',
+		copyJson: 'Copy JSON',
+		editSource: 'Submit a fix',
+		getApiKey: 'Get API key',
+		visitPlatform: 'Visit platform',
+		context: 'Context',
+		maxOutput: 'Max output',
+		released: 'Released',
+		input: 'Input',
+		output: 'Output',
+		pricing: 'Catalog pricing',
+		perImage: 'per image',
+		perMillion: '/ 1M tokens',
+		imageOutput: 'Image output',
+		priceNote: 'Catalog prices come from Gateway presets. Confirm current pricing and availability with the vendor.',
+		download: 'Download full JSON',
+		source: 'View source',
+		contributeProvider: 'Add your Provider to the Catalog',
+		contributeProviderBody:
+			'Add its name, protocols, and endpoints to the Gateway Provider preset file, then open a PR for the next catalog sync.',
+		contributeModel: 'Found incorrect Model data?',
+		contributeModelBody:
+			'Every model card links to its preset file. Fix the ID, context, modalities, or catalog pricing and open a PR.',
+		openContribution: 'Contribute on GitHub',
+		syncedFrom: 'Synced from Gateway',
+		dataTools: 'Data and contributions',
+		currency: 'Currency',
+	},
+} as const;
+
+const t = copy[locale];
+
+const vendorVisuals: Record<string, { logo?: string; accent: string; monogram?: string }> = {
+	aliyun: { logo: '/brand/qwen.svg', accent: '#ff6a00' },
+	anthropic: { logo: '/brand/anthropic.svg', accent: '#d4a27f' },
+	azure: { logo: '/brand/microsoft.svg', accent: '#0078d4' },
+	baichuan: { accent: '#625bff', monogram: 'BC' },
+	baidu: { accent: '#2932e1', monogram: 'B' },
+	bytedance: { logo: '/brand/bytedance.svg', accent: '#00c8d7' },
+	cohere: { accent: '#39594d', monogram: 'C' },
+	deepseek: { logo: '/brand/deepseek.svg', accent: '#4d6bfe' },
+	fireworks: { accent: '#ff5f56', monogram: 'FW' },
+	google: { logo: '/brand/googlegemini.svg', accent: '#4285f4' },
+	groq: { accent: '#f55036', monogram: 'G' },
+	meituan: { accent: '#ffd100', monogram: 'LC' },
+	meta: { logo: '/brand/meta.svg', accent: '#0866ff' },
+	minimax: { accent: '#f25c54', monogram: 'M' },
+	mistral: { logo: '/brand/mistralai.svg', accent: '#ff7000' },
+	moonshot: { logo: '/brand/moonshotai.svg', accent: '#7c8ca1' },
+	nvidia: { logo: '/brand/nvidia.svg', accent: '#76b900' },
+	ollama: { logo: '/brand/ollama.svg', accent: '#7c8ca1' },
+	openai: { logo: '/brand/openai.svg', accent: '#10a37f' },
+	openrouter: { logo: '/brand/openrouter.svg', accent: '#6366f1' },
+	perplexity: { logo: '/brand/perplexity.svg', accent: '#20b8cd' },
+	siliconflow: { accent: '#6d5dfc', monogram: 'SF' },
+	stepfun: { accent: '#2f6bff', monogram: 'S' },
+	tencent: { accent: '#006eff', monogram: 'T' },
+	together: { accent: '#0f62fe', monogram: 'T' },
+	volcengine: { logo: '/brand/bytedance.svg', accent: '#00c8d7' },
+	xai: { logo: '/brand/x.svg', accent: '#6b7280' },
+	xiaomi: { accent: '#ff6900', monogram: 'MI' },
+	zhipu: { accent: '#1f5eff', monogram: 'GLM' },
+};
+
+const modelVendors = Array.from(
+	new Map((modelCatalog.items as ModelItem[]).map((item) => [item.vendor, item.vendor_label])).entries(),
+)
+	.map(([key, label]) => ({ key, label }))
+	.sort((a, b) => a.label.localeCompare(b.label));
+
+function initials(label: string) {
+	return label
+		.split(/[\s()/-]+/)
+		.filter(Boolean)
+		.slice(0, 2)
+		.map((word) => word[0])
+		.join('')
+		.toUpperCase();
+}
+
+function vendorVisual(key: string, label: string) {
+	const visual = vendorVisuals[key] ?? { accent: '#17c8d2' };
+	return {
+		...visual,
+		monogram: visual.monogram ?? initials(label),
+		style: `--vendor-accent: ${visual.accent};${visual.logo ? ` --vendor-icon: url(${visual.logo});` : ''}`,
+	};
+}
+
+function flattenEndpoints(item: ProviderItem) {
+	const rows: Array<{ protocol: string; capability: string; url: string }> = [];
+	for (const [protocol, config] of Object.entries(item.endpoints)) {
+		if ('base' in config && config.base) rows.push({ protocol, capability: t.base, url: config.base });
+		if ('endpoints' in config && config.endpoints) {
+			for (const [capability, url] of Object.entries(config.endpoints)) {
+				if (url) rows.push({ protocol, capability, url });
+			}
+		}
+	}
+	return rows;
+}
+
+function compactNumber(value: number | null | undefined) {
+	if (value == null) return '—';
+	if (value >= 1_000_000) return `${value / 1_000_000}M`;
+	if (value >= 1_000) return `${value / 1_000}K`;
+	return String(value);
+}
+
+function money(value: number, currency: 'usd' | 'cny') {
+	const symbol = currency === 'usd' ? '$' : '¥';
+	return `${symbol}${new Intl.NumberFormat(locale === 'zh' ? 'zh-CN' : 'en-US', {
+		maximumFractionDigits: 4,
+	}).format(value)}`;
+}
+
+function pricingSummary(item: ModelItem, currency: 'usd' | 'cny') {
+	const profile = item.pricing[currency];
+	if (profile.image_billing_mode === 'per_image' && profile.image?.default != null) {
+		return {
+			primary: money(profile.image.default, currency),
+			secondary: t.perImage,
+		};
+	}
+	const tier = profile.tiers?.[0];
+	if (!tier) return { primary: '—', secondary: '' };
+	if (item.kind === 'image' && tier.image_output_price != null) {
+		return {
+			primary: `${money(tier.image_output_price, currency)} ${t.imageOutput}`,
+			secondary: t.perMillion,
+		};
+	}
+	return {
+		primary: `${money(tier.input_price ?? 0, currency)} ${t.input.toLowerCase()} · ${money(
+			tier.output_price ?? 0,
+			currency,
+		)} ${t.output.toLowerCase()}`,
+		secondary: t.perMillion,
+	};
+}
+
+function contributionUrl(item: ProviderItem | ModelItem) {
+	return `${repo}/edit/main/${item.source_path}`;
+}
+
+---
+
+<section class="catalog-explorer" data-catalog-root data-kind={kind} data-locale={locale}>
+	<nav class="catalog-switcher" aria-label={locale === 'zh' ? 'Catalog 类型' : 'Catalog type'}>
+		<a class:list={{ active: isProviders }} href={`/${locale}/catalog/providers/`}>
+			<span class="switcher-icon" aria-hidden="true">P</span>
+			<span>
+				<small>{t.eyebrow}</small>
+				<strong>{t.browseProviders}</strong>
+			</span>
+			<em>{providerCatalog.count}</em>
+		</a>
+		<a class:list={{ active: !isProviders }} href={`/${locale}/catalog/models/`}>
+			<span class="switcher-icon" aria-hidden="true">M</span>
+			<span>
+				<small>{t.eyebrow}</small>
+				<strong>{t.browseModels}</strong>
+			</span>
+			<em>{modelCatalog.count}</em>
+		</a>
+	</nav>
+
+	<div class="catalog-boundary">
+		<div class="boundary-mark" aria-hidden="true">↗</div>
+		<div>
+			<strong>{t.customTitle}</strong>
+			<p>{t.customBody}</p>
+		</div>
+		<a href={`/${locale}/docs/guides/${isProviders ? 'providers' : 'models'}/`}>{t.customLink} <span aria-hidden="true">→</span></a>
+	</div>
+
+	<div class="catalog-toolbar">
+		<div class="catalog-search">
+			<svg aria-hidden="true" viewBox="0 0 24 24" width="20" height="20">
+				<circle cx="11" cy="11" r="7"></circle>
+				<path d="m16.5 16.5 4 4"></path>
+			</svg>
+			<input
+				type="search"
+				autocomplete="off"
+				spellcheck="false"
+				placeholder={isProviders ? t.searchProviders : t.searchModels}
+				aria-label={isProviders ? t.searchProviders : t.searchModels}
+				data-catalog-search
+			/>
+			<kbd aria-hidden="true">/</kbd>
+		</div>
+
+		<div class="catalog-controls">
+			<div class="catalog-chips" role="group" aria-label={isProviders ? 'Protocol' : 'Model type'}>
+				<button type="button" class="active" data-catalog-filter="all" aria-pressed="true"><span>{t.all}</span></button>
+				{
+					isProviders ? (
+						<>
+							<button type="button" data-catalog-filter="openai" aria-pressed="false"><span>OpenAI</span></button>
+							<button type="button" data-catalog-filter="anthropic" aria-pressed="false"><span>Anthropic</span></button>
+							<button type="button" data-catalog-filter="gemini" aria-pressed="false"><span>Gemini</span></button>
+						</>
+					) : (
+						<>
+							<button type="button" data-catalog-filter="llm" aria-pressed="false"><span>{t.llm}</span></button>
+							<button type="button" data-catalog-filter="image" aria-pressed="false"><span>{t.image}</span></button>
+						</>
+					)
+				}
+			</div>
+
+			{
+				!isProviders && (
+					<>
+						<label class="catalog-select">
+							<span class="sr-only">{t.allVendors}</span>
+							<select data-catalog-vendor>
+								<option value="all">{t.allVendors}</option>
+								{modelVendors.map((vendor) => (
+									<option value={vendor.key}>{vendor.label}</option>
+								))}
+							</select>
+						</label>
+						<label class="catalog-select">
+							<span class="sr-only">{locale === 'zh' ? '排序' : 'Sort'}</span>
+							<select data-catalog-sort>
+								<option value="released">{t.newest}</option>
+								<option value="name">{t.name}</option>
+								<option value="vendor">{t.vendor}</option>
+							</select>
+						</label>
+						<div class="currency-switch" role="group" aria-label={t.currency}>
+							<button type="button" class="active" data-currency-button="usd" aria-pressed="true"><span>USD</span></button>
+							<button type="button" data-currency-button="cny" aria-pressed="false"><span>CNY</span></button>
+						</div>
+					</>
+				)
+			}
+		</div>
+
+		<div class="catalog-toolbar-meta">
+			<p aria-live="polite"><strong data-catalog-count>{catalog.count}</strong> {t.results}</p>
+			<span>{t.searchHint}</span>
+		</div>
+	</div>
+
+	<div class:list={['catalog-grid', { 'provider-grid': isProviders, 'model-grid': !isProviders }]} data-catalog-grid>
+		{
+			isProviders
+				? (items as ProviderItem[]).map((item) => {
+						const endpoints = flattenEndpoints(item);
+						const visual = vendorVisual(item.vendor_key, item.vendor_label);
+						const localized = item.i18n?.[locale];
+						const displayName = localized?.name || item.name;
+						const displayDescription = localized?.description || item.description || t.noDescription;
+						const platformUrl = item.links?.api_keys || item.links?.platform;
+						const platformLabel = item.links?.api_keys ? t.getApiKey : t.visitPlatform;
+						const search = [
+							item.name,
+							item.i18n?.zh?.name ?? '',
+							item.i18n?.zh?.description ?? '',
+							item.i18n?.en?.name ?? '',
+							item.i18n?.en?.description ?? '',
+							item.vendor_label,
+							item.vendor_key,
+							item.description ?? '',
+							...endpoints.flatMap((endpoint) => [endpoint.protocol, endpoint.capability, endpoint.url]),
+						]
+							.join(' ')
+							.toLowerCase();
+						return (
+							<article
+								class="catalog-card provider-card"
+								data-catalog-card
+								data-key={item.catalog_key}
+								data-search={search}
+								data-protocols={item.protocols.join(' ')}
+							>
+								<div class="card-head">
+									<div class:list={['vendor-logo', { 'has-brand-mark': visual.logo }]} style={visual.style} aria-hidden="true">
+										{visual.logo ? <span class="vendor-logo-mark"></span> : <span class="vendor-logo-fallback">{visual.monogram}</span>}
+									</div>
+									<div class="card-identity">
+										<p>{item.vendor_label}</p>
+										<h2>{displayName}</h2>
+									</div>
+									<div class="protocol-stack" aria-label="Protocols">
+										{item.protocols.map((protocol) => (
+											<span>{protocol}</span>
+										))}
+									</div>
+								</div>
+								<p class="card-description">{displayDescription}</p>
+								<div class="endpoint-section">
+									<div class="section-label">
+										<span>{t.endpoints}</span>
+										<em>{endpoints.length}</em>
+									</div>
+									<div class="endpoint-list">
+										{endpoints.map((endpoint) => (
+											<div class="endpoint-row">
+												<span class={`protocol-dot protocol-${endpoint.protocol}`} aria-hidden="true"></span>
+												<div>
+													<small>
+														{endpoint.protocol} · {endpoint.capability}
+													</small>
+													<code title={endpoint.url}>{endpoint.url}</code>
+												</div>
+												<button
+													type="button"
+													data-copy-value={endpoint.url}
+													data-label={t.copyUrl}
+													data-copied={t.copied}
+													aria-label={`${t.copyUrl}: ${endpoint.url}`}
+												>
+													<svg aria-hidden="true" viewBox="0 0 24 24">
+														<rect x="8" y="8" width="11" height="11" rx="2"></rect>
+														<path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"></path>
+													</svg>
+												</button>
+											</div>
+										))}
+									</div>
+								</div>
+								<div class="card-actions">
+									<div class="card-action-links">
+										{
+											platformUrl && (
+												<a class="provider-platform-link" href={platformUrl} target="_blank" rel="noreferrer">
+													{platformLabel} <span aria-hidden="true">↗</span>
+												</a>
+											)
+										}
+										<a href={contributionUrl(item)} target="_blank" rel="noreferrer">
+											{t.editSource} <span aria-hidden="true">↗</span>
+										</a>
+									</div>
+								</div>
+							</article>
+						);
+					})
+				: (items as ModelItem[]).map((item) => {
+						const visual = vendorVisual(item.vendor, item.vendor_label);
+						const usdPrice = pricingSummary(item, 'usd');
+						const cnyPrice = pricingSummary(item, 'cny');
+						const search = [
+							item.id,
+							item.display_name ?? '',
+							item.vendor,
+							item.vendor_label,
+							...(item.tags ?? []),
+							...(item.modalities?.input ?? []),
+							...(item.modalities?.output ?? []),
+						]
+							.join(' ')
+							.toLowerCase();
+						return (
+							<article
+								class="catalog-card model-card"
+								data-catalog-card
+								data-key={item.id}
+								data-search={search}
+								data-model-kind={item.kind}
+								data-vendor={item.vendor}
+								data-name={(item.display_name ?? item.id).toLowerCase()}
+								data-released={item.released ?? ''}
+							>
+								<div class="card-head">
+									<div class:list={['vendor-logo', { 'has-brand-mark': visual.logo }]} style={visual.style} aria-hidden="true">
+										{visual.logo ? <span class="vendor-logo-mark"></span> : <span class="vendor-logo-fallback">{visual.monogram}</span>}
+									</div>
+									<div class="card-identity">
+										<p>{item.vendor_label}</p>
+										<h2>{item.display_name ?? item.id}</h2>
+									</div>
+									<div class:list={['model-kind', item.kind]}>{item.kind === 'image' ? t.image : t.llm}</div>
+								</div>
+								<div class="model-id-row">
+									<code>{item.id}</code>
+									<button
+										type="button"
+										data-copy-value={item.id}
+										data-label={t.copyJson}
+										data-copied={t.copied}
+										aria-label={`${locale === 'zh' ? '复制模型 ID' : 'Copy model ID'}: ${item.id}`}
+									>
+										<svg aria-hidden="true" viewBox="0 0 24 24">
+											<rect x="8" y="8" width="11" height="11" rx="2"></rect>
+											<path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"></path>
+										</svg>
+									</button>
+								</div>
+								<div class="model-tags">
+									{(item.tags ?? []).map((tag) => <span class="signal-tag">{tag}</span>)}
+									{(item.modalities?.input ?? []).map((modality) => <span>{`${t.input}: ${modality}`}</span>)}
+									{(item.modalities?.output ?? []).map((modality) => <span>{`${t.output}: ${modality}`}</span>)}
+								</div>
+								<div class="model-specs">
+									<div>
+										<span>{t.context}</span>
+										<strong>{compactNumber(item.context_window)}</strong>
+									</div>
+									<div>
+										<span>{t.maxOutput}</span>
+										<strong>{compactNumber(item.max_tokens)}</strong>
+									</div>
+									<div>
+										<span>{t.released}</span>
+										<strong>{item.released ?? '—'}</strong>
+									</div>
+								</div>
+								<div class="price-panel">
+									<span>{t.pricing}</span>
+									<div data-currency-price="usd">
+										<strong>{usdPrice.primary}</strong>
+										<small>{usdPrice.secondary}</small>
+									</div>
+									<div data-currency-price="cny" hidden>
+										<strong>{cnyPrice.primary}</strong>
+										<small>{cnyPrice.secondary}</small>
+									</div>
+								</div>
+								<div class="card-actions">
+									<details data-json-details data-key={item.id}>
+										<summary>{t.rawData}</summary>
+										<div class="raw-panel">
+											<button type="button" data-copy-item={item.id}>{t.copyJson}</button>
+											<pre><code data-json-preview></code></pre>
+										</div>
+									</details>
+									<a href={contributionUrl(item)} target="_blank" rel="noreferrer">
+										{t.editSource} <span aria-hidden="true">↗</span>
+									</a>
+								</div>
+							</article>
+						);
+					})
+		}
+	</div>
+
+	<div class="catalog-empty" data-catalog-empty hidden>
+		<div aria-hidden="true">⌕</div>
+		<h2>{t.noResults}</h2>
+		<p>{t.noResultsBody}</p>
+		<button type="button" data-catalog-clear>{t.clear}</button>
+	</div>
+
+	{!isProviders && <p class="catalog-price-note">{t.priceNote}</p>}
+
+	{
+		isProviders ? (
+			<a class="provider-contribute-link" href={editRoot} target="_blank" rel="noreferrer">
+				<span>{t.contributeProvider}</span>
+				<strong>{t.openContribution} <span aria-hidden="true">↗</span></strong>
+			</a>
+		) : (
+			<section class="catalog-contribute">
+				<div>
+					<p class="contribute-kicker">{t.dataTools}</p>
+					<h2>{t.contributeModel}</h2>
+					<p>{t.contributeModelBody}</p>
+					<a class="contribute-primary" href={editRoot} target="_blank" rel="noreferrer">
+						{t.openContribution} <span aria-hidden="true">↗</span>
+					</a>
+				</div>
+				<div class="data-actions">
+					<a href={downloadUrl} download>
+						<span aria-hidden="true">↓</span>
+						<strong>{t.download}</strong>
+						<small>{catalog.count} {kind} · JSON</small>
+					</a>
+					<a href={catalogSourceUrl} target="_blank" rel="noreferrer">
+						<span aria-hidden="true">⌘</span>
+						<strong>{t.source}</strong>
+						<small>{t.syncedFrom} · {sourceShort}</small>
+					</a>
+				</div>
+			</section>
+		)
+	}
+
+	<script is:inline type="application/json" data-catalog-data set:html={JSON.stringify(items).replaceAll('<', '\\u003c')}></script>
+</section>
+
+<script>
+	function initializeCatalogApiCopy() {
+		document.querySelectorAll<HTMLButtonElement>('[data-catalog-api-copy]').forEach((button) => {
+			if (button.dataset.ready === 'true') return;
+			button.dataset.ready = 'true';
+			button.addEventListener('click', async () => {
+				const value = button.dataset.copyValue ?? '';
+				try {
+					await navigator.clipboard.writeText(value);
+				} catch {
+					const textarea = document.createElement('textarea');
+					textarea.value = value;
+					textarea.style.position = 'fixed';
+					textarea.style.opacity = '0';
+					document.body.append(textarea);
+					textarea.select();
+					document.execCommand('copy');
+					textarea.remove();
+				}
+				const state = button.querySelector<HTMLElement>('[data-copy-state]');
+				const original = button.dataset.copyLabel ?? 'Copy';
+				if (state) state.textContent = button.dataset.copiedLabel ?? 'Copied';
+				button.classList.add('copied');
+				window.setTimeout(() => {
+					if (state) state.textContent = original;
+					button.classList.remove('copied');
+				}, 1400);
+			});
+		});
+	}
+
+	function initializeCatalogs() {
+		document.querySelectorAll<HTMLElement>('[data-catalog-root]').forEach((root) => {
+			if (root.dataset.ready === 'true') return;
+			root.dataset.ready = 'true';
+
+			const kind = root.dataset.kind;
+			const search = root.querySelector<HTMLInputElement>('[data-catalog-search]');
+			const count = root.querySelector<HTMLElement>('[data-catalog-count]');
+			const grid = root.querySelector<HTMLElement>('[data-catalog-grid]');
+			const empty = root.querySelector<HTMLElement>('[data-catalog-empty]');
+			const vendor = root.querySelector<HTMLSelectElement>('[data-catalog-vendor]');
+			const sort = root.querySelector<HTMLSelectElement>('[data-catalog-sort]');
+			const filterButtons = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-catalog-filter]'));
+			const cards = Array.from(root.querySelectorAll<HTMLElement>('[data-catalog-card]'));
+			const raw = root.querySelector<HTMLScriptElement>('[data-catalog-data]');
+			const items = raw?.textContent ? JSON.parse(raw.textContent) : [];
+			const itemsByKey = new Map(
+				items.map((item: { catalog_key?: string; id?: string }) => [String(item.catalog_key ?? item.id), item]),
+			);
+			let activeFilter = 'all';
+
+			const normalize = (value: string) =>
+				value
+					.toLocaleLowerCase()
+					.normalize('NFKD')
+					.replace(/\p{Diacritic}/gu, '');
+
+			const update = () => {
+				const query = normalize(search?.value.trim() ?? '');
+				const activeVendor = vendor?.value ?? 'all';
+				let visible = 0;
+				for (const card of cards) {
+					const matchesSearch = !query || normalize(card.dataset.search ?? '').includes(query);
+					const matchesFilter =
+						activeFilter === 'all' ||
+						(kind === 'providers'
+							? (card.dataset.protocols ?? '').split(' ').includes(activeFilter)
+							: card.dataset.modelKind === activeFilter);
+					const matchesVendor = activeVendor === 'all' || card.dataset.vendor === activeVendor;
+					const show = matchesSearch && matchesFilter && matchesVendor;
+					card.hidden = !show;
+					if (show) visible += 1;
+				}
+				if (count) count.textContent = String(visible);
+				if (empty) empty.hidden = visible !== 0;
+
+				const url = new URL(window.location.href);
+				query ? url.searchParams.set('q', search?.value.trim() ?? '') : url.searchParams.delete('q');
+				activeFilter !== 'all'
+					? url.searchParams.set(kind === 'providers' ? 'protocol' : 'type', activeFilter)
+					: url.searchParams.delete(kind === 'providers' ? 'protocol' : 'type');
+				activeVendor !== 'all' ? url.searchParams.set('vendor', activeVendor) : url.searchParams.delete('vendor');
+				history.replaceState(null, '', `${url.pathname}${url.search}${url.hash}`);
+			};
+
+			const applySort = () => {
+				if (!grid || kind !== 'models') return;
+				const mode = sort?.value ?? 'released';
+				const sorted = [...cards].sort((a, b) => {
+					if (mode === 'name') return (a.dataset.name ?? '').localeCompare(b.dataset.name ?? '');
+					if (mode === 'vendor') {
+						return (a.dataset.vendor ?? '').localeCompare(b.dataset.vendor ?? '') ||
+							(a.dataset.name ?? '').localeCompare(b.dataset.name ?? '');
+					}
+					return (b.dataset.released ?? '').localeCompare(a.dataset.released ?? '') ||
+						(a.dataset.name ?? '').localeCompare(b.dataset.name ?? '');
+				});
+				sorted.forEach((card) => grid.append(card));
+			};
+
+			const params = new URLSearchParams(window.location.search);
+			if (search && params.has('q')) search.value = params.get('q') ?? '';
+			const requestedFilter = params.get(kind === 'providers' ? 'protocol' : 'type');
+			if (requestedFilter && filterButtons.some((button) => button.dataset.catalogFilter === requestedFilter)) {
+				activeFilter = requestedFilter;
+			}
+			if (vendor && params.has('vendor')) vendor.value = params.get('vendor') ?? 'all';
+			filterButtons.forEach((button) => {
+				button.classList.toggle('active', button.dataset.catalogFilter === activeFilter);
+				button.setAttribute('aria-pressed', String(button.dataset.catalogFilter === activeFilter));
+				button.addEventListener('click', () => {
+					activeFilter = button.dataset.catalogFilter ?? 'all';
+					filterButtons.forEach((candidate) => {
+						candidate.classList.toggle('active', candidate === button);
+						candidate.setAttribute('aria-pressed', String(candidate === button));
+					});
+					update();
+				});
+			});
+
+			search?.addEventListener('input', update);
+			vendor?.addEventListener('change', update);
+			sort?.addEventListener('change', applySort);
+			root.querySelector('[data-catalog-clear]')?.addEventListener('click', () => {
+				if (search) search.value = '';
+				if (vendor) vendor.value = 'all';
+				activeFilter = 'all';
+				filterButtons.forEach((button) => {
+					const active = button.dataset.catalogFilter === 'all';
+					button.classList.toggle('active', active);
+					button.setAttribute('aria-pressed', String(active));
+				});
+				update();
+				search?.focus();
+			});
+
+			root.querySelectorAll<HTMLButtonElement>('[data-currency-button]').forEach((button) => {
+				button.addEventListener('click', () => {
+					const currency = button.dataset.currencyButton;
+					root.querySelectorAll<HTMLButtonElement>('[data-currency-button]').forEach((candidate) => {
+						candidate.classList.toggle('active', candidate === button);
+						candidate.setAttribute('aria-pressed', String(candidate === button));
+					});
+					root.querySelectorAll<HTMLElement>('[data-currency-price]').forEach((price) => {
+						price.hidden = price.dataset.currencyPrice !== currency;
+					});
+				});
+			});
+
+			const writeClipboard = async (value: string, button: HTMLButtonElement) => {
+				try {
+					await navigator.clipboard.writeText(value);
+				} catch {
+					const textarea = document.createElement('textarea');
+					textarea.value = value;
+					textarea.style.position = 'fixed';
+					textarea.style.opacity = '0';
+					document.body.append(textarea);
+					textarea.select();
+					document.execCommand('copy');
+					textarea.remove();
+				}
+				const oldLabel = button.getAttribute('aria-label');
+				button.classList.add('copied');
+				button.setAttribute('aria-label', button.dataset.copied ?? 'Copied');
+				window.setTimeout(() => {
+					button.classList.remove('copied');
+					if (oldLabel) button.setAttribute('aria-label', oldLabel);
+				}, 1400);
+			};
+
+			root.querySelectorAll<HTMLButtonElement>('[data-copy-value]').forEach((button) => {
+				button.addEventListener('click', () => writeClipboard(button.dataset.copyValue ?? '', button));
+			});
+			root.querySelectorAll<HTMLButtonElement>('[data-copy-item]').forEach((button) => {
+				button.addEventListener('click', () => {
+					const item = itemsByKey.get(button.dataset.copyItem ?? '');
+					if (item) writeClipboard(JSON.stringify(item, null, 2), button);
+				});
+			});
+			root.querySelectorAll<HTMLDetailsElement>('[data-json-details]').forEach((details) => {
+				details.addEventListener('toggle', () => {
+					if (!details.open) return;
+					const preview = details.querySelector<HTMLElement>('[data-json-preview]');
+					const item = itemsByKey.get(details.dataset.key ?? '');
+					if (preview && item && !preview.textContent) preview.textContent = JSON.stringify(item, null, 2);
+				});
+			});
+
+			const keyHandler = (event: KeyboardEvent) => {
+				const target = event.target as HTMLElement | null;
+				const isEditing = target?.matches('input, textarea, select, [contenteditable="true"]');
+				if (event.key === '/' && !isEditing) {
+					event.preventDefault();
+					search?.focus();
+				}
+				if (event.key === 'Escape' && document.activeElement === search && search?.value) {
+					search.value = '';
+					update();
+				}
+			};
+			document.addEventListener('keydown', keyHandler);
+			document.addEventListener('astro:before-swap', () => document.removeEventListener('keydown', keyHandler), {
+				once: true,
+			});
+
+			applySort();
+			update();
+		});
+	}
+
+	initializeCatalogApiCopy();
+	initializeCatalogs();
+	document.addEventListener('astro:page-load', initializeCatalogApiCopy);
+	document.addEventListener('astro:page-load', initializeCatalogs);
+</script>
+
+<style>
+	.catalog-explorer {
+		--catalog-cyan: var(--of-accent);
+		--catalog-green: var(--of-accent-hover);
+		--catalog-panel: color-mix(in srgb, var(--of-surface-card-solid) 96%, transparent);
+		--catalog-soft: color-mix(in srgb, var(--of-accent) 8%, var(--of-surface-card));
+		width: 100%;
+		max-width: 84rem;
+		margin-inline: auto;
+		padding-bottom: 3rem;
+	}
+
+	.catalog-explorer h2 {
+		margin-top: 0;
+		padding-bottom: 0;
+		border-bottom: 0;
+	}
+
+	.catalog-explorer h2::before {
+		display: none;
+	}
+
+	.sr-only {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		padding: 0;
+		margin: -1px;
+		overflow: hidden;
+		clip: rect(0, 0, 0, 0);
+		white-space: nowrap;
+		border: 0;
+	}
+
+	.catalog-switcher {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 0.75rem;
+		margin-bottom: 1rem;
+	}
+
+	.catalog-switcher a {
+		display: grid;
+		grid-template-columns: auto 1fr auto;
+		gap: 0.85rem;
+		align-items: center;
+		min-width: 0;
+		padding: 0.85rem 1rem;
+		border: 1px solid var(--of-border-default);
+		border-radius: 0.85rem;
+		color: var(--of-text-secondary);
+		text-decoration: none;
+		background: var(--catalog-panel);
+		box-shadow: var(--sl-shadow-sm);
+		transition: border-color 160ms ease, transform 160ms ease, background 160ms ease;
+	}
+
+	.catalog-switcher a:hover {
+		border-color: var(--of-border-strong);
+		transform: translateY(-1px);
+	}
+
+	.catalog-switcher a.active {
+		border-color: color-mix(in srgb, var(--catalog-cyan) 58%, transparent);
+		color: var(--of-text-primary);
+		background:
+			linear-gradient(115deg, color-mix(in srgb, var(--catalog-cyan) 13%, transparent), transparent 50%),
+			var(--catalog-panel);
+	}
+
+	.switcher-icon {
+		display: grid;
+		place-items: center;
+		width: 2.35rem;
+		height: 2.35rem;
+		border: 1px solid var(--of-card-icon-border);
+		border-radius: 0.65rem;
+		font: 600 0.85rem/1 var(--sl-font-mono);
+		color: var(--catalog-cyan);
+		background: var(--of-card-icon-bg);
+	}
+
+	.catalog-switcher small,
+	.catalog-switcher strong {
+		display: block;
+	}
+
+	.catalog-switcher small {
+		margin-bottom: 0.1rem;
+		font: 500 0.61rem/1.2 var(--sl-font-mono);
+		letter-spacing: 0.11em;
+		color: var(--of-text-muted);
+	}
+
+	.catalog-switcher strong {
+		font-size: 0.96rem;
+	}
+
+	.catalog-switcher em {
+		display: grid;
+		place-items: center;
+		min-width: 2.1rem;
+		height: 1.65rem;
+		padding-inline: 0.4rem;
+		border-radius: 999px;
+		font: 500 0.72rem/1 var(--sl-font-mono);
+		font-style: normal;
+		color: var(--of-text-muted);
+		background: color-mix(in srgb, var(--of-text-primary) 7%, transparent);
+	}
+
+	.catalog-boundary {
+		display: grid;
+		grid-template-columns: auto minmax(0, 1fr) auto;
+		gap: 1rem;
+		align-items: center;
+		padding: 0.78rem 1rem;
+		margin-bottom: 1rem;
+		border: 1px solid color-mix(in srgb, var(--of-signal-warn) 38%, var(--of-border-default));
+		border-radius: 0.85rem;
+		background:
+			linear-gradient(110deg, color-mix(in srgb, var(--of-signal-warn) 9%, transparent), transparent 60%),
+			var(--catalog-panel);
+	}
+
+	.boundary-mark {
+		display: grid;
+		place-items: center;
+		width: 2.25rem;
+		height: 2.25rem;
+		border-radius: 0.6rem;
+		color: var(--of-signal-warn);
+		background: color-mix(in srgb, var(--of-signal-warn) 13%, transparent);
+		font-weight: 700;
+	}
+
+	.catalog-boundary strong {
+		display: block;
+		margin-bottom: 0.18rem;
+		color: var(--of-text-primary);
+	}
+
+	.catalog-boundary p {
+		max-width: 62rem;
+		margin: 0;
+		color: var(--of-text-muted);
+		font-size: 0.82rem;
+		line-height: 1.48;
+	}
+
+	.catalog-boundary a {
+		white-space: nowrap;
+		font-size: 0.8rem;
+		font-weight: 600;
+		color: var(--of-signal-warn);
+		text-decoration: none;
+	}
+
+	.catalog-toolbar {
+		position: sticky;
+		top: calc(var(--sl-nav-height) + 0.5rem);
+		z-index: 8;
+		padding: 0.7rem;
+		margin-bottom: 1rem;
+		border: 1px solid var(--of-border-default);
+		border-radius: 0.95rem;
+		background: color-mix(in srgb, var(--of-surface-card-solid) 95%, transparent);
+		box-shadow: 0 14px 34px color-mix(in srgb, var(--of-bg-base) 58%, transparent);
+		backdrop-filter: blur(18px) saturate(1.15);
+	}
+
+	.catalog-search {
+		position: relative;
+		display: flex;
+		align-items: center;
+	}
+
+	.catalog-search svg {
+		position: absolute;
+		left: 0.9rem;
+		fill: none;
+		stroke: var(--of-text-muted);
+		stroke-width: 1.8;
+		pointer-events: none;
+	}
+
+	.catalog-search input {
+		width: 100%;
+		height: 2.7rem;
+		padding: 0 3rem;
+		border: 1px solid var(--of-border-default);
+		border-radius: 0.72rem;
+		outline: none;
+		color: var(--of-text-primary);
+		background: color-mix(in srgb, var(--of-bg-base) 76%, transparent);
+		font: 500 0.94rem/1 var(--sl-font);
+		transition: border-color 150ms ease, box-shadow 150ms ease;
+	}
+
+	.catalog-search input:focus {
+		border-color: var(--catalog-cyan);
+		box-shadow: 0 0 0 3px color-mix(in srgb, var(--catalog-cyan) 14%, transparent);
+	}
+
+	.catalog-search kbd {
+		position: absolute;
+		right: 0.8rem;
+		display: grid;
+		place-items: center;
+		width: 1.65rem;
+		height: 1.65rem;
+		border: 1px solid var(--of-border-default);
+		border-bottom-width: 2px;
+		border-radius: 0.38rem;
+		font: 500 0.73rem/1 var(--sl-font-mono);
+		color: var(--of-text-muted);
+		background: var(--of-surface-card);
+	}
+
+	.catalog-controls {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.6rem;
+		align-items: center;
+		margin-top: 0.7rem;
+	}
+
+	.catalog-chips,
+	.currency-switch {
+		display: flex;
+		box-sizing: border-box;
+		align-items: center;
+		gap: 0.25rem;
+		height: 2.7rem;
+		padding: 0.22rem;
+		border: 1px solid var(--of-border-default);
+		border-radius: 0.58rem;
+		background: color-mix(in srgb, var(--of-bg-base) 64%, transparent);
+	}
+
+	.catalog-chips button,
+	.currency-switch button {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		height: 2.1rem;
+		min-height: 0;
+		margin: 0;
+		padding: 0.38rem 0.7rem;
+		border: 0;
+		border-radius: 0.42rem;
+		color: var(--of-text-muted);
+		background: transparent;
+		font: 600 0.72rem/1 var(--sl-font);
+		cursor: pointer;
+	}
+
+	.catalog-chips button:hover,
+	.currency-switch button:hover {
+		color: var(--of-text-primary);
+	}
+
+	.catalog-chips button > span,
+	.currency-switch button > span {
+		display: block;
+		transform: translateY(-2px);
+	}
+
+	.catalog-chips button.active,
+	.currency-switch button.active {
+		color: var(--of-text-invert);
+		background: var(--catalog-cyan);
+		box-shadow: 0 3px 10px color-mix(in srgb, var(--catalog-cyan) 22%, transparent);
+	}
+
+	.catalog-select {
+		display: block;
+	}
+
+	.catalog-select select {
+		height: 2.7rem;
+		max-width: 13rem;
+		padding: 0 2rem 0 0.72rem;
+		border: 1px solid var(--of-border-default);
+		border-radius: 0.58rem;
+		outline: none;
+		color: var(--of-text-secondary);
+		background-color: color-mix(in srgb, var(--of-bg-base) 64%, transparent);
+		font: 500 0.76rem/1 var(--sl-font);
+	}
+
+	.catalog-select select:focus {
+		border-color: var(--catalog-cyan);
+	}
+
+	.catalog-toolbar-meta {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		margin-top: 0.65rem;
+		color: var(--of-text-muted);
+		font-size: 0.72rem;
+	}
+
+	.catalog-toolbar-meta p {
+		margin: 0;
+	}
+
+	.catalog-toolbar-meta strong {
+		color: var(--of-text-primary);
+		font: 600 0.82rem/1 var(--sl-font-mono);
+	}
+
+	@media (min-width: 70rem) {
+		.catalog-toolbar {
+			display: grid;
+			grid-template-columns: minmax(22rem, 1fr) max-content;
+			gap: 0.55rem 0.75rem;
+			align-items: center;
+		}
+
+		.catalog-controls {
+			flex-wrap: nowrap;
+			margin-top: 0;
+		}
+
+		.catalog-toolbar-meta {
+			grid-column: 1 / -1;
+			margin-top: 0.05rem;
+			padding-inline: 0.15rem;
+		}
+	}
+
+	.catalog-grid {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 0.85rem;
+		align-items: stretch;
+	}
+
+	.catalog-card {
+		position: relative;
+		display: flex;
+		flex-direction: column;
+		height: 100%;
+		min-width: 0;
+		margin: 0;
+		overflow: hidden;
+		border: 1px solid var(--of-card-border);
+		border-radius: 0.95rem;
+		background:
+			linear-gradient(145deg, color-mix(in srgb, var(--catalog-cyan) 4%, transparent), transparent 42%),
+			var(--catalog-panel);
+		box-shadow: var(--sl-shadow-sm);
+		transition: border-color 160ms ease, transform 160ms ease, box-shadow 160ms ease;
+	}
+
+	.catalog-card::before {
+		position: absolute;
+		inset: 0 auto auto 0;
+		width: 4rem;
+		height: 1px;
+		content: '';
+		background: linear-gradient(90deg, var(--catalog-cyan), transparent);
+	}
+
+	.catalog-card:hover {
+		border-color: var(--of-card-border-hover);
+		transform: translateY(-2px);
+		box-shadow: var(--sl-shadow-md);
+	}
+
+	.card-head {
+		display: grid;
+		grid-template-columns: auto minmax(0, 1fr) auto;
+		gap: 0.75rem;
+		align-items: center;
+		padding: 1rem 1rem 0;
+	}
+
+	.vendor-logo {
+		--vendor-accent: var(--catalog-cyan);
+
+		position: relative;
+		display: grid;
+		place-items: center;
+		width: 2.7rem;
+		height: 2.7rem;
+		overflow: hidden;
+		isolation: isolate;
+		border: 1px solid color-mix(in srgb, var(--vendor-accent) 34%, var(--of-border-default));
+		border-radius: 0.72rem;
+		color: color-mix(in srgb, var(--vendor-accent) 62%, var(--of-text-primary));
+		background:
+			linear-gradient(145deg, color-mix(in srgb, var(--vendor-accent) 16%, transparent), transparent 58%),
+			color-mix(in srgb, var(--of-surface-card-solid) 94%, var(--vendor-accent));
+		font: 700 0.72rem/1 var(--sl-font-mono);
+		box-shadow:
+			inset 0 1px 0 color-mix(in srgb, var(--of-text-primary) 10%, transparent),
+			0 0 0 1px color-mix(in srgb, var(--vendor-accent) 5%, transparent);
+	}
+
+	.vendor-logo::after {
+		position: absolute;
+		inset: 0;
+		z-index: -1;
+		content: '';
+		background: radial-gradient(circle at 76% 18%, color-mix(in srgb, var(--vendor-accent) 20%, transparent), transparent 42%);
+	}
+
+	.vendor-logo-mark {
+		width: 1.62rem;
+		height: 1.62rem;
+		background: currentColor;
+		-webkit-mask: var(--vendor-icon) center / contain no-repeat;
+		mask: var(--vendor-icon) center / contain no-repeat;
+	}
+
+	.vendor-logo-fallback {
+		display: grid;
+		place-items: center;
+		min-width: 1.7rem;
+		height: 1.7rem;
+		padding-inline: 0.12rem;
+		border-radius: 0.48rem;
+		letter-spacing: -0.045em;
+		background: color-mix(in srgb, var(--vendor-accent) 10%, transparent);
+	}
+
+	.vendor-logo-fallback:not(:only-child) {
+		display: none;
+	}
+
+	.card-identity {
+		min-width: 0;
+		transform: translateY(-4px);
+	}
+
+	.card-identity p {
+		margin: 0 0 0.18rem;
+		overflow: hidden;
+		color: var(--of-text-muted);
+		font-size: 0.74rem;
+		line-height: 1.2;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+
+	.card-identity h2 {
+		margin: 0;
+		overflow: hidden;
+		color: var(--of-text-primary);
+		font-size: 1rem;
+		line-height: 1.25;
+		letter-spacing: -0.015em;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+
+	.protocol-stack {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: flex-end;
+		gap: 0.28rem;
+	}
+
+	.protocol-stack span,
+	.model-kind {
+		padding: 0.28rem 0.46rem;
+		border: 1px solid var(--of-border-default);
+		border-radius: 999px;
+		color: var(--of-text-muted);
+		background: color-mix(in srgb, var(--of-bg-base) 64%, transparent);
+		font: 500 0.62rem/1 var(--sl-font-mono);
+		text-transform: uppercase;
+	}
+
+	.model-kind.image {
+		border-color: color-mix(in srgb, var(--of-accent-alt) 52%, transparent);
+		color: var(--of-accent-alt);
+		background: color-mix(in srgb, var(--of-accent-alt) 9%, transparent);
+	}
+
+	.model-kind.llm {
+		border-color: color-mix(in srgb, var(--catalog-cyan) 42%, transparent);
+		color: var(--catalog-cyan);
+	}
+
+	.card-description {
+		display: -webkit-box;
+		min-height: 2.8rem;
+		margin: 0.75rem 1rem;
+		overflow: hidden;
+		color: var(--of-text-muted);
+		font-size: 0.8rem;
+		line-height: 1.55;
+		-webkit-box-orient: vertical;
+		-webkit-line-clamp: 2;
+	}
+
+	.endpoint-section {
+		margin: 0 0.75rem 0.75rem;
+		padding: 0.7rem;
+		border: 1px solid var(--of-border-subtle);
+		border-radius: 0.72rem;
+		background: color-mix(in srgb, var(--of-bg-base) 55%, transparent);
+	}
+
+	.section-label {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		margin-bottom: 0.45rem;
+		color: var(--of-text-muted);
+		font: 600 0.67rem/1 var(--sl-font-mono);
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
+	}
+
+	.section-label em {
+		font-style: normal;
+	}
+
+	.endpoint-list {
+		display: grid;
+		gap: 0.35rem;
+	}
+
+	.endpoint-row {
+		display: grid;
+		grid-template-columns: auto minmax(0, 1fr) auto;
+		gap: 0.55rem;
+		align-items: center;
+		min-width: 0;
+		padding: 0.48rem 0.5rem;
+		border-radius: 0.48rem;
+		background: color-mix(in srgb, var(--of-text-primary) 3%, transparent);
+	}
+
+	.protocol-dot {
+		width: 0.38rem;
+		height: 0.38rem;
+		border-radius: 50%;
+		background: var(--catalog-cyan);
+		box-shadow: 0 0 0 3px color-mix(in srgb, var(--catalog-cyan) 11%, transparent);
+	}
+
+	.protocol-anthropic {
+		background: var(--of-signal-warn);
+		box-shadow: 0 0 0 3px color-mix(in srgb, var(--of-signal-warn) 11%, transparent);
+	}
+
+	.protocol-gemini {
+		background: var(--of-accent-alt);
+		box-shadow: 0 0 0 3px color-mix(in srgb, var(--of-accent-alt) 11%, transparent);
+	}
+
+	.endpoint-row div {
+		min-width: 0;
+	}
+
+	.endpoint-row small,
+	.endpoint-row code {
+		display: block;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+
+	.endpoint-row small {
+		margin-bottom: 0.16rem;
+		color: var(--of-text-muted);
+		font-size: 0.64rem;
+		text-transform: capitalize;
+	}
+
+	.endpoint-row code {
+		padding: 0;
+		color: var(--of-text-secondary);
+		background: none;
+		font-size: 0.7rem;
+	}
+
+	.endpoint-row button,
+	.model-id-row button {
+		display: grid;
+		place-items: center;
+		width: 1.75rem;
+		height: 1.75rem;
+		padding: 0;
+		border: 1px solid transparent;
+		border-radius: 0.4rem;
+		color: var(--of-text-muted);
+		background: transparent;
+		cursor: pointer;
+	}
+
+	.endpoint-row button:hover,
+	.model-id-row button:hover,
+	.endpoint-row button.copied,
+	.model-id-row button.copied {
+		border-color: var(--of-border-default);
+		color: var(--catalog-cyan);
+		background: var(--of-surface-card);
+	}
+
+	.endpoint-row svg,
+	.model-id-row svg {
+		width: 0.92rem;
+		height: 0.92rem;
+		fill: none;
+		stroke: currentColor;
+		stroke-width: 1.7;
+	}
+
+	.card-actions {
+		display: flex;
+		justify-content: space-between;
+		align-items: flex-start;
+		gap: 1rem;
+		padding: 0.75rem 1rem;
+		border-top: 1px solid var(--of-border-subtle);
+		margin-top: auto;
+	}
+
+	.card-action-links a,
+	.model-card .card-actions > a,
+	.card-actions summary {
+		color: var(--of-text-muted);
+		font-size: 0.72rem;
+		font-weight: 600;
+		text-decoration: none;
+		cursor: pointer;
+		list-style: none;
+	}
+
+	.card-actions summary::-webkit-details-marker {
+		display: none;
+	}
+
+	.card-action-links a:hover,
+	.model-card .card-actions > a:hover,
+	.card-actions summary:hover {
+		color: var(--catalog-cyan);
+	}
+
+	.card-action-links {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.85rem;
+		justify-content: flex-end;
+		margin-inline-start: auto;
+	}
+
+	.card-action-links .provider-platform-link {
+		color: var(--catalog-cyan);
+	}
+
+	.card-actions details {
+		min-width: 0;
+		flex: 1;
+	}
+
+	.raw-panel {
+		position: relative;
+		margin-top: 0.6rem;
+	}
+
+	.raw-panel > button {
+		position: absolute;
+		top: 0.45rem;
+		right: 0.45rem;
+		z-index: 1;
+		padding: 0.3rem 0.48rem;
+		border: 1px solid var(--of-border-default);
+		border-radius: 0.35rem;
+		color: var(--of-text-muted);
+		background: var(--of-surface-card-solid);
+		font: 600 0.58rem/1 var(--sl-font);
+		cursor: pointer;
+	}
+
+	.raw-panel pre {
+		max-height: 18rem;
+		margin: 0;
+		padding: 2.2rem 0.65rem 0.65rem;
+		overflow: auto;
+		border: 1px solid var(--of-border-subtle);
+		border-radius: 0.5rem;
+		background: var(--of-surface-code);
+	}
+
+	.raw-panel code {
+		padding: 0;
+		color: var(--of-text-secondary);
+		background: none;
+		font-size: 0.6rem;
+		line-height: 1.5;
+		white-space: pre;
+	}
+
+	.model-id-row {
+		display: flex;
+		align-items: center;
+		gap: 0.35rem;
+		margin: 0.75rem 1rem 0;
+	}
+
+	.model-id-row code {
+		min-width: 0;
+		overflow: hidden;
+		padding: 0.3rem 0.45rem;
+		border: 1px solid var(--of-border-subtle);
+		border-radius: 0.4rem;
+		color: var(--catalog-cyan);
+		background: color-mix(in srgb, var(--catalog-cyan) 7%, transparent);
+		font-size: 0.65rem;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+
+	.model-tags {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.3rem;
+		min-height: 1.65rem;
+		margin: 0.65rem 1rem;
+	}
+
+	.model-tags span {
+		padding: 0.25rem 0.42rem;
+		border: 1px solid var(--of-border-subtle);
+		border-radius: 0.35rem;
+		color: var(--of-text-muted);
+		background: color-mix(in srgb, var(--of-text-primary) 3%, transparent);
+		font-size: 0.63rem;
+	}
+
+	.model-tags .signal-tag {
+		border-color: color-mix(in srgb, var(--catalog-green) 42%, transparent);
+		color: var(--catalog-green);
+		background: color-mix(in srgb, var(--catalog-green) 8%, transparent);
+	}
+
+	.model-specs {
+		display: grid;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		margin: 0 0.75rem;
+		border: 1px solid var(--of-border-subtle);
+		border-radius: 0.68rem;
+		overflow: hidden;
+	}
+
+	.model-specs div {
+		min-width: 0;
+		padding: 0.62rem;
+	}
+
+	.model-specs div + div {
+		border-inline-start: 1px solid var(--of-border-subtle);
+	}
+
+	.model-specs span,
+	.model-specs strong {
+		display: block;
+	}
+
+	.model-specs span {
+		margin-bottom: 0.22rem;
+		color: var(--of-text-muted);
+		font-size: 0.62rem;
+	}
+
+	.model-specs strong {
+		overflow: hidden;
+		color: var(--of-text-secondary);
+		font: 600 0.72rem/1.2 var(--sl-font-mono);
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+
+	.price-panel {
+		display: grid;
+		grid-template-columns: 1fr auto;
+		align-items: end;
+		gap: 0.5rem;
+		min-height: 3.85rem;
+		margin: 0.65rem 0.75rem 0.75rem;
+		padding: 0.7rem;
+		border-radius: 0.68rem;
+		background:
+			linear-gradient(110deg, color-mix(in srgb, var(--catalog-cyan) 10%, transparent), transparent),
+			color-mix(in srgb, var(--of-bg-base) 58%, transparent);
+	}
+
+	.price-panel > span {
+		align-self: start;
+		color: var(--of-text-muted);
+		font-size: 0.64rem;
+	}
+
+	.price-panel div {
+		grid-row: 1 / span 2;
+		grid-column: 2;
+		text-align: right;
+	}
+
+	.price-panel strong,
+	.price-panel small {
+		display: block;
+	}
+
+	.price-panel strong {
+		color: var(--of-text-primary);
+		font: 600 0.79rem/1.3 var(--sl-font-mono);
+	}
+
+	.price-panel small {
+		margin-top: 0.18rem;
+		color: var(--of-text-muted);
+		font-size: 0.61rem;
+	}
+
+	.catalog-empty {
+		padding: 4rem 1rem;
+		border: 1px dashed var(--of-border-default);
+		border-radius: 0.95rem;
+		text-align: center;
+		background: var(--catalog-panel);
+	}
+
+	.catalog-empty div {
+		color: var(--catalog-cyan);
+		font-size: 2rem;
+	}
+
+	.catalog-empty h2 {
+		margin: 0.6rem 0 0.25rem;
+		color: var(--of-text-primary);
+		font-size: 1rem;
+	}
+
+	.catalog-empty p {
+		margin: 0 0 1rem;
+		color: var(--of-text-muted);
+		font-size: 0.78rem;
+	}
+
+	.catalog-empty button {
+		padding: 0.55rem 0.8rem;
+		border: 1px solid var(--catalog-cyan);
+		border-radius: 0.5rem;
+		color: var(--catalog-cyan);
+		background: transparent;
+		font-weight: 600;
+		cursor: pointer;
+	}
+
+	.catalog-price-note {
+		min-height: 1.2rem;
+		margin: 0.8rem 0 0;
+		color: var(--of-text-muted);
+		font-size: 0.65rem;
+		text-align: right;
+	}
+
+	.catalog-contribute {
+		display: grid;
+		grid-template-columns: 1.15fr 0.85fr;
+		gap: 1.5rem;
+		align-items: center;
+		margin-top: 2rem;
+		padding: clamp(1.25rem, 3vw, 2rem);
+		border: 1px solid var(--of-card-border-hover);
+		border-radius: 1rem;
+		background:
+			linear-gradient(120deg, color-mix(in srgb, var(--catalog-cyan) 12%, transparent), transparent 52%),
+			linear-gradient(300deg, color-mix(in srgb, var(--catalog-green) 7%, transparent), transparent 40%),
+			var(--catalog-panel);
+		box-shadow: var(--sl-shadow-md);
+	}
+
+	.provider-contribute-link {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		gap: 1rem;
+		margin-top: 1.5rem;
+		padding: 1rem 1.1rem;
+		border: 1px solid var(--of-card-border-hover);
+		border-radius: 0.8rem;
+		color: var(--of-text-secondary);
+		background:
+			linear-gradient(110deg, color-mix(in srgb, var(--catalog-cyan) 9%, transparent), transparent 58%),
+			var(--catalog-panel);
+		text-decoration: none;
+		box-shadow: var(--sl-shadow-sm);
+		transition: border-color 150ms ease, transform 150ms ease;
+	}
+
+	.provider-contribute-link:hover {
+		border-color: var(--catalog-cyan);
+		transform: translateY(-1px);
+	}
+
+	.provider-contribute-link > span {
+		font-size: 0.82rem;
+		font-weight: 600;
+	}
+
+	.provider-contribute-link strong {
+		white-space: nowrap;
+		color: var(--catalog-cyan);
+		font-size: 0.75rem;
+	}
+
+	.contribute-kicker {
+		margin: 0 0 0.4rem;
+		color: var(--catalog-cyan);
+		font: 600 0.63rem/1 var(--sl-font-mono);
+		letter-spacing: 0.12em;
+		text-transform: uppercase;
+	}
+
+	.catalog-contribute h2 {
+		margin: 0;
+		color: var(--of-text-primary);
+		font-size: clamp(1.2rem, 3vw, 1.65rem);
+		letter-spacing: -0.025em;
+	}
+
+	.catalog-contribute > div > p:not(.contribute-kicker) {
+		max-width: 38rem;
+		margin: 0.65rem 0 1rem;
+		color: var(--of-text-muted);
+		font-size: 0.8rem;
+		line-height: 1.6;
+	}
+
+	.contribute-primary {
+		display: inline-flex;
+		gap: 0.45rem;
+		align-items: center;
+		padding: 0.62rem 0.82rem;
+		border-radius: 0.55rem;
+		color: var(--of-text-invert);
+		background: var(--catalog-cyan);
+		font-size: 0.75rem;
+		font-weight: 700;
+		text-decoration: none;
+	}
+
+	.contribute-primary:hover {
+		background: var(--catalog-green);
+	}
+
+	.data-actions {
+		display: grid;
+		gap: 0.55rem;
+	}
+
+	.data-actions a {
+		display: grid;
+		grid-template-columns: auto 1fr;
+		grid-template-rows: auto auto;
+		column-gap: 0.75rem;
+		padding: 0.8rem;
+		border: 1px solid var(--of-border-default);
+		border-radius: 0.65rem;
+		color: var(--of-text-secondary);
+		background: color-mix(in srgb, var(--of-bg-base) 56%, transparent);
+		text-decoration: none;
+		transition: border-color 150ms ease, background 150ms ease;
+	}
+
+	.data-actions a:hover {
+		border-color: var(--catalog-cyan);
+		background: color-mix(in srgb, var(--catalog-cyan) 6%, var(--of-bg-base));
+	}
+
+	.data-actions a > span {
+		grid-row: 1 / span 2;
+		display: grid;
+		place-items: center;
+		width: 2rem;
+		height: 2rem;
+		border-radius: 0.48rem;
+		color: var(--catalog-cyan);
+		background: color-mix(in srgb, var(--catalog-cyan) 10%, transparent);
+		font: 600 0.8rem/1 var(--sl-font-mono);
+	}
+
+	.data-actions strong {
+		font-size: 0.75rem;
+	}
+
+	.data-actions small {
+		margin-top: 0.15rem;
+		color: var(--of-text-muted);
+		font: 500 0.58rem/1.2 var(--sl-font-mono);
+	}
+
+	.catalog-card[hidden],
+	.catalog-empty[hidden],
+	[data-currency-price][hidden] {
+		display: none;
+	}
+
+	@media (max-width: 62rem) {
+		.catalog-grid {
+			grid-template-columns: 1fr;
+		}
+
+		.catalog-toolbar {
+			position: static;
+		}
+	}
+
+	@media (max-width: 44rem) {
+		.catalog-switcher {
+			grid-template-columns: 1fr;
+		}
+
+		.catalog-boundary {
+			grid-template-columns: auto 1fr;
+		}
+
+		.catalog-boundary a {
+			grid-column: 2;
+		}
+
+		.catalog-toolbar {
+			padding: 0.7rem;
+		}
+
+		.catalog-controls {
+			align-items: stretch;
+		}
+
+		.catalog-chips {
+			width: 100%;
+			overflow-x: auto;
+		}
+
+		.catalog-chips button {
+			flex: 1 0 auto;
+		}
+
+		.catalog-select {
+			flex: 1;
+		}
+
+		.catalog-select select {
+			width: 100%;
+			max-width: none;
+		}
+
+		.catalog-toolbar-meta span {
+			display: none;
+		}
+
+		.catalog-contribute {
+			grid-template-columns: 1fr;
+		}
+
+		.provider-contribute-link {
+			align-items: flex-start;
+			flex-direction: column;
+		}
+
+		.card-head {
+			grid-template-columns: auto minmax(0, 1fr);
+		}
+
+		.protocol-stack,
+		.model-kind {
+			grid-column: 2;
+			justify-self: start;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.catalog-card,
+		.catalog-switcher a {
+			transition: none;
+		}
+	}
+</style>

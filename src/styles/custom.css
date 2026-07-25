@@ -1450,3 +1450,245 @@ html[data-theme='light'] .sl-link-card {
 		transition: none;
 	}
 }
+
+/* Catalog pages are retrieval surfaces: keep the branded atmosphere, but bring
+ * searchable data into the first viewport and quiet the long-list background. */
+html:has(.catalog-explorer) {
+	--of-bg-mesh-1: hsl(184 100% 58% / 0.045);
+	--of-bg-mesh-2: hsl(142 92% 56% / 0.035);
+}
+
+html[data-theme='light']:has(.catalog-explorer) {
+	--of-bg-mesh-1: hsl(190 100% 36% / 0.075);
+	--of-bg-mesh-2: hsl(148 80% 38% / 0.055);
+}
+
+html:has(.catalog-explorer) body::before {
+	opacity: 0.46;
+}
+
+html:has(.catalog-explorer) body::after {
+	opacity: 0.3;
+}
+
+html:has(.catalog-explorer) .hero {
+	grid-template-columns: minmax(0, 1fr) !important;
+	gap: 0;
+	min-height: 0;
+	padding-block: clamp(2rem, 4vw, 3.25rem) clamp(1.5rem, 3vw, 2.25rem);
+}
+
+html:has(.catalog-explorer) .hero::before {
+	opacity: 0.62;
+	clip-path: polygon(0 0, 100% 0, 100% 76%, 82% 100%, 0 88%);
+}
+
+html:has(.catalog-explorer) .hero h1 {
+	font-size: clamp(2.25rem, 5vw, 4rem);
+	letter-spacing: -0.045em;
+}
+
+html:has(.catalog-explorer) .hero .tagline {
+	margin-top: 0.65rem;
+}
+
+html:has(.catalog-api-hero) .hero {
+	grid-template-columns: minmax(0, 1.08fr) minmax(21rem, 0.92fr) !important;
+	gap: clamp(2rem, 5vw, 5rem);
+}
+
+html:has(.catalog-api-hero) .hero > .hero-html {
+	order: 2;
+	width: 100%;
+	max-width: none;
+	margin: 0;
+}
+
+.catalog-api-hero {
+	position: relative;
+	width: 100%;
+	overflow: hidden;
+	padding: 1rem;
+	border: 1px solid var(--of-card-border);
+	border-radius: 0.9rem;
+	color: var(--of-text-secondary);
+	text-align: start;
+	background:
+		linear-gradient(135deg, hsl(184 100% 55% / 0.12), transparent 45%),
+		linear-gradient(315deg, hsl(142 92% 62% / 0.07), transparent 46%),
+		var(--of-surface-card-solid);
+	box-shadow:
+		inset 0 1px 0 hsl(0 0% 100% / 0.06),
+		0 22px 54px hsl(222 42% 2% / 0.34);
+}
+
+.catalog-api-hero::before {
+	position: absolute;
+	inset: 0;
+	pointer-events: none;
+	content: '';
+	background: repeating-linear-gradient(180deg, hsl(0 0% 100% / 0.025) 0 1px, transparent 1px 7px);
+	opacity: 0.55;
+}
+
+.catalog-api-hero > * {
+	position: relative;
+}
+
+.catalog-api-heading {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1rem;
+	font: 600 0.64rem/1 var(--sl-font-mono);
+	letter-spacing: 0.1em;
+	text-transform: uppercase;
+}
+
+.catalog-api-heading span {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.45rem;
+	color: var(--of-accent-strong);
+}
+
+.catalog-api-heading i {
+	width: 0.45rem;
+	height: 0.45rem;
+	border-radius: 999px;
+	background: var(--of-accent-hover);
+	box-shadow: 0 0 0 0.22rem hsl(142 92% 62% / 0.1), 0 0 1rem hsl(142 92% 62% / 0.45);
+}
+
+.catalog-api-heading strong {
+	padding: 0.28rem 0.45rem;
+	border: 1px solid hsl(142 92% 62% / 0.28);
+	border-radius: 999px;
+	color: var(--of-accent-hover);
+	background: hsl(142 92% 62% / 0.08);
+	font-size: 0.58rem;
+	letter-spacing: 0.07em;
+}
+
+.catalog-api-title {
+	display: block;
+	margin: 0.8rem 0 0;
+	color: var(--of-text-primary);
+	font-size: clamp(1.1rem, 2vw, 1.4rem);
+	letter-spacing: -0.025em;
+}
+
+.catalog-api-hero > p {
+	margin: 0.35rem 0 0.85rem;
+	color: var(--of-text-muted);
+	font-size: 0.76rem;
+	line-height: 1.5;
+}
+
+.catalog-api-endpoint {
+	display: grid;
+	grid-template-columns: auto minmax(0, 1fr) auto;
+	align-items: center;
+	gap: 0.55rem;
+	min-width: 0;
+	padding: 0.38rem;
+	border: 1px solid var(--of-border-default);
+	border-radius: 0.62rem;
+	background: color-mix(in srgb, var(--of-bg-base) 78%, transparent);
+}
+
+.catalog-api-endpoint b {
+	padding: 0.42rem 0.48rem;
+	border-radius: 0.4rem;
+	color: var(--of-text-invert);
+	background: var(--of-accent);
+	font: 700 0.62rem/1 var(--sl-font-mono);
+}
+
+.catalog-api-endpoint code {
+	min-width: 0;
+	overflow: hidden;
+	padding: 0;
+	border: 0;
+	color: var(--of-text-secondary);
+	background: transparent;
+	font: 500 0.67rem/1.2 var(--sl-font-mono);
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.catalog-api-endpoint button {
+	min-width: 3.45rem;
+	margin: 0;
+	padding: 0.42rem 0.48rem;
+	border: 1px solid var(--of-border-default);
+	border-radius: 0.4rem;
+	color: var(--of-text-secondary);
+	background: var(--of-surface-card);
+	font: 600 0.61rem/1 var(--sl-font);
+	cursor: pointer;
+	transition: border-color 150ms ease, color 150ms ease, background 150ms ease;
+}
+
+.catalog-api-endpoint button:hover,
+.catalog-api-endpoint button.copied {
+	border-color: var(--of-accent);
+	color: var(--of-accent-strong);
+	background: hsl(184 100% 55% / 0.08);
+}
+
+.catalog-api-meta {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.4rem 0.85rem;
+	margin-top: 0.7rem;
+}
+
+.catalog-api-meta span {
+	position: relative;
+	padding-inline-start: 0.65rem;
+	color: var(--of-text-muted);
+	font-size: 0.62rem;
+}
+
+.catalog-api-meta span::before {
+	position: absolute;
+	top: 50%;
+	left: 0;
+	width: 0.25rem;
+	height: 0.25rem;
+	border-radius: 999px;
+	content: '';
+	background: var(--of-accent);
+	transform: translateY(-50%);
+}
+
+.catalog-api-hero > a {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.35rem;
+	margin-top: 0.8rem;
+	color: var(--of-accent-strong);
+	font-size: 0.7rem;
+	font-weight: 600;
+	text-decoration: none;
+}
+
+.catalog-api-hero > a:hover {
+	color: var(--of-text-primary);
+}
+
+html[data-theme='light'] .catalog-api-hero {
+	box-shadow: var(--sl-shadow-md);
+}
+
+@media (max-width: 49.99rem) {
+	html:has(.catalog-api-hero) .hero {
+		grid-template-columns: minmax(0, 1fr) !important;
+		gap: 1.5rem;
+	}
+
+	html:has(.catalog-api-hero) .hero > .hero-html {
+		order: initial;
+	}
+}

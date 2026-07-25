@@ -73,7 +73,7 @@ src/content/docs/
 
 - API、部署、迁移、架构、计费、审计、时间语义：维护在 `octafuse-gateway`。
 - 官网正文：维护品牌、首页、导航、SEO、多语言，以及面向使用者的轻量任务指南。
-- 官网 [GitHub 技术参考](src/content/docs/zh/docs/github-reference.mdx) 由 `sync/contract.json` 生成，避免手工维护旧路径。
+- 官网 [GitHub 技术参考](src/content/docs/zh/docs/github-reference.mdx) 与 Provider / Model Catalog 数据由 `sync/contract.json` 生成，避免手工维护旧路径或复制一份会漂移的预设。
 
 两个仓库并排放置时，可本地刷新技术参考页：
 
@@ -88,6 +88,13 @@ npm run sync:gateway:check -- --gateway-dir ../octafuse-gateway
 ```
 
 新增技术文档时，先改 `octafuse-gateway/docs`；官网只在需要展示入口时更新 `sync/contract.json`。
+
+Catalog 的权威数据仍在 Gateway 仓库：
+
+- Provider：`packages/admin/lib/provider-import-presets.json`
+- Model：`packages/admin/lib/model-presets/*.json`
+
+官网生成的 `src/data/catalog/*.json` 只用于展示与公开下载。新增 Provider 或修正 Model 数据时，请在 Gateway 仓库修改并提交 PR，再运行同步。
 
 ## 相关仓库
 

@@ -1,0 +1,5 @@
+{
+	"version": 1,
+	"include": ["/api/catalog/providers", "/api/catalog/providers/"],
+	"exclude": []
+}

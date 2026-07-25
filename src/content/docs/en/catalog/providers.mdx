@@ -1,0 +1,36 @@
+---
+title: Provider Catalog
+description: Browse the static Provider presets currently bundled with OctaFuse Gateway for direct import, or consume the free public Catalog API.
+template: splash
+sidebar:
+  hidden: true
+hero:
+  title: Provider Catalog
+  tagline: Ready-to-import Provider presets, with protocols and endpoints in one place.
+  image:
+    alt: Free Provider Catalog API
+    html: |
+      <aside class="catalog-api-hero" aria-label="Provider Catalog public API">
+        <div class="catalog-api-heading">
+          <span><i aria-hidden="true"></i> Public API</span>
+          <strong>Free</strong>
+        </div>
+        <strong class="catalog-api-title">Provider Catalog API</strong>
+        <p>This is the source-of-truth Provider data. Cache the response and refresh only when needed.</p>
+        <div class="catalog-api-endpoint">
+          <b>GET</b>
+          <code title="https://octafuse.dev/api/catalog/providers">https://octafuse.dev/api/catalog/providers</code>
+          <button type="button" data-catalog-api-copy data-copy-value="https://octafuse.dev/api/catalog/providers" data-copy-label="Copy" data-copied-label="Copied" aria-label="Copy API endpoint"><span data-copy-state>Copy</span></button>
+        </div>
+        <div class="catalog-api-meta">
+          <span>Cache recommended</span>
+          <span>No API key</span>
+          <span>10 requests / minute</span>
+        </div>
+        <a href="https://octafuse.dev/api/catalog/providers" target="_blank" rel="noreferrer">Open endpoint <span aria-hidden="true">↗</span></a>
+      </aside>
+---
+
+import CatalogExplorer from '../../../../components/catalog/CatalogExplorer.astro';
+
+<CatalogExplorer kind="providers" locale="en" />

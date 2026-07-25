@@ -1,0 +1,36 @@
+---
+title: Provider Catalog
+description: 浏览 OctaFuse Gateway 当前内置、可直接导入的 Provider 静态预设，或通过免费公共接口获取完整 Catalog 数据。
+template: splash
+sidebar:
+  hidden: true
+hero:
+  title: Provider Catalog
+  tagline: 直接导入的 Provider 预设，一处查清协议与 Endpoint。
+  image:
+    alt: 免费 Provider Catalog 公共接口
+    html: |
+      <aside class="catalog-api-hero" aria-label="Provider Catalog 公共接口">
+        <div class="catalog-api-heading">
+          <span><i aria-hidden="true"></i> 公共接口</span>
+          <strong>公益免费</strong>
+        </div>
+        <strong class="catalog-api-title">Provider Catalog API</strong>
+        <p>这是 Provider Catalog 的源头数据，请缓存响应，仅在需要时刷新。</p>
+        <div class="catalog-api-endpoint">
+          <b>GET</b>
+          <code title="https://octafuse.dev/api/catalog/providers">https://octafuse.dev/api/catalog/providers</code>
+          <button type="button" data-catalog-api-copy data-copy-value="https://octafuse.dev/api/catalog/providers" data-copy-label="复制" data-copied-label="已复制" aria-label="复制 API 地址"><span data-copy-state>复制</span></button>
+        </div>
+        <div class="catalog-api-meta">
+          <span>建议缓存使用</span>
+          <span>无需 API Key</span>
+          <span>每分钟 10 次</span>
+        </div>
+        <a href="https://octafuse.dev/api/catalog/providers" target="_blank" rel="noreferrer">打开接口 <span aria-hidden="true">↗</span></a>
+      </aside>
+---
+
+import CatalogExplorer from '../../../../components/catalog/CatalogExplorer.astro';
+
+<CatalogExplorer kind="providers" locale="zh" />

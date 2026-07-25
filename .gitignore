@@ -2,6 +2,9 @@
 dist/
 # generated types
 .astro/
+# Cloudflare local/build artifacts
+.wrangler/
+_worker.bundle
 
 # dependencies
 node_modules/

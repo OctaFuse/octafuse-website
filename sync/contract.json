@@ -17,6 +17,15 @@
 			"intro": "This page is generated from sync/contract.json and points to canonical technical docs in the octafuse-gateway repository. This website keeps user-facing summaries; APIs, deployments, migrations, architecture, and behavior semantics live with gateway code."
 		}
 	},
+	"catalog": {
+		"providerPresets": "packages/admin/lib/provider-import-presets.json",
+		"modelVendors": "packages/admin/lib/model-vendors.json",
+		"modelPresetsDir": "packages/admin/lib/model-presets",
+		"targets": {
+			"providers": "src/data/catalog/providers.json",
+			"models": "src/data/catalog/models.json"
+		}
+	},
 	"sections": [
 		{
 			"id": "start",

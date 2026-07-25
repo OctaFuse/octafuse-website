@@ -13,6 +13,23 @@ export const docsSidebar: StarlightUserConfig['sidebar'] = [
 		],
 	},
 	{
+		label: 'Catalog',
+		translations: { en: 'Catalog' },
+		collapsed: false,
+		items: [
+			{
+				label: 'Provider Catalog',
+				slug: 'catalog/providers',
+				translations: { en: 'Provider Catalog' },
+			},
+			{
+				label: 'Model Catalog',
+				slug: 'catalog/models',
+				translations: { en: 'Model Catalog' },
+			},
+		],
+	},
+	{
 		label: '配置工作流',
 		translations: { en: 'Configure' },
 		collapsed: false,
