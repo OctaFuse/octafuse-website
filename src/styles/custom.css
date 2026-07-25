@@ -4,6 +4,108 @@
  * Unlayered rules override Starlight’s `@layer starlight.*` where needed.
  */
 
+/* Header catalog menu
+ * Keep these rules outside Starlight's cascade layers so native details/summary
+ * styles cannot flatten the flyout into the header row.
+ */
+.page .header {
+	overflow: visible;
+}
+
+.page .header .catalog-menu {
+	position: relative;
+}
+
+.page .header .catalog-menu > summary {
+	display: flex;
+	align-items: center;
+	gap: 0.38rem;
+	height: 2.25rem;
+	padding: 0 0.72rem;
+	border-radius: 0.55rem;
+	color: var(--sl-color-gray-2);
+	font-size: 0.875rem;
+	font-weight: 600;
+	line-height: 1;
+	list-style: none;
+	cursor: pointer;
+	user-select: none;
+}
+
+.page .header .catalog-menu > summary::-webkit-details-marker {
+	display: none;
+}
+
+.page .header .catalog-menu > summary::marker {
+	content: '';
+}
+
+.page .header .catalog-menu > summary:hover,
+.page .header .catalog-menu[open] > summary {
+	color: var(--sl-color-white);
+	background: color-mix(in srgb, var(--sl-color-accent) 10%, transparent);
+}
+
+.page .header .catalog-menu-panel {
+	position: absolute;
+	top: calc(100% + 0.62rem);
+	left: 0;
+	z-index: 30;
+	display: grid;
+	width: min(18rem, calc(100vw - 2rem));
+	padding: 0.42rem;
+	border: 1px solid var(--sl-color-gray-5);
+	border-radius: 0.8rem;
+	background: color-mix(in srgb, var(--sl-color-bg-nav) 96%, transparent);
+	box-shadow:
+		0 18px 48px rgb(0 0 0 / 16%),
+		0 2px 8px rgb(0 0 0 / 8%);
+	backdrop-filter: blur(18px);
+}
+
+.page .header .catalog-menu-panel > a {
+	display: grid;
+	gap: 0.16rem;
+	padding: 0.68rem;
+	border-radius: 0.58rem;
+	color: var(--sl-color-gray-2);
+	text-decoration: none;
+}
+
+.page .header .catalog-menu-panel > span {
+	padding: 0.3rem 0.68rem 0.48rem;
+	color: var(--sl-color-gray-3);
+	font-family: var(--sl-font-mono);
+	font-size: 0.63rem;
+	font-weight: 700;
+	letter-spacing: 0.1em;
+	text-transform: uppercase;
+}
+
+.page .header .catalog-menu-panel > a:hover,
+.page .header .catalog-menu-panel > a[aria-current='page'] {
+	color: var(--sl-color-white);
+	background: color-mix(in srgb, var(--sl-color-accent) 9%, transparent);
+}
+
+.page .header .catalog-menu-panel strong,
+.page .header .catalog-menu-panel small {
+	display: block;
+}
+
+.page .header .catalog-menu-panel strong {
+	color: inherit;
+	font-size: 0.84rem;
+	line-height: 1.25;
+}
+
+.page .header .catalog-menu-panel small {
+	margin-top: 0.16rem;
+	color: var(--sl-color-gray-3);
+	font-size: 0.7rem;
+	line-height: 1.35;
+}
+
 /* -------------------------------------------------------------------------- */
 /* Semantic tokens (OctaFuse “of-*”) — referenced by --sl-* and components     */
 /* -------------------------------------------------------------------------- */
@@ -882,7 +984,7 @@ html[data-theme='light'] .of-console-top strong {
 
 .of-console-node {
 	display: grid;
-	grid-template-columns: 2.1rem minmax(0, 1fr);
+	grid-template-columns: 2.35rem minmax(0, 1fr);
 	align-items: center;
 	gap: 0.58rem;
 	min-width: 0;
@@ -906,15 +1008,16 @@ html[data-theme='light'] .of-console-top strong {
 .of-console-node i {
 	display: grid;
 	place-items: center;
-	width: 2.1rem;
+	width: 2.35rem;
 	height: 2.1rem;
 	border: 1px solid hsl(184 100% 55% / 0.28);
 	border-radius: 0.4rem;
 	background: hsl(184 100% 55% / 0.1);
 	color: var(--of-accent-strong);
-	font-size: 0.6rem;
+	font-size: 0.56rem;
 	font-style: normal;
 	font-weight: 600;
+	letter-spacing: 0.02em;
 }
 
 .of-console-node > span {
@@ -1095,7 +1198,7 @@ html[data-has-hero] .hero > .hero-html {
 }
 
 .hero .actions .sl-link-button.primary {
-	background: linear-gradient(96deg, var(--of-accent), var(--of-accent-hover) 72%, var(--of-signal-warn));
+	background: linear-gradient(96deg, var(--of-accent), var(--of-accent-hover));
 	color: hsl(222 18% 7%);
 	box-shadow:
 		0 0 0 1px hsl(184 100% 80% / 0.36),
@@ -1120,6 +1223,19 @@ html[data-theme='light'] .hero .actions .sl-link-button.secondary {
 html[data-theme='light'] .hero .actions .sl-link-button.secondary:hover {
 	border-color: var(--of-accent);
 	color: var(--of-accent-hover);
+}
+
+html[data-theme='light'] .hero .actions .sl-link-button.primary {
+	border-color: hsl(190 100% 24%);
+	background: linear-gradient(135deg, hsl(190 100% 27%), hsl(166 76% 31%));
+	color: white;
+	box-shadow:
+		0 0 0 1px hsl(190 100% 22% / 0.16),
+		0 10px 26px hsl(190 72% 27% / 0.2);
+}
+
+html[data-theme='light'] .hero .actions .sl-link-button.primary:hover {
+	background: linear-gradient(135deg, hsl(190 100% 23%), hsl(166 80% 27%));
 }
 
 /* Cards */

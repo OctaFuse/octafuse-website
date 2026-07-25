@@ -146,7 +146,11 @@ function allItems(data) {
 }
 
 function catalogSourcePaths(data) {
-	return [data.catalog.providerPresets, data.catalog.modelVendors, data.catalog.modelPresetsDir];
+	return [
+		data.catalog.providerPresets,
+		data.catalog.modelVendors,
+		data.catalog.modelPresetsDir,
+	];
 }
 
 function renderCatalogOutputs(data, gatewayPath, source) {
@@ -187,6 +191,8 @@ function renderCatalogOutputs(data, gatewayPath, source) {
 	const modelRows = modelFiles.flatMap((file) =>
 		readJson(join(gatewayPath, data.catalog.modelPresetsDir, file)).map((row) => ({
 			...row,
+			description: row.description ?? row.i18n?.en ?? null,
+			i18n: row.i18n ?? null,
 			vendor_label: vendorLabels.get(row.vendor) ?? row.vendor ?? 'Other',
 			kind: row.modalities?.output?.includes('image') ? 'image' : 'llm',
 			source_path: `${data.catalog.modelPresetsDir}/${file}`,
@@ -208,7 +214,7 @@ function renderCatalogOutputs(data, gatewayPath, source) {
 		{
 			target: data.catalog.targets.models,
 			content: stableJson({
-				schema_version: 1,
+				schema_version: 2,
 				catalog: 'models',
 				source,
 				source_path: data.catalog.modelPresetsDir,

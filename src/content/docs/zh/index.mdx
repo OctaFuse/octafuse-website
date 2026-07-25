@@ -8,7 +8,7 @@ hero:
   title: '<span class="of-hero-heading"><img src="/favicon.svg" class="of-hero-logo" width="104" height="104" alt="" /><span class="of-hero-heading-text"><span class="of-hero-kicker">AI Gateway & Control Plane</span><span class="of-hero-title">OctaFuse</span></span></span>'
   tagline: 统一 AI 能力，掌控每一次调用。
   image:
-    html: '<div class="of-gateway-console" aria-label="OctaFuse AI 能力网关架构"><div class="of-console-top"><span></span><strong>capability.route</strong><code>live</code></div><div class="of-console-grid"><div class="of-console-lane of-console-capabilities" aria-label="上游能力"><p class="of-console-label">Upstream capabilities</p><div class="of-console-node"><i>AI</i><span><strong>LLM / 推理模型</strong><small>chat · code · reasoning</small></span></div><div class="of-console-node"><i>MM</i><span><strong>多模态模型</strong><small>vision · audio · video</small></span></div><div class="of-console-node"><i>IMG</i><span><strong>图片模型</strong><small>generate · edit</small></span></div><div class="of-console-node"><i>↗</i><span><strong>Agent Tools</strong><small>search · fetch · deep</small></span></div></div><div class="of-console-core"><span>OctaFuse</span><strong>Capability Gateway</strong><div class="of-console-core-tags"><small>route</small><small>keys</small><small>budget</small><small>failover</small><small>billing</small><small>audit</small></div></div><div class="of-console-lane of-console-interfaces" aria-label="统一访问面"><p class="of-console-label">Unified access</p><div class="of-console-node"><i>TXT</i><span><strong>Chat API</strong><small>OpenAI · Anthropic · Gemini</small></span></div><div class="of-console-node"><i>IMG</i><span><strong>Images API</strong><small>generations · edits</small></span></div><div class="of-console-node"><i>TOOL</i><span><strong>Tools API</strong><small>可扩展的 Agent 能力</small></span></div><div class="of-console-node"><i>ADM</i><span><strong>Admin API</strong><small>用户 · Key · 预算 · 日志</small></span></div></div></div><div class="of-console-metrics"><span><strong>4</strong> 能力类型</span><span><strong>N+</strong> 上游服务</span><span><strong>1</strong> 统一网关</span><span><strong>4</strong> 访问面</span></div></div>'
+    html: '<div class="of-gateway-console" aria-label="OctaFuse AI 能力网关架构"><div class="of-console-top"><span></span><strong>capability.route</strong><code>live</code></div><div class="of-console-grid"><div class="of-console-lane of-console-capabilities" aria-label="上游能力"><p class="of-console-label">Upstream capabilities</p><div class="of-console-node"><i>LLM</i><span><strong>推理模型</strong><small>chat · code · reasoning</small></span></div><div class="of-console-node"><i>IMG</i><span><strong>图像模型</strong><small>generate · edit · vision</small></span></div><div class="of-console-node"><i>VID</i><span><strong>视频模型</strong><small>generate · edit · understand</small></span></div><div class="of-console-node"><i>EXT</i><span><strong>外部能力</strong><small>search · fetch · tools</small></span></div></div><div class="of-console-core"><span>OctaFuse</span><strong>Capability Gateway</strong><div class="of-console-core-tags"><small>route</small><small>keys</small><small>budget</small><small>failover</small><small>billing</small><small>audit</small></div></div><div class="of-console-lane of-console-interfaces" aria-label="统一访问面"><p class="of-console-label">Unified access</p><div class="of-console-node"><i>TXT</i><span><strong>Chat API</strong><small>OpenAI · Anthropic · Gemini</small></span></div><div class="of-console-node"><i>IMG</i><span><strong>Images API</strong><small>generations · edits</small></span></div><div class="of-console-node"><i>TOOL</i><span><strong>Tools API</strong><small>可扩展的 Agent 能力</small></span></div><div class="of-console-node"><i>ADM</i><span><strong>Admin API</strong><small>用户 · Key · 预算 · 日志</small></span></div></div></div><div class="of-console-metrics"><span><strong>4</strong> 能力类型</span><span><strong>N+</strong> 上游服务</span><span><strong>1</strong> 统一网关</span><span><strong>4</strong> 访问面</span></div></div>'
   actions:
     - text: 快速开始
       link: /zh/docs/quick-start/
@@ -18,17 +18,13 @@ hero:
       link: /zh/docs/
       icon: open-book
       variant: secondary
-    - text: 浏览 Catalog
-      link: /zh/catalog/providers/
-      icon: magnifier
-      variant: secondary
 ---
 
 import { Card, CardGrid } from '@astrojs/starlight/components';
 
 AI 能力正在从文本模型扩展到图片生成、Agent Tools、私有模型与更多专用服务。供应商、兼容端点、Coding Plan、自托管服务和团队内部账号，各有自己的 **Base URL**、密钥、额度、价格与日志；应用真正需要的是一个稳定入口、一套可控路由、清楚的预算和可追溯的调用记录。
 
-**OctaFuse 是可自托管的 AI 能力网关与运营控制面。**你可以统一接入官方 Provider、第三方兼容端点、图片生成、Agent Tools、私有模型服务与多把上游 Key，并在自己的系统里管理路由、粘性、限流、熔断、预算、计费、审计和管理 API。对客户端而言，仍然是一个 Gateway URL 和一把用户 Key。
+**OctaFuse 是可自托管的 AI 能力网关与运营控制面。** 你可以统一接入官方 Provider、第三方兼容端点、图片生成、Agent Tools、私有模型服务与多把上游 Key，并在自己的系统里管理路由、粘性、限流、熔断、预算、计费、审计和管理 API。对客户端而言，仍然是一个 Gateway URL 和一把用户 Key。
 
 ## 应用场景
 

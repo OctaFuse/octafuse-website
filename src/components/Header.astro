@@ -1,0 +1,287 @@
+---
+import config from 'virtual:starlight/user-config';
+
+import LanguageSelect from 'virtual:starlight/components/LanguageSelect';
+import Search from 'virtual:starlight/components/Search';
+import SiteTitle from 'virtual:starlight/components/SiteTitle';
+import SocialIcons from 'virtual:starlight/components/SocialIcons';
+import ThemeSelect from 'virtual:starlight/components/ThemeSelect';
+
+const shouldRenderSearch =
+	config.pagefind || config.components.Search !== '@astrojs/starlight/components/Search.astro';
+const isEnglish = Astro.url.pathname.startsWith('/en/');
+const localePrefix = isEnglish ? '/en' : '/zh';
+const catalogLinks = [
+	{
+		label: isEnglish ? 'Provider Catalog' : '供应商目录',
+		href: `${localePrefix}/catalog/providers/`,
+		match: `${localePrefix}/catalog/providers`,
+	},
+	{
+		label: isEnglish ? 'Model Catalog' : '模型目录',
+		href: `${localePrefix}/catalog/models/`,
+		match: `${localePrefix}/catalog/models`,
+	},
+];
+const isCatalogPage = Astro.url.pathname.startsWith(`${localePrefix}/catalog/`);
+---
+
+<div class="header">
+	<div class="brand-group">
+		<div class="title-wrapper sl-flex">
+			<SiteTitle />
+		</div>
+		<nav class="primary-nav print:hidden" aria-label={isEnglish ? 'Primary navigation' : '主要导航'}>
+			<a
+				href={`${localePrefix}/docs/`}
+				aria-current={Astro.url.pathname.startsWith(`${localePrefix}/docs`) ? 'page' : undefined}
+			>
+				{isEnglish ? 'Docs' : '文档'}
+			</a>
+			<details class="catalog-menu" data-current={isCatalogPage ? 'true' : undefined}>
+				<summary>
+					{isEnglish ? 'Catalog' : '目录'}
+				</summary>
+				<div class="catalog-menu-panel">
+					<span>{isEnglish ? 'Import catalog' : '导入目录'}</span>
+					{
+						catalogLinks.map((item) => (
+							<a
+								href={item.href}
+								aria-current={Astro.url.pathname.startsWith(item.match) ? 'page' : undefined}
+							>
+								<strong>{item.label}</strong>
+								<small>
+									{item.match.endsWith('providers')
+										? isEnglish
+											? 'Platforms and endpoints'
+											: '平台与 Endpoint'
+										: isEnglish
+											? 'Models and pricing'
+											: '模型与目录价格'}
+								</small>
+							</a>
+						))
+					}
+				</div>
+			</details>
+		</nav>
+	</div>
+	<div class="search-wrapper sl-flex print:hidden">
+		{shouldRenderSearch && <Search />}
+	</div>
+	<div class="sl-hidden md:sl-flex print:hidden right-group">
+		<div class="sl-flex social-icons">
+			<SocialIcons />
+		</div>
+		<ThemeSelect />
+		<LanguageSelect />
+	</div>
+</div>
+
+<script>
+	const catalogMenu = document.querySelector<HTMLDetailsElement>('.catalog-menu');
+
+	if (catalogMenu) {
+		const catalogSummary = catalogMenu.querySelector<HTMLElement>('summary');
+		const closeCatalogMenu = () => catalogMenu.removeAttribute('open');
+
+		document.addEventListener('pointerdown', (event) => {
+			if (event.target instanceof Node && !catalogMenu.contains(event.target)) {
+				closeCatalogMenu();
+			}
+		});
+
+		document.addEventListener('focusin', (event) => {
+			if (event.target instanceof Node && !catalogMenu.contains(event.target)) {
+				closeCatalogMenu();
+			}
+		});
+
+		document.addEventListener('keydown', (event) => {
+			if (event.key === 'Escape' && catalogMenu.open) {
+				closeCatalogMenu();
+				catalogSummary?.focus();
+			}
+		});
+
+		catalogMenu.querySelectorAll('a').forEach((link) => {
+			link.addEventListener('click', closeCatalogMenu);
+		});
+	}
+</script>
+
+<style>
+	@layer starlight.core {
+		.header {
+			display: grid;
+			grid-template-columns: minmax(0, auto) minmax(12rem, 24rem) auto;
+			gap: clamp(0.75rem, 1.8vw, 1.5rem);
+			align-items: center;
+			height: 100%;
+		}
+
+		.brand-group {
+			display: flex;
+			align-items: center;
+			gap: clamp(1rem, 2vw, 1.8rem);
+			min-width: 0;
+		}
+
+		.title-wrapper {
+			flex: 0 0 auto;
+			overflow: clip;
+			padding: 0.25rem;
+			margin: -0.25rem;
+			min-width: 0;
+		}
+
+		.primary-nav {
+			display: none;
+			align-items: center;
+			gap: 0.2rem;
+		}
+
+		.primary-nav > a,
+		.catalog-menu > summary {
+			position: relative;
+			padding: 0.45rem 0.65rem;
+			border-radius: 0.4rem;
+			color: var(--of-text-muted);
+			font-size: var(--sl-text-sm);
+			font-weight: 600;
+			line-height: 1;
+			text-decoration: none;
+			cursor: pointer;
+			transition:
+				color 0.15s ease,
+				background 0.15s ease;
+		}
+
+		.primary-nav > a:hover,
+		.catalog-menu > summary:hover,
+		.catalog-menu[open] > summary {
+			color: var(--of-text-primary);
+			background: hsl(184 100% 55% / 0.08);
+		}
+
+		.primary-nav > a[aria-current='page'],
+		.catalog-menu[data-current='true'] > summary {
+			color: var(--of-accent-strong);
+			background: hsl(184 100% 55% / 0.11);
+		}
+
+		.primary-nav > a[aria-current='page']::after,
+		.catalog-menu[data-current='true'] > summary::after {
+			position: absolute;
+			right: 0.65rem;
+			bottom: 0.18rem;
+			left: 0.65rem;
+			height: 1px;
+			content: '';
+			background: var(--of-accent);
+		}
+
+		.catalog-menu {
+			position: relative;
+		}
+
+		.catalog-menu > summary {
+			display: flex;
+			align-items: center;
+			gap: 0.4rem;
+			list-style: none;
+		}
+
+		.catalog-menu > summary::-webkit-details-marker {
+			display: none;
+		}
+
+		.catalog-menu-panel {
+			position: absolute;
+			top: calc(100% + 0.75rem);
+			left: 0;
+			z-index: 20;
+			display: grid;
+			width: 17.5rem;
+			padding: 0.55rem;
+			border: 1px solid var(--of-card-border);
+			border-radius: 0.55rem;
+			background:
+				linear-gradient(135deg, hsl(184 100% 55% / 0.08), transparent 45%),
+				var(--of-surface-card-solid);
+			box-shadow: var(--sl-shadow-lg);
+		}
+
+		.catalog-menu-panel > span {
+			padding: 0.35rem 0.55rem 0.5rem;
+			color: var(--of-text-muted);
+			font-family: var(--sl-font-mono);
+			font-size: 0.62rem;
+			font-weight: 600;
+			letter-spacing: 0.1em;
+			text-transform: uppercase;
+		}
+
+		.catalog-menu-panel a {
+			display: grid;
+			gap: 0.18rem;
+			padding: 0.65rem;
+			border: 1px solid transparent;
+			border-radius: 0.42rem;
+			text-decoration: none;
+			transition:
+				border-color 0.15s ease,
+				background 0.15s ease;
+		}
+
+		.catalog-menu-panel a:hover,
+		.catalog-menu-panel a[aria-current='page'] {
+			border-color: var(--of-card-border);
+			background: hsl(184 100% 55% / 0.07);
+		}
+
+		.catalog-menu-panel strong {
+			color: var(--of-text-primary);
+			font-size: var(--sl-text-sm);
+		}
+
+		.catalog-menu-panel small {
+			color: var(--of-text-muted);
+			font-size: var(--sl-text-xs);
+		}
+
+		.search-wrapper {
+			min-width: 0;
+		}
+
+		.right-group,
+		.social-icons {
+			gap: 1rem;
+			align-items: center;
+		}
+
+		.social-icons::after {
+			content: '';
+			height: 2rem;
+			border-inline-end: 1px solid var(--sl-color-gray-5);
+		}
+
+		@media (min-width: 72rem) {
+			.primary-nav {
+				display: flex;
+			}
+		}
+
+		@media (max-width: 49.99rem) {
+			.header {
+				display: flex;
+				justify-content: space-between;
+			}
+
+			.search-wrapper {
+				margin-inline-start: auto;
+			}
+		}
+	}
+</style>

@@ -72,6 +72,8 @@ var _hmt = _hmt || [];
 				},
 			],
 			components: {
+				Header: './src/components/Header.astro',
+				Footer: './src/components/Footer.astro',
 				ThemeProvider: './src/components/ThemeProvider.astro',
 				ThemeSelect: './src/components/ThemeSelect.astro',
 			},

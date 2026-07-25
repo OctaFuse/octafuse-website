@@ -24,6 +24,23 @@ type CatalogKind = 'providers' | 'models';
 type Locale = 'zh' | 'en';
 type ProviderItem = (typeof providerCatalog.items)[number];
 type ModelItem = (typeof modelCatalog.items)[number];
+type CatalogPriceTier = {
+	upto?: number | null;
+	input_price?: number | null;
+	output_price?: number | null;
+	cache_read_price?: number | null;
+	cache_write_price?: number | null;
+	image_input_price?: number | null;
+	image_input_cache_price?: number | null;
+	image_output_price?: number | null;
+};
+type CatalogPriceProfile = {
+	image_billing_mode?: 'per_image' | 'token';
+	image?: {
+		default?: number | null;
+	};
+	tiers?: CatalogPriceTier[];
+};
 
 interface Props {
 	kind: CatalogKind;
@@ -34,14 +51,10 @@ const { kind, locale } = Astro.props;
 const isProviders = kind === 'providers';
 const catalog = isProviders ? providerCatalog : modelCatalog;
 const items = catalog.items;
-const sourceCommit = catalog.source.commit;
-const sourceShort = sourceCommit.slice(0, 7);
 const repo = `https://github.com/${catalog.source.repo}`;
-const downloadUrl = `/catalog/${kind}.json`;
 const editRoot = isProviders
 	? `${repo}/edit/main/${providerCatalog.source_path}`
 	: `${repo}/tree/main/${modelCatalog.source_path}`;
-const catalogSourceUrl = `${repo}/${isProviders ? 'blob' : 'tree'}/${sourceCommit}/${catalog.source_path}`;
 
 const copy = {
 	zh: {
@@ -59,6 +72,8 @@ const copy = {
 		searchHint: '按 / 快速搜索',
 		all: '全部',
 		allVendors: '全部厂商',
+		modelType: '模型类型',
+		vendors: '厂商',
 		llm: 'LLM',
 		image: '图片',
 		newest: '最新发布',
@@ -73,23 +88,32 @@ const copy = {
 		base: 'Base URL',
 		copyUrl: '复制 URL',
 		copied: '已复制',
-		rawData: '查看原始数据',
-		copyJson: '复制 JSON',
+		copyModelId: '复制模型 ID',
 		editSource: '提交修改',
 		getApiKey: '获取 API Key',
 		visitPlatform: '访问平台',
 		context: '上下文',
 		maxOutput: '最大输出',
-		released: '发布',
+		released: '发布日期',
 		input: '输入',
 		output: '输出',
+		modalities: '模态',
 		pricing: '目录价',
 		perImage: '每张',
 		perMillion: '/ 1M tokens',
+		standardTier: '标准',
+		billing: '计费方式',
+		perImageMode: '按张计费',
+		tokenMode: 'Token 计费',
+		textInput: '文本输入',
+		textOutput: '文本输出',
+		cacheRead: '缓存读取',
+		cacheWrite: '缓存写入',
+		imageInput: '图片输入',
 		imageOutput: '图片输出',
+		imageCache: '图片缓存',
+		dataAction: '数据',
 		priceNote: '目录价按 Gateway 静态预设展示；实际价格与可用性请以供应商为准。',
-		download: '下载完整 JSON',
-		source: '查看数据源',
 		contributeProvider: '把你的 Provider 加入 Catalog',
 		contributeProviderBody:
 			'在 Gateway 的 Provider 预设文件中补充名称、协议和 Endpoint，提交 PR 后即可进入下一次同步。',
@@ -97,7 +121,6 @@ const copy = {
 		contributeModelBody:
 			'每张模型卡片都链接到对应预设文件。修正 ID、上下文、模态或目录价后，直接提交 PR。',
 		openContribution: '前往 GitHub 贡献',
-		syncedFrom: '同步自 Gateway',
 		dataTools: '数据与贡献',
 		currency: '币种',
 	},
@@ -116,6 +139,8 @@ const copy = {
 		searchHint: 'Press / to search',
 		all: 'All',
 		allVendors: 'All vendors',
+		modelType: 'Model type',
+		vendors: 'Vendors',
 		llm: 'LLM',
 		image: 'Image',
 		newest: 'Newest release',
@@ -130,8 +155,7 @@ const copy = {
 		base: 'Base URL',
 		copyUrl: 'Copy URL',
 		copied: 'Copied',
-		rawData: 'View raw data',
-		copyJson: 'Copy JSON',
+		copyModelId: 'Copy model ID',
 		editSource: 'Submit a fix',
 		getApiKey: 'Get API key',
 		visitPlatform: 'Visit platform',
@@ -140,13 +164,23 @@ const copy = {
 		released: 'Released',
 		input: 'Input',
 		output: 'Output',
+		modalities: 'Modalities',
 		pricing: 'Catalog pricing',
 		perImage: 'per image',
 		perMillion: '/ 1M tokens',
+		standardTier: 'Standard',
+		billing: 'Billing',
+		perImageMode: 'Per image',
+		tokenMode: 'Token based',
+		textInput: 'Text input',
+		textOutput: 'Text output',
+		cacheRead: 'Cache read',
+		cacheWrite: 'Cache write',
+		imageInput: 'Image input',
 		imageOutput: 'Image output',
+		imageCache: 'Image cache',
+		dataAction: 'Data',
 		priceNote: 'Catalog prices come from Gateway presets. Confirm current pricing and availability with the vendor.',
-		download: 'Download full JSON',
-		source: 'View source',
 		contributeProvider: 'Add your Provider to the Catalog',
 		contributeProviderBody:
 			'Add its name, protocols, and endpoints to the Gateway Provider preset file, then open a PR for the next catalog sync.',
@@ -154,7 +188,6 @@ const copy = {
 		contributeModelBody:
 			'Every model card links to its preset file. Fix the ID, context, modalities, or catalog pricing and open a PR.',
 		openContribution: 'Contribute on GitHub',
-		syncedFrom: 'Synced from Gateway',
 		dataTools: 'Data and contributions',
 		currency: 'Currency',
 	},
@@ -194,10 +227,19 @@ const vendorVisuals: Record<string, { logo?: string; accent: string; monogram?: 
 	zhipu: { logo: zhipuLogo, accent: '#1f5eff' },
 };
 
-const modelVendors = Array.from(
-	new Map((modelCatalog.items as ModelItem[]).map((item) => [item.vendor, item.vendor_label])).entries(),
-)
-	.map(([key, label]) => ({ key, label }))
+const modelItems = modelCatalog.items as ModelItem[];
+const modelKindCounts = {
+	all: modelItems.length,
+	llm: modelItems.filter((item) => item.kind === 'llm').length,
+	image: modelItems.filter((item) => item.kind === 'image').length,
+};
+const modelVendors = Array.from(new Map(modelItems.map((item) => [item.vendor, item.vendor_label])).entries())
+	.map(([key, label]) => ({
+		key,
+		label,
+		count: modelItems.filter((item) => item.vendor === key).length,
+		accent: vendorVisuals[key]?.accent ?? '#17c8d2',
+	}))
 	.sort((a, b) => a.label.localeCompare(b.label));
 
 function initials(label: string) {
@@ -262,29 +304,85 @@ function money(value: number, currency: 'usd' | 'cny') {
 	}).format(value)}`;
 }
 
-function pricingSummary(item: ModelItem, currency: 'usd' | 'cny') {
-	const profile = item.pricing[currency];
+function tierLabel(tiers: CatalogPriceTier[], index: number) {
+	const current = tiers[index]?.upto;
+	const previous = index > 0 ? tiers[index - 1]?.upto : null;
+	if (current != null && previous != null) return `${compactNumber(previous)}–${compactNumber(current)}`;
+	if (current != null) return `≤ ${compactNumber(current)}`;
+	if (previous != null) return `> ${compactNumber(previous)}`;
+	return t.standardTier;
+}
+
+function pricingDetails(item: ModelItem, currency: 'usd' | 'cny') {
+	const profile = item.pricing[currency] as CatalogPriceProfile;
 	if (profile.image_billing_mode === 'per_image' && profile.image?.default != null) {
 		return {
-			primary: money(profile.image.default, currency),
-			secondary: t.perImage,
+			mode: 'per-image',
+			modeLabel: t.perImageMode,
+			unit: '',
+			tiers: [
+				{
+					label: t.standardTier,
+					metrics: [{ key: 'per-image', label: t.perImage, value: money(profile.image.default, currency) }],
+				},
+			],
 		};
 	}
-	const tier = profile.tiers?.[0];
-	if (!tier) return { primary: '—', secondary: '' };
-	if (item.kind === 'image' && tier.image_output_price != null) {
-		return {
-			primary: `${money(tier.image_output_price, currency)} ${t.imageOutput}`,
-			secondary: t.perMillion,
-		};
-	}
+
+	const tiers = profile.tiers ?? [];
+	const metricDefinitions =
+		item.kind === 'image'
+			? [
+					{ key: 'input_price', className: 'text-input', label: t.textInput },
+					{ key: 'output_price', className: 'text-output', label: t.textOutput },
+					{ key: 'image_input_price', className: 'image-input', label: t.imageInput },
+					{ key: 'image_output_price', className: 'image-output', label: t.imageOutput },
+					{ key: 'cache_read_price', className: 'cache-read', label: t.cacheRead },
+					{ key: 'cache_write_price', className: 'cache-write', label: t.cacheWrite },
+					{ key: 'image_input_cache_price', className: 'image-cache', label: t.imageCache },
+				]
+			: [
+					{ key: 'input_price', className: 'text-input', label: t.input },
+					{ key: 'output_price', className: 'text-output', label: t.output },
+					{ key: 'cache_read_price', className: 'cache-read', label: t.cacheRead },
+					{ key: 'cache_write_price', className: 'cache-write', label: t.cacheWrite },
+				];
+
 	return {
-		primary: `${money(tier.input_price ?? 0, currency)} ${t.input.toLowerCase()} · ${money(
-			tier.output_price ?? 0,
-			currency,
-		)} ${t.output.toLowerCase()}`,
-		secondary: t.perMillion,
+		mode: item.kind === 'image' ? 'image-token' : 'llm',
+		modeLabel: t.tokenMode,
+		unit: t.perMillion,
+		tiers: tiers.map((tier, index) => ({
+			label: tierLabel(tiers, index),
+			metrics: metricDefinitions.flatMap((metric) => {
+				const value = tier[metric.key as keyof CatalogPriceTier];
+				return typeof value === 'number'
+					? [{ key: metric.className, label: metric.label, value: money(value, currency) }]
+					: [];
+			}),
+		})),
 	};
+}
+
+const modalityNames = {
+	zh: {
+		text: '文本',
+		image: '图片',
+		file: '文件',
+		audio: '音频',
+		video: '视频',
+	},
+	en: {
+		text: 'Text',
+		image: 'Image',
+		file: 'File',
+		audio: 'Audio',
+		video: 'Video',
+	},
+} as const;
+
+function modalityLabel(modality: string) {
+	return modalityNames[locale][modality as keyof (typeof modalityNames)[typeof locale]] ?? modality;
 }
 
 function contributionUrl(item: ProviderItem | ModelItem) {
@@ -322,78 +420,104 @@ function contributionUrl(item: ProviderItem | ModelItem) {
 		<a href={`/${locale}/docs/guides/${isProviders ? 'providers' : 'models'}/`}>{t.customLink} <span aria-hidden="true">→</span></a>
 	</div>
 
-	<div class="catalog-toolbar">
-		<div class="catalog-search">
-			<svg aria-hidden="true" viewBox="0 0 24 24" width="20" height="20">
-				<circle cx="11" cy="11" r="7"></circle>
-				<path d="m16.5 16.5 4 4"></path>
-			</svg>
-			<input
-				type="search"
-				autocomplete="off"
-				spellcheck="false"
-				placeholder={isProviders ? t.searchProviders : t.searchModels}
-				aria-label={isProviders ? t.searchProviders : t.searchModels}
-				data-catalog-search
-			/>
-			<kbd aria-hidden="true">/</kbd>
-		</div>
+	<div class:list={['catalog-browser', { 'model-browser': !isProviders }]}>
+		{
+			!isProviders && (
+				<aside class="model-filter-sidebar" aria-label={locale === 'zh' ? '模型筛选' : 'Model filters'}>
+					<section class="filter-section">
+						<h2>{t.modelType}</h2>
+						<div class="filter-list" role="group" aria-label={t.modelType}>
+							<button type="button" class="active" data-catalog-filter="all" aria-pressed="true">
+								<span>{t.all}</span>
+								<em>{modelKindCounts.all}</em>
+							</button>
+							<button type="button" data-catalog-filter="llm" aria-pressed="false">
+								<span>{t.llm}</span>
+								<em>{modelKindCounts.llm}</em>
+							</button>
+							<button type="button" data-catalog-filter="image" aria-pressed="false">
+								<span>{t.image}</span>
+								<em>{modelKindCounts.image}</em>
+							</button>
+						</div>
+					</section>
+					<section class="filter-section">
+						<h2>{t.vendors}</h2>
+						<div class="filter-list vendor-filter-list" role="group" aria-label={t.vendors}>
+							<button type="button" class="active" data-catalog-vendor="all" aria-pressed="true">
+								<span>{t.allVendors}</span>
+								<em>{modelCatalog.count}</em>
+							</button>
+							{modelVendors.map((vendor) => (
+								<button
+									type="button"
+									data-catalog-vendor={vendor.key}
+									aria-pressed="false"
+									style={`--filter-accent: ${vendor.accent}`}
+								>
+									<span><i aria-hidden="true"></i>{vendor.label}</span>
+									<em>{vendor.count}</em>
+								</button>
+							))}
+						</div>
+					</section>
+				</aside>
+			)
+		}
 
-		<div class="catalog-controls">
-			<div class="catalog-chips" role="group" aria-label={isProviders ? 'Protocol' : 'Model type'}>
-				<button type="button" class="active" data-catalog-filter="all" aria-pressed="true"><span>{t.all}</span></button>
-				{
-					isProviders ? (
-						<>
-							<button type="button" data-catalog-filter="openai" aria-pressed="false"><span>OpenAI</span></button>
-							<button type="button" data-catalog-filter="anthropic" aria-pressed="false"><span>Anthropic</span></button>
-							<button type="button" data-catalog-filter="gemini" aria-pressed="false"><span>Gemini</span></button>
-						</>
-					) : (
-						<>
-							<button type="button" data-catalog-filter="llm" aria-pressed="false"><span>{t.llm}</span></button>
-							<button type="button" data-catalog-filter="image" aria-pressed="false"><span>{t.image}</span></button>
-						</>
-					)
-				}
+		<div class="catalog-main">
+			<div class:list={['catalog-toolbar', { 'model-toolbar': !isProviders }]}>
+				<div class="catalog-search">
+					<svg aria-hidden="true" viewBox="0 0 24 24" width="20" height="20">
+						<circle cx="11" cy="11" r="7"></circle>
+						<path d="m16.5 16.5 4 4"></path>
+					</svg>
+					<input
+						type="search"
+						autocomplete="off"
+						spellcheck="false"
+						placeholder={isProviders ? t.searchProviders : t.searchModels}
+						aria-label={isProviders ? t.searchProviders : t.searchModels}
+						data-catalog-search
+					/>
+					<kbd aria-hidden="true">/</kbd>
+				</div>
+
+				<div class="catalog-controls">
+					{
+						isProviders ? (
+							<div class="catalog-chips" role="group" aria-label="Protocol">
+								<button type="button" class="active" data-catalog-filter="all" aria-pressed="true"><span>{t.all}</span></button>
+								<button type="button" data-catalog-filter="openai" aria-pressed="false"><span>OpenAI</span></button>
+								<button type="button" data-catalog-filter="anthropic" aria-pressed="false"><span>Anthropic</span></button>
+								<button type="button" data-catalog-filter="gemini" aria-pressed="false"><span>Gemini</span></button>
+							</div>
+						) : (
+							<>
+								<label class="catalog-select">
+									<span class="sr-only">{locale === 'zh' ? '排序' : 'Sort'}</span>
+									<select data-catalog-sort>
+										<option value="released">{t.newest}</option>
+										<option value="name">{t.name}</option>
+										<option value="vendor">{t.vendor}</option>
+									</select>
+								</label>
+								<div class="currency-switch" role="group" aria-label={t.currency}>
+									<button type="button" class="active" data-currency-button="usd" aria-pressed="true"><span>USD</span></button>
+									<button type="button" data-currency-button="cny" aria-pressed="false"><span>CNY</span></button>
+								</div>
+							</>
+						)
+					}
+				</div>
+
+				<div class="catalog-toolbar-meta">
+					<p aria-live="polite"><strong data-catalog-count>{catalog.count}</strong> {t.results}</p>
+					<span>{t.searchHint}</span>
+				</div>
 			</div>
 
-			{
-				!isProviders && (
-					<>
-						<label class="catalog-select">
-							<span class="sr-only">{t.allVendors}</span>
-							<select data-catalog-vendor>
-								<option value="all">{t.allVendors}</option>
-								{modelVendors.map((vendor) => (
-									<option value={vendor.key}>{vendor.label}</option>
-								))}
-							</select>
-						</label>
-						<label class="catalog-select">
-							<span class="sr-only">{locale === 'zh' ? '排序' : 'Sort'}</span>
-							<select data-catalog-sort>
-								<option value="released">{t.newest}</option>
-								<option value="name">{t.name}</option>
-								<option value="vendor">{t.vendor}</option>
-							</select>
-						</label>
-						<div class="currency-switch" role="group" aria-label={t.currency}>
-							<button type="button" class="active" data-currency-button="usd" aria-pressed="true"><span>USD</span></button>
-							<button type="button" data-currency-button="cny" aria-pressed="false"><span>CNY</span></button>
-						</div>
-					</>
-				)
-			}
-		</div>
-
-		<div class="catalog-toolbar-meta">
-			<p aria-live="polite"><strong data-catalog-count>{catalog.count}</strong> {t.results}</p>
-			<span>{t.searchHint}</span>
-		</div>
-	</div>
-
-	<div class:list={['catalog-grid', { 'provider-grid': isProviders, 'model-grid': !isProviders }]} data-catalog-grid>
+			<div class:list={['catalog-grid', { 'provider-grid': isProviders, 'model-grid': !isProviders }]} data-catalog-grid>
 		{
 			isProviders
 				? (items as ProviderItem[]).map((item) => {
@@ -490,13 +614,22 @@ function contributionUrl(item: ProviderItem | ModelItem) {
 					})
 				: (items as ModelItem[]).map((item) => {
 						const visual = vendorVisual(item.vendor, item.vendor_label);
-						const usdPrice = pricingSummary(item, 'usd');
-						const cnyPrice = pricingSummary(item, 'cny');
+						const usdPricing = pricingDetails(item, 'usd');
+						const priceProfiles = [
+							{ currency: 'usd', details: usdPricing },
+							{ currency: 'cny', details: pricingDetails(item, 'cny') },
+						] as const;
+						const displayDescription = item.i18n?.[locale] || item.description;
+						const inputModalities = item.modalities?.input ?? [];
+						const outputModalities = item.modalities?.output ?? [];
 						const search = [
 							item.id,
 							item.display_name ?? '',
 							item.vendor,
 							item.vendor_label,
+							item.description ?? '',
+							item.i18n?.en ?? '',
+							item.i18n?.zh ?? '',
 							...(item.tags ?? []),
 							...(item.modalities?.input ?? []),
 							...(item.modalities?.output ?? []),
@@ -505,7 +638,7 @@ function contributionUrl(item: ProviderItem | ModelItem) {
 							.toLowerCase();
 						return (
 							<article
-								class="catalog-card model-card"
+								class:list={['catalog-card', 'model-card', item.kind]}
 								data-catalog-card
 								data-key={item.id}
 								data-search={search}
@@ -514,121 +647,215 @@ function contributionUrl(item: ProviderItem | ModelItem) {
 								data-name={(item.display_name ?? item.id).toLowerCase()}
 								data-released={item.released ?? ''}
 							>
-								<div class="card-head">
-									<div class:list={['vendor-logo', { 'has-brand-mark': visual.logo }]} style={visual.style} aria-hidden="true">
-										{visual.logo ? <span class="vendor-logo-mark"></span> : <span class="vendor-logo-fallback">{visual.monogram}</span>}
-									</div>
-									<div class="card-identity">
-										<p>{item.vendor_label}</p>
-										<h2>{item.display_name ?? item.id}</h2>
-									</div>
-									<div class:list={['model-kind', item.kind]}>{item.kind === 'image' ? t.image : t.llm}</div>
-								</div>
-								<div class="model-id-row">
-									<code>{item.id}</code>
-									<button
-										type="button"
-										data-copy-value={item.id}
-										data-label={t.copyJson}
-										data-copied={t.copied}
-										aria-label={`${locale === 'zh' ? '复制模型 ID' : 'Copy model ID'}: ${item.id}`}
-									>
-										<svg aria-hidden="true" viewBox="0 0 24 24">
-											<rect x="8" y="8" width="11" height="11" rx="2"></rect>
-											<path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"></path>
-										</svg>
-									</button>
-								</div>
-								<div class="model-tags">
-									{(item.tags ?? []).map((tag) => <span class="signal-tag">{tag}</span>)}
-									{(item.modalities?.input ?? []).map((modality) => <span>{`${t.input}: ${modality}`}</span>)}
-									{(item.modalities?.output ?? []).map((modality) => <span>{`${t.output}: ${modality}`}</span>)}
-								</div>
-								<div class="model-specs">
-									<div>
-										<span>{t.context}</span>
-										<strong>{compactNumber(item.context_window)}</strong>
-									</div>
-									<div>
-										<span>{t.maxOutput}</span>
-										<strong>{compactNumber(item.max_tokens)}</strong>
-									</div>
-									<div>
-										<span>{t.released}</span>
-										<strong>{item.released ?? '—'}</strong>
-									</div>
-								</div>
-								<div class="price-panel">
-									<span>{t.pricing}</span>
-									<div data-currency-price="usd">
-										<strong>{usdPrice.primary}</strong>
-										<small>{usdPrice.secondary}</small>
-									</div>
-									<div data-currency-price="cny" hidden>
-										<strong>{cnyPrice.primary}</strong>
-										<small>{cnyPrice.secondary}</small>
-									</div>
-								</div>
-								<div class="card-actions">
-									<details data-json-details data-key={item.id}>
-										<summary>{t.rawData}</summary>
-										<div class="raw-panel">
-											<button type="button" data-copy-item={item.id}>{t.copyJson}</button>
-											<pre><code data-json-preview></code></pre>
+								<div class="model-card-header">
+									<div class="model-card-heading">
+										<div class:list={['vendor-logo', { 'has-brand-mark': visual.logo }]} style={visual.style} aria-hidden="true">
+											{visual.logo ? <span class="vendor-logo-mark"></span> : <span class="vendor-logo-fallback">{visual.monogram}</span>}
 										</div>
-									</details>
-									<a href={contributionUrl(item)} target="_blank" rel="noreferrer">
-										{t.editSource} <span aria-hidden="true">↗</span>
-									</a>
+										<div class="card-identity">
+											<div class="model-vendor-row">
+												<p>{item.vendor_label}</p>
+												<span class:list={['model-kind', item.kind]}>{item.kind === 'image' ? t.image : t.llm}</span>
+												{(item.tags ?? []).map((tag) => <span class="signal-tag">{tag}</span>)}
+											</div>
+											<div class="model-title-row">
+												<h2>{item.display_name ?? item.id}</h2>
+												<div class="model-id-row">
+													<code>{item.id}</code>
+													<button
+														type="button"
+														data-copy-value={item.id}
+														data-label={t.copyModelId}
+														data-copied={t.copied}
+														aria-label={`${t.copyModelId}: ${item.id}`}
+													>
+														<svg aria-hidden="true" viewBox="0 0 24 24">
+															<rect x="8" y="8" width="11" height="11" rx="2"></rect>
+															<path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"></path>
+														</svg>
+													</button>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="model-header-meta">
+										<dl class="model-quick-facts">
+											{
+												item.kind === 'llm' ? (
+													<>
+														<div>
+															<dt class="model-fact-label">{t.context}</dt>
+															<dd class="model-fact-value">{compactNumber(item.context_window)}</dd>
+														</div>
+														<div>
+															<dt class="model-fact-label">{t.maxOutput}</dt>
+															<dd class="model-fact-value">{compactNumber(item.max_tokens)}</dd>
+														</div>
+													</>
+												) : (
+													<div>
+														<dt class="model-fact-label">{t.billing}</dt>
+														<dd class="model-fact-value">{usdPricing.modeLabel}</dd>
+													</div>
+												)
+											}
+											<div>
+												<dt class="model-fact-label">{t.released}</dt>
+												<dd class="model-fact-value">{item.released ?? '—'}</dd>
+											</div>
+										</dl>
+										<div class="model-edit-action">
+											<span>{t.dataAction}</span>
+											<a class="model-edit-link" href={contributionUrl(item)} target="_blank" rel="noreferrer">
+												{t.editSource} <span aria-hidden="true">↗</span>
+											</a>
+										</div>
+									</div>
+								</div>
+								<div class="model-card-content">
+									<div class="model-overview">
+										<p class="model-description" title={displayDescription}>{displayDescription}</p>
+										<section class="modality-panel" aria-label={t.modalities}>
+											<span class="modality-label">{t.modalities}</span>
+											<div class="modality-flow">
+												<div class="modality-group" aria-label={t.input}>
+													<div class="modality-icons">
+														{
+															inputModalities.map((modality) => (
+																<span class:list={['modality-icon', modality]} title={modalityLabel(modality)}>
+																	{
+																		modality === 'text' ? (
+																			<b aria-hidden="true">T</b>
+																		) : modality === 'image' ? (
+																			<svg aria-hidden="true" viewBox="0 0 24 24">
+																				<rect x="3.5" y="4" width="17" height="16" rx="2"></rect>
+																				<circle cx="9" cy="9" r="1.5"></circle>
+																				<path d="m5.5 17 4.2-4 3.1 2.7 2.3-2.2 3.4 3.5"></path>
+																			</svg>
+																		) : modality === 'file' ? (
+																			<svg aria-hidden="true" viewBox="0 0 24 24">
+																				<path d="M6 3.5h7l5 5V21H6z"></path>
+																				<path d="M13 3.5v5h5"></path>
+																			</svg>
+																		) : modality === 'audio' ? (
+																			<svg aria-hidden="true" viewBox="0 0 24 24">
+																				<path d="M5 10v4M9 7v10M13 4v16M17 8v8M21 10v4"></path>
+																			</svg>
+																		) : modality === 'video' ? (
+																			<svg aria-hidden="true" viewBox="0 0 24 24">
+																				<rect x="3.5" y="5" width="17" height="14" rx="2"></rect>
+																				<path d="m10 9 5 3-5 3z"></path>
+																			</svg>
+																		) : (
+																			<b aria-hidden="true">{modality.slice(0, 2).toUpperCase()}</b>
+																		)
+																	}
+																	<span class="sr-only">{modalityLabel(modality)}</span>
+																</span>
+															))
+														}
+													</div>
+												</div>
+												<svg class="modality-arrow" aria-hidden="true" viewBox="0 0 24 24">
+													<path d="M5 12h14M14 7l5 5-5 5"></path>
+												</svg>
+												<div class="modality-group" aria-label={t.output}>
+													<div class="modality-icons">
+														{
+															outputModalities.map((modality) => (
+																<span class:list={['modality-icon', modality]} title={modalityLabel(modality)}>
+																	{
+																		modality === 'text' ? (
+																			<b aria-hidden="true">T</b>
+																		) : modality === 'image' ? (
+																			<svg aria-hidden="true" viewBox="0 0 24 24">
+																				<rect x="3.5" y="4" width="17" height="16" rx="2"></rect>
+																				<circle cx="9" cy="9" r="1.5"></circle>
+																				<path d="m5.5 17 4.2-4 3.1 2.7 2.3-2.2 3.4 3.5"></path>
+																			</svg>
+																		) : modality === 'file' ? (
+																			<svg aria-hidden="true" viewBox="0 0 24 24">
+																				<path d="M6 3.5h7l5 5V21H6z"></path>
+																				<path d="M13 3.5v5h5"></path>
+																			</svg>
+																		) : modality === 'audio' ? (
+																			<svg aria-hidden="true" viewBox="0 0 24 24">
+																				<path d="M5 10v4M9 7v10M13 4v16M17 8v8M21 10v4"></path>
+																			</svg>
+																		) : modality === 'video' ? (
+																			<svg aria-hidden="true" viewBox="0 0 24 24">
+																				<rect x="3.5" y="5" width="17" height="14" rx="2"></rect>
+																				<path d="m10 9 5 3-5 3z"></path>
+																			</svg>
+																		) : (
+																			<b aria-hidden="true">{modality.slice(0, 2).toUpperCase()}</b>
+																		)
+																	}
+																	<span class="sr-only">{modalityLabel(modality)}</span>
+																</span>
+															))
+														}
+													</div>
+												</div>
+											</div>
+										</section>
+									</div>
+									<aside class:list={['model-pricing-panel', usdPricing.mode]} aria-label={t.pricing}>
+										<header>
+											<div>
+												<span>{t.pricing}</span>
+												<strong>{usdPricing.modeLabel}</strong>
+											</div>
+											<small>{usdPricing.unit}</small>
+										</header>
+										{
+											priceProfiles.map(({ currency, details }) => (
+												<div class="price-profile" data-currency-price={currency} hidden={currency === 'cny'}>
+													{details.tiers.map((tier) => (
+														<div class="price-tier">
+															<span class="price-tier-label">{tier.label}</span>
+															<div class="price-metrics">
+																{tier.metrics.map((metric) => (
+																	<div class:list={['price-metric', metric.key]}>
+																		<small>{metric.label}</small>
+																		<strong>{metric.value}</strong>
+																	</div>
+																))}
+															</div>
+														</div>
+													))}
+												</div>
+											))
+										}
+									</aside>
 								</div>
 							</article>
 						);
 					})
 		}
+			</div>
+
+			<div class="catalog-empty" data-catalog-empty hidden>
+				<div aria-hidden="true">⌕</div>
+				<h2>{t.noResults}</h2>
+				<p>{t.noResultsBody}</p>
+				<button type="button" data-catalog-clear>{t.clear}</button>
+			</div>
+
+			{!isProviders && <p class="catalog-price-note">{t.priceNote}</p>}
+		</div>
 	</div>
 
-	<div class="catalog-empty" data-catalog-empty hidden>
-		<div aria-hidden="true">⌕</div>
-		<h2>{t.noResults}</h2>
-		<p>{t.noResultsBody}</p>
-		<button type="button" data-catalog-clear>{t.clear}</button>
-	</div>
-
-	{!isProviders && <p class="catalog-price-note">{t.priceNote}</p>}
-
-	{
-		isProviders ? (
-			<a class="provider-contribute-link" href={editRoot} target="_blank" rel="noreferrer">
-				<span>{t.contributeProvider}</span>
-				<strong>{t.openContribution} <span aria-hidden="true">↗</span></strong>
-			</a>
-		) : (
-			<section class="catalog-contribute">
-				<div>
-					<p class="contribute-kicker">{t.dataTools}</p>
-					<h2>{t.contributeModel}</h2>
-					<p>{t.contributeModelBody}</p>
-					<a class="contribute-primary" href={editRoot} target="_blank" rel="noreferrer">
-						{t.openContribution} <span aria-hidden="true">↗</span>
-					</a>
-				</div>
-				<div class="data-actions">
-					<a href={downloadUrl} download>
-						<span aria-hidden="true">↓</span>
-						<strong>{t.download}</strong>
-						<small>{catalog.count} {kind} · JSON</small>
-					</a>
-					<a href={catalogSourceUrl} target="_blank" rel="noreferrer">
-						<span aria-hidden="true">⌘</span>
-						<strong>{t.source}</strong>
-						<small>{t.syncedFrom} · {sourceShort}</small>
-					</a>
-				</div>
-			</section>
-		)
-	}
-
-	<script is:inline type="application/json" data-catalog-data set:html={JSON.stringify(items).replaceAll('<', '\\u003c')}></script>
+	<section class="catalog-contribute">
+		<div class="contribute-copy">
+			<p class="contribute-kicker">{t.dataTools}</p>
+			<h2>{isProviders ? t.contributeProvider : t.contributeModel}</h2>
+			<p>{isProviders ? t.contributeProviderBody : t.contributeModelBody}</p>
+		</div>
+		<a class="contribute-primary" href={editRoot} target="_blank" rel="noreferrer">
+			{t.openContribution} <span aria-hidden="true">↗</span>
+		</a>
+	</section>
 </section>
 
 <script>
@@ -672,16 +899,12 @@ function contributionUrl(item: ProviderItem | ModelItem) {
 			const count = root.querySelector<HTMLElement>('[data-catalog-count]');
 			const grid = root.querySelector<HTMLElement>('[data-catalog-grid]');
 			const empty = root.querySelector<HTMLElement>('[data-catalog-empty]');
-			const vendor = root.querySelector<HTMLSelectElement>('[data-catalog-vendor]');
 			const sort = root.querySelector<HTMLSelectElement>('[data-catalog-sort]');
 			const filterButtons = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-catalog-filter]'));
+			const vendorButtons = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-catalog-vendor]'));
 			const cards = Array.from(root.querySelectorAll<HTMLElement>('[data-catalog-card]'));
-			const raw = root.querySelector<HTMLScriptElement>('[data-catalog-data]');
-			const items = raw?.textContent ? JSON.parse(raw.textContent) : [];
-			const itemsByKey = new Map(
-				items.map((item: { catalog_key?: string; id?: string }) => [String(item.catalog_key ?? item.id), item]),
-			);
 			let activeFilter = 'all';
+			let activeVendor = 'all';
 
 			const normalize = (value: string) =>
 				value
@@ -691,7 +914,6 @@ function contributionUrl(item: ProviderItem | ModelItem) {
 
 			const update = () => {
 				const query = normalize(search?.value.trim() ?? '');
-				const activeVendor = vendor?.value ?? 'all';
 				let visible = 0;
 				for (const card of cards) {
 					const matchesSearch = !query || normalize(card.dataset.search ?? '').includes(query);
@@ -738,7 +960,10 @@ function contributionUrl(item: ProviderItem | ModelItem) {
 			if (requestedFilter && filterButtons.some((button) => button.dataset.catalogFilter === requestedFilter)) {
 				activeFilter = requestedFilter;
 			}
-			if (vendor && params.has('vendor')) vendor.value = params.get('vendor') ?? 'all';
+			const requestedVendor = params.get('vendor');
+			if (requestedVendor && vendorButtons.some((button) => button.dataset.catalogVendor === requestedVendor)) {
+				activeVendor = requestedVendor;
+			}
 			filterButtons.forEach((button) => {
 				button.classList.toggle('active', button.dataset.catalogFilter === activeFilter);
 				button.setAttribute('aria-pressed', String(button.dataset.catalogFilter === activeFilter));
@@ -751,16 +976,32 @@ function contributionUrl(item: ProviderItem | ModelItem) {
 					update();
 				});
 			});
+			vendorButtons.forEach((button) => {
+				button.classList.toggle('active', button.dataset.catalogVendor === activeVendor);
+				button.setAttribute('aria-pressed', String(button.dataset.catalogVendor === activeVendor));
+				button.addEventListener('click', () => {
+					activeVendor = button.dataset.catalogVendor ?? 'all';
+					vendorButtons.forEach((candidate) => {
+						candidate.classList.toggle('active', candidate === button);
+						candidate.setAttribute('aria-pressed', String(candidate === button));
+					});
+					update();
+				});
+			});
 
 			search?.addEventListener('input', update);
-			vendor?.addEventListener('change', update);
 			sort?.addEventListener('change', applySort);
 			root.querySelector('[data-catalog-clear]')?.addEventListener('click', () => {
 				if (search) search.value = '';
-				if (vendor) vendor.value = 'all';
 				activeFilter = 'all';
+				activeVendor = 'all';
 				filterButtons.forEach((button) => {
 					const active = button.dataset.catalogFilter === 'all';
+					button.classList.toggle('active', active);
+					button.setAttribute('aria-pressed', String(active));
+				});
+				vendorButtons.forEach((button) => {
+					const active = button.dataset.catalogVendor === 'all';
 					button.classList.toggle('active', active);
 					button.setAttribute('aria-pressed', String(active));
 				});
@@ -806,21 +1047,6 @@ function contributionUrl(item: ProviderItem | ModelItem) {
 			root.querySelectorAll<HTMLButtonElement>('[data-copy-value]').forEach((button) => {
 				button.addEventListener('click', () => writeClipboard(button.dataset.copyValue ?? '', button));
 			});
-			root.querySelectorAll<HTMLButtonElement>('[data-copy-item]').forEach((button) => {
-				button.addEventListener('click', () => {
-					const item = itemsByKey.get(button.dataset.copyItem ?? '');
-					if (item) writeClipboard(JSON.stringify(item, null, 2), button);
-				});
-			});
-			root.querySelectorAll<HTMLDetailsElement>('[data-json-details]').forEach((details) => {
-				details.addEventListener('toggle', () => {
-					if (!details.open) return;
-					const preview = details.querySelector<HTMLElement>('[data-json-preview]');
-					const item = itemsByKey.get(details.dataset.key ?? '');
-					if (preview && item && !preview.textContent) preview.textContent = JSON.stringify(item, null, 2);
-				});
-			});
-
 			const keyHandler = (event: KeyboardEvent) => {
 				const target = event.target as HTMLElement | null;
 				const isEditing = target?.matches('input, textarea, select, [contenteditable="true"]');
@@ -1007,6 +1233,138 @@ function contributionUrl(item: ProviderItem | ModelItem) {
 		text-decoration: none;
 	}
 
+	.catalog-browser,
+	.catalog-main {
+		min-width: 0;
+	}
+
+	.catalog-main {
+		margin-top: 0;
+	}
+
+	.model-browser {
+		display: grid;
+		grid-template-columns: 14rem minmax(0, 1fr);
+		gap: 1rem;
+		align-items: start;
+	}
+
+	.model-filter-sidebar {
+		position: sticky;
+		top: calc(var(--sl-nav-height) + 0.5rem);
+		min-width: 0;
+		max-height: calc(100vh - var(--sl-nav-height) - 1rem);
+		padding: 0.75rem;
+		overflow: auto;
+		border: 1px solid var(--of-border-default);
+		border-radius: 0.95rem;
+		background:
+			linear-gradient(145deg, color-mix(in srgb, var(--catalog-cyan) 5%, transparent), transparent 46%),
+			color-mix(in srgb, var(--of-surface-card-solid) 96%, transparent);
+		box-shadow: var(--sl-shadow-sm);
+		scrollbar-width: thin;
+		scrollbar-color: color-mix(in srgb, var(--of-text-muted) 35%, transparent) transparent;
+	}
+
+	.filter-section + .filter-section {
+		padding-top: 0.85rem;
+		margin-top: 0.85rem;
+		border-top: 1px solid var(--of-border-subtle);
+	}
+
+	.filter-section,
+	.filter-list {
+		min-width: 0;
+	}
+
+	.filter-section h2 {
+		margin: 0 0 0.55rem;
+		color: var(--of-text-muted);
+		font: 600 0.65rem/1.2 var(--sl-font-mono);
+		letter-spacing: 0.09em;
+		text-transform: uppercase;
+	}
+
+	.filter-list {
+		display: grid;
+		gap: 0.18rem;
+	}
+
+	.filter-list button {
+		--filter-accent: var(--catalog-cyan);
+
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		gap: 0.55rem;
+		width: 100%;
+		min-height: 2.2rem;
+		padding: 0.42rem 0.48rem 0.42rem 0.58rem;
+		border: 1px solid transparent;
+		border-radius: 0.5rem;
+		color: var(--of-text-secondary);
+		background: transparent;
+		font: 500 0.73rem/1.2 var(--sl-font);
+		text-align: left;
+		cursor: pointer;
+		transition: color 140ms ease, border-color 140ms ease, background 140ms ease;
+	}
+
+	.filter-list button:hover {
+		border-color: var(--of-border-subtle);
+		color: var(--of-text-primary);
+		background: color-mix(in srgb, var(--of-text-primary) 4%, transparent);
+	}
+
+	.filter-list button.active {
+		border-color: color-mix(in srgb, var(--catalog-cyan) 35%, var(--of-border-default));
+		color: var(--of-text-primary);
+		background:
+			linear-gradient(90deg, color-mix(in srgb, var(--catalog-cyan) 13%, transparent), transparent 90%),
+			color-mix(in srgb, var(--of-bg-base) 56%, transparent);
+	}
+
+	.filter-list button > span {
+		display: flex;
+		align-items: center;
+		gap: 0.48rem;
+		min-width: 0;
+	}
+
+	.vendor-filter-list button > span {
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+
+	.vendor-filter-list i {
+		flex: 0 0 auto;
+		width: 0.42rem;
+		height: 0.42rem;
+		border-radius: 50%;
+		background: var(--filter-accent);
+		box-shadow: 0 0 0 3px color-mix(in srgb, var(--filter-accent) 12%, transparent);
+	}
+
+	.filter-list em {
+		display: grid;
+		flex: 0 0 auto;
+		place-items: center;
+		min-width: 1.65rem;
+		height: 1.35rem;
+		padding-inline: 0.35rem;
+		border-radius: 999px;
+		color: var(--of-text-muted);
+		background: color-mix(in srgb, var(--of-text-primary) 6%, transparent);
+		font: 500 0.62rem/1 var(--sl-font-mono);
+		font-style: normal;
+	}
+
+	.filter-list button.active em {
+		color: var(--catalog-cyan);
+		background: color-mix(in srgb, var(--catalog-cyan) 12%, transparent);
+	}
+
 	.catalog-toolbar {
 		position: sticky;
 		top: calc(var(--sl-nav-height) + 0.5rem);
@@ -1074,6 +1432,10 @@ function contributionUrl(item: ProviderItem | ModelItem) {
 		gap: 0.6rem;
 		align-items: center;
 		margin-top: 0.7rem;
+	}
+
+	.catalog-controls > * {
+		margin-block: 0;
 	}
 
 	.catalog-chips,
@@ -1180,6 +1542,10 @@ function contributionUrl(item: ProviderItem | ModelItem) {
 			margin-top: 0.05rem;
 			padding-inline: 0.15rem;
 		}
+
+		.model-toolbar .catalog-controls {
+			justify-content: flex-end;
+		}
 	}
 
 	.catalog-grid {
@@ -1187,6 +1553,11 @@ function contributionUrl(item: ProviderItem | ModelItem) {
 		grid-template-columns: repeat(2, minmax(0, 1fr));
 		gap: 0.85rem;
 		align-items: stretch;
+	}
+
+	.model-grid {
+		grid-template-columns: minmax(0, 1fr);
+		gap: 0.65rem;
 	}
 
 	.catalog-card {
@@ -1507,169 +1878,540 @@ function contributionUrl(item: ProviderItem | ModelItem) {
 		color: var(--catalog-cyan);
 	}
 
-	.card-actions details {
-		min-width: 0;
-		flex: 1;
-	}
-
-	.raw-panel {
-		position: relative;
-		margin-top: 0.6rem;
-	}
-
-	.raw-panel > button {
-		position: absolute;
-		top: 0.45rem;
-		right: 0.45rem;
-		z-index: 1;
-		padding: 0.3rem 0.48rem;
-		border: 1px solid var(--of-border-default);
-		border-radius: 0.35rem;
-		color: var(--of-text-muted);
-		background: var(--of-surface-card-solid);
-		font: 600 0.58rem/1 var(--sl-font);
-		cursor: pointer;
-	}
-
-	.raw-panel pre {
-		max-height: 18rem;
-		margin: 0;
-		padding: 2.2rem 0.65rem 0.65rem;
-		overflow: auto;
-		border: 1px solid var(--of-border-subtle);
-		border-radius: 0.5rem;
-		background: var(--of-surface-code);
-	}
-
-	.raw-panel code {
-		padding: 0;
-		color: var(--of-text-secondary);
-		background: none;
-		font-size: 0.6rem;
-		line-height: 1.5;
-		white-space: pre;
-	}
-
 	.model-id-row {
 		display: flex;
 		align-items: center;
 		gap: 0.35rem;
-		margin: 0.75rem 1rem 0;
+		margin-top: 0.38rem;
 	}
 
 	.model-id-row code {
 		min-width: 0;
 		overflow: hidden;
-		padding: 0.3rem 0.45rem;
+		padding: 0.06rem 0.32rem;
+		color: var(--of-text-muted);
 		border: 1px solid var(--of-border-subtle);
-		border-radius: 0.4rem;
-		color: var(--catalog-cyan);
-		background: color-mix(in srgb, var(--catalog-cyan) 7%, transparent);
-		font-size: 0.65rem;
+		border-radius: 0.3rem;
+		background: color-mix(in srgb, var(--of-bg-base) 58%, transparent);
+		font-size: 0.68rem;
 		text-overflow: ellipsis;
 		white-space: nowrap;
 	}
 
-	.model-tags {
+	.model-id-row button {
+		width: 1.35rem;
+		height: 1.35rem;
+	}
+
+	.model-id-row svg {
+		width: 0.78rem;
+		height: 0.78rem;
+	}
+
+	.model-card .card-identity {
+		margin-top: 0;
+		transform: none;
+	}
+
+	.model-card {
+		--model-accent: var(--catalog-cyan);
+
+		height: auto;
+	}
+
+	.model-card.image {
+		--model-accent: var(--of-accent-alt);
+	}
+
+	.model-card::before {
+		width: 5rem;
+		background: linear-gradient(90deg, var(--model-accent), transparent);
+	}
+
+	.model-card:hover {
+		transform: translateY(-1px);
+	}
+
+	.model-card-header {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) auto;
+		gap: 1rem;
+		align-items: center;
+		padding: 0.75rem 0.85rem;
+		border-bottom: 1px solid var(--of-border-subtle);
+	}
+
+	.model-card-heading {
+		display: grid;
+		grid-template-columns: auto minmax(0, 1fr);
+		gap: 0.65rem;
+		align-items: center;
+		min-width: 0;
+	}
+
+	.model-card-heading .vendor-logo {
+		width: 2.55rem;
+		height: 2.55rem;
+		border-radius: 0.68rem;
+	}
+
+	.model-card-heading .vendor-logo-mark {
+		width: 1.48rem;
+		height: 1.48rem;
+	}
+
+	.model-vendor-row {
+		display: flex;
+		gap: 0.38rem;
+		align-items: center;
+		min-width: 0;
+		margin-bottom: 0.16rem;
+	}
+
+	.model-vendor-row p {
+		flex: 0 1 auto;
+		margin: 0;
+	}
+
+	.model-title-row {
 		display: flex;
 		flex-wrap: wrap;
-		gap: 0.3rem;
-		min-height: 1.65rem;
-		margin: 0.65rem 1rem;
+		gap: 0.28rem;
+		align-items: center;
+		min-width: 0;
+		margin-top: 0;
 	}
 
-	.model-tags span {
-		padding: 0.25rem 0.42rem;
-		border: 1px solid var(--of-border-subtle);
-		border-radius: 0.35rem;
-		color: var(--of-text-muted);
-		background: color-mix(in srgb, var(--of-text-primary) 3%, transparent);
-		font-size: 0.63rem;
+	.model-title-row h2 {
+		flex: 0 1 auto;
+		min-width: 0;
+		font-size: 1rem;
 	}
 
-	.model-tags .signal-tag {
-		border-color: color-mix(in srgb, var(--catalog-green) 42%, transparent);
+	.model-kind,
+	.model-vendor-row .signal-tag {
+		flex: 0 0 auto;
+		padding: 0.2rem 0.36rem;
+		font-size: 0.54rem;
+		line-height: 1;
+	}
+
+	.model-vendor-row .signal-tag {
+		border: 1px solid color-mix(in srgb, var(--catalog-green) 42%, transparent);
+		border-radius: 999px;
 		color: var(--catalog-green);
 		background: color-mix(in srgb, var(--catalog-green) 8%, transparent);
+		font-family: var(--sl-font-mono);
+		text-transform: uppercase;
 	}
 
-	.model-specs {
-		display: grid;
-		grid-template-columns: repeat(3, minmax(0, 1fr));
-		margin: 0 0.75rem;
-		border: 1px solid var(--of-border-subtle);
-		border-radius: 0.68rem;
-		overflow: hidden;
-	}
-
-	.model-specs div {
+	.model-id-row {
+		flex: 0 1 auto;
 		min-width: 0;
-		padding: 0.62rem;
+		margin-top: 0;
 	}
 
-	.model-specs div + div {
-		border-inline-start: 1px solid var(--of-border-subtle);
-	}
-
-	.model-specs span,
-	.model-specs strong {
-		display: block;
-	}
-
-	.model-specs span {
-		margin-bottom: 0.22rem;
-		color: var(--of-text-muted);
-		font-size: 0.62rem;
-	}
-
-	.model-specs strong {
+	.model-description {
+		display: -webkit-box;
+		margin: 0;
 		overflow: hidden;
 		color: var(--of-text-secondary);
-		font: 600 0.72rem/1.2 var(--sl-font-mono);
+		font-size: 0.76rem;
+		line-height: 1.5;
+		-webkit-box-orient: vertical;
+		-webkit-line-clamp: 2;
+	}
+
+	.model-header-meta {
+		display: flex;
+		gap: 0;
+		align-items: stretch;
+		margin-top: 0;
+	}
+
+	.model-quick-facts {
+		display: flex;
+		align-items: stretch;
+		margin: 0;
+	}
+
+	.model-quick-facts > div {
+		display: grid;
+		grid-template-rows: 0.9rem 1rem;
+		align-content: center;
+		justify-items: stretch;
+		min-width: 4.7rem;
+		padding: 0.08rem 0.72rem;
+		margin-top: 0;
+		border-left: 1px solid var(--of-border-subtle);
+	}
+
+	.catalog-card.model-card .model-fact-label,
+	.catalog-card.model-card .model-fact-value {
+		display: block;
+		justify-self: stretch;
+		width: 100%;
+		padding: 0;
+		margin-block: 0 !important;
+		margin-inline: 0 !important;
+		text-align: start !important;
+	}
+
+	.model-fact-label {
+		margin-bottom: 0;
+		color: var(--of-text-muted);
+		font-size: 0.52rem;
+		line-height: 0.9rem;
+		letter-spacing: 0.04em;
+		white-space: nowrap;
+	}
+
+	.model-fact-value {
+		color: var(--of-text-primary);
+		font: 600 0.66rem/1rem var(--sl-font-mono);
+		white-space: nowrap;
+	}
+
+	.model-edit-action {
+		display: grid;
+		grid-template-rows: 0.9rem 1rem;
+		align-content: center;
+		justify-items: stretch;
+		min-width: 4.6rem;
+		padding: 0.08rem 0 0.08rem 0.72rem;
+		margin-top: 0;
+		border-left: 1px solid var(--of-border-subtle);
+	}
+
+	.model-edit-action > span {
+		display: block;
+		justify-self: stretch;
+		width: 100%;
+		padding: 0;
+		margin: 0 !important;
+		color: var(--of-text-muted);
+		font-size: 0.52rem;
+		line-height: 0.9rem;
+		letter-spacing: 0.04em;
+		text-align: start !important;
+	}
+
+	.model-edit-link {
+		display: block;
+		align-self: start;
+		justify-self: stretch;
+		width: 100%;
+		padding: 0;
+		margin: 0 !important;
+		color: var(--of-text-muted);
+		font-size: 0.6rem;
+		line-height: 1rem;
+		font-weight: 600;
+		text-align: start !important;
+		text-decoration: none;
+		white-space: nowrap;
+	}
+
+	.model-edit-link:hover {
+		color: var(--model-accent);
+	}
+
+	.model-card-content {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) minmax(20rem, 0.9fr);
+		gap: 0.75rem;
+		align-items: stretch;
+		padding: 0.72rem 0.85rem 0.78rem;
+		margin-top: 0;
+	}
+
+	.model-overview {
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+		min-width: 0;
+	}
+
+	.modality-panel {
+		display: flex;
+		gap: 0.7rem;
+		align-items: center;
+		min-width: 0;
+		padding-top: 0.55rem;
+		margin-top: 0.55rem;
+		border-top: 1px solid var(--of-border-subtle);
+	}
+
+	.modality-label {
+		flex: 0 0 auto;
+		color: var(--of-text-muted);
+		font: 600 0.55rem/1.2 var(--sl-font-mono);
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
+		white-space: nowrap;
+	}
+
+	.modality-flow {
+		display: flex;
+		gap: 0.48rem;
+		align-items: center;
+		min-width: 0;
+	}
+
+	.modality-flow > * {
+		margin-top: 0;
+	}
+
+	.modality-group {
+		display: block;
+		margin-top: 0;
+	}
+
+	.modality-icons {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.18rem;
+		margin-top: 0;
+	}
+
+	.modality-icon {
+		display: grid;
+		place-items: center;
+		width: 1.25rem;
+		height: 1.25rem;
+		border: 1px solid transparent;
+		border-radius: 0.36rem;
+		font: 700 0.6rem/1 var(--sl-font-mono);
+	}
+
+	.modality-icon svg {
+		width: 0.72rem;
+		height: 0.72rem;
+		fill: none;
+		stroke: currentColor;
+		stroke-linecap: round;
+		stroke-linejoin: round;
+		stroke-width: 1.8;
+	}
+
+	.modality-icon.text {
+		border-color: color-mix(in srgb, #2488ff 24%, transparent);
+		color: #2488ff;
+		background: color-mix(in srgb, #2488ff 11%, transparent);
+	}
+
+	.modality-icon.image {
+		border-color: color-mix(in srgb, #21a366 24%, transparent);
+		color: #21a366;
+		background: color-mix(in srgb, #21a366 11%, transparent);
+	}
+
+	.modality-icon.file {
+		border-color: color-mix(in srgb, #e5a000 26%, transparent);
+		color: #d99500;
+		background: color-mix(in srgb, #f3ad00 11%, transparent);
+	}
+
+	.modality-icon.audio {
+		border-color: color-mix(in srgb, #8b5cf6 25%, transparent);
+		color: #8b5cf6;
+		background: color-mix(in srgb, #8b5cf6 11%, transparent);
+	}
+
+	.modality-icon.video {
+		border-color: color-mix(in srgb, #ef5b62 25%, transparent);
+		color: #ef5b62;
+		background: color-mix(in srgb, #ef5b62 10%, transparent);
+	}
+
+	.modality-arrow {
+		width: 0.82rem;
+		height: 1.25rem;
+		margin-bottom: 0;
+		fill: none;
+		stroke: var(--of-text-muted);
+		stroke-linecap: round;
+		stroke-linejoin: round;
+		stroke-width: 1.6;
+	}
+
+	.sr-only {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		padding: 0;
+		margin: -1px;
+		overflow: hidden;
+		clip: rect(0, 0, 0, 0);
+		white-space: nowrap;
+		border: 0;
+	}
+
+	.model-pricing-panel {
+		--pricing-accent: var(--catalog-cyan);
+
+		min-width: 0;
+		overflow: hidden;
+		margin-top: 0;
+		border: 1px solid color-mix(in srgb, var(--pricing-accent) 28%, var(--of-border-default));
+		border-radius: 0.7rem;
+		background:
+			linear-gradient(135deg, color-mix(in srgb, var(--pricing-accent) 8%, transparent), transparent 72%),
+			color-mix(in srgb, var(--of-bg-base) 52%, transparent);
+	}
+
+	.model-pricing-panel.image-token,
+	.model-pricing-panel.per-image {
+		--pricing-accent: var(--of-accent-alt);
+	}
+
+	.model-pricing-panel > header {
+		display: flex;
+		justify-content: space-between;
+		gap: 0.75rem;
+		align-items: center;
+		padding: 0.48rem 0.62rem;
+		border-bottom: 1px solid var(--of-border-subtle);
+	}
+
+	.model-pricing-panel > header div {
+		display: flex;
+		gap: 0.38rem;
+		align-items: baseline;
+	}
+
+	.model-pricing-panel > header span,
+	.model-pricing-panel > header small {
+		color: var(--of-text-muted);
+		font: 500 0.52rem/1.2 var(--sl-font-mono);
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+	}
+
+	.model-pricing-panel > header strong {
+		color: var(--pricing-accent);
+		font-size: 0.58rem;
+		font-weight: 650;
+	}
+
+	.price-profile {
+		display: grid;
+		margin-top: 0;
+	}
+
+	.price-tier {
+		display: grid;
+		grid-template-columns: minmax(3.3rem, auto) minmax(0, 1fr);
+		gap: 0.55rem;
+		align-items: stretch;
+		padding: 0.48rem 0.62rem;
+	}
+
+	.price-tier + .price-tier {
+		border-top: 1px solid var(--of-border-subtle);
+	}
+
+	.price-tier-label {
+		align-self: center;
+		color: var(--pricing-accent);
+		font: 600 0.54rem/1.25 var(--sl-font-mono);
+		white-space: nowrap;
+	}
+
+	.price-metrics {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(4.2rem, 1fr));
+		gap: 0.42rem;
+		min-width: 0;
+	}
+
+	.price-metric {
+		display: grid;
+		grid-template-rows: 0.88rem 1rem;
+		align-content: center;
+		min-width: 0;
+		padding-left: 0.5rem;
+		margin-top: 0;
+		border-left: 1px solid var(--of-border-subtle);
+	}
+
+	.price-metric small,
+	.price-metric strong {
+		display: block;
+		overflow: hidden;
 		text-overflow: ellipsis;
 		white-space: nowrap;
 	}
 
-	.price-panel {
-		display: grid;
-		grid-template-columns: 1fr auto;
-		align-items: end;
-		gap: 0.5rem;
-		min-height: 3.85rem;
-		margin: 0.65rem 0.75rem 0.75rem;
-		padding: 0.7rem;
-		border-radius: 0.68rem;
-		background:
-			linear-gradient(110deg, color-mix(in srgb, var(--catalog-cyan) 10%, transparent), transparent),
-			color-mix(in srgb, var(--of-bg-base) 58%, transparent);
-	}
-
-	.price-panel > span {
-		align-self: start;
+	.price-metric small {
+		margin-bottom: 0;
 		color: var(--of-text-muted);
-		font-size: 0.64rem;
+		font-size: 0.5rem;
+		line-height: 0.88rem;
 	}
 
-	.price-panel div {
-		grid-row: 1 / span 2;
-		grid-column: 2;
-		text-align: right;
-	}
-
-	.price-panel strong,
-	.price-panel small {
-		display: block;
-	}
-
-	.price-panel strong {
+	.price-metric strong {
 		color: var(--of-text-primary);
-		font: 600 0.79rem/1.3 var(--sl-font-mono);
+		font: 650 0.64rem/1rem var(--sl-font-mono);
 	}
 
-	.price-panel small {
-		margin-top: 0.18rem;
-		color: var(--of-text-muted);
-		font-size: 0.61rem;
+	.price-metric.image-output strong,
+	.price-metric.text-output strong,
+	.price-metric.per-image strong {
+		color: color-mix(in srgb, var(--pricing-accent) 78%, var(--of-text-primary));
+	}
+
+	@media (max-width: 52rem) {
+		.model-card-content {
+			grid-template-columns: 1fr;
+		}
+	}
+
+	@media (max-width: 44rem) {
+		.model-card-header {
+			grid-template-columns: 1fr;
+			gap: 0.65rem;
+		}
+
+		.model-header-meta {
+			justify-content: space-between;
+			gap: 0.5rem;
+		}
+
+		.model-quick-facts {
+			flex-wrap: wrap;
+		}
+
+		.model-quick-facts > div:first-child {
+			border-left: 0;
+			padding-left: 0;
+		}
+
+		.model-card-content {
+			padding: 0.68rem 0.72rem 0.72rem;
+		}
+
+		.modality-panel {
+			align-items: flex-start;
+			flex-direction: column;
+			gap: 0.4rem;
+		}
+
+		.modality-flow {
+			width: 100%;
+			overflow-x: auto;
+			padding-bottom: 0.1rem;
+		}
+
+		.price-tier {
+			grid-template-columns: 1fr;
+			gap: 0.38rem;
+		}
+
+		.price-tier-label {
+			padding-bottom: 0.25rem;
+			border-bottom: 1px solid var(--of-border-subtle);
+		}
 	}
 
 	.catalog-empty {
@@ -1717,7 +2459,7 @@ function contributionUrl(item: ProviderItem | ModelItem) {
 
 	.catalog-contribute {
 		display: grid;
-		grid-template-columns: 1.15fr 0.85fr;
+		grid-template-columns: minmax(0, 1fr) auto;
 		gap: 1.5rem;
 		align-items: center;
 		margin-top: 2rem;
@@ -1729,40 +2471,6 @@ function contributionUrl(item: ProviderItem | ModelItem) {
 			linear-gradient(300deg, color-mix(in srgb, var(--catalog-green) 7%, transparent), transparent 40%),
 			var(--catalog-panel);
 		box-shadow: var(--sl-shadow-md);
-	}
-
-	.provider-contribute-link {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		gap: 1rem;
-		margin-top: 1.5rem;
-		padding: 1rem 1.1rem;
-		border: 1px solid var(--of-card-border-hover);
-		border-radius: 0.8rem;
-		color: var(--of-text-secondary);
-		background:
-			linear-gradient(110deg, color-mix(in srgb, var(--catalog-cyan) 9%, transparent), transparent 58%),
-			var(--catalog-panel);
-		text-decoration: none;
-		box-shadow: var(--sl-shadow-sm);
-		transition: border-color 150ms ease, transform 150ms ease;
-	}
-
-	.provider-contribute-link:hover {
-		border-color: var(--catalog-cyan);
-		transform: translateY(-1px);
-	}
-
-	.provider-contribute-link > span {
-		font-size: 0.82rem;
-		font-weight: 600;
-	}
-
-	.provider-contribute-link strong {
-		white-space: nowrap;
-		color: var(--catalog-cyan);
-		font-size: 0.75rem;
 	}
 
 	.contribute-kicker {
@@ -1780,9 +2488,9 @@ function contributionUrl(item: ProviderItem | ModelItem) {
 		letter-spacing: -0.025em;
 	}
 
-	.catalog-contribute > div > p:not(.contribute-kicker) {
+	.contribute-copy > p:not(.contribute-kicker) {
 		max-width: 38rem;
-		margin: 0.65rem 0 1rem;
+		margin: 0.65rem 0 0;
 		color: var(--of-text-muted);
 		font-size: 0.8rem;
 		line-height: 1.6;
@@ -1799,56 +2507,11 @@ function contributionUrl(item: ProviderItem | ModelItem) {
 		font-size: 0.75rem;
 		font-weight: 700;
 		text-decoration: none;
+		white-space: nowrap;
 	}
 
 	.contribute-primary:hover {
 		background: var(--catalog-green);
-	}
-
-	.data-actions {
-		display: grid;
-		gap: 0.55rem;
-	}
-
-	.data-actions a {
-		display: grid;
-		grid-template-columns: auto 1fr;
-		grid-template-rows: auto auto;
-		column-gap: 0.75rem;
-		padding: 0.8rem;
-		border: 1px solid var(--of-border-default);
-		border-radius: 0.65rem;
-		color: var(--of-text-secondary);
-		background: color-mix(in srgb, var(--of-bg-base) 56%, transparent);
-		text-decoration: none;
-		transition: border-color 150ms ease, background 150ms ease;
-	}
-
-	.data-actions a:hover {
-		border-color: var(--catalog-cyan);
-		background: color-mix(in srgb, var(--catalog-cyan) 6%, var(--of-bg-base));
-	}
-
-	.data-actions a > span {
-		grid-row: 1 / span 2;
-		display: grid;
-		place-items: center;
-		width: 2rem;
-		height: 2rem;
-		border-radius: 0.48rem;
-		color: var(--catalog-cyan);
-		background: color-mix(in srgb, var(--catalog-cyan) 10%, transparent);
-		font: 600 0.8rem/1 var(--sl-font-mono);
-	}
-
-	.data-actions strong {
-		font-size: 0.75rem;
-	}
-
-	.data-actions small {
-		margin-top: 0.15rem;
-		color: var(--of-text-muted);
-		font: 500 0.58rem/1.2 var(--sl-font-mono);
 	}
 
 	.catalog-card[hidden],
@@ -1860,6 +2523,31 @@ function contributionUrl(item: ProviderItem | ModelItem) {
 	@media (max-width: 62rem) {
 		.catalog-grid {
 			grid-template-columns: 1fr;
+		}
+
+		.model-browser {
+			grid-template-columns: 1fr;
+		}
+
+		.model-filter-sidebar {
+			position: static;
+			display: grid;
+			grid-template-columns: 12rem minmax(0, 1fr);
+			gap: 1rem;
+			max-height: none;
+			overflow: visible;
+		}
+
+		.model-filter-sidebar .filter-section + .filter-section {
+			padding-top: 0;
+			padding-left: 1rem;
+			margin-top: 0;
+			border-top: 0;
+			border-left: 1px solid var(--of-border-subtle);
+		}
+
+		.model-filter-sidebar .vendor-filter-list {
+			grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr));
 		}
 
 		.catalog-toolbar {
@@ -1882,6 +2570,39 @@ function contributionUrl(item: ProviderItem | ModelItem) {
 
 		.catalog-toolbar {
 			padding: 0.7rem;
+		}
+
+		.model-filter-sidebar {
+			display: block;
+			padding: 0.7rem;
+		}
+
+		.model-filter-sidebar .filter-section + .filter-section {
+			padding-top: 0.75rem;
+			padding-left: 0;
+			margin-top: 0.75rem;
+			border-top: 1px solid var(--of-border-subtle);
+			border-left: 0;
+		}
+
+		.model-filter-sidebar .filter-list,
+		.model-filter-sidebar .vendor-filter-list {
+			display: flex;
+			gap: 0.35rem;
+			width: 100%;
+			padding-bottom: 0.12rem;
+			overflow-x: auto;
+			scrollbar-width: thin;
+		}
+
+		.model-filter-sidebar .filter-list button {
+			flex: 0 0 auto;
+			width: auto;
+			min-width: 5.3rem;
+		}
+
+		.model-filter-sidebar .vendor-filter-list button {
+			min-width: 8.5rem;
 		}
 
 		.catalog-controls {
@@ -1914,17 +2635,15 @@ function contributionUrl(item: ProviderItem | ModelItem) {
 			grid-template-columns: 1fr;
 		}
 
-		.provider-contribute-link {
-			align-items: flex-start;
-			flex-direction: column;
+		.catalog-contribute .contribute-primary {
+			justify-self: start;
 		}
 
-		.card-head {
+		.provider-card .card-head {
 			grid-template-columns: auto minmax(0, 1fr);
 		}
 
-		.protocol-stack,
-		.model-kind {
+		.provider-card .protocol-stack {
 			grid-column: 2;
 			justify-self: start;
 		}

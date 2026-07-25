@@ -1,5 +1,10 @@
 {
 	"version": 1,
-	"include": ["/api/catalog/providers", "/api/catalog/providers/"],
+	"include": [
+		"/api/catalog/providers",
+		"/api/catalog/providers/",
+		"/api/catalog/models",
+		"/api/catalog/models/"
+	],
 	"exclude": []
 }

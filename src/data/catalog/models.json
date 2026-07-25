@@ -1,10 +1,10 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "catalog": "models",
   "source": {
     "repo": "OctaFuse/octafuse-gateway",
     "ref": "main",
-    "commit": "5ada20f98316ac3099f5cb9dd2278f153bce5aac"
+    "commit": "5d8ef94be548478389bdef256ad6650e0af818c8"
   },
   "source_path": "packages/admin/lib/model-presets",
   "count": 74,
@@ -12,6 +12,11 @@
     {
       "id": "qwen3.8-max-preview",
       "display_name": "Qwen3.8 Max Preview",
+      "description": "A flagship Qwen preview for complex reasoning, coding, and agentic enterprise workloads.",
+      "i18n": {
+        "en": "A flagship Qwen preview for complex reasoning, coding, and agentic enterprise workloads.",
+        "zh": "面向复杂推理、编程与企业级 Agent 工作流的 Qwen 旗舰预览模型。"
+      },
       "vendor": "aliyun",
       "context_window": 1000000,
       "max_tokens": 64000,
@@ -56,6 +61,11 @@
     {
       "id": "qwen3.7-plus",
       "display_name": "Qwen3.7 Plus",
+      "description": "A cost-efficient multimodal Qwen model for general reasoning, vision, and production applications. It combines text and image understanding with a cost-conscious design for production-scale multimodal reasoning.",
+      "i18n": {
+        "en": "A cost-efficient multimodal Qwen model for general reasoning, vision, and production applications. It combines text and image understanding with a cost-conscious design for production-scale multimodal reasoning.",
+        "zh": "兼顾成本与效果的 Qwen 多模态模型，适合通用推理、视觉理解与生产应用。兼顾文本与图像理解，并以更具成本效率的设计服务于生产级多模态推理。"
+      },
       "vendor": "aliyun",
       "context_window": 1000000,
       "max_tokens": 64000,
@@ -116,6 +126,11 @@
     {
       "id": "qwen3.7-max",
       "display_name": "Qwen3.7 Max",
+      "description": "The Qwen3.7 flagship, optimized for coding, productivity, and agent-centric workloads. Its agent-oriented design emphasizes coding, office productivity, and complex multi-step work.",
+      "i18n": {
+        "en": "The Qwen3.7 flagship, optimized for coding, productivity, and agent-centric workloads. Its agent-oriented design emphasizes coding, office productivity, and complex multi-step work.",
+        "zh": "Qwen3.7 旗舰模型，重点优化编程、生产力任务与 Agent 工作流。其 Agent 导向设计重点覆盖编程、办公生产力和复杂多步骤任务。"
+      },
       "vendor": "aliyun",
       "context_window": 1000000,
       "max_tokens": 64000,
@@ -159,6 +174,11 @@
     {
       "id": "qwen3.6-plus",
       "display_name": "Qwen3.6 Plus",
+      "description": "A scalable long-context Qwen model balancing strong reasoning with efficient inference. A hybrid of efficient linear attention and sparse expert routing improves scalability and inference efficiency.",
+      "i18n": {
+        "en": "A scalable long-context Qwen model balancing strong reasoning with efficient inference. A hybrid of efficient linear attention and sparse expert routing improves scalability and inference efficiency.",
+        "zh": "兼顾推理能力与推理效率、适合长上下文任务的 Qwen 模型。通过高效线性注意力与稀疏专家路由的混合架构，提升扩展性和推理效率。"
+      },
       "vendor": "aliyun",
       "context_window": 1000000,
       "max_tokens": 64000,
@@ -219,6 +239,11 @@
     {
       "id": "qwen3.6-max",
       "display_name": "Qwen3.6 Max",
+      "description": "A high-capability Qwen model for demanding reasoning, coding, and knowledge work.",
+      "i18n": {
+        "en": "A high-capability Qwen model for demanding reasoning, coding, and knowledge work.",
+        "zh": "面向高难度推理、编程与知识工作的高性能 Qwen 模型。"
+      },
       "vendor": "aliyun",
       "context_window": 256000,
       "max_tokens": 64000,
@@ -276,6 +301,11 @@
     {
       "id": "qwen3.6-flash",
       "display_name": "Qwen3.6 flash",
+      "description": "A fast multimodal Qwen model with a large context window for high-throughput workloads. It handles text, image, and video inputs with a long context window for latency-sensitive multimodal applications.",
+      "i18n": {
+        "en": "A fast multimodal Qwen model with a large context window for high-throughput workloads. It handles text, image, and video inputs with a long context window for latency-sensitive multimodal applications.",
+        "zh": "具备大上下文能力的高速 Qwen 多模态模型，适合高吞吐工作负载。支持文本、图像和视频输入，并以长上下文能力面向延迟敏感的多模态应用。"
+      },
       "vendor": "aliyun",
       "context_window": 1000000,
       "max_tokens": 64000,
@@ -336,6 +366,11 @@
     {
       "id": "qwen3.5-plus",
       "display_name": "Qwen3.5 Plus",
+      "description": "A balanced Qwen model for general chat, reasoning, coding, and multimodal tasks.",
+      "i18n": {
+        "en": "A balanced Qwen model for general chat, reasoning, coding, and multimodal tasks.",
+        "zh": "适合通用对话、推理、编程与多模态任务的均衡型 Qwen 模型。"
+      },
       "vendor": "aliyun",
       "context_window": 1000000,
       "max_tokens": 64000,
@@ -396,6 +431,11 @@
     {
       "id": "qwen3.5-flash",
       "display_name": "Qwen3.5 Flash",
+      "description": "A low-latency Qwen model for responsive chat, extraction, and lightweight agents.",
+      "i18n": {
+        "en": "A low-latency Qwen model for responsive chat, extraction, and lightweight agents.",
+        "zh": "面向低延迟对话、信息抽取与轻量 Agent 场景的 Qwen 模型。"
+      },
       "vendor": "aliyun",
       "context_window": 1000000,
       "max_tokens": 64000,
@@ -442,6 +482,11 @@
     {
       "id": "qwen3-vl-plus",
       "display_name": "Qwen3-VL Plus",
+      "description": "A vision-language model for document, image, screen, and visual reasoning tasks.",
+      "i18n": {
+        "en": "A vision-language model for document, image, screen, and visual reasoning tasks.",
+        "zh": "面向文档、图像、屏幕理解与视觉推理任务的视觉语言模型。"
+      },
       "vendor": "aliyun",
       "context_window": 256000,
       "max_tokens": 32000,
@@ -515,6 +560,11 @@
     {
       "id": "qwen3.5-omni-plus",
       "display_name": "Qwen3.5 Omni Plus",
+      "description": "A full-capability Qwen model for understanding text, images, audio, and video.",
+      "i18n": {
+        "en": "A full-capability Qwen model for understanding text, images, audio, and video.",
+        "zh": "可统一理解文本、图像、音频与视频的全能力 Qwen 多模态模型。"
+      },
       "vendor": "aliyun",
       "context_window": 256000,
       "max_tokens": 64000,
@@ -562,6 +612,11 @@
     {
       "id": "qwen3.5-omni-flash",
       "display_name": "Qwen3.5 Omni Flash",
+      "description": "A fast omni-modal Qwen model for real-time multimodal understanding and interaction.",
+      "i18n": {
+        "en": "A fast omni-modal Qwen model for real-time multimodal understanding and interaction.",
+        "zh": "面向实时多模态理解与交互的高速 Qwen Omni 模型。"
+      },
       "vendor": "aliyun",
       "context_window": 256000,
       "max_tokens": 64000,
@@ -609,6 +664,11 @@
     {
       "id": "claude-fable-5",
       "display_name": "Claude Fable 5",
+      "description": "An Anthropic model built for autonomous knowledge work, coding, and multimodal agents. It is positioned for autonomous knowledge work and coding with multimodal input, reasoning, and tool-oriented workflows.",
+      "i18n": {
+        "en": "An Anthropic model built for autonomous knowledge work, coding, and multimodal agents. It is positioned for autonomous knowledge work and coding with multimodal input, reasoning, and tool-oriented workflows.",
+        "zh": "面向自主知识工作、编程和多模态 Agent 的 Anthropic 模型。定位于自主知识工作与编程，支持多模态输入、推理及工具驱动工作流。"
+      },
       "vendor": "anthropic",
       "context_window": 1000000,
       "max_tokens": 128000,
@@ -654,6 +714,11 @@
     {
       "id": "claude-sonnet-5",
       "display_name": "Claude Sonnet 5",
+      "description": "A frontier Sonnet model for coding, professional work, and adaptive agentic reasoning. Adaptive reasoning levels let applications balance frontier coding and agent performance against latency and token use.",
+      "i18n": {
+        "en": "A frontier Sonnet model for coding, professional work, and adaptive agentic reasoning. Adaptive reasoning levels let applications balance frontier coding and agent performance against latency and token use.",
+        "zh": "适合编程、专业工作与自适应 Agent 推理的前沿 Sonnet 模型。自适应推理等级可在前沿编程与 Agent 能力、延迟和 Token 消耗之间灵活取舍。"
+      },
       "vendor": "anthropic",
       "context_window": 1000000,
       "max_tokens": 128000,
@@ -699,6 +764,11 @@
     {
       "id": "claude-opus-5",
       "display_name": "Claude Opus 5",
+      "description": "Anthropic's flagship for demanding reasoning, coding, visual analysis, and long-running agents. It is especially capable at end-to-end software tasks, code review and bug finding, document and chart analysis, complex office deliverables, tool use, and coordinating parallel subagents.",
+      "i18n": {
+        "en": "Anthropic's flagship for demanding reasoning, coding, visual analysis, and long-running agents. It is especially capable at end-to-end software tasks, code review and bug finding, document and chart analysis, complex office deliverables, tool use, and coordinating parallel subagents.",
+        "zh": "Anthropic 旗舰模型，面向复杂推理、编程、视觉分析与长时间 Agent 任务。尤其擅长端到端软件任务、代码审查与缺陷定位、文档和图表分析、复杂办公交付、工具调用及并行子 Agent 协作。"
+      },
       "vendor": "anthropic",
       "context_window": 1000000,
       "max_tokens": 128000,
@@ -744,6 +814,11 @@
     {
       "id": "claude-opus-4.8",
       "display_name": "Claude Opus 4.8",
+      "description": "A high-capability Opus model for long-context reasoning, coding, and multimodal analysis. It combines multimodal input, reasoning support, and a long context window for demanding general-purpose workflows.",
+      "i18n": {
+        "en": "A high-capability Opus model for long-context reasoning, coding, and multimodal analysis. It combines multimodal input, reasoning support, and a long context window for demanding general-purpose workflows.",
+        "zh": "适合长上下文推理、编程与多模态分析的高性能 Opus 模型。结合多模态输入、推理能力与长上下文窗口，适合高要求的通用工作流。"
+      },
       "vendor": "anthropic",
       "context_window": 1000000,
       "max_tokens": 128000,
@@ -789,6 +864,11 @@
     {
       "id": "claude-opus-4.7",
       "display_name": "Claude Opus 4.7",
+      "description": "An Opus model designed for long-running asynchronous agents and complex software workflows. The model is designed for asynchronous agents that sustain coding and professional work over extended runs.",
+      "i18n": {
+        "en": "An Opus model designed for long-running asynchronous agents and complex software workflows. The model is designed for asynchronous agents that sustain coding and professional work over extended runs.",
+        "zh": "面向长时间异步 Agent 与复杂软件工作流的 Opus 模型。面向需要长时间持续执行编程与专业任务的异步 Agent。"
+      },
       "vendor": "anthropic",
       "context_window": 1000000,
       "max_tokens": 128000,
@@ -834,6 +914,11 @@
     {
       "id": "claude-opus-4.6",
       "display_name": "Claude Opus 4.6",
+      "description": "A powerful Claude model for end-to-end coding and long-running professional workflows. It is optimized for agents that operate across complete software and professional workflows instead of isolated prompts.",
+      "i18n": {
+        "en": "A powerful Claude model for end-to-end coding and long-running professional workflows. It is optimized for agents that operate across complete software and professional workflows instead of isolated prompts.",
+        "zh": "面向端到端编程与长时间专业工作流的高性能 Claude 模型。针对贯穿完整软件与专业工作流的 Agent 优化，而不仅是处理孤立提示词。"
+      },
       "vendor": "anthropic",
       "context_window": 1000000,
       "max_tokens": 128000,
@@ -879,6 +964,11 @@
     {
       "id": "claude-sonnet-4.6",
       "display_name": "Claude Sonnet 4.6",
+      "description": "A balanced frontier model for iterative development, agents, and professional knowledge work. Strengths include iterative development, complex codebase navigation, and end-to-end project execution with tools.",
+      "i18n": {
+        "en": "A balanced frontier model for iterative development, agents, and professional knowledge work. Strengths include iterative development, complex codebase navigation, and end-to-end project execution with tools.",
+        "zh": "适合迭代开发、Agent 与专业知识工作的均衡型前沿模型。优势包括迭代开发、复杂代码库导航，以及借助工具完成端到端项目执行。"
+      },
       "vendor": "anthropic",
       "context_window": 1000000,
       "max_tokens": 64000,
@@ -924,6 +1014,11 @@
     {
       "id": "claude-haiku-4.5",
       "display_name": "Claude Haiku 4.5",
+      "description": "A fast, efficient Claude model for latency-sensitive chat, coding, and agent tasks. It targets near-frontier intelligence at substantially lower latency and cost for high-volume interactive workloads.",
+      "i18n": {
+        "en": "A fast, efficient Claude model for latency-sensitive chat, coding, and agent tasks. It targets near-frontier intelligence at substantially lower latency and cost for high-volume interactive workloads.",
+        "zh": "适合低延迟对话、编程和 Agent 任务的高速高效 Claude 模型。以显著更低的延迟和成本提供接近前沿水平的能力，适合高并发交互式任务。"
+      },
       "vendor": "anthropic",
       "context_window": 200000,
       "max_tokens": 64000,
@@ -969,6 +1064,11 @@
     {
       "id": "doubao-seedream-5-0-pro",
       "display_name": "Doubao Seedream 5.0 Pro",
+      "description": "A premium Seedream model for high-fidelity image generation and professional visual creation.",
+      "i18n": {
+        "en": "A premium Seedream model for high-fidelity image generation and professional visual creation.",
+        "zh": "面向高保真图片生成与专业视觉创作的 Seedream 高质量模型。"
+      },
       "vendor": "bytedance",
       "context_window": null,
       "max_tokens": null,
@@ -1040,6 +1140,11 @@
     {
       "id": "doubao-seedream-5-0",
       "display_name": "Doubao Seedream 5.0",
+      "description": "A Seedream model for general image generation, editing, and visual design workflows.",
+      "i18n": {
+        "en": "A Seedream model for general image generation, editing, and visual design workflows.",
+        "zh": "适合通用图片生成、编辑与视觉设计工作流的 Seedream 模型。"
+      },
       "vendor": "bytedance",
       "context_window": null,
       "max_tokens": null,
@@ -1076,6 +1181,11 @@
     {
       "id": "doubao-seed-2-0-mini-260215",
       "display_name": "Doubao Seed 2.0 Mini",
+      "description": "A compact Doubao model for fast, cost-sensitive chat and lightweight reasoning.",
+      "i18n": {
+        "en": "A compact Doubao model for fast, cost-sensitive chat and lightweight reasoning.",
+        "zh": "面向快速对话、成本敏感与轻量推理场景的紧凑型豆包模型。"
+      },
       "vendor": "bytedance",
       "context_window": 256000,
       "max_tokens": 128000,
@@ -1134,6 +1244,11 @@
     {
       "id": "doubao-seed-2-0-lite-260215",
       "display_name": "Doubao Seed 2.0 Lite",
+      "description": "A lightweight Doubao model optimized for high-throughput text and vision workloads.",
+      "i18n": {
+        "en": "A lightweight Doubao model optimized for high-throughput text and vision workloads.",
+        "zh": "针对高吞吐文本与视觉工作负载优化的轻量豆包模型。"
+      },
       "vendor": "bytedance",
       "context_window": 256000,
       "max_tokens": 128000,
@@ -1194,6 +1309,11 @@
     {
       "id": "doubao-seed-2-0-pro-260215",
       "display_name": "Doubao Seed 2.0 Pro",
+      "description": "A capable Doubao model for advanced reasoning, multimodal understanding, and agents.",
+      "i18n": {
+        "en": "A capable Doubao model for advanced reasoning, multimodal understanding, and agents.",
+        "zh": "适合高级推理、多模态理解与 Agent 场景的高性能豆包模型。"
+      },
       "vendor": "bytedance",
       "context_window": 256000,
       "max_tokens": 128000,
@@ -1253,6 +1373,11 @@
     {
       "id": "doubao-seed-2-1-pro-260628",
       "display_name": "Doubao Seed 2.1 Pro",
+      "description": "A newer Doubao Pro model for complex reasoning, coding, and multimodal production use.",
+      "i18n": {
+        "en": "A newer Doubao Pro model for complex reasoning, coding, and multimodal production use.",
+        "zh": "面向复杂推理、编程与多模态生产应用的新一代豆包 Pro 模型。"
+      },
       "vendor": "bytedance",
       "context_window": 256000,
       "max_tokens": 256000,
@@ -1299,6 +1424,11 @@
     {
       "id": "doubao-seed-2-1-turbo-260628",
       "display_name": "Doubao Seed 2.1 Turbo",
+      "description": "A low-latency Doubao model for responsive multimodal applications and agents.",
+      "i18n": {
+        "en": "A low-latency Doubao model for responsive multimodal applications and agents.",
+        "zh": "面向高响应多模态应用与 Agent 的低延迟豆包模型。"
+      },
       "vendor": "bytedance",
       "context_window": 256000,
       "max_tokens": 256000,
@@ -1344,6 +1474,11 @@
     {
       "id": "doubao-seed-evolving",
       "display_name": "Doubao Seed Evolving",
+      "description": "An evolving Doubao model intended for adaptive reasoning and agentic experimentation.",
+      "i18n": {
+        "en": "An evolving Doubao model intended for adaptive reasoning and agentic experimentation.",
+        "zh": "面向自适应推理与 Agent 实验场景的持续演进型豆包模型。"
+      },
       "vendor": "bytedance",
       "context_window": 256000,
       "max_tokens": 256000,
@@ -1389,6 +1524,11 @@
     {
       "id": "deepseek-v3.2",
       "display_name": "DeepSeek-V3.2",
+      "description": "An efficient DeepSeek model combining strong reasoning with agentic tool use. Its sparse-attention design targets efficient long-context reasoning while preserving strong tool-use performance.",
+      "i18n": {
+        "en": "An efficient DeepSeek model combining strong reasoning with agentic tool use. Its sparse-attention design targets efficient long-context reasoning while preserving strong tool-use performance.",
+        "zh": "兼顾推理效率、复杂推理与 Agent 工具调用能力的 DeepSeek 模型。稀疏注意力设计旨在提高长上下文推理效率，同时保持较强的工具调用表现。"
+      },
       "vendor": "deepseek",
       "context_window": 128000,
       "max_tokens": 8000,
@@ -1432,6 +1572,11 @@
     {
       "id": "deepseek-v4-flash",
       "display_name": "DeepSeek V4 Flash",
+      "description": "A fast DeepSeek mixture-of-experts model for long-context reasoning and coding. The efficiency-focused mixture-of-experts architecture activates only a small portion of its parameters for fast long-context inference.",
+      "i18n": {
+        "en": "A fast DeepSeek mixture-of-experts model for long-context reasoning and coding. The efficiency-focused mixture-of-experts architecture activates only a small portion of its parameters for fast long-context inference.",
+        "zh": "面向长上下文推理与编程任务的高速 DeepSeek 混合专家模型。效率优先的混合专家架构仅激活少量参数，以实现快速的长上下文推理。"
+      },
       "vendor": "deepseek",
       "context_window": 1000000,
       "max_tokens": 384000,
@@ -1475,6 +1620,11 @@
     {
       "id": "deepseek-v4-pro",
       "display_name": "DeepSeek V4 Pro",
+      "description": "A large DeepSeek mixture-of-experts model for advanced reasoning, coding, and agents. Its large mixture-of-experts design is aimed at advanced reasoning, coding, and sustained agent workloads.",
+      "i18n": {
+        "en": "A large DeepSeek mixture-of-experts model for advanced reasoning, coding, and agents. Its large mixture-of-experts design is aimed at advanced reasoning, coding, and sustained agent workloads.",
+        "zh": "面向高级推理、编程与 Agent 的大型 DeepSeek 混合专家模型。大规模混合专家架构面向高级推理、编程和持续运行的 Agent 任务。"
+      },
       "vendor": "deepseek",
       "context_window": 1000000,
       "max_tokens": 384000,
@@ -1518,6 +1668,11 @@
     {
       "id": "gemini-3.1-flash-image",
       "display_name": "Gemini 3.1 Flash Image",
+      "description": "A fast Google model for high-quality image generation and editing with multimodal reasoning. Also known as Nano Banana 2, it combines fast generation with advanced editing and multimodal visual reasoning.",
+      "i18n": {
+        "en": "A fast Google model for high-quality image generation and editing with multimodal reasoning. Also known as Nano Banana 2, it combines fast generation with advanced editing and multimodal visual reasoning.",
+        "zh": "结合多模态推理能力的高速 Google 图片生成与编辑模型。亦称 Nano Banana 2，将高速生成与高级编辑和多模态视觉推理结合起来。"
+      },
       "vendor": "google",
       "context_window": null,
       "max_tokens": null,
@@ -1573,6 +1728,11 @@
     {
       "id": "gemini-3-pro-image-preview",
       "display_name": "Gemini 3 Pro Image Preview",
+      "description": "Google's advanced image generation preview for grounded creation and detailed visual editing. Built on Gemini 3 Pro, it emphasizes grounded creation, stronger multimodal reasoning, and detailed image editing.",
+      "i18n": {
+        "en": "Google's advanced image generation preview for grounded creation and detailed visual editing. Built on Gemini 3 Pro, it emphasizes grounded creation, stronger multimodal reasoning, and detailed image editing.",
+        "zh": "Google 高级图片生成预览模型，擅长有依据的创作与精细视觉编辑。基于 Gemini 3 Pro，强调有依据的创作、更强的多模态推理和精细图像编辑。"
+      },
       "vendor": "google",
       "context_window": null,
       "max_tokens": null,
@@ -1628,6 +1788,11 @@
     {
       "id": "gemini-3.6-flash",
       "display_name": "Gemini 3.6 Flash",
+      "description": "A high-efficiency Gemini model for coding, agents, and web or application development. It focuses on polished coding and application outputs with fewer unnecessary edits across agentic workflows.",
+      "i18n": {
+        "en": "A high-efficiency Gemini model for coding, agents, and web or application development. It focuses on polished coding and application outputs with fewer unnecessary edits across agentic workflows.",
+        "zh": "面向编程、Agent、Web 与应用开发的高效率 Gemini 模型。面向 Agent 工作流中的编程与应用开发，力求以更少的无效修改产出更成熟的结果。"
+      },
       "vendor": "google",
       "context_window": 1000000,
       "max_tokens": 64000,
@@ -1675,6 +1840,11 @@
     {
       "id": "gemini-3.1-pro-preview",
       "display_name": "Gemini 3.1 Pro Preview",
+      "description": "A frontier Gemini reasoning preview for software engineering and reliable agentic workflows. The preview improves software-engineering performance, agent reliability, and token efficiency across complex workflows.",
+      "i18n": {
+        "en": "A frontier Gemini reasoning preview for software engineering and reliable agentic workflows. The preview improves software-engineering performance, agent reliability, and token efficiency across complex workflows.",
+        "zh": "面向软件工程与高可靠 Agent 工作流的前沿 Gemini 推理预览模型。该预览版在复杂工作流中强化软件工程表现、Agent 可靠性和 Token 效率。"
+      },
       "vendor": "google",
       "context_window": 1000000,
       "max_tokens": 64000,
@@ -1736,6 +1906,11 @@
     {
       "id": "gemini-3-flash-preview",
       "display_name": "Gemini 3 Flash Preview",
+      "description": "A fast Gemini thinking model for multi-turn chat, coding, and agent workflows. It offers near-Pro reasoning and tool use at Flash-class speed for multi-turn chat, coding, and agents.",
+      "i18n": {
+        "en": "A fast Gemini thinking model for multi-turn chat, coding, and agent workflows. It offers near-Pro reasoning and tool use at Flash-class speed for multi-turn chat, coding, and agents.",
+        "zh": "适合多轮对话、编程与 Agent 工作流的高速 Gemini 思考模型。以 Flash 级速度提供接近 Pro 的推理与工具调用能力，适用于多轮对话、编程和 Agent。"
+      },
       "vendor": "google",
       "context_window": 1000000,
       "max_tokens": 64000,
@@ -1783,6 +1958,11 @@
     {
       "id": "gemini-3.5-flash",
       "display_name": "Gemini 3.5 Flash",
+      "description": "An efficient multimodal Gemini model with strong coding, reasoning, and parallel-agent performance. It brings near-Pro coding and reasoning to a faster tier and is tuned for parallel agent execution.",
+      "i18n": {
+        "en": "An efficient multimodal Gemini model with strong coding, reasoning, and parallel-agent performance. It brings near-Pro coding and reasoning to a faster tier and is tuned for parallel agent execution.",
+        "zh": "在编程、推理与并行 Agent 场景表现出色的高效 Gemini 多模态模型。在更高效的档位提供接近 Pro 的编程和推理能力，并针对并行 Agent 执行优化。"
+      },
       "vendor": "google",
       "context_window": 1000000,
       "max_tokens": 64000,
@@ -1830,6 +2010,11 @@
     {
       "id": "gemini-3.5-flash-lite",
       "display_name": "Gemini 3.5 Flash Lite",
+      "description": "A lightweight Gemini model for focused subagents and high-volume production tasks. The lightweight design is especially suited to focused subagents inside larger multi-agent systems.",
+      "i18n": {
+        "en": "A lightweight Gemini model for focused subagents and high-volume production tasks. The lightweight design is especially suited to focused subagents inside larger multi-agent systems.",
+        "zh": "面向专注型子 Agent 与高流量生产任务的轻量 Gemini 模型。轻量化设计尤其适合大型多 Agent 系统中执行明确子任务的子 Agent。"
+      },
       "vendor": "google",
       "context_window": 1000000,
       "max_tokens": 64000,
@@ -1877,6 +2062,11 @@
     {
       "id": "gemini-3.1-flash-lite-preview",
       "display_name": "Gemini 3.1 Flash Lite Preview",
+      "description": "A high-efficiency Gemini preview optimized for high-volume, latency-sensitive applications. It is tuned for high-volume workloads while approaching the quality of larger Flash models.",
+      "i18n": {
+        "en": "A high-efficiency Gemini preview optimized for high-volume, latency-sensitive applications. It is tuned for high-volume workloads while approaching the quality of larger Flash models.",
+        "zh": "针对高流量、延迟敏感应用优化的高效率 Gemini 预览模型。针对高吞吐工作负载优化，同时力求接近更大型 Flash 模型的质量。"
+      },
       "vendor": "google",
       "context_window": 1000000,
       "max_tokens": 64000,
@@ -1924,6 +2114,11 @@
     {
       "id": "gemini-2.5-pro",
       "display_name": "Gemini 2.5 Pro",
+      "description": "A capable Gemini reasoning model for coding, mathematics, science, and multimodal analysis. Built-in thinking supports more deliberate answers across advanced coding, mathematics, science, and multimodal analysis.",
+      "i18n": {
+        "en": "A capable Gemini reasoning model for coding, mathematics, science, and multimodal analysis. Built-in thinking supports more deliberate answers across advanced coding, mathematics, science, and multimodal analysis.",
+        "zh": "适合编程、数学、科学与多模态分析的高性能 Gemini 推理模型。内置思考能力可在高级编程、数学、科学和多模态分析中给出更审慎的回答。"
+      },
       "vendor": "google",
       "context_window": 1000000,
       "max_tokens": 64000,
@@ -1985,6 +2180,11 @@
     {
       "id": "gemini-2.5-flash",
       "display_name": "Gemini 2.5 Flash",
+      "description": "A versatile Gemini workhorse balancing reasoning quality, speed, and multimodal support. It balances built-in reasoning with workhorse throughput for coding, mathematics, science, and multimodal production tasks.",
+      "i18n": {
+        "en": "A versatile Gemini workhorse balancing reasoning quality, speed, and multimodal support. It balances built-in reasoning with workhorse throughput for coding, mathematics, science, and multimodal production tasks.",
+        "zh": "在推理质量、速度与多模态能力之间取得平衡的 Gemini 主力模型。在编程、数学、科学和多模态生产任务中平衡内置推理能力与主力级吞吐量。"
+      },
       "vendor": "google",
       "context_window": 1000000,
       "max_tokens": 64000,
@@ -2032,6 +2232,11 @@
     {
       "id": "gemini-2.5-flash-lite",
       "display_name": "Gemini 2.5 Flash Lite",
+      "description": "A low-cost Gemini reasoning model optimized for throughput and fast token generation. The model prioritizes ultra-low latency, low cost, high throughput, and fast token generation.",
+      "i18n": {
+        "en": "A low-cost Gemini reasoning model optimized for throughput and fast token generation. The model prioritizes ultra-low latency, low cost, high throughput, and fast token generation.",
+        "zh": "针对高吞吐与快速生成优化的低成本 Gemini 推理模型。重点优化超低延迟、低成本、高吞吐和快速 Token 生成。"
+      },
       "vendor": "google",
       "context_window": 1000000,
       "max_tokens": 64000,
@@ -2079,6 +2284,11 @@
     {
       "id": "longcat-2.0",
       "display_name": "LongCat 2.0",
+      "description": "A sparse expert model from Meituan for coding, repository work, and long-horizon agents. Its sparse expert architecture is built for repository-scale coding, long-horizon problem solving, and agentic execution.",
+      "i18n": {
+        "en": "A sparse expert model from Meituan for coding, repository work, and long-horizon agents. Its sparse expert architecture is built for repository-scale coding, long-horizon problem solving, and agentic execution.",
+        "zh": "美团稀疏专家模型，适合编程、代码仓库任务与长周期 Agent。稀疏专家架构面向仓库级编程、长周期问题求解和 Agent 执行。"
+      },
       "vendor": "meituan",
       "context_window": 1000000,
       "max_tokens": 128000,
@@ -2125,6 +2335,11 @@
     {
       "id": "minimax-m2.5",
       "display_name": "MiniMax M2.5",
+      "description": "A MiniMax model for practical productivity, coding, and real-world digital work. Training across varied digital work environments extends its coding foundation into practical, end-to-end productivity tasks.",
+      "i18n": {
+        "en": "A MiniMax model for practical productivity, coding, and real-world digital work. Training across varied digital work environments extends its coding foundation into practical, end-to-end productivity tasks.",
+        "zh": "面向实际生产力、编程与真实数字化工作的 MiniMax 模型。通过多样化数字工作环境训练，将编程基础能力扩展到实用的端到端生产力任务。"
+      },
       "vendor": "minimax",
       "context_window": 196000,
       "max_tokens": 128000,
@@ -2168,6 +2383,11 @@
     {
       "id": "minimax-m2.7",
       "display_name": "MiniMax M2.7",
+      "description": "An agentic MiniMax model for autonomous productivity and multi-agent collaboration. It emphasizes autonomous productivity, multi-agent collaboration, and continuous improvement in real-world work.",
+      "i18n": {
+        "en": "An agentic MiniMax model for autonomous productivity and multi-agent collaboration. It emphasizes autonomous productivity, multi-agent collaboration, and continuous improvement in real-world work.",
+        "zh": "面向自主生产力与多 Agent 协作的 Agent 型 MiniMax 模型。强调真实工作场景中的自主生产力、多 Agent 协作和持续改进。"
+      },
       "vendor": "minimax",
       "context_window": 196000,
       "max_tokens": 128000,
@@ -2211,6 +2431,11 @@
     {
       "id": "minimax-m3",
       "display_name": "MiniMax M3",
+      "description": "A long-context multimodal MiniMax model for coding, knowledge work, and agents. The multimodal foundation is designed for long-horizon agents, coding, and knowledge work over extended context.",
+      "i18n": {
+        "en": "A long-context multimodal MiniMax model for coding, knowledge work, and agents. The multimodal foundation is designed for long-horizon agents, coding, and knowledge work over extended context.",
+        "zh": "适合编程、知识工作与 Agent 的长上下文 MiniMax 多模态模型。多模态基础能力面向长周期 Agent、编程和长上下文知识工作。"
+      },
       "vendor": "minimax",
       "context_window": 1000000,
       "max_tokens": 64000,
@@ -2270,6 +2495,11 @@
     {
       "id": "kimi-k2.5",
       "display_name": "Kimi K2.5",
+      "description": "A native multimodal Kimi model for visual coding and coordinated agent workflows. It pairs native multimodal understanding with visual coding and a self-directed agent-swarm approach.",
+      "i18n": {
+        "en": "A native multimodal Kimi model for visual coding and coordinated agent workflows. It pairs native multimodal understanding with visual coding and a self-directed agent-swarm approach.",
+        "zh": "面向视觉编程与协同 Agent 工作流的原生多模态 Kimi 模型。将原生多模态理解、视觉编程与自主 Agent 集群范式结合起来。"
+      },
       "vendor": "moonshot",
       "context_window": 256000,
       "max_tokens": 256000,
@@ -2315,6 +2545,11 @@
     {
       "id": "kimi-k2.6",
       "display_name": "Kimi K2.6",
+      "description": "A multimodal Kimi model for long-horizon coding, UI generation, and agent orchestration. It targets long-horizon coding, code-driven UI generation, and coordinated multi-agent execution across complex projects.",
+      "i18n": {
+        "en": "A multimodal Kimi model for long-horizon coding, UI generation, and agent orchestration. It targets long-horizon coding, code-driven UI generation, and coordinated multi-agent execution across complex projects.",
+        "zh": "面向长周期编程、UI 生成与 Agent 编排的多模态 Kimi 模型。面向长周期编程、代码驱动的 UI 生成，以及复杂项目中的多 Agent 协同执行。"
+      },
       "vendor": "moonshot",
       "context_window": 256000,
       "max_tokens": 256000,
@@ -2360,6 +2595,11 @@
     {
       "id": "kimi-k2.7-code",
       "display_name": "Kimi K2.7 Code",
+      "description": "A coding-focused Kimi model for reliable end-to-end programming across long contexts. The coding-focused design aims to complete end-to-end programming tasks reliably across long contexts.",
+      "i18n": {
+        "en": "A coding-focused Kimi model for reliable end-to-end programming across long contexts. The coding-focused design aims to complete end-to-end programming tasks reliably across long contexts.",
+        "zh": "面向长上下文端到端编程任务、强调可靠性的 Kimi Code 模型。以编程为中心，旨在长上下文中可靠完成端到端开发任务。"
+      },
       "vendor": "moonshot",
       "context_window": 256000,
       "max_tokens": 256000,
@@ -2405,6 +2645,11 @@
     {
       "id": "kimi-k3",
       "display_name": "Kimi K3",
+      "description": "An open-weight multimodal Kimi model for complex coding, reasoning, and agentic work. The open-weight multimodal reasoning model is positioned for complex coding, knowledge work, and long-running agents.",
+      "i18n": {
+        "en": "An open-weight multimodal Kimi model for complex coding, reasoning, and agentic work. The open-weight multimodal reasoning model is positioned for complex coding, knowledge work, and long-running agents.",
+        "zh": "面向复杂编程、推理与 Agent 工作的开放权重 Kimi 多模态模型。这款开放权重多模态推理模型面向复杂编程、知识工作和长时间运行的 Agent。"
+      },
       "vendor": "moonshot",
       "context_window": 1000000,
       "max_tokens": 1000000,
@@ -2450,6 +2695,11 @@
     {
       "id": "gpt-image-2",
       "display_name": "GPT Image 2",
+      "description": "OpenAI's high-fidelity image generation and editing model for the dedicated Images API.",
+      "i18n": {
+        "en": "OpenAI's high-fidelity image generation and editing model for the dedicated Images API.",
+        "zh": "用于专用 Images API 的 OpenAI 高保真图片生成与编辑模型。"
+      },
       "vendor": "openai",
       "context_window": null,
       "max_tokens": null,
@@ -2502,6 +2752,11 @@
     {
       "id": "gpt-5.2",
       "display_name": "GPT-5.2",
+      "description": "A frontier GPT model with adaptive reasoning for coding, agents, and long-context work. Adaptive reasoning allocates computation according to task difficulty for stronger agent and long-context performance.",
+      "i18n": {
+        "en": "A frontier GPT model with adaptive reasoning for coding, agents, and long-context work. Adaptive reasoning allocates computation according to task difficulty for stronger agent and long-context performance.",
+        "zh": "具备自适应推理能力、适合编程、Agent 与长上下文工作的前沿 GPT 模型。自适应推理会根据任务难度分配计算资源，以提升 Agent 与长上下文表现。"
+      },
       "vendor": "openai",
       "context_window": 400000,
       "max_tokens": 128000,
@@ -2546,6 +2801,11 @@
     {
       "id": "gpt-5.4",
       "display_name": "GPT-5.4",
+      "description": "A flagship GPT model for advanced reasoning, coding, multimodal input, and professional workflows. It unifies general GPT and coding capabilities for large-context professional work and tool-driven execution.",
+      "i18n": {
+        "en": "A flagship GPT model for advanced reasoning, coding, multimodal input, and professional workflows. It unifies general GPT and coding capabilities for large-context professional work and tool-driven execution.",
+        "zh": "面向高级推理、编程、多模态输入与专业工作流的旗舰 GPT 模型。统一通用 GPT 与编程能力，面向大上下文专业工作和工具驱动执行。"
+      },
       "vendor": "openai",
       "context_window": 1000000,
       "max_tokens": 128000,
@@ -2604,6 +2864,11 @@
     {
       "id": "gpt-5.4-mini",
       "display_name": "GPT-5.4 mini",
+      "description": "A faster GPT-5.4 variant for high-throughput reasoning, coding, and multimodal applications. The smaller variant keeps strong reasoning and coding capabilities while improving speed and throughput.",
+      "i18n": {
+        "en": "A faster GPT-5.4 variant for high-throughput reasoning, coding, and multimodal applications. The smaller variant keeps strong reasoning and coding capabilities while improving speed and throughput.",
+        "zh": "面向高吞吐推理、编程与多模态应用的高速 GPT-5.4 变体。较小规模版本保留较强推理和编程能力，同时提高速度与吞吐量。"
+      },
       "vendor": "openai",
       "context_window": 400000,
       "max_tokens": 128000,
@@ -2648,6 +2913,11 @@
     {
       "id": "gpt-5.4-nano",
       "display_name": "GPT-5.4 nano",
+      "description": "A compact GPT model optimized for low-latency, high-volume, and cost-sensitive tasks. It is tuned for speed-critical classification, extraction, routing, and other high-volume lightweight tasks.",
+      "i18n": {
+        "en": "A compact GPT model optimized for low-latency, high-volume, and cost-sensitive tasks. It is tuned for speed-critical classification, extraction, routing, and other high-volume lightweight tasks.",
+        "zh": "针对低延迟、高流量与成本敏感任务优化的紧凑型 GPT 模型。针对强调速度的分类、抽取、路由及其他高并发轻量任务优化。"
+      },
       "vendor": "openai",
       "context_window": 400000,
       "max_tokens": 128000,
@@ -2692,6 +2962,11 @@
     {
       "id": "gpt-5.5",
       "display_name": "GPT-5.5",
+      "description": "A frontier GPT model for complex professional work with stronger reasoning and reliability. It strengthens reliability and token efficiency on difficult professional tasks while retaining long-context support.",
+      "i18n": {
+        "en": "A frontier GPT model for complex professional work with stronger reasoning and reliability. It strengthens reliability and token efficiency on difficult professional tasks while retaining long-context support.",
+        "zh": "面向复杂专业工作、强化推理能力与可靠性的前沿 GPT 模型。在保留长上下文能力的同时，提高困难专业任务上的可靠性和 Token 效率。"
+      },
       "vendor": "openai",
       "context_window": 1000000,
       "max_tokens": 128000,
@@ -2750,6 +3025,11 @@
     {
       "id": "gpt-5.6",
       "display_name": "GPT-5.6",
+      "description": "A GPT-5.6 family model for advanced reasoning, coding, and general agent workflows.",
+      "i18n": {
+        "en": "A GPT-5.6 family model for advanced reasoning, coding, and general agent workflows.",
+        "zh": "面向高级推理、编程与通用 Agent 工作流的 GPT-5.6 系列模型。"
+      },
       "vendor": "openai",
       "context_window": 1050000,
       "max_tokens": 128000,
@@ -2808,6 +3088,11 @@
     {
       "id": "gpt-5.6-sol",
       "display_name": "GPT-5.6 Sol",
+      "description": "The GPT-5.6 flagship for demanding reasoning, coding, and multi-step agent tasks. The flagship tier is particularly strong at command-line work and complex multi-step coding workflows.",
+      "i18n": {
+        "en": "The GPT-5.6 flagship for demanding reasoning, coding, and multi-step agent tasks. The flagship tier is particularly strong at command-line work and complex multi-step coding workflows.",
+        "zh": "GPT-5.6 旗舰模型，适合高难度推理、编程与多步骤 Agent 任务。旗舰档位尤其擅长命令行工作和复杂的多步骤编程流程。"
+      },
       "vendor": "openai",
       "context_window": 1050000,
       "max_tokens": 128000,
@@ -2866,6 +3151,11 @@
     {
       "id": "gpt-5.6-terra",
       "display_name": "GPT-5.6 Terra",
+      "description": "A balanced GPT-5.6 model for everyday coding, reasoning, and agentic applications. The balanced tier sits between flagship quality and cost efficiency for everyday coding, reasoning, and agents.",
+      "i18n": {
+        "en": "A balanced GPT-5.6 model for everyday coding, reasoning, and agentic applications. The balanced tier sits between flagship quality and cost efficiency for everyday coding, reasoning, and agents.",
+        "zh": "面向日常编程、推理与 Agent 应用的均衡型 GPT-5.6 模型。平衡档位在旗舰质量与成本效率之间取舍，适合日常编程、推理和 Agent。"
+      },
       "vendor": "openai",
       "context_window": 1050000,
       "max_tokens": 128000,
@@ -2924,6 +3214,11 @@
     {
       "id": "gpt-5.6-luna",
       "display_name": "GPT-5.6 Luna",
+      "description": "A fast, efficient GPT-5.6 model for chat, classification, and lightweight agents. The efficient tier targets high-volume chat, classification, and lightweight agent workflows with low latency.",
+      "i18n": {
+        "en": "A fast, efficient GPT-5.6 model for chat, classification, and lightweight agents. The efficient tier targets high-volume chat, classification, and lightweight agent workflows with low latency.",
+        "zh": "面向对话、分类与轻量 Agent 的高速高效 GPT-5.6 模型。高效档位面向高并发对话、分类和轻量 Agent 工作流，强调低延迟。"
+      },
       "vendor": "openai",
       "context_window": 1050000,
       "max_tokens": 128000,
@@ -2982,6 +3277,11 @@
     {
       "id": "step-3.7-flash",
       "display_name": "Step 3.7 Flash",
+      "description": "An efficient multimodal StepFun model for native image and video understanding. Its multimodal mixture-of-experts design combines a large language backbone with native image and video understanding.",
+      "i18n": {
+        "en": "An efficient multimodal StepFun model for native image and video understanding. Its multimodal mixture-of-experts design combines a large language backbone with native image and video understanding.",
+        "zh": "支持原生图像与视频理解的高效率阶跃星辰多模态模型。多模态混合专家设计将大型语言骨干与原生图像、视频理解结合起来。"
+      },
       "vendor": "stepfun",
       "context_window": 256000,
       "max_tokens": 256000,
@@ -3027,6 +3327,11 @@
     {
       "id": "hy3",
       "display_name": "Hy3",
+      "description": "A Tencent mixture-of-experts model for configurable reasoning and production agents. Configurable reasoning effort lets production systems trade latency for depth across agentic workloads.",
+      "i18n": {
+        "en": "A Tencent mixture-of-experts model for configurable reasoning and production agents. Configurable reasoning effort lets production systems trade latency for depth across agentic workloads.",
+        "zh": "面向可调节推理与生产级 Agent 的腾讯混合专家模型。可配置的推理强度让生产系统在 Agent 任务中灵活权衡延迟与推理深度。"
+      },
       "vendor": "tencent",
       "context_window": 256000,
       "max_tokens": 128000,
@@ -3070,6 +3375,11 @@
     {
       "id": "hy3-preview",
       "display_name": "Hy3 preview",
+      "description": "A high-efficiency Tencent preview model for agent workflows and production evaluation. The preview offers configurable reasoning levels for efficient evaluation and deployment of agent workflows.",
+      "i18n": {
+        "en": "A high-efficiency Tencent preview model for agent workflows and production evaluation. The preview offers configurable reasoning levels for efficient evaluation and deployment of agent workflows.",
+        "zh": "面向 Agent 工作流与生产评估的高效率腾讯预览模型。预览版提供可配置推理等级，便于高效评估和部署 Agent 工作流。"
+      },
       "vendor": "tencent",
       "context_window": 256000,
       "max_tokens": 128000,
@@ -3127,6 +3437,11 @@
     {
       "id": "grok-imagine-image-quality",
       "display_name": "Grok Imagine Image Quality",
+      "description": "A high-fidelity xAI model for fast image generation, editing, and reference-guided creation.",
+      "i18n": {
+        "en": "A high-fidelity xAI model for fast image generation, editing, and reference-guided creation.",
+        "zh": "面向快速图片生成、编辑与参考图创作的 xAI 高保真模型。"
+      },
       "vendor": "xai",
       "context_window": null,
       "max_tokens": null,
@@ -3180,6 +3495,11 @@
     {
       "id": "grok-4.5",
       "display_name": "Grok 4.5",
+      "description": "A frontier Grok model for coding, knowledge work, STEM, and demanding reasoning. It is positioned as xAI’s highest-capability option for frontier coding, knowledge work, and STEM tasks.",
+      "i18n": {
+        "en": "A frontier Grok model for coding, knowledge work, STEM, and demanding reasoning. It is positioned as xAI’s highest-capability option for frontier coding, knowledge work, and STEM tasks.",
+        "zh": "面向编程、知识工作、STEM 与复杂推理的前沿 Grok 模型。定位为 xAI 面向前沿编程、知识工作和 STEM 任务的最高能力档位。"
+      },
       "vendor": "xai",
       "context_window": 500000,
       "max_tokens": 128000,
@@ -3227,6 +3547,11 @@
     {
       "id": "grok-4.3",
       "display_name": "Grok 4.3",
+      "description": "A multimodal Grok reasoning model for agents, instruction following, and factual tasks. It combines visual input with reasoning for factual instruction following and agent-oriented applications.",
+      "i18n": {
+        "en": "A multimodal Grok reasoning model for agents, instruction following, and factual tasks. It combines visual input with reasoning for factual instruction following and agent-oriented applications.",
+        "zh": "面向 Agent、指令遵循与事实型任务的 Grok 多模态推理模型。结合视觉输入与推理能力，适合注重事实性的指令遵循和 Agent 应用。"
+      },
       "vendor": "xai",
       "context_window": 1000000,
       "max_tokens": 128000,
@@ -3271,6 +3596,11 @@
     {
       "id": "mimo-v2-omni",
       "display_name": "MiMo V2 Omni",
+      "description": "A Xiaomi omni-modal model for unified text, image, audio, and video understanding.",
+      "i18n": {
+        "en": "A Xiaomi omni-modal model for unified text, image, audio, and video understanding.",
+        "zh": "面向文本、图像、音频与视频统一理解的小米 MiMo 全模态模型。"
+      },
       "vendor": "xiaomi",
       "context_window": 256000,
       "max_tokens": 128000,
@@ -3318,6 +3648,11 @@
     {
       "id": "mimo-v2-pro",
       "display_name": "MiMo V2 Pro",
+      "description": "A capable Xiaomi MiMo model for complex reasoning, coding, and agentic workloads.",
+      "i18n": {
+        "en": "A capable Xiaomi MiMo model for complex reasoning, coding, and agentic workloads.",
+        "zh": "面向复杂推理、编程与 Agent 工作负载的小米 MiMo 高性能模型。"
+      },
       "vendor": "xiaomi",
       "context_window": 1050000,
       "max_tokens": 128000,
@@ -3379,6 +3714,11 @@
     {
       "id": "mimo-v2.5-pro",
       "display_name": "Mimo V2.5 Pro",
+      "description": "Xiaomi's flagship MiMo model for software engineering and long-horizon agent tasks. The flagship emphasizes general agent capability, complex software engineering, and long-horizon execution.",
+      "i18n": {
+        "en": "Xiaomi's flagship MiMo model for software engineering and long-horizon agent tasks. The flagship emphasizes general agent capability, complex software engineering, and long-horizon execution.",
+        "zh": "面向软件工程与长周期 Agent 任务的小米 MiMo 旗舰模型。旗舰版本重点强化通用 Agent 能力、复杂软件工程和长周期执行。"
+      },
       "vendor": "xiaomi",
       "context_window": 1050000,
       "max_tokens": 128000,
@@ -3426,6 +3766,11 @@
     {
       "id": "mimo-v2.5",
       "display_name": "MiMo V2.5",
+      "description": "A cost-efficient omni-modal MiMo model for agentic and visual understanding workloads. The native omni-modal design aims for Pro-level agent performance with more economical inference and stronger visual understanding.",
+      "i18n": {
+        "en": "A cost-efficient omni-modal MiMo model for agentic and visual understanding workloads. The native omni-modal design aims for Pro-level agent performance with more economical inference and stronger visual understanding.",
+        "zh": "兼顾成本与能力、适合 Agent 和视觉理解场景的 MiMo 全模态模型。原生全模态设计以更经济的推理成本提供接近 Pro 的 Agent 表现，并增强视觉理解。"
+      },
       "vendor": "xiaomi",
       "context_window": 1050000,
       "max_tokens": 128000,
@@ -3473,6 +3818,11 @@
     {
       "id": "glm-image",
       "display_name": "GLM Image",
+      "description": "A Zhipu image model for text-guided generation and general visual creation.",
+      "i18n": {
+        "en": "A Zhipu image model for text-guided generation and general visual creation.",
+        "zh": "面向文本引导图片生成与通用视觉创作的智谱图像模型。"
+      },
       "vendor": "zhipu",
       "context_window": null,
       "max_tokens": null,
@@ -3512,6 +3862,11 @@
     {
       "id": "glm-5",
       "display_name": "GLM-5",
+      "description": "A flagship open GLM model for systems design, coding, and long-horizon agents. The open foundation model targets complex systems design and production-grade programming across long-running agent workflows.",
+      "i18n": {
+        "en": "A flagship open GLM model for systems design, coding, and long-horizon agents. The open foundation model targets complex systems design and production-grade programming across long-running agent workflows.",
+        "zh": "面向系统设计、编程与长周期 Agent 的 GLM 旗舰开放模型。开放基础模型面向复杂系统设计，以及长周期 Agent 工作流中的生产级编程。"
+      },
       "vendor": "zhipu",
       "context_window": 200000,
       "max_tokens": 128000,
@@ -3555,6 +3910,11 @@
     {
       "id": "glm-5-turbo",
       "display_name": "GLM-5 Turbo",
+      "description": "A fast GLM model optimized for real-world agent environments and efficient inference. It is deeply optimized for fast inference in real-world, tool-using agent environments.",
+      "i18n": {
+        "en": "A fast GLM model optimized for real-world agent environments and efficient inference. It is deeply optimized for fast inference in real-world, tool-using agent environments.",
+        "zh": "针对真实 Agent 环境与高效推理优化的高速 GLM 模型。针对真实世界中使用工具的 Agent 环境进行深度优化，强调快速推理。"
+      },
       "vendor": "zhipu",
       "context_window": 200000,
       "max_tokens": 128000,
@@ -3599,6 +3959,11 @@
     {
       "id": "glm-5.1",
       "display_name": "GLM-5.1",
+      "description": "A GLM model with stronger coding and sustained performance on long-horizon tasks. Its coding improvements focus on sustained, independent execution over tasks that extend far beyond short interactions.",
+      "i18n": {
+        "en": "A GLM model with stronger coding and sustained performance on long-horizon tasks. Its coding improvements focus on sustained, independent execution over tasks that extend far beyond short interactions.",
+        "zh": "强化编程能力与长周期任务持续执行表现的 GLM 模型。编程能力提升重点面向远超短时交互、需要持续独立执行的任务。"
+      },
       "vendor": "zhipu",
       "context_window": 200000,
       "max_tokens": 128000,
@@ -3642,6 +4007,11 @@
     {
       "id": "glm-5.2",
       "display_name": "GLM-5.2",
+      "description": "A long-context GLM reasoning model for project-level software engineering and agents. The large-scale reasoning model is intended for project-level software engineering and long-horizon agent workflows.",
+      "i18n": {
+        "en": "A long-context GLM reasoning model for project-level software engineering and agents. The large-scale reasoning model is intended for project-level software engineering and long-horizon agent workflows.",
+        "zh": "面向项目级软件工程与 Agent 的长上下文 GLM 推理模型。大规模推理模型面向项目级软件工程和长周期 Agent 工作流。"
+      },
       "vendor": "zhipu",
       "context_window": 1000000,
       "max_tokens": 128000,
