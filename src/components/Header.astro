@@ -115,7 +115,7 @@ const isCatalogPage = Astro.url.pathname.startsWith(`${localePrefix}/catalog/`);
 	@layer starlight.core {
 		.header {
 			display: grid;
-			grid-template-columns: minmax(0, auto) minmax(12rem, 24rem) auto;
+			grid-template-columns: minmax(0, 1fr) minmax(12rem, 24rem) auto;
 			gap: clamp(0.75rem, 1.8vw, 1.5rem);
 			align-items: center;
 			height: 100%;
