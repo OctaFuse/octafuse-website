@@ -9,16 +9,17 @@ Agent Tools are **protocol-agnostic, extensible product APIs** (same family as `
 
 The surface grows over time. Shipping today — web tools:
 
-| Tool | Endpoint | Notes |
-|------|----------|-------|
-| Web Search | `POST /v1/tools/web-search` | Search result list |
-| Web Fetch | `POST /v1/tools/web-fetch` | Fetch one URL body |
-| Web Deep Search | `POST /v1/tools/web-deep-search` | Search + read; heavier and usually more expensive |
+| Tool | Endpoint | Available Providers |
+|------|----------|---------------------|
+| Web Search | `POST /v1/tools/web-search` | Bocha, Tavily, Alibaba Cloud CleverSee, Tencent Cloud WSA |
+| Web Fetch | `POST /v1/tools/web-fetch` | Firecrawl, Tavily Extract, Jina Reader |
+| Web Deep Search | `POST /v1/tools/web-deep-search` | Firecrawl Search, Jina Search |
 
 <Aside type="caution" title="Dependencies and limits">
 	- You must supply **third-party engine API keys** (see the Admin whitelist).
 	- **Exactly one Active engine per tool**; calls return **503** when the Active engine has no key.
 	- **Per-call billing; failures are not charged** against the user budget.
+	- Tool logs currently use the Active engine’s fixed unit cost for supplier cost, catalog price, and user charge; model Route factors and daily schedules do not apply.
 </Aside>
 
 ## What to do in Admin

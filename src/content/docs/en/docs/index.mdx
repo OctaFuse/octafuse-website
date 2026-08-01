@@ -32,7 +32,7 @@ OctaFuse is a self-hostable AI capability gateway and operations control plane. 
 </div>
 
 <Aside type="tip" title="Suggested order">
-	Quick start → Providers → Models → Routes → Users → API keys → Simulator → Deploy. Open GitHub technical reference when you need fields, SQL, architecture, or troubleshooting details.
+	Quick start → Providers → Models → Routes → Agent Tools (optional) → Users → API keys → Simulator → Deploy. Open GitHub technical reference when you need fields, SQL, architecture, or troubleshooting details.
 </Aside>
 
 ## Product Tour
@@ -43,21 +43,21 @@ OctaFuse is a self-hostable AI capability gateway and operations control plane. 
 		<figcaption>Dashboard: start with operations, requests, tokens, spend, and recent errors.</figcaption>
 	</figure>
 	<figure class="of-doc-figure">
-		<img src="/screenshots/admin-routes.png" alt="OctaFuse Admin Routes page showing model-to-provider route cards." loading="lazy" />
-		<figcaption>Routes: map client model ids to vendors, upstream model names, and route groups.</figcaption>
+		<img src="/screenshots/admin-routes.png" alt="OctaFuse Admin Routes page showing the full topology from Surface and policy to Upstream Targets." loading="lazy" />
+		<figcaption>Routes: follow Surface → Policy → Upstream to configure protocols, route groups, strategies, priority, and weight.</figcaption>
 	</figure>
 	<figure class="of-doc-figure">
 		<img src="/screenshots/admin-playground.png" alt="OctaFuse Admin Playground showing route selection, request body, and response panels." loading="lazy" />
-		<figcaption>Playground: probe one upstream route before sending live traffic through it.</figcaption>
+		<figcaption>Playground: probe one Upstream Target before sending live traffic through it.</figcaption>
 	</figure>
 </div>
 
 ## Configuration Pipeline
 
 <div class="of-flow">
-	<a href="/en/docs/guides/providers/"><span>1</span><strong>Providers</strong><small>Endpoints and multi-key pools</small></a>
+	<a href="/en/docs/guides/providers/"><span>1</span><strong>Providers</strong><small>Endpoints, one key, status</small></a>
 	<a href="/en/docs/guides/models/"><span>2</span><strong>Models</strong><small>Catalog and pricing</small></a>
-	<a href="/en/docs/guides/routing/"><span>3</span><strong>Routes</strong><small>Selection, groups, failover</small></a>
+	<a href="/en/docs/guides/routing/"><span>3</span><strong>Routes</strong><small>Surface, Pool, Target, strategy</small></a>
 	<a href="/en/docs/guides/images/"><span>4</span><strong>Images</strong><small>Generation / edit pricing</small></a>
 	<a href="/en/docs/guides/tools/"><span>5</span><strong>Tools</strong><small>Extensible agent tools</small></a>
 	<a href="/en/docs/guides/users/"><span>6</span><strong>Users</strong><small>Accounts, budgets, periods</small></a>

@@ -51,8 +51,16 @@
 					"path": "docs/users/configuration.md",
 					"label": { "zh": "Admin 配置指南", "en": "Admin configuration" },
 					"description": {
-						"zh": "部署后配置 Provider、Route、用户和 API Key。",
-						"en": "Configure providers, routes, users, and API keys after deployment."
+						"zh": "部署后配置 Provider、模型路由、Agent Tools、用户和 API Key。",
+						"en": "Configure Providers, model routing, Agent Tools, users, and API keys after deployment."
+					}
+				},
+				{
+					"path": "docs/users/features.md",
+					"label": { "zh": "功能地图", "en": "Feature map" },
+					"description": {
+						"zh": "协议、Agent Tools、路由策略、计费、管理能力与部署方式总览。",
+						"en": "Overview of protocols, Agent Tools, route strategies, billing, administration, and deployment."
 					}
 				}
 			]
@@ -81,16 +89,16 @@
 					"path": "docs/developers/api/user.md",
 					"label": { "zh": "用户侧 API", "en": "User-facing APIs" },
 					"description": {
-						"zh": "OpenAI / Anthropic / Gemini 兼容入口、模型列表、预算状态。",
-						"en": "OpenAI / Anthropic / Gemini compatible fronts, model list, and budget state."
+						"zh": "OpenAI / Anthropic / Gemini、Images、Audio、Agent Tools、模型列表与预算状态。",
+						"en": "OpenAI / Anthropic / Gemini, Images, Audio, Agent Tools, model lists, and budget state."
 					}
 				},
 				{
 					"path": "docs/developers/api/admin.md",
 					"label": { "zh": "Admin HTTP API", "en": "Admin HTTP API" },
 					"description": {
-						"zh": "Provider、模型、路由、用户、密钥、配置和日志自动化接口。",
-						"en": "Automation APIs for providers, models, routes, users, keys, config, and logs."
+						"zh": "Provider、模型、路由、Tools、用户、密钥、计费配置、日志与分析接口。",
+						"en": "APIs for Providers, models, routing, Tools, users, keys, billing config, logs, and analytics."
 					}
 				},
 				{
@@ -116,11 +124,27 @@
 					}
 				},
 				{
+					"path": "docs/developers/architecture/route-topology.md",
+					"label": { "zh": "Route 拓扑", "en": "Route topology" },
+					"description": {
+						"zh": "Request Surface → Route Pool → Upstream Target 的关系、operation 与故障转移边界。",
+						"en": "Request Surface → Route Pool → Upstream Target relationships, operations, and failover boundaries."
+					}
+				},
+				{
+					"path": "docs/developers/reference/route-strategies.md",
+					"label": { "zh": "路由策略", "en": "Route strategies" },
+					"description": {
+						"zh": "affinity、weighted_random、strict、round_robin 的算法、覆盖层级与适用场景。",
+						"en": "Algorithms, precedence, and use cases for affinity, weighted_random, strict, and round_robin."
+					}
+				},
+				{
 					"path": "docs/developers/architecture/proxy-request-lifecycle.md",
 					"label": { "zh": "Proxy 请求生命周期", "en": "Proxy request lifecycle" },
 					"description": {
-						"zh": "鉴权、路由、限流、熔断、粘性、failover 和异步记账。",
-						"en": "Auth, routing, rate limits, circuit breakers, stickiness, failover, and async billing."
+						"zh": "鉴权、Surface / Pool / Target 解析、四策略、Provider 熔断、failover 和异步记账。",
+						"en": "Auth, Surface / Pool / Target resolution, four strategies, Provider circuits, failover, and async billing."
 					}
 				},
 				{
@@ -227,8 +251,8 @@
 					"path": "examples/quick-curl.md",
 					"label": { "zh": "curl 最小示例", "en": "Minimal curl examples" },
 					"description": {
-						"zh": "健康检查、用户推理和 Admin 配置接口的最小 curl。",
-						"en": "Minimal curl commands for health, user inference, and Admin config."
+						"zh": "健康检查、用户推理、Agent Tool 与 Admin 鉴权探针的最小 curl。",
+						"en": "Minimal curl commands for health, user inference, an Agent Tool, and an Admin auth probe."
 					}
 				}
 			]

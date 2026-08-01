@@ -76,13 +76,14 @@ npm run bootstrap:cloudflare
 <Steps>
 1. [供应商配置](/zh/docs/guides/providers/) — 接入上游模型服务  
 1. [模型配置](/zh/docs/guides/models/) — 维护网关识别的模型目录  
-1. [路由配置](/zh/docs/guides/routing/) — 把客户端 `model` 映射到上游  
+1. [路由配置](/zh/docs/guides/routing/) — 用 Surface → Pool → Target 把客户端 `model` 与 operation 映射到上游
+1. [Agent Tools](/zh/docs/guides/tools/)（可选）— 配置 Search / Fetch / Deep Search 的 Active 引擎
 1. [用户管理](/zh/docs/guides/users/) 与 [API Key 管理](/zh/docs/guides/api-keys/) — 谁可以调用、额度多少  
 </Steps>
 
 ## 可选：立刻打一条测试请求
 
-在管理台里配好 **Provider + 路由 + API Key** 后，将密钥与 `model` 换成真实值：
+在管理台里配好 **Provider + Model + Request Surface / Route Pool / Upstream Target + API Key** 后，将密钥与 `model` 换成真实值：
 
 ```bash
 curl -sS http://127.0.0.1:8787/v1/chat/completions \

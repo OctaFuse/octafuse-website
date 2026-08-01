@@ -9,6 +9,7 @@ Open **System → Config** (labeled **Config** in English). This screen groups g
 
 - **Master key** for server-to-admin API calls — must match **`GATEWAY_MASTER_KEY`** in your portal/backend.  
 - **Business timezone** and **billing currency** — affect how times and money render across Admin; business timezone also drives route **Daily schedule** (time-of-day pricing) window evaluation.  
+- **Global route strategy** — set `ROUTE_STRATEGY` to `affinity` (default), `weighted_random`, `strict`, or `round_robin`; model rules and Route Pools can override it.
 - **Alert webhooks** (e.g. Feishu / WeCom) — optional incident notifications.  
 - **Custom entries** — advanced globals your team agrees on (names and meanings are operational contracts).
 

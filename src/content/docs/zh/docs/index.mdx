@@ -32,7 +32,7 @@ OctaFuse 是可自托管的 AI 能力网关与运营控制面。文档按工作�
 </div>
 
 <Aside type="tip" title="推荐阅读顺序">
-	快速开始 → 供应商 → 模型 → 路由 → 用户 → API Key → Simulator → 部署。需要字段、SQL、架构或排障细节时，再打开 GitHub 技术参考。
+	快速开始 → 供应商 → 模型 → 路由 → Agent Tools（可选）→ 用户 → API Key → Simulator → 部署。需要字段、SQL、架构或排障细节时，再打开 GitHub 技术参考。
 </Aside>
 
 ## 界面速览
@@ -43,21 +43,21 @@ OctaFuse 是可自托管的 AI 能力网关与运营控制面。文档按工作�
 		<figcaption>Dashboard：安装后先看运行概况、请求量、Token、费用与最近错误。</figcaption>
 	</figure>
 	<figure class="of-doc-figure">
-		<img src="/screenshots/admin-routes.png" alt="OctaFuse Admin Routes 页面展示模型到供应商的路由配置卡片。" loading="lazy" />
-		<figcaption>Routes：把客户端传入的 model 映射到供应商、上游模型名和路由组。</figcaption>
+		<img src="/screenshots/admin-routes.png" alt="OctaFuse Admin Routes 页面展示 Surface、策略与 Upstream Target 的完整路由拓扑。" loading="lazy" />
+		<figcaption>Routes：沿 Surface → Policy → Upstream 路径配置协议、路由组、策略、优先级和权重。</figcaption>
 	</figure>
 	<figure class="of-doc-figure">
 		<img src="/screenshots/admin-playground.png" alt="OctaFuse Admin Playground 页面展示路由选择、请求体和响应区域。" loading="lazy" />
-		<figcaption>Playground：上线前先对单条路由直连上游试跑，快速确认配置。</figcaption>
+		<figcaption>Playground：上线前先对单个 Upstream Target 直连上游试跑，快速确认配置。</figcaption>
 	</figure>
 </div>
 
 ## 配置流水线
 
 <div class="of-flow">
-	<a href="/zh/docs/guides/providers/"><span>1</span><strong>Providers</strong><small>上游端点与多 Key</small></a>
+	<a href="/zh/docs/guides/providers/"><span>1</span><strong>Providers</strong><small>上游端点、单 Key 与状态</small></a>
 	<a href="/zh/docs/guides/models/"><span>2</span><strong>Models</strong><small>模型目录与定价</small></a>
-	<a href="/zh/docs/guides/routing/"><span>3</span><strong>Routes</strong><small>路由、分组、故障切换</small></a>
+	<a href="/zh/docs/guides/routing/"><span>3</span><strong>Routes</strong><small>Surface、Pool、Target 与策略</small></a>
 	<a href="/zh/docs/guides/images/"><span>4</span><strong>Images</strong><small>图片生成与按张/Token 价</small></a>
 	<a href="/zh/docs/guides/tools/"><span>5</span><strong>Tools</strong><small>可扩展 Agent 工具</small></a>
 	<a href="/zh/docs/guides/users/"><span>6</span><strong>Users</strong><small>账户、预算、周期</small></a>

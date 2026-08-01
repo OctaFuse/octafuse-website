@@ -4,10 +4,10 @@
   "source": {
     "repo": "OctaFuse/octafuse-gateway",
     "ref": "main",
-    "commit": "386cd44987eb01e3b92f292222231afa3c4e4467"
+    "commit": "cf037f046f44aec390eaaf2f0d3a74598992d1b2"
   },
   "source_path": "packages/admin/lib/model-presets",
-  "count": 74,
+  "count": 78,
   "items": [
     {
       "id": "qwen3.8-max-preview",
@@ -688,10 +688,10 @@
           "tiers": [
             {
               "upto": null,
-              "input_price": 72,
-              "output_price": 360,
-              "cache_read_price": 7.2,
-              "cache_write_price": 90
+              "input_price": 70,
+              "output_price": 350,
+              "cache_read_price": 7,
+              "cache_write_price": 87.5
             }
           ]
         }
@@ -738,10 +738,10 @@
           "tiers": [
             {
               "upto": null,
-              "input_price": 21.6,
-              "output_price": 108,
-              "cache_read_price": 2.16,
-              "cache_write_price": 27
+              "input_price": 21,
+              "output_price": 105,
+              "cache_read_price": 2.1,
+              "cache_write_price": 26.25
             }
           ]
         }
@@ -788,10 +788,10 @@
           "tiers": [
             {
               "upto": null,
-              "input_price": 36,
-              "output_price": 180,
-              "cache_read_price": 3.6,
-              "cache_write_price": 45
+              "input_price": 35,
+              "output_price": 175,
+              "cache_read_price": 3.5,
+              "cache_write_price": 43.75
             }
           ]
         }
@@ -838,10 +838,10 @@
           "tiers": [
             {
               "upto": null,
-              "input_price": 36,
-              "output_price": 180,
-              "cache_read_price": 3.6,
-              "cache_write_price": 45
+              "input_price": 35,
+              "output_price": 175,
+              "cache_read_price": 3.5,
+              "cache_write_price": 43.75
             }
           ]
         }
@@ -888,10 +888,10 @@
           "tiers": [
             {
               "upto": null,
-              "input_price": 36,
-              "output_price": 180,
-              "cache_read_price": 3.6,
-              "cache_write_price": 45
+              "input_price": 35,
+              "output_price": 175,
+              "cache_read_price": 3.5,
+              "cache_write_price": 43.75
             }
           ]
         }
@@ -938,10 +938,10 @@
           "tiers": [
             {
               "upto": null,
-              "input_price": 36,
-              "output_price": 180,
-              "cache_read_price": 3.6,
-              "cache_write_price": 45
+              "input_price": 35,
+              "output_price": 175,
+              "cache_read_price": 3.5,
+              "cache_write_price": 43.75
             }
           ]
         }
@@ -988,10 +988,10 @@
           "tiers": [
             {
               "upto": null,
-              "input_price": 21.6,
-              "output_price": 108,
-              "cache_read_price": 2.16,
-              "cache_write_price": 27
+              "input_price": 21,
+              "output_price": 105,
+              "cache_read_price": 2.1,
+              "cache_write_price": 26.25
             }
           ]
         }
@@ -1038,10 +1038,10 @@
           "tiers": [
             {
               "upto": null,
-              "input_price": 7.2,
-              "output_price": 36,
-              "cache_read_price": 0.72,
-              "cache_write_price": 9
+              "input_price": 7,
+              "output_price": 35,
+              "cache_read_price": 0.7,
+              "cache_write_price": 8.75
             }
           ]
         }
@@ -1700,13 +1700,13 @@
           "tiers": [
             {
               "upto": null,
-              "input_price": 3.625,
-              "output_price": 21.75,
+              "input_price": 3.5,
+              "output_price": 21,
               "cache_read_price": null,
               "cache_write_price": null,
-              "image_input_price": 3.625,
+              "image_input_price": 3.5,
               "image_input_cache_price": null,
-              "image_output_price": 435
+              "image_output_price": 420
             }
           ]
         }
@@ -1760,13 +1760,13 @@
           "tiers": [
             {
               "upto": null,
-              "input_price": 14.5,
-              "output_price": 87,
+              "input_price": 14,
+              "output_price": 84,
               "cache_read_price": null,
               "cache_write_price": null,
-              "image_input_price": 14.5,
+              "image_input_price": 14,
               "image_input_cache_price": null,
-              "image_output_price": 870
+              "image_output_price": 840
             }
           ]
         }
@@ -1812,10 +1812,10 @@
           "tiers": [
             {
               "upto": null,
-              "input_price": 10.8,
-              "output_price": 54,
-              "cache_read_price": 1.08,
-              "cache_write_price": 0.59998
+              "input_price": 10.5,
+              "output_price": 52.5,
+              "cache_read_price": 1.05,
+              "cache_write_price": 0.58331
             }
           ]
         }
@@ -1871,17 +1871,17 @@
           "tiers": [
             {
               "upto": 200000,
-              "input_price": 14.4,
-              "output_price": 86.4,
-              "cache_read_price": 1.44,
-              "cache_write_price": 2.7
+              "input_price": 14,
+              "output_price": 84,
+              "cache_read_price": 1.4,
+              "cache_write_price": 2.625
             },
             {
               "upto": null,
-              "input_price": 28.8,
-              "output_price": 129.6,
-              "cache_read_price": 2.88,
-              "cache_write_price": 2.7
+              "input_price": 28,
+              "output_price": 126,
+              "cache_read_price": 2.8,
+              "cache_write_price": 2.625
             }
           ]
         }
@@ -1930,10 +1930,10 @@
           "tiers": [
             {
               "upto": null,
-              "input_price": 3.6,
-              "output_price": 21.6,
-              "cache_read_price": 0.36,
-              "cache_write_price": 0.59998
+              "input_price": 3.5,
+              "output_price": 21,
+              "cache_read_price": 0.35,
+              "cache_write_price": 0.58331
             }
           ]
         }
@@ -1982,10 +1982,10 @@
           "tiers": [
             {
               "upto": null,
-              "input_price": 10.8,
-              "output_price": 64.8,
-              "cache_read_price": 1.08,
-              "cache_write_price": 0.59998
+              "input_price": 10.5,
+              "output_price": 63,
+              "cache_read_price": 1.05,
+              "cache_write_price": 0.58331
             }
           ]
         }
@@ -2034,10 +2034,10 @@
           "tiers": [
             {
               "upto": null,
-              "input_price": 2.16,
-              "output_price": 18,
-              "cache_read_price": 0.216,
-              "cache_write_price": 0.59998
+              "input_price": 2.1,
+              "output_price": 17.5,
+              "cache_read_price": 0.21,
+              "cache_write_price": 0.58331
             }
           ]
         }
@@ -2086,10 +2086,10 @@
           "tiers": [
             {
               "upto": null,
-              "input_price": 1.8,
-              "output_price": 10.8,
-              "cache_read_price": 0.18,
-              "cache_write_price": 0.59998
+              "input_price": 1.75,
+              "output_price": 10.5,
+              "cache_read_price": 0.175,
+              "cache_write_price": 0.58331
             }
           ]
         }
@@ -2145,17 +2145,17 @@
           "tiers": [
             {
               "upto": 200000,
-              "input_price": 9,
-              "output_price": 72,
-              "cache_read_price": 0.9,
-              "cache_write_price": 2.7
+              "input_price": 8.75,
+              "output_price": 70,
+              "cache_read_price": 0.875,
+              "cache_write_price": 2.625
             },
             {
               "upto": null,
-              "input_price": 18,
-              "output_price": 108,
-              "cache_read_price": 1.8,
-              "cache_write_price": 2.7
+              "input_price": 17.5,
+              "output_price": 105,
+              "cache_read_price": 1.75,
+              "cache_write_price": 2.625
             }
           ]
         }
@@ -2204,10 +2204,10 @@
           "tiers": [
             {
               "upto": null,
-              "input_price": 2.16,
-              "output_price": 18,
-              "cache_read_price": 0.216,
-              "cache_write_price": 0.59998
+              "input_price": 2.1,
+              "output_price": 17.5,
+              "cache_read_price": 0.21,
+              "cache_write_price": 0.58331
             }
           ]
         }
@@ -2256,10 +2256,10 @@
           "tiers": [
             {
               "upto": null,
-              "input_price": 0.72,
-              "output_price": 2.88,
-              "cache_read_price": 0.072,
-              "cache_write_price": 0.59998
+              "input_price": 0.7,
+              "output_price": 2.8,
+              "cache_read_price": 0.07,
+              "cache_write_price": 0.58331
             }
           ]
         }
@@ -2693,6 +2693,187 @@
       "source_path": "packages/admin/lib/model-presets/moonshot.json"
     },
     {
+      "id": "whisper-1",
+      "display_name": "Whisper",
+      "description": "OpenAI Whisper (whisper-1) speech-to-text for /v1/audio/transcriptions. Official price $0.006/minute; gateway meters by duration (per second).",
+      "i18n": {
+        "en": "OpenAI Whisper (whisper-1) speech-to-text for /v1/audio/transcriptions. Official price $0.006/minute; gateway meters by duration (per second).",
+        "zh": "OpenAI Whisper（whisper-1）语音转写，用于 /v1/audio/transcriptions。官方价 $0.006/分钟；网关按秒计量。"
+      },
+      "vendor": "openai",
+      "context_window": null,
+      "max_tokens": null,
+      "pricing": {
+        "usd": {
+          "audio_billing_mode": "per_second",
+          "audio": {
+            "price_per_second": 0.0001,
+            "minimum_seconds": 1
+          }
+        },
+        "cny": {
+          "audio_billing_mode": "per_second",
+          "audio": {
+            "price_per_second": 0.0007,
+            "minimum_seconds": 1
+          }
+        }
+      },
+      "modalities": {
+        "input": [
+          "audio"
+        ],
+        "output": [
+          "text"
+        ]
+      },
+      "released": "2022-09-01",
+      "vendor_label": "OpenAI",
+      "kind": "llm",
+      "source_path": "packages/admin/lib/model-presets/openai-audio.json"
+    },
+    {
+      "id": "gpt-4o-mini-transcribe",
+      "display_name": "GPT-4o mini Transcribe",
+      "description": "OpenAI GPT-4o mini speech-to-text for /v1/audio/transcriptions (json/text). Official rates $1.25/$5 per 1M audio tokens; gateway meters by tokens.",
+      "i18n": {
+        "en": "OpenAI GPT-4o mini speech-to-text for /v1/audio/transcriptions (json/text). Official rates $1.25/$5 per 1M audio tokens; gateway meters by tokens.",
+        "zh": "OpenAI GPT-4o mini 语音转写（/v1/audio/transcriptions，json/text）。官方价 $1.25/$5 /1M audio token；网关按 token 计量。"
+      },
+      "vendor": "openai",
+      "context_window": 16000,
+      "max_tokens": 2000,
+      "pricing": {
+        "usd": {
+          "audio_billing_mode": "token",
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 1.25,
+              "output_price": 5
+            }
+          ]
+        },
+        "cny": {
+          "audio_billing_mode": "token",
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 8.75,
+              "output_price": 35
+            }
+          ]
+        }
+      },
+      "modalities": {
+        "input": [
+          "audio",
+          "text"
+        ],
+        "output": [
+          "text"
+        ]
+      },
+      "released": "2025-03-20",
+      "vendor_label": "OpenAI",
+      "kind": "llm",
+      "source_path": "packages/admin/lib/model-presets/openai-audio.json"
+    },
+    {
+      "id": "gpt-4o-transcribe",
+      "display_name": "GPT-4o Transcribe",
+      "description": "OpenAI GPT-4o speech-to-text for /v1/audio/transcriptions (json/text). Official rates $2.50/$10 per 1M audio tokens; gateway meters by tokens.",
+      "i18n": {
+        "en": "OpenAI GPT-4o speech-to-text for /v1/audio/transcriptions (json/text). Official rates $2.50/$10 per 1M audio tokens; gateway meters by tokens.",
+        "zh": "OpenAI GPT-4o 语音转写（/v1/audio/transcriptions，json/text）。官方价 $2.50/$10 /1M audio token；网关按 token 计量。"
+      },
+      "vendor": "openai",
+      "context_window": 16000,
+      "max_tokens": 2000,
+      "pricing": {
+        "usd": {
+          "audio_billing_mode": "token",
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 2.5,
+              "output_price": 10
+            }
+          ]
+        },
+        "cny": {
+          "audio_billing_mode": "token",
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 17.5,
+              "output_price": 70
+            }
+          ]
+        }
+      },
+      "modalities": {
+        "input": [
+          "audio",
+          "text"
+        ],
+        "output": [
+          "text"
+        ]
+      },
+      "released": "2025-03-20",
+      "vendor_label": "OpenAI",
+      "kind": "llm",
+      "source_path": "packages/admin/lib/model-presets/openai-audio.json"
+    },
+    {
+      "id": "gpt-4o-transcribe-diarize",
+      "display_name": "GPT-4o Transcribe Diarize",
+      "description": "OpenAI GPT-4o transcription with speaker diarization (/v1/audio/transcriptions; json/text/diarized_json). Same token rates as gpt-4o-transcribe ($2.50/$10 per 1M); gateway meters by tokens.",
+      "i18n": {
+        "en": "OpenAI GPT-4o transcription with speaker diarization (/v1/audio/transcriptions; json/text/diarized_json). Same token rates as gpt-4o-transcribe ($2.50/$10 per 1M); gateway meters by tokens.",
+        "zh": "OpenAI GPT-4o 带说话人分离的语音转写（/v1/audio/transcriptions；json/text/diarized_json）。单价同 gpt-4o-transcribe（$2.50/$10 /1M）；网关按 token 计量。"
+      },
+      "vendor": "openai",
+      "context_window": 16000,
+      "max_tokens": 2000,
+      "pricing": {
+        "usd": {
+          "audio_billing_mode": "token",
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 2.5,
+              "output_price": 10
+            }
+          ]
+        },
+        "cny": {
+          "audio_billing_mode": "token",
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 17.5,
+              "output_price": 70
+            }
+          ]
+        }
+      },
+      "modalities": {
+        "input": [
+          "audio",
+          "text"
+        ],
+        "output": [
+          "text"
+        ]
+      },
+      "released": "2025-10-18",
+      "vendor_label": "OpenAI",
+      "kind": "llm",
+      "source_path": "packages/admin/lib/model-presets/openai-audio.json"
+    },
+    {
       "id": "gpt-image-2",
       "display_name": "GPT Image 2",
       "description": "OpenAI's high-fidelity image generation and editing model for the dedicated Images API.",
@@ -2724,13 +2905,13 @@
           "tiers": [
             {
               "upto": null,
-              "input_price": 36.25,
+              "input_price": 35,
               "output_price": 0,
-              "cache_read_price": 9.0625,
+              "cache_read_price": 8.75,
               "cache_write_price": null,
-              "image_input_price": 58,
-              "image_input_cache_price": 14.5,
-              "image_output_price": 217.5
+              "image_input_price": 56,
+              "image_input_cache_price": 14,
+              "image_output_price": 210
             }
           ]
         }
@@ -2776,9 +2957,9 @@
           "tiers": [
             {
               "upto": null,
-              "input_price": 12.6,
-              "output_price": 100.8,
-              "cache_read_price": 1.26,
+              "input_price": 12.25,
+              "output_price": 98,
+              "cache_read_price": 1.225,
               "cache_write_price": null
             }
           ]
@@ -2832,16 +3013,16 @@
           "tiers": [
             {
               "upto": 272000,
-              "input_price": 18,
-              "output_price": 108,
-              "cache_read_price": 1.8,
+              "input_price": 17.5,
+              "output_price": 105,
+              "cache_read_price": 1.75,
               "cache_write_price": null
             },
             {
               "upto": null,
-              "input_price": 36,
-              "output_price": 162,
-              "cache_read_price": 3.6,
+              "input_price": 35,
+              "output_price": 157.5,
+              "cache_read_price": 3.5,
               "cache_write_price": null
             }
           ]
@@ -2888,9 +3069,9 @@
           "tiers": [
             {
               "upto": null,
-              "input_price": 5.4,
-              "output_price": 32.4,
-              "cache_read_price": 0.54,
+              "input_price": 5.25,
+              "output_price": 31.5,
+              "cache_read_price": 0.525,
               "cache_write_price": null
             }
           ]
@@ -2937,9 +3118,9 @@
           "tiers": [
             {
               "upto": null,
-              "input_price": 1.44,
-              "output_price": 9,
-              "cache_read_price": 0.144,
+              "input_price": 1.4,
+              "output_price": 8.75,
+              "cache_read_price": 0.14,
               "cache_write_price": null
             }
           ]
@@ -2993,16 +3174,16 @@
           "tiers": [
             {
               "upto": 272000,
-              "input_price": 36,
-              "output_price": 216,
-              "cache_read_price": 3.6,
+              "input_price": 35,
+              "output_price": 210,
+              "cache_read_price": 3.5,
               "cache_write_price": null
             },
             {
               "upto": null,
-              "input_price": 72,
-              "output_price": 324,
-              "cache_read_price": 7.2,
+              "input_price": 70,
+              "output_price": 315,
+              "cache_read_price": 7,
               "cache_write_price": null
             }
           ]
@@ -3056,17 +3237,17 @@
           "tiers": [
             {
               "upto": 272000,
-              "input_price": 36,
-              "output_price": 216,
-              "cache_read_price": 3.6,
-              "cache_write_price": 45
+              "input_price": 35,
+              "output_price": 210,
+              "cache_read_price": 3.5,
+              "cache_write_price": 43.75
             },
             {
               "upto": null,
-              "input_price": 72,
-              "output_price": 324,
-              "cache_read_price": 7.2,
-              "cache_write_price": 90
+              "input_price": 70,
+              "output_price": 315,
+              "cache_read_price": 7,
+              "cache_write_price": 87.5
             }
           ]
         }
@@ -3119,17 +3300,17 @@
           "tiers": [
             {
               "upto": 272000,
-              "input_price": 36,
-              "output_price": 216,
-              "cache_read_price": 3.6,
-              "cache_write_price": 45
+              "input_price": 35,
+              "output_price": 210,
+              "cache_read_price": 3.5,
+              "cache_write_price": 43.75
             },
             {
               "upto": null,
-              "input_price": 72,
-              "output_price": 324,
-              "cache_read_price": 7.2,
-              "cache_write_price": 90
+              "input_price": 70,
+              "output_price": 315,
+              "cache_read_price": 7,
+              "cache_write_price": 87.5
             }
           ]
         }
@@ -3182,17 +3363,17 @@
           "tiers": [
             {
               "upto": 272000,
-              "input_price": 18,
-              "output_price": 108,
-              "cache_read_price": 1.8,
-              "cache_write_price": 22.5
+              "input_price": 17.5,
+              "output_price": 105,
+              "cache_read_price": 1.75,
+              "cache_write_price": 21.875
             },
             {
               "upto": null,
-              "input_price": 36,
-              "output_price": 162,
-              "cache_read_price": 3.6,
-              "cache_write_price": 45
+              "input_price": 35,
+              "output_price": 157.5,
+              "cache_read_price": 3.5,
+              "cache_write_price": 43.75
             }
           ]
         }
@@ -3245,17 +3426,17 @@
           "tiers": [
             {
               "upto": 272000,
-              "input_price": 7.2,
-              "output_price": 43.2,
-              "cache_read_price": 0.72,
-              "cache_write_price": 9
+              "input_price": 7,
+              "output_price": 42,
+              "cache_read_price": 0.7,
+              "cache_write_price": 8.75
             },
             {
               "upto": null,
-              "input_price": 14.4,
-              "output_price": 64.8,
-              "cache_read_price": 1.44,
-              "cache_write_price": 18
+              "input_price": 14,
+              "output_price": 63,
+              "cache_read_price": 1.4,
+              "cache_write_price": 17.5
             }
           ]
         }
@@ -3466,10 +3647,10 @@
         "cny": {
           "image_billing_mode": "per_image",
           "image": {
-            "default": 0.36,
+            "default": 0.35,
             "by_size": {
-              "1k": 0.36,
-              "2k": 0.51
+              "1k": 0.35,
+              "2k": 0.49
             },
             "input": {
               "default": 0.07
@@ -3522,9 +3703,9 @@
           "tiers": [
             {
               "upto": null,
-              "input_price": 14.4,
-              "output_price": 43.2,
-              "cache_read_price": 3.6,
+              "input_price": 14,
+              "output_price": 42,
+              "cache_read_price": 3.5,
               "cache_write_price": null
             }
           ]
@@ -3571,9 +3752,9 @@
           "tiers": [
             {
               "upto": null,
-              "input_price": 9,
-              "output_price": 18,
-              "cache_read_price": 1.44,
+              "input_price": 8.75,
+              "output_price": 17.5,
+              "cache_read_price": 1.4,
               "cache_write_price": null
             }
           ]

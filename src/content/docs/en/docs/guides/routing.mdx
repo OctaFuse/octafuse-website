@@ -1,11 +1,11 @@
 ---
 title: Routing
-description: Configure upstream paths per model in Admin with vendor, protocol, route group, priority, sticky keys, billing factors, and daily schedule pricing for routing and failover.
+description: Configure protocol operations, strategies, priority, weight, billing factors, and failover with Request Surfaces, Route Pools, and Upstream Targets.
 ---
 
 import { Aside, Steps } from '@astrojs/starlight/components';
 
-Open **Inference → Routes**. **Model routes** define how a client **`model`** (and optional **route group**) maps to **model + vendor + upstream model name**, and in which **priority** order to try them. Multiple routes in the same group enable automatic failover.
+Open **Inference → Routes**. Version 2.0 uses three layers: a client request resolves a **Request Surface** by model, route group, protocol, and operation; the Surface points to a **Route Pool**; the Pool contains concrete **Upstream Targets**. Chat, Images, Audio, and other operations can therefore use independent failover pools and strategies.
 
 The list supports rich filters; the current filter set is reflected in the browser address bar so you can share a link to the same view.
 
@@ -14,34 +14,45 @@ The list supports rich filters; the current filter set is reflected in the brows
 </Aside>
 
 <figure class="of-doc-figure">
-	<img src="/screenshots/admin-routes.png" alt="OctaFuse Admin Routes page grouped by provider with route cards for each model." loading="lazy" />
-	<figcaption>The Routes page groups route cards by provider and model. One model can have active and fallback routes for priority and failover.</figcaption>
+	<img src="/screenshots/admin-routes.png" alt="OctaFuse Admin Routes page showing the topology from Request Surface and route group through policy to Upstream Targets." loading="lazy" />
+	<figcaption>Routes keeps the client surface, routing policy, and upstream targets on one visible path. A model can use separate paths by protocol, operation, and route group.</figcaption>
 </figure>
 
 ## What to do in Admin
 
 <Steps>
 1. Open **Routes**.
-1. **Create a route**: pick model, vendor, upstream model name, **protocol** (must match the base URL you configured for that protocol on the provider), **route group** (often `default`), **priority** (lower tries first), **status** (only **active** routes serve production traffic).
-1. **Billing**: set base multipliers for **charged to user** and **supplier cost** relative to the catalog list price. For vendor peak / off-peak rates, add a **Daily schedule** (time-of-day multipliers; timezone comes from [System config](/en/docs/guides/system-config/) business timezone).
+1. **Request Surface**: choose the client model and `route_group` (often `default`), then the incoming protocol / operation, such as `openai.chat`, `anthropic.messages`, or `openai.images.generations`.
+1. **Route Pool**: point the Surface to a failover pool and optionally set a Pool-level strategy; otherwise it inherits model / global policy.
+1. **Upstream Target**: choose a Provider, upstream model name and operation, then set **priority** (higher tries first), **weight**, and status.
+1. **Billing**: set **charged to user** and **supplier cost** multipliers on the Target. Add a **Daily schedule** for vendor peak / off-peak pricing; its timezone comes from [System config](/en/docs/guides/system-config/).
 1. After saving, use [Playground](/en/docs/features/playground/) for a single-route upstream check; use [Simulator](/en/docs/features/simulator/) to exercise the full Proxy path with a real `sk-` key.
 </Steps>
 
 ## Client impact
 
-Clients only send **`model`** and protocol-specific payloads — no hard-coded vendor details. Prefer changing routes when switching upstreams.
+Clients only send **`model`** and protocol-specific payloads — no hard-coded vendor details. Use a base model id, or `baseId:group` to select a route group.
 
-## Routing boundary: priority, weight, and sticky
+## Ordering and four strategies
 
-| Layer | Controls |
-|-------|----------|
-| **Route `priority`** | Which upstream route to try first in a `route_group` (lower first). **Routes have no weight.** |
-| **Provider key `weight`** | After a route is chosen, weighted random among that Provider’s keys when headroom is nearly tied. See [Providers](/en/docs/guides/providers/). |
-| **Sticky** | Opt-in on **Models** per protocol × route group. Keeps the same user on the same upstream key when possible to improve **prompt cache** hits; short-wait on soft rate limits; still fail over on hard upstream errors. |
+Pools first group Targets by `priority` **descending**; higher numbers try first. Within one priority tier, the effective strategy orders Targets using `weight`:
+
+| Strategy | Behavior and use |
+|----------|------------------|
+| `affinity` (default) | Keeps a stable preferred Provider for the same user, model, group, and protocol, improving Prompt Cache hits; short-term traffic may be uneven. |
+| `weighted_random` | Weighted random distribution with strong load balancing for proportional allocation or A/B; weaker cache affinity. |
+| `strict` | Fixed high-to-low weight order for predictable primary / backup behavior; the first Provider gets most traffic. |
+| `round_robin` | Weighted rotation for more even traffic; counters are per runtime instance and not globally synchronized. |
+
+Use different priorities for hard primary / backup across Providers. A Route Pool policy has highest precedence, followed by model rules / defaults, global `ROUTE_STRATEGY`, and finally the code default `affinity`.
+
+## Failover and circuits
+
+Retryable 429, 401 / 403, 5xx, and network errors move to the next Target. Providers enter error-specific cooldowns. If every candidate is circuit-open, Proxy returns 429 with `Retry-After`.
 
 ## Note
 
-**Playground** probes **one** route upstream and does **not** mirror full multi-route failover or sticky behavior; validate with real Proxy calls or **Simulator**. Image routes must use the OpenAI protocol — see [Image generation / edit](/en/docs/guides/images/).
+**Playground** directly probes one Target and bypasses Pool strategy, failover, user billing, and request logs. Validate the full behavior with real Proxy calls or **Simulator**. Image routes must use the OpenAI protocol — see [Image generation / edit](/en/docs/guides/images/).
 
 ## Next
 

@@ -5,23 +5,23 @@ description: Add upstream vendors in Admin with per-protocol base URLs and an AP
 
 import { Aside, Steps } from '@astrojs/starlight/components';
 
-In Admin, open **Inference → Providers**. A **provider** is where the gateway forwards traffic. For each record you can set **OpenAI-compatible**, **Anthropic**, and **Gemini** endpoints, and maintain **one or more upstream API keys** (usually masked / fingerprinted after save).
+In Admin, open **Inference → Providers**. A **Provider** represents one upstream service account. Each record contains **OpenAI-compatible**, **Anthropic**, and **Gemini** endpoints, **one upstream API key**, and an `active` / `disabled` status. Create multiple Providers when you have multiple accounts at the same vendor.
 
 <Aside type="tip" title="Prerequisite">
 	Finish [Quick start](/en/docs/quick-start/) so you can sign in to Admin.
 </Aside>
 
 <figure class="of-doc-figure">
-	<img src="/screenshots/admin-providers.png" alt="OctaFuse Admin Providers page showing provider stats, search, import, and provider cards." loading="lazy" />
-	<figcaption>Providers is where you maintain upstream vendors, protocol endpoints, and key status. Imported presets still need real API keys.</figcaption>
+	<img src="/screenshots/admin-providers.png" alt="OctaFuse Admin New Provider form with name, API key, status, and OpenAI, Anthropic, and Gemini endpoint settings." loading="lazy" />
+	<figcaption>Each Provider represents one upstream account and API key. Configure only the protocol base URLs or capability endpoints that account supports.</figcaption>
 </figure>
 
 ## What to do in Admin
 
 <Steps>
 1. In the sidebar under **Inference**, open **Providers**.
-1. **Create or edit**: set id, display name, per-protocol endpoints (`base` or full capability URLs — follow upstream docs for `/v1` paths), the first **API Key**, optional notes.
-1. **Multiple keys**: add more upstream keys on the same Provider with labels, **priority**, optional **weight**, RPM / TPM / concurrency, and status. Scheduling uses key priority / headroom first, then weight on near ties — this is **not** the same layer as [route](/en/docs/guides/routing/) **priority**.
+1. **Create or edit**: set the display name, per-protocol endpoints (`base` or full capability URLs — follow upstream docs for `/v1` paths), one **API Key**, status, and optional notes.
+1. **Multiple accounts**: create one Provider per vendor account, then add multiple Upstream Targets to the same Route Pool. Configure priority, weight, and distribution strategy under [Routing](/en/docs/guides/routing/).
 1. **Import from catalog**: use the built-in catalog to pre-fill endpoints; you still need a valid **API Key**. For Images, confirm generations (and edits when needed); see [Images](/en/docs/guides/images/).
 1. After saving, go to [Routing](/en/docs/guides/routing/) to bind models to this vendor and protocol; use [Playground](/en/docs/features/playground/) or [Simulator](/en/docs/features/simulator/) to validate connectivity.
 </Steps>
@@ -30,7 +30,7 @@ In Admin, open **Inference → Providers**. A **provider** is where the gateway 
 
 - Wrong base URLs / endpoints often show up as 404/401 — double-check upstream docs.
 - This screen **does not** include a one-click connectivity test; validate via routes + Playground / Simulator.
-- When upstream rotates keys, update them here; you can keep multiple keys for gradual cutover.
+- When the upstream rotates a key, replace it here. Use multiple Providers and Route Targets for gradual cutover or backup accounts.
 
 ## Automation
 

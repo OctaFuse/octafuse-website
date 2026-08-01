@@ -1,6 +1,6 @@
 ---
 title: OctaFuse
-description: A self-hostable open-source AI capability gateway and operations control plane. Unify Chat, image generation / edit, and extensible Agent Tools while controlling routing, keys, budgets, billing, and audit. Supports Cloudflare Workers + D1 and Docker / Postgres / MySQL. AGPLv3.
+description: A self-hostable open-source AI capability gateway and operations control plane. Unify Chat, image generation / edit, speech transcription, and Agent Tools with Surface → Pool → Target routing, budgets, billing, and audit. Supports Cloudflare Workers + D1 and Docker / Postgres / MySQL. AGPLv3.
 template: splash
 sidebar:
   hidden: true
@@ -24,7 +24,7 @@ import { Card, CardGrid } from '@astrojs/starlight/components';
 
 AI capabilities are expanding beyond text models into image generation, Agent Tools, private models, and specialized services. Providers, compatible endpoints, coding plans, self-hosted services, and internal accounts each bring their own **Base URLs**, keys, quotas, pricing, and logs. Applications need something simpler: one stable entrypoint, controlled routing, clear budgets, and traceable request history.
 
-**OctaFuse is a self-hostable AI capability gateway and operations control plane.** Unify official providers, third-party compatible endpoints, image generation, Agent Tools, private model services, and upstream key pools while keeping routing, sticky affinity, limits, circuit breaking, budgets, billing, audit, and Admin APIs under your control. Clients still use one Gateway URL and one user key.
+**OctaFuse is a self-hostable AI capability gateway and operations control plane.** Unify official providers, third-party compatible endpoints, image generation and editing, speech transcription, Agent Tools, and private model services. Request Surface → Route Pool → Upstream Target topology keeps routing, failover, Provider circuits, budgets, billing, audit, and Admin APIs under your control. Clients still use one Gateway URL and one user key.
 
 ## Application Scenarios
 
@@ -39,45 +39,45 @@ AI capabilities are expanding beyond text models into image generation, Agent To
 		Create separate users and API keys for departments, projects, members, or customers, with budget periods, status, and metadata outside application services.
 	</Card>
 	<Card title="API proxy businesses" icon="external">
-		Connect multiple upstream providers and key pools, issue downstream customer keys, and manage each customer through request logs, cost lenses, and audit records.
+		Connect multiple upstream Providers; represent multiple accounts at the same vendor as separate Providers. Issue downstream customer keys and manage each customer through request logs, cost lenses, and audit records.
 	</Card>
 	<Card title="Private and hybrid models" icon="setting">
 		Put self-hosted compatible services, internal models, Ollama / vLLM paths, and public model providers behind one routing system with a consistent external surface.
 	</Card>
 	<Card title="Cost and reliability ops" icon="analytics">
-		Observe usage and failures by model, Provider, user, and reliability view, then tune default routes, backups, budgets, time-of-day pricing, and upstream key quotas.
+		Observe usage and failures by model, Provider, user, and reliability view, then tune Route Pool strategy, priority / weight, budgets, and time-of-day pricing.
 	</Card>
 </CardGrid>
 
 ## Product Capabilities
 
 <CardGrid stagger>
-	<Card title="Three protocol entrypoints" icon="external">
-		Supports OpenAI Chat Completions, Anthropic Messages, Gemini `generateContent` / `streamGenerateContent`. Agents / SDKs use authenticated `GET /v1/models`; portals can use public `GET /catalog/models`.
+	<Card title="Multi-protocol, multimodal entrypoint" icon="external">
+		Supports OpenAI Chat, Images, Audio Transcriptions, and Models; Anthropic Messages; and Gemini `generateContent` / `streamGenerateContent`. Portals can discover capabilities through public `GET /catalog/models`.
 	</Card>
 	<Card title="Image generation / edit" icon="open-book">
 		OpenAI-compatible `POST /v1/images/generations` and `edits`, with token-metered and per-image (`per_image`) catalog pricing. Playground / Simulator cover image smoke and billing logs.
 	</Card>
 	<Card title="Agent Tools" icon="puzzle">
-		Extensible product APIs for agents (`/v1/tools/*`). Shipping today: web tools (Search / Fetch / Deep Search); more tools can follow. Configure engine keys under Admin → Tools — per-call billing, no charge on failure.
+		Extensible product APIs for agents (`/v1/tools/*`). Web Search supports Bocha, Tavily, CleverSee, and Tencent Cloud WSA; Web Fetch supports Firecrawl, Tavily Extract, and Jina Reader; Deep Search supports Firecrawl Search and Jina Search.
 	</Card>
-	<Card title="Models and route groups" icon="random">
-		Clients can use stable model IDs or `baseId:group`. One model can attach multiple upstream routes by protocol, route group, and **route priority** — routes have **no weight**.
+	<Card title="Surface → Pool → Target routing" icon="random">
+		Client requests resolve a protocol and operation Request Surface, then enter a Route Pool. Pools group Upstream Targets by priority and order each tier with strategy plus weight before automatic failover.
 	</Card>
 	<Card title="Provider and model presets" icon="document">
 		One-click Admin import for a large preset catalog: official model vendors plus aggregation platforms and Coding / Token Plans, with Base URLs and catalog pricing prefilled so you are not hunting docs to maintain endpoints by hand.
 	</Card>
-	<Card title="Provider key scheduling" icon="approve-check">
-		A Provider can hold multiple upstream keys. After a route is chosen, scheduling uses key priority, headroom, **key weight** (near ties), circuit state, and **sticky** bindings before failover.
+	<Card title="Single-key Providers and presets" icon="approve-check">
+		Each Provider owns one upstream API key and status; represent multiple vendor accounts as separate Providers. Import Provider / Model presets in Admin, add the real key, then attach routes.
 	</Card>
-	<Card title="Limits, circuits, sticky" icon="warning">
-		Upstream keys support **RPM / TPM / max concurrency**. 429, 401 / 403, 5xx, and network errors use separate cooldown policies; opt-in sticky bindings keep the same user on the same key to improve prompt cache hits.
+	<Card title="Four strategies and Provider circuits" icon="warning">
+		Choose `affinity`, `weighted_random`, `strict`, or `round_robin`. Default affinity keeps a stable preferred upstream for better Prompt Cache hits; 429, 401 / 403, and consecutive 5xx responses trigger Provider-level cooldowns.
 	</Card>
 	<Card title="User keys, budgets, and pricing" icon="padlock">
-		Budgets and reset periods belong to Users; each user can own multiple active API keys. Proxy checks budget before forwarding and records three amounts per request: **supplier cost**, **catalog list price**, and **charged to user**. Routes support base factors plus **daily schedule multipliers** (business-timezone peak / off-peak) for vendor time-based pricing.
+		Govern access through External system → User → API Key. Budgets and reset periods belong to Users; API Keys authenticate and attribute usage. Model requests record **supplier cost**, **catalog list price**, and **charged to user**, with business-timezone daily schedule multipliers.
 	</Card>
 	<Card title="Logs, audit, analytics" icon="magnifier">
-		Request logs capture protocol, model, route group, Provider, provider key, tokens, status, and costs. Audit logs track budget charges, resets, and user / key lifecycle events.
+		Request logs capture protocol / operation, model, route group, Surface, Pool, Target, Provider, tokens, status, and three cost views. Audit logs track budget charges, resets, and user / key lifecycle events.
 	</Card>
 	<Card title="Playground and Simulator" icon="open-book">
 		Playground tests a single Admin route. Simulator uses a real user key from the browser to verify auth, routing, billing, and logs.

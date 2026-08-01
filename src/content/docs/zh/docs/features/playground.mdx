@@ -1,13 +1,13 @@
 ---
 title: Playground
-description: 在管理台选定一条模型路由，编辑请求体直连上游试跑，用于验证配置且不消耗用户密钥额度。
+description: 在管理台选定一个 Upstream Target，编辑请求体直连上游试跑，用于验证配置且不消耗用户密钥额度。
 ---
 
 import { Aside, Steps } from '@astrojs/starlight/components';
 
-在左侧 **Inference → Playground** 打开。**Playground** 用来在 **不经过业务用户的 `sk-…` 计费路径** 的前提下，针对 **某一条已配置的路由** 向对应上游发一次试跑请求，快速确认供应商地址、密钥、上游模型名等是否正确。
+在左侧 **Inference → Playground** 打开。**Playground** 用来在 **不经过业务用户的 `sk-…` 计费路径** 的前提下，针对 **一个已配置的 Upstream Target** 向对应上游发一次试跑请求，快速确认供应商地址、密钥、上游模型名等是否正确。
 
-试跑 **不会**写入与真实业务相同的 **请求日志** 流水，也 **不会**扣减用户侧预算，也 **不会**模拟「同一路由组内多条路由自动切换」的完整行为——后者请用真实 Proxy 调用或 [Simulator](/zh/docs/features/simulator/) 验证。
+试跑 **不会**写入请求日志、扣减用户预算，也 **不会**经过 Route Pool 的策略、熔断与故障转移——完整行为请用真实 Proxy 调用或 [Simulator](/zh/docs/features/simulator/) 验证。Agent Tools 请直接调用 `/v1/tools/*`。
 
 <Aside type="tip" title="适用场景">
 	刚改完供应商或路由时，先用 Playground 确认能打通上游，再让业务流量切换。
@@ -31,7 +31,7 @@ import { Aside, Steps } from '@astrojs/starlight/components';
 
 | 工具 | 典型用途 |
 |------|----------|
-| Playground | 运维/开发验证 **单条路由 → 上游** 是否配通 |
+| Playground | 运维/开发验证 **单个 Target → 上游** 是否配通 |
 | [Simulator](/zh/docs/features/simulator/) | 用真实 **`sk-…`** 从浏览器打 **Proxy**，验证鉴权、路由、预算与日志整条链路 |
 
 ## 下一步

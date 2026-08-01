@@ -1,11 +1,11 @@
 ---
 title: 路由配置
-description: 在管理台为模型配置上游路由：供应商、协议、路由组、优先级、粘性、计费倍率与每日时段调价，实现路由与故障切换。
+description: 使用 Request Surface、Route Pool 与 Upstream Target 配置协议操作、路由策略、优先级、权重、计费倍率和故障转移。
 ---
 
 import { Aside, Steps } from '@astrojs/starlight/components';
 
-在左侧 **Inference → Routes** 打开路由页。**模型路由**决定：当客户端传入某个 **`model`**（以及可选的 **路由组**）时，网关按什么顺序尝试哪条「模型 + 供应商 + 上游模型名」组合。同一路由组内可配置多条路由，按 **优先级** 依次尝试，实现故障时的自动切换。
+在左侧 **Inference → Routes** 打开路由页。2.0 使用三层拓扑：客户端请求先按模型、路由组、协议与 operation 命中 **Request Surface**；Surface 指向一个 **Route Pool**；Pool 内包含多个具体的 **Upstream Target**。这样 Chat、Images、Audio 等操作可以使用独立故障转移池和路由策略。
 
 列表支持多条件筛选；筛选结果会反映在浏览器地址栏，便于复制链接给同事查看同一视图。
 
@@ -14,34 +14,45 @@ import { Aside, Steps } from '@astrojs/starlight/components';
 </Aside>
 
 <figure class="of-doc-figure">
-	<img src="/screenshots/admin-routes.png" alt="OctaFuse Admin Routes 页面中按供应商分组展示模型路由配置。" loading="lazy" />
-	<figcaption>Routes 页面会按供应商和模型展示路由卡片；同一个模型可以有多条启用/备用路由，用于优先级和故障切换。</figcaption>
+	<img src="/screenshots/admin-routes.png" alt="OctaFuse Admin Routes 页面展示 Request Surface、路由组、策略与多个 Upstream Target 的拓扑关系。" loading="lazy" />
+	<figcaption>Routes 把客户端入口、路由策略与上游 Target 放在同一条链路中展示；同一模型可以按协议、operation 与 route group 拆分。</figcaption>
 </figure>
 
 ## 在管理台里要做什么
 
 <Steps>
 1. 打开 **Routes**。
-1. **新建路由**：选择模型、供应商、上游实际模型名称、**协议类型**（须与供应商页为该协议配置的访问地址一致）、**路由组**（常用 `default`）、**优先级**（数字越小越优先）、**状态**（仅 **启用** 的路由参与对外服务）。
-1. **计费**：在路由的 Billing 面板配置 **用户计费 / 供应成本** 相对目录标准价的基础倍率；如需对齐供应商高峰 / 闲时价，再配置 **Daily schedule**（每日时段倍率，时区见 [系统配置](/zh/docs/guides/system-config/) 的业务时区）。
+1. **Request Surface**：选择客户端模型与 `route_group`（常用 `default`），再指定入口协议 / operation，例如 `openai.chat`、`anthropic.messages`、`openai.images.generations`。
+1. **Route Pool**：让 Surface 指向一个故障转移池，并按需设置 Pool 级策略；未设置时继承模型 / 全局策略。
+1. **Upstream Target**：选择 Provider、填写上游实际模型名与 operation，设置 **priority**（数字越大越先试）、**weight** 和启用状态。
+1. **计费**：在 Target 的 Billing 配置 **用户计费 / 供应成本** 相对目录标准价的基础倍率；如需对齐供应商高峰 / 闲时价，再配置 **Daily schedule**（每日时段倍率，时区见 [系统配置](/zh/docs/guides/system-config/)）。
 1. **保存后**：用 [Playground](/zh/docs/features/playground/) 针对单条路由做上游试跑；若要验证「真实密钥 + 网关入口」整条链路，请用 [Simulator](/zh/docs/features/simulator/)。
 </Steps>
 
 ## 与客户端的关系
 
-客户端只需传 **`model`** 及协议要求的请求体，无需写死供应商信息。调整上游或优先级时，优先改路由页即可。
+客户端只需传 **`model`** 及协议要求的请求体，无需写死供应商信息。可使用基础模型 ID，或用 `baseId:group` 选择路由组。
 
-## 路由边界：priority、weight 与粘性
+## 路由顺序与四种策略
 
-| 层 | 控制什么 |
-|----|----------|
-| **Route `priority`** | 同一 `route_group` 内先试哪条上游 route（数字越小越先）。**Route 没有 weight。** |
-| **Provider Key `weight`** | 命中某条 route 后，在该 Provider 的多把 Key 间、余量接近时加权随机。见 [供应商配置](/zh/docs/guides/providers/)。 |
-| **粘性（sticky）** | 在 **Models** 上按「协议 × 路由组」opt-in。开启后，同一用户尽量连续命中同一把上游 Key，提升上游 **prompt cache** 命中率；软限流可短等待，上游硬错误仍会 failover。 |
+Pool 先按 Target 的 `priority` **降序分层**，数字越大越先试；同一 priority 层再按生效策略与 `weight` 排序：
+
+| 策略 | 特点与适用场景 |
+|------|----------------|
+| `affinity`（默认） | 同用户、模型、分组与协议稳定首选同一 Provider，Prompt Cache 命中率高；短时流量可能不完全均匀。 |
+| `weighted_random` | 按 weight 加权随机分流，负载均衡性高，适合比例分摊或 A/B；缓存亲和较弱。 |
+| `strict` | 同层按 weight 从高到低固定排序，适合可预测主备；首选 Provider 承担大部分流量。 |
+| `round_robin` | 按 weight 轮转，更均匀；计数器按运行实例维护，多实例间不全局同步。 |
+
+跨供应商硬主备请使用不同 `priority`。策略覆盖顺序以 Route Pool 为最高优先级，其后是模型规则 / 模型默认、全局 `ROUTE_STRATEGY`，最后回退 `affinity`。
+
+## 故障转移与熔断
+
+可重试的 429、401 / 403、5xx 与网络错误会继续尝试下一个 Target；Provider 会按错误类型进入不同冷却时间。若所有候选都处于熔断状态，Proxy 返回 429 并携带 `Retry-After`。
 
 ## 说明
 
-**Playground** 用于直连上游试跑单条路由，**不会**模拟网关对同组多条路由的自动切换，也 **不走** sticky；完整路由行为以真实 Proxy 调用为准。图片生成路由须为 OpenAI 协议，见 [图片生成 / 编辑](/zh/docs/guides/images/)。
+**Playground** 直连单条 Target，不经过 Pool 策略、故障转移、用户计费或请求日志；完整行为请用真实 Proxy 调用或 **Simulator** 验证。图片生成路由须为 OpenAI 协议，见 [图片生成 / 编辑](/zh/docs/guides/images/)。
 
 ## 下一步
 

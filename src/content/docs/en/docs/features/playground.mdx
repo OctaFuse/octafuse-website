@@ -1,13 +1,13 @@
 ---
 title: Playground
-description: Pick one configured route in Admin edit a JSON body and send an upstream probe without consuming user key budget on the normal path.
+description: Pick one Upstream Target in Admin, edit a JSON body, and probe the upstream without consuming user key budget.
 ---
 
 import { Aside, Steps } from '@astrojs/starlight/components';
 
-Open **Inference → Playground**. **Playground** sends a **probe** for **one selected route** straight to its upstream, so you can verify URLs, credentials, and upstream model names **without** using a customer **`sk-…`** on the normal billing path.
+Open **Inference → Playground**. **Playground** sends a **probe** for **one selected Upstream Target** straight to its upstream, so you can verify URLs, credentials, and upstream model names **without** using a customer **`sk-…`** on the normal billing path.
 
-It does **not** create the same **request log** stream as production traffic, does **not** debit user budgets, and does **not** fully mirror **multi-route failover** inside a route group — validate that with real Proxy calls or [Simulator](/en/docs/features/simulator/).
+It does **not** write request logs, debit user budgets, or run Route Pool strategy, circuits, and failover. Validate the full behavior with real Proxy calls or [Simulator](/en/docs/features/simulator/). Call Agent Tools directly through `/v1/tools/*`.
 
 <Aside type="tip" title="When to use">
 	After editing providers or routes, confirm upstream connectivity here before switching live traffic.
@@ -31,7 +31,7 @@ It does **not** create the same **request log** stream as production traffic, do
 
 | Tool | Typical goal |
 |------|----------------|
-| Playground | Ops/dev: **single route → upstream** wiring check |
+| Playground | Ops/dev: **single Target → upstream** wiring check |
 | [Simulator](/en/docs/features/simulator/) | Real **`sk-…`** from the browser to the **Proxy** — auth, routing, budget, logs |
 
 ## Next

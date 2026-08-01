@@ -76,13 +76,14 @@ Follow the CLI for `GATEWAY_URL` / `GATEWAY_MASTER_URL`, then verify with `GET $
 <Steps>
 1. [Providers](/en/docs/guides/providers/) — wire upstream vendors  
 1. [Models](/en/docs/guides/models/) — catalog model ids the gateway understands  
-1. [Routing](/en/docs/guides/routing/) — map client `model` strings to upstreams  
+1. [Routing](/en/docs/guides/routing/) — map client model + operation to upstreams through Surface → Pool → Target
+1. [Agent Tools](/en/docs/guides/tools/) (optional) — configure the Active engine for Search / Fetch / Deep Search
 1. [Users](/en/docs/guides/users/) and [API keys](/en/docs/guides/api-keys/) — who can call and with what budget  
 </Steps>
 
 ## Optional: one inference smoke test
 
-After Provider + route + API key exist in Admin, replace the key and `model` below:
+After Provider + Model + Request Surface / Route Pool / Upstream Target + API key exist in Admin, replace the key and `model` below:
 
 ```bash
 curl -sS http://127.0.0.1:8787/v1/chat/completions \

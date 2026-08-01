@@ -24,7 +24,7 @@ Open **Inference → Models**. **Models** are catalog entries: the client **`mod
 1. **Import from catalog**: bulk pre-fill from the built-in catalog, then review and save.
 1. **Pricing**: use the tier editor in the page (currency display follows your global billing currency setting).
 1. After saving, add at least one **active** route in [Routing](/en/docs/guides/routing/) or clients cannot resolve the model.
-1. **Sticky (optional)**: to keep the same user on the same upstream key (better prompt cache hits), enable sticky on the model per protocol × route group — see [Routing](/en/docs/guides/routing/).
+1. **Capabilities and billing mode**: for Images, verify `image_billing_mode` (token / per_image); for transcription, verify `audio_billing_mode` (token / per_second). Default affinity routing keeps a stable preferred Provider at protocol granularity.
 </Steps>
 
 ## How clients pass `model`
@@ -35,7 +35,7 @@ Use the **base model id**, or **`baseModelId:routeGroup`** (for example `my-mode
 
 | Endpoint | Auth | Typical use |
 |----------|------|-------------|
-| **`GET /v1/models`** | User `sk-…` | Agents / SDKs; LLMs by default (`kind=image` / `kind=all` when needed) |
+| **`GET /v1/models`** | User `sk-…` | Agents / SDKs; LLMs by default (`kind=image` / `kind=audio` / `kind=all` when needed) |
 | **`GET /catalog/models`** | None | Public portal discovery; protocols and route groups from active routes |
 
 They are not the same response shape — do not mix them. Image pricing: [Image generation / edit](/en/docs/guides/images/).

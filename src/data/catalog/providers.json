@@ -4,7 +4,7 @@
   "source": {
     "repo": "OctaFuse/octafuse-gateway",
     "ref": "main",
-    "commit": "386cd44987eb01e3b92f292222231afa3c4e4467"
+    "commit": "cf037f046f44aec390eaaf2f0d3a74598992d1b2"
   },
   "source_path": "packages/admin/lib/provider-import-presets.json",
   "count": 42,

@@ -14,13 +14,13 @@ import { Aside, CardGrid, LinkCard } from '@astrojs/starlight/components';
 <Aside type="note" title="Source">
 	此页由 `npm run sync:gateway` 生成。 如果官网摘要与 gateway 仓库文档不一致，请以 gateway 仓库为准。
 
-	Gateway ref: `main` · commit: `386cd44987eb01e3b92f292222231afa3c4e4467`
+	Gateway ref: `main` · commit: `cf037f046f44aec390eaaf2f0d3a74598992d1b2`
 </Aside>
 
 <CardGrid>
 	<LinkCard title="快速开始" description="Docker 与 Cloudflare 本地 D1 的最小启动路径。" href="https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/users/quickstart.md" />
-	<LinkCard title="用户侧 API" description="OpenAI / Anthropic / Gemini 兼容入口、模型列表、预算状态。" href="https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/developers/api/user.md" />
-	<LinkCard title="Admin HTTP API" description="Provider、模型、路由、用户、密钥、配置和日志自动化接口。" href="https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/developers/api/admin.md" />
+	<LinkCard title="用户侧 API" description="OpenAI / Anthropic / Gemini、Images、Audio、Agent Tools、模型列表与预算状态。" href="https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/developers/api/user.md" />
+	<LinkCard title="Admin HTTP API" description="Provider、模型、路由、Tools、用户、密钥、计费配置、日志与分析接口。" href="https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/developers/api/admin.md" />
 	<LinkCard title="Docker / 自托管" description="Docker 镜像、Compose、GHCR、Postgres / MySQL 和 Zeabur 注意事项。" href="https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/operators/deployment/docker.md" />
 </CardGrid>
 
@@ -30,7 +30,8 @@ import { Aside, CardGrid, LinkCard } from '@astrojs/starlight/components';
 |-----|----------------|
 | [文档总入口](https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/README.md) | 按使用者、开发者、运维者和维护者组织的入口。 |
 | [快速开始](https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/users/quickstart.md) | Docker 与 Cloudflare 本地 D1 的最小启动路径。 |
-| [Admin 配置指南](https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/users/configuration.md) | 部署后配置 Provider、Route、用户和 API Key。 |
+| [Admin 配置指南](https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/users/configuration.md) | 部署后配置 Provider、模型路由、Agent Tools、用户和 API Key。 |
+| [功能地图](https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/users/features.md) | 协议、Agent Tools、路由策略、计费、管理能力与部署方式总览。 |
 
 ## 开发者与集成
 
@@ -38,8 +39,8 @@ import { Aside, CardGrid, LinkCard } from '@astrojs/starlight/components';
 |-----|----------------|
 | [系统集成指南](https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/developers/integration.md) | 门户、后台或 SaaS 接入 Gateway 的边界、Key 类型和常见流程。 |
 | [API 总览](https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/developers/api/README.md) | Proxy / Admin 的 Base URL、认证方式和错误形态。 |
-| [用户侧 API](https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/developers/api/user.md) | OpenAI / Anthropic / Gemini 兼容入口、模型列表、预算状态。 |
-| [Admin HTTP API](https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/developers/api/admin.md) | Provider、模型、路由、用户、密钥、配置和日志自动化接口。 |
+| [用户侧 API](https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/developers/api/user.md) | OpenAI / Anthropic / Gemini、Images、Audio、Agent Tools、模型列表与预算状态。 |
+| [Admin HTTP API](https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/developers/api/admin.md) | Provider、模型、路由、Tools、用户、密钥、计费配置、日志与分析接口。 |
 | [本地开发与测试](https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/developers/local-development.md) | D1、Node + Postgres、Node + MySQL、Docker 和冒烟脚本组合。 |
 
 ## 架构与行为语义
@@ -47,7 +48,9 @@ import { Aside, CardGrid, LinkCard } from '@astrojs/starlight/components';
 | Doc | 内容 |
 |-----|----------------|
 | [运行时与数据存储架构](https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/developers/architecture/runtime-data.md) | Cloudflare / Node 与 D1 / Postgres / MySQL 的组合矩阵。 |
-| [Proxy 请求生命周期](https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/developers/architecture/proxy-request-lifecycle.md) | 鉴权、路由、限流、熔断、粘性、failover 和异步记账。 |
+| [Route 拓扑](https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/developers/architecture/route-topology.md) | Request Surface → Route Pool → Upstream Target 的关系、operation 与故障转移边界。 |
+| [路由策略](https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/developers/reference/route-strategies.md) | affinity、weighted_random、strict、round_robin 的算法、覆盖层级与适用场景。 |
+| [Proxy 请求生命周期](https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/developers/architecture/proxy-request-lifecycle.md) | 鉴权、Surface / Pool / Target 解析、四策略、Provider 熔断、failover 和异步记账。 |
 | [用户与 API Key 数据模型](https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/developers/architecture/user-keys-data-model.md) | User、API Key、预算、请求日志和审计日志的关系与约束。 |
 | [流式计费与取消](https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/developers/reference/streaming-billing.md) | 流式 Chat、客户端取消、usage 解析和扣费状态。 |
 | [文生图模型](https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/developers/reference/image-models.md) | gpt-image-2 与 Seedream：端点、参数、计费折算与运营验收。 |
@@ -69,4 +72,4 @@ import { Aside, CardGrid, LinkCard } from '@astrojs/starlight/components';
 |-----|----------------|
 | [版本治理与发版](https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/maintainers/release-versioning.md) | Changesets、Version PR、tag、GitHub Release 和 GHCR 镜像。 |
 | [文档边界与敏感信息规范](https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/CONVENTIONS.md) | 仓内文档分层、官网边界、占位符和禁止值。 |
-| [curl 最小示例](https://github.com/OctaFuse/octafuse-gateway/blob/main/examples/quick-curl.md) | 健康检查、用户推理和 Admin 配置接口的最小 curl。 |
+| [curl 最小示例](https://github.com/OctaFuse/octafuse-gateway/blob/main/examples/quick-curl.md) | 健康检查、用户推理、Agent Tool 与 Admin 鉴权探针的最小 curl。 |
