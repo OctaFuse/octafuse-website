@@ -80,6 +80,45 @@ docker build -f Dockerfile.migrate -t octafuse-migrate:local .
 
 `Dockerfile.migrate` 是一次性迁移 Job；`Dockerfile.proxy` 与 `Dockerfile.admin` 是常驻应用进程。
 
+## 如何更新版本
+
+升级前先阅读该版本 [GitHub Release](https://github.com/OctaFuse/octafuse-gateway/releases) / Changelog 中的 **升级说明**（是否有破坏性变更、是否必须先迁移）。推荐顺序始终是：**先 migrate，再滚动重启 Proxy / Admin**（或只在一侧开 `AUTO_MIGRATE=1`）。
+
+### 预构建镜像（GHCR / 私有 registry）
+
+1. 在 `docker/deploy/.env.local`（或你的 env 文件）里把 `GATEWAY_PROXY_IMAGE` / `GATEWAY_ADMIN_IMAGE` / `GATEWAY_MIGRATE_IMAGE` 的 **tag** 改成目标版本（例如 `v2.1.2`；生产建议钉死 semver，避免长期漂在 `latest`）。
+2. 拉取并迁移，再重建容器：
+
+```bash
+docker compose --env-file docker/deploy/.env.local -f docker/examples/gateway.compose.yml pull
+docker compose --env-file docker/deploy/.env.local -f docker/examples/gateway.compose.yml --profile migrate run --rm migrate
+docker compose --env-file docker/deploy/.env.local -f docker/examples/gateway.compose.yml up -d
+```
+
+若已启用 `AUTO_MIGRATE=1`，可在 `pull` 后直接 `up -d`（入口会在启动前跑幂等迁移）；仍建议先看 Release 说明确认本版迁移是否需要维护窗口。
+
+### 本地构建镜像（方式 A / C）
+
+```bash
+git pull --ff-only
+# 有新 SQL 时先迁移
+docker compose -f docker/compose/node-pg.yml --profile migrate run --rm migrate
+# 再重建并启动应用（MySQL 则改用 node-mysql.yml）
+docker compose -f docker/compose/node-pg.yml up -d --build gateway-proxy gateway-admin
+```
+
+本地一键体验（`quickstart.yml`）同理：`git pull` 后 `docker compose -f docker/compose/quickstart.yml up --build -d`。
+
+### 升级后验收
+
+```bash
+curl -fsS http://127.0.0.1:8787/health
+curl -fsS http://127.0.0.1:8789/api/admin/config \
+  -H 'Authorization: Bearer <MASTER_KEY>'
+```
+
+更细的镜像名、GHCR digest 与 Zeabur 注意项见 [GitHub · Docker / 自托管](https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/operators/deployment/docker.md)。
+
 ## 关键环境变量
 
 <Steps>

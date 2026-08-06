@@ -80,6 +80,45 @@ docker build -f Dockerfile.migrate -t octafuse-migrate:local .
 
 `Dockerfile.migrate` is a one-shot migration job; `Dockerfile.proxy` and `Dockerfile.admin` are long-running application images.
 
+## How to upgrade
+
+Before upgrading, read the **Upgrade notes** in that version’s [GitHub Release](https://github.com/OctaFuse/octafuse-gateway/releases) / Changelog (breaking changes, required migrations). Always prefer **migrate first, then roll Proxy / Admin** (or enable `AUTO_MIGRATE=1` on only one service).
+
+### Prebuilt images (GHCR / private registry)
+
+1. In `docker/deploy/.env.local` (or your env file), bump the **tag** on `GATEWAY_PROXY_IMAGE` / `GATEWAY_ADMIN_IMAGE` / `GATEWAY_MIGRATE_IMAGE` (for example `v2.1.2`; pin semver in production instead of floating on `latest`).
+2. Pull, migrate, then recreate containers:
+
+```bash
+docker compose --env-file docker/deploy/.env.local -f docker/examples/gateway.compose.yml pull
+docker compose --env-file docker/deploy/.env.local -f docker/examples/gateway.compose.yml --profile migrate run --rm migrate
+docker compose --env-file docker/deploy/.env.local -f docker/examples/gateway.compose.yml up -d
+```
+
+If `AUTO_MIGRATE=1` is already set, you can `up -d` after `pull` (the entrypoint runs idempotent migrations). Still check the Release notes for any maintenance window.
+
+### Locally built images (options A / C)
+
+```bash
+git pull --ff-only
+# When new SQL lands, migrate first
+docker compose -f docker/compose/node-pg.yml --profile migrate run --rm migrate
+# Rebuild and restart apps (use node-mysql.yml for MySQL)
+docker compose -f docker/compose/node-pg.yml up -d --build gateway-proxy gateway-admin
+```
+
+For the local quickstart (`quickstart.yml`): `git pull`, then `docker compose -f docker/compose/quickstart.yml up --build -d`.
+
+### Smoke test after upgrade
+
+```bash
+curl -fsS http://127.0.0.1:8787/health
+curl -fsS http://127.0.0.1:8789/api/admin/config \
+  -H 'Authorization: Bearer <MASTER_KEY>'
+```
+
+Image names, GHCR digests, and Zeabur notes: [GitHub · Docker / self-hosted](https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/operators/deployment/docker.md).
+
 ## Key environment variables
 
 <Steps>

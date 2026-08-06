@@ -27,14 +27,39 @@ npm run bootstrap:cloudflare
 
 The script will: create or reuse D1 → remote migrate → deploy Proxy / Admin → put `ADMIN_PASSWORD` → print downstream `GATEWAY_*` hints.
 
-Later releases:
+Try locally without deploying: [Quick start · local](/en/docs/quick-start/).
+
+## How to upgrade
+
+For an already-deployed instance, work from the **octafuse-gateway** repo root. Back up important config first, and read the **Upgrade notes** in that version’s [Release](https://github.com/OctaFuse/octafuse-gateway/releases) / Changelog.
 
 ```bash
-npm run deploy:cloudflare -- <instance> --migrate   # include when new D1 SQL lands
-npm run deploy:cloudflare -- <instance>             # redeploy only
+git pull --ff-only
+npm ci
 ```
 
-Try locally without deploying: [Quick start · local](/en/docs/quick-start/).
+When new D1 migrations land (prefer **migrate first, then deploy Workers that depend on the new schema**):
+
+```bash
+npm run deploy:cloudflare -- <instance> --migrate
+```
+
+When there are no schema changes:
+
+```bash
+npm run deploy:cloudflare -- <instance>
+```
+
+Or update one side only:
+
+```bash
+npm run deploy:cloudflare -- <instance> --proxy-only
+npm run deploy:cloudflare -- <instance> --admin-only
+```
+
+`<instance>` maps to `cloudflare-worker/<instance>.env` (for example `production`). **Redeploying Workers does not run D1 migrations.** Workers Builds (Connect to Git) also skip migrations—use `--migrate` or `db:migrate:remote` when new SQL lands.
+
+Full troubleshooting: [gateway Cloudflare quickstart · Upgrades](https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/operators/deployment/cloudflare-quickstart.md#12-后续升级).
 
 ## Configuration model (deeper)
 

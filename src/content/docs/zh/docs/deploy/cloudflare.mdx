@@ -27,14 +27,39 @@ npm run bootstrap:cloudflare
 
 脚本会：创建或复用 D1 → 远程迁移 → 部署 Proxy / Admin → 写入 `ADMIN_PASSWORD` Secret → 打印下游 `GATEWAY_*` 提示。
 
-后续发版：
+本机先试用、不上云：见 [快速开始 · 本机启动](/zh/docs/quick-start/)。
+
+## 如何更新版本
+
+已上线实例发新版时，在 **octafuse-gateway** 仓库根目录操作。升级前先备份重要配置，并阅读该版本 [Release](https://github.com/OctaFuse/octafuse-gateway/releases) / Changelog 的 **升级说明**。
 
 ```bash
-npm run deploy:cloudflare -- <instance> --migrate   # 有新 D1 SQL 时带 --migrate
-npm run deploy:cloudflare -- <instance>             # 仅重新部署
+git pull --ff-only
+npm ci
 ```
 
-本机先试用、不上云：见 [快速开始 · 本机启动](/zh/docs/quick-start/)。
+有新 D1 migration 时（推荐：**先迁移，再部署依赖新 schema 的 Worker**）：
+
+```bash
+npm run deploy:cloudflare -- <instance> --migrate
+```
+
+没有数据库变更时：
+
+```bash
+npm run deploy:cloudflare -- <instance>
+```
+
+也可只更新一侧：
+
+```bash
+npm run deploy:cloudflare -- <instance> --proxy-only
+npm run deploy:cloudflare -- <instance> --admin-only
+```
+
+`<instance>` 对应 `cloudflare-worker/<instance>.env`（例如 `production`）。**D1 迁移不会因为 Worker 重新部署而自动执行**；Workers Builds（Connect to Git）同样不会自动跑迁移，有新 SQL 时仍须带 `--migrate` 或先 `db:migrate:remote`。
+
+完整排障与清理见 [gateway Cloudflare 快速部署 · 后续升级](https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/operators/deployment/cloudflare-quickstart.md#12-后续升级)。
 
 ## 配置模型（深入）
 
