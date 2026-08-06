@@ -135,8 +135,8 @@
 					"path": "docs/developers/reference/route-strategies.md",
 					"label": { "zh": "路由策略", "en": "Route strategies" },
 					"description": {
-						"zh": "affinity、weighted_random、strict、round_robin 的算法、覆盖层级与适用场景。",
-						"en": "Algorithms, precedence, and use cases for affinity, weighted_random, strict, and round_robin."
+						"zh": "cache_affinity、weighted_random、fixed_order、weighted_round_robin 的算法、按层覆盖与适用场景。",
+						"en": "Algorithms, tier overrides, precedence, and use cases for cache_affinity, weighted_random, fixed_order, and weighted_round_robin."
 					}
 				},
 				{
@@ -207,6 +207,30 @@
 					"description": {
 						"zh": "Docker 镜像、Compose、GHCR、Postgres / MySQL 和 Zeabur 注意事项。",
 						"en": "Docker images, Compose, GHCR, Postgres / MySQL, and Zeabur notes."
+					}
+				},
+				{
+					"path": "docs/operators/migrations/gemini-models-generate-cutover.md",
+					"label": { "zh": "Gemini models.generate 迁移", "en": "Gemini models.generate migration" },
+					"description": {
+						"zh": "迁移 0017：合并流式与非流式 Surface、处理冲突 Pool，并校验 Gemini 出站 action。",
+						"en": "Migration 0017: merge streaming and non-streaming Surfaces, handle conflicting Pools, and verify Gemini wire actions."
+					}
+				},
+				{
+					"path": "docs/operators/migrations/route-pool-tier-strategies-cutover.md",
+					"label": { "zh": "按 priority 层路由策略迁移", "en": "Priority-tier route strategy migration" },
+					"description": {
+						"zh": "迁移 0018：新增 Route Pool tier_strategies、发布顺序与验收步骤。",
+						"en": "Migration 0018: add Route Pool tier_strategies with deployment order and acceptance checks."
+					}
+				},
+				{
+					"path": "docs/operators/migrations/route-strategy-canonical-ids-cutover.md",
+					"label": { "zh": "Canonical 路由策略 ID 迁移", "en": "Canonical route strategy ID migration" },
+					"description": {
+						"zh": "迁移 0019：在维护窗口内硬切换策略 ID，并校验所有持久化配置。",
+						"en": "Migration 0019: hard-cut strategy IDs in a maintenance window and verify all persisted policy locations."
 					}
 				},
 				{

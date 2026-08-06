@@ -71,7 +71,7 @@ AI 能力正在从文本模型扩展到图片生成、Agent Tools、私有模型
 		一个 Provider 维护一把上游 API Key 与启用状态；同一供应商多账号用多个 Provider 表达。Admin 可一键导入 Provider / Model 模板，再补齐真实 Key 并挂载路由。
 	</Card>
 	<Card title="四种策略与 Provider 熔断" icon="warning">
-		支持 `affinity`、`weighted_random`、`strict`、`round_robin`。默认 affinity 稳定首选上游以提高 Prompt Cache 命中；429、401 / 403 与连续 5xx 会触发 Provider 级冷却。
+		支持 `cache_affinity`、`weighted_random`、`fixed_order`、`weighted_round_robin`，并可按 Route Pool 的 priority 层覆盖。默认 cache_affinity 稳定首选上游以提高 Prompt Cache 命中；429、401 / 403 与连续 5xx 会触发 Provider 级冷却。
 	</Card>
 	<Card title="用户 Key、预算与计费" icon="padlock">
 		External system → User → API Key 分层治理；预算与周期归属 User，调用由 API Key 鉴权和归集。模型请求同时记 **供应成本**、**目录标准价**、**用户计费**，并支持业务时区下的每日时段倍率。

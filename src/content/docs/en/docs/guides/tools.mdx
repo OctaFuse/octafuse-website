@@ -1,33 +1,36 @@
 ---
 title: Agent Tools
-description: Configure extensible Agent product APIs in Admin Tools—third-party engine keys, one Active engine, per-call billing, and invocation logs. Web tools ship today; more tools can follow.
+description: Configure Agent Tool credentials, three-ledger prices, one Active engine, and invocation logs through Provider cards in Admin.
 ---
 
 import { Aside, Steps } from '@astrojs/starlight/components';
 
 Agent Tools are **protocol-agnostic, extensible product APIs** (same family as `/v1/me`) under `POST /v1/tools/*` for desktop agents after a model tool call. They are **not** part of OpenAI / Anthropic / Gemini chat protocols.
 
-The surface grows over time. Shipping today — web tools:
+Available today:
 
 | Tool | Endpoint | Available Providers |
 |------|----------|---------------------|
 | Web Search | `POST /v1/tools/web-search` | Bocha, Tavily, Alibaba Cloud CleverSee, Tencent Cloud WSA |
 | Web Fetch | `POST /v1/tools/web-fetch` | Firecrawl, Tavily Extract, Jina Reader |
 | Web Deep Search | `POST /v1/tools/web-deep-search` | Firecrawl Search, Jina Search |
+| AI Detection | `POST /v1/tools/ai-detection` | Tencent Cloud TMS (currently implemented) |
 
 <Aside type="caution" title="Dependencies and limits">
 	- You must supply **third-party engine API keys** (see the Admin whitelist).
 	- **Exactly one Active engine per tool**; calls return **503** when the Active engine has no key.
-	- **Per-call billing; failures are not charged** against the user budget.
-	- Tool logs currently use the Active engine’s fixed unit cost for supplier cost, catalog price, and user charge; model Route factors and daily schedules do not apply.
+	- Web tools bill per call; AI Detection bills by `billingUnitChars` character units. Upstream failures are not charged.
+	- Configure **S standard / C charged / M metered** prices separately for every Provider. Only C increases the user budget, and the three prices may differ.
+	- Model Route factors and daily schedules do not apply. Cards flag unsaved changes, missing credentials, unavailable engines, and loss pricing (C < M).
 </Aside>
 
 ## What to do in Admin
 
 <Steps>
 1. Open **Tools → Configuration**.
-1. Maintain each engine catalog for the tools you use: API key + unit cost (currency follows system billing currency).
-1. Pick the **Active** engine; engines without a saved key cannot be activated.
+1. Click a Provider card and use the right-side drawer to enter credentials plus S / C / M prices (currency follows system billing currency).
+1. Use **Save configuration only** to prepare a non-Active engine. **Save and activate** stores the draft and switches the tool’s single Active engine; unimplemented engines or incomplete credentials cannot be activated.
+1. Before clearing credentials from the current Active engine, save and activate another fully configured engine.
 1. Call `/v1/tools/*` with a user `sk-…`; inspect **Tools → Invocations** or [Request logs](/en/docs/guides/request-logs/) (`provider_id=octafuse-tools`).
 </Steps>
 

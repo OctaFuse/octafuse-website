@@ -22,8 +22,8 @@ The list supports rich filters; the current filter set is reflected in the brows
 
 <Steps>
 1. Open **Routes**.
-1. **Request Surface**: choose the client model and `route_group` (often `default`), then the incoming protocol / operation, such as `openai.chat`, `anthropic.messages`, or `openai.images.generations`.
-1. **Route Pool**: point the Surface to a failover pool and optionally set a Pool-level strategy; otherwise it inherits model / global policy.
+1. **Request Surface**: choose the client model and `route_group` (often `default`), then the incoming protocol / operation, such as `openai.chat`, `anthropic.messages`, or `openai.images.generations`. Gemini streaming and non-streaming routes both use `gemini.models.generate`.
+1. **Route Pool**: point the Surface to a failover pool. Set a Pool default strategy, or click a priority-tier strategy chip to override only that tier; unset values continue through the model / global inheritance chain.
 1. **Upstream Target**: choose a Provider, upstream model name and operation, then set **priority** (higher tries first), **weight**, and status.
 1. **Billing**: set **charged to user** and **supplier cost** multipliers on the Target. Add a **Daily schedule** for vendor peak / off-peak pricing; its timezone comes from [System config](/en/docs/guides/system-config/).
 1. After saving, use [Playground](/en/docs/features/playground/) for a single-route upstream check; use [Simulator](/en/docs/features/simulator/) to exercise the full Proxy path with a real `sk-` key.
@@ -39,12 +39,12 @@ Pools first group Targets by `priority` **descending**; higher numbers try first
 
 | Strategy | Behavior and use |
 |----------|------------------|
-| `affinity` (default) | Keeps a stable preferred Provider for the same user, model, group, and protocol, improving Prompt Cache hits; short-term traffic may be uneven. |
+| `cache_affinity` (default) | Keeps a stable preferred Provider for the same user, model, group, and protocol, improving Prompt Cache hits; short-term traffic may be uneven. |
 | `weighted_random` | Weighted random distribution with strong load balancing for proportional allocation or A/B; weaker cache affinity. |
-| `strict` | Fixed high-to-low weight order for predictable primary / backup behavior; the first Provider gets most traffic. |
-| `round_robin` | Weighted rotation for more even traffic; counters are per runtime instance and not globally synchronized. |
+| `fixed_order` | Fixed high-to-low weight order for predictable primary / backup behavior; the first Provider gets most traffic. |
+| `weighted_round_robin` | Weighted rotation for more even traffic; counters are per runtime instance and not globally synchronized. |
 
-Use different priorities for hard primary / backup across Providers. A Route Pool policy has highest precedence, followed by model rules / defaults, global `ROUTE_STRATEGY`, and finally the code default `affinity`.
+Use different priorities for hard primary / backup across Providers. Precedence is: current priority-tier override → Route Pool default → model capability rule → model protocol rule → model default → global `ROUTE_STRATEGY` → `cache_affinity`.
 
 ## Failover and circuits
 

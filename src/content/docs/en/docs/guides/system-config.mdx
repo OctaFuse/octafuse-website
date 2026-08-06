@@ -9,7 +9,7 @@ Open **System → Config** (labeled **Config** in English). This screen groups g
 
 - **Master key** for server-to-admin API calls — must match **`GATEWAY_MASTER_KEY`** in your portal/backend.  
 - **Business timezone** and **billing currency** — affect how times and money render across Admin; business timezone also drives route **Daily schedule** (time-of-day pricing) window evaluation.  
-- **Global route strategy** — set `ROUTE_STRATEGY` to `affinity` (default), `weighted_random`, `strict`, or `round_robin`; model rules and Route Pools can override it.
+- **Global route strategy** — set `ROUTE_STRATEGY` to `cache_affinity` (default), `weighted_random`, `fixed_order`, or `weighted_round_robin`; model rules, Route Pool defaults, and priority-tier policies can override it.
 - **Alert webhooks** (e.g. Feishu / WeCom) — optional incident notifications.  
 - **Custom entries** — advanced globals your team agrees on (names and meanings are operational contracts).
 
@@ -24,6 +24,7 @@ Sensitive values can be **shown or hidden** in the UI for screen-sharing.
 <Steps>
 1. Open **Config**.
 1. Verify master key, business timezone, and billing currency match your policy.
+1. On the global route strategy card, click **Change** and select the fallback used when no model or Route Pool policy overrides it.
 1. Configure or rotate alert URLs if you use them.
 1. Add any other agreed global entries via **Add** (or the equivalent control) and save.
 </Steps>

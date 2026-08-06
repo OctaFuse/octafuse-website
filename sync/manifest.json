@@ -1,7 +1,7 @@
 {
   "source": "OctaFuse/octafuse-gateway",
   "ref": "main",
-  "commit": "cf037f046f44aec390eaaf2f0d3a74598992d1b2",
+  "commit": "70ba442f6c33b8a10b7e994f84320d541e40140d",
   "contract": "sync/contract.json",
   "targets": [
     "src/content/docs/zh/docs/github-reference.mdx",
@@ -30,6 +30,9 @@
     "docs/operators/deployment/README.md",
     "docs/operators/deployment/cloudflare.md",
     "docs/operators/deployment/docker.md",
+    "docs/operators/migrations/gemini-models-generate-cutover.md",
+    "docs/operators/migrations/route-pool-tier-strategies-cutover.md",
+    "docs/operators/migrations/route-strategy-canonical-ids-cutover.md",
     "docs/operators/migrations/d1-postgres-cutover.md",
     "cloudflare-worker/README.md",
     "docs/maintainers/release-versioning.md",

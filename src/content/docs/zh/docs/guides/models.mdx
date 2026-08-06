@@ -24,7 +24,7 @@ import { Aside, Steps } from '@astrojs/starlight/components';
 1. **从目录导入**：使用内置模型目录批量预填，导入后请核对并保存。
 1. **定价**：在页面中的分层定价编辑器里维护各档位价格（界面金额单位会随全局计费币种设置变化）。
 1. **保存后**：务必在 [路由配置](/zh/docs/guides/routing/) 中为该模型添加至少一条 **启用（active）** 的路由，否则客户端无法正常路由。
-1. **能力与计费模式**：图片模型核对 `image_billing_mode`（token / per_image），语音转写模型核对 `audio_billing_mode`（token / per_second）；默认 affinity 路由策略会在协议粒度稳定首选 Provider。
+1. **能力与计费模式**：图片模型核对 `image_billing_mode`（token / per_image），语音转写模型核对 `audio_billing_mode`（token / per_second）；默认 `cache_affinity` 路由策略会在协议粒度稳定首选 Provider。
 </Steps>
 
 ## 客户端 `model` 怎么写

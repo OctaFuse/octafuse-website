@@ -26,6 +26,10 @@ In Admin, open **Inference → Providers**. A **Provider** represents one upstre
 1. After saving, go to [Routing](/en/docs/guides/routing/) to bind models to this vendor and protocol; use [Playground](/en/docs/features/playground/) or [Simulator](/en/docs/features/simulator/) to validate connectivity.
 </Steps>
 
+## Gemini Generate Content
+
+For standard Gemini services, set the Base URL to the path immediately before `{model}`, for example `https://generativelanguage.googleapis.com/v1beta/models`. For a non-standard upstream, use one Advanced **`models.generate`** template such as `https://example.com/v1beta/models/{model}:{action}`; `{action}` resolves to `generateContent` or `streamGenerateContent` at runtime. Legacy per-action templates remain readable, but new configuration should use the unified template.
+
 ## Notes
 
 - Wrong base URLs / endpoints often show up as 404/401 — double-check upstream docs.

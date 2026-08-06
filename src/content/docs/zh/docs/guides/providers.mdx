@@ -26,6 +26,10 @@ import { Aside, Steps } from '@astrojs/starlight/components';
 1. **保存后**：到 [路由配置](/zh/docs/guides/routing/) 把模型与供应商、协议类型关联起来；需要试连通时，可用 [Playground](/zh/docs/features/playground/) 或 [Simulator](/zh/docs/features/simulator/)。
 </Steps>
 
+## Gemini Generate Content
+
+标准 Gemini 服务只需把 Base URL 配到 `{model}` 之前，例如 `https://generativelanguage.googleapis.com/v1beta/models`。非标准上游在 Advanced 中使用单一 **`models.generate`** 模板，形如 `https://example.com/v1beta/models/{model}:{action}`；`{action}` 会在运行时替换为 `generateContent` 或 `streamGenerateContent`。历史双模板仍可兼容读取，但新配置应使用统一模板。
+
 ## 常见注意点
 
 - **Base URL / endpoints** 填错容易出现 404、401，请与上游文档逐项对照。

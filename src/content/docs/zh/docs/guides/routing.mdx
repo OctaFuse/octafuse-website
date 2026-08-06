@@ -22,8 +22,8 @@ import { Aside, Steps } from '@astrojs/starlight/components';
 
 <Steps>
 1. 打开 **Routes**。
-1. **Request Surface**：选择客户端模型与 `route_group`（常用 `default`），再指定入口协议 / operation，例如 `openai.chat`、`anthropic.messages`、`openai.images.generations`。
-1. **Route Pool**：让 Surface 指向一个故障转移池，并按需设置 Pool 级策略；未设置时继承模型 / 全局策略。
+1. **Request Surface**：选择客户端模型与 `route_group`（常用 `default`），再指定入口协议 / operation，例如 `openai.chat`、`anthropic.messages`、`openai.images.generations`；Gemini 流式与非流式统一选择 `gemini.models.generate`。
+1. **Route Pool**：让 Surface 指向一个故障转移池；可设置 Pool 默认策略，也可点击各 priority 层的策略 chip 单独覆盖该层。未设置时继续继承模型 / 全局策略。
 1. **Upstream Target**：选择 Provider、填写上游实际模型名与 operation，设置 **priority**（数字越大越先试）、**weight** 和启用状态。
 1. **计费**：在 Target 的 Billing 配置 **用户计费 / 供应成本** 相对目录标准价的基础倍率；如需对齐供应商高峰 / 闲时价，再配置 **Daily schedule**（每日时段倍率，时区见 [系统配置](/zh/docs/guides/system-config/)）。
 1. **保存后**：用 [Playground](/zh/docs/features/playground/) 针对单条路由做上游试跑；若要验证「真实密钥 + 网关入口」整条链路，请用 [Simulator](/zh/docs/features/simulator/)。
@@ -39,12 +39,12 @@ Pool 先按 Target 的 `priority` **降序分层**，数字越大越先试；同
 
 | 策略 | 特点与适用场景 |
 |------|----------------|
-| `affinity`（默认） | 同用户、模型、分组与协议稳定首选同一 Provider，Prompt Cache 命中率高；短时流量可能不完全均匀。 |
+| `cache_affinity`（默认） | 同用户、模型、分组与协议稳定首选同一 Provider，Prompt Cache 命中率高；短时流量可能不完全均匀。 |
 | `weighted_random` | 按 weight 加权随机分流，负载均衡性高，适合比例分摊或 A/B；缓存亲和较弱。 |
-| `strict` | 同层按 weight 从高到低固定排序，适合可预测主备；首选 Provider 承担大部分流量。 |
-| `round_robin` | 按 weight 轮转，更均匀；计数器按运行实例维护，多实例间不全局同步。 |
+| `fixed_order` | 同层按 weight 从高到低固定排序，适合可预测主备；首选 Provider 承担大部分流量。 |
+| `weighted_round_robin` | 按 weight 轮转，更均匀；计数器按运行实例维护，多实例间不全局同步。 |
 
-跨供应商硬主备请使用不同 `priority`。策略覆盖顺序以 Route Pool 为最高优先级，其后是模型规则 / 模型默认、全局 `ROUTE_STRATEGY`，最后回退 `affinity`。
+跨供应商硬主备请使用不同 `priority`。策略覆盖顺序为：当前 `priority` 层覆盖 → Route Pool 默认 → 模型 capability 规则 → 模型 protocol 规则 → 模型默认 → 全局 `ROUTE_STRATEGY` → `cache_affinity`。
 
 ## 故障转移与熔断
 
