@@ -2,6 +2,7 @@
 title: OctaFuse 2.1.1：错误可识别，熔断更精准
 description: OctaFuse Gateway 2.1.1 统一 user+model 熔断，完善 Failover 与错误码契约，并增强上游请求失败诊断和阿里云模型预设。
 publishDate: 2026-08-03
+publish_at: 2026-08-03
 updateLabel: VERSION 2.1.1
 template: splash
 prev: false
@@ -9,8 +10,11 @@ next: false
 lastUpdated: false
 sidebar:
   hidden: true
+site_external_id: "octafuse-release-v2-1-1"
+site_post_id: 496
+site_status: "published"
+canonical_url: "https://didispace.com/posts/496"
 ---
-
 **OctaFuse Gateway 2.1.1 正式发布。**
 
 这是一轮面向生产稳定性的补强：当上游返回错误时，网关不仅要决定“是否重试、是否切换 Provider”，还应该让调用方准确知道错误来自哪里、属于哪一类，以及下一步应该怎么处理。
