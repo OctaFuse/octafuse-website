@@ -1,0 +1,80 @@
+---
+title: OctaFuse 2.1.2：路由拓扑更稳定，排障信息更完整
+description: OctaFuse Gateway 2.1.2 优化 Admin 路由与 Provider 体验，为请求日志增加 external_system，并修复干净仓库下 Admin 本地开发解析问题。
+publishDate: 2026-08-05
+updateLabel: VERSION 2.1.2
+template: splash
+prev: false
+next: false
+lastUpdated: false
+sidebar:
+  hidden: true
+---
+
+**OctaFuse Gateway 2.1.2 正式发布。**
+
+当路由配置逐渐复杂，管理体验的关键不只是“能不能保存”，而是同一份配置是否始终以稳定、清楚的方式呈现；出现问题时，日志是否能快速回答请求来自哪个业务系统。
+
+2.1.2 聚焦 Admin 路由与 Provider 体验、请求日志可观测性，以及干净开发环境下的启动可靠性。
+
+## 同一份路由配置，始终保持稳定顺序
+
+路由列表和拓扑中的 Target 如果每次刷新顺序不同，运维人员很容易误以为配置发生了变化。2.1.2 为同一 priority 层建立稳定排序规则：
+
+1. 先区分启用与停用状态。
+2. 再按照 weight 排列。
+3. 最后使用名称保证确定性顺序。
+
+这种排序不改变 Proxy 的真实调度语义，但能保证相同配置在 Admin 中得到一致呈现。比较不同模型、检查主备关系或截图沟通时，不会再受到随机顺序干扰。
+
+## 路由拓扑：状态、参数和说明更容易读
+
+本次版本继续完善 Route 页面：
+
+- 因子状态使用更明确的状态 chip，并补充无障碍文案。
+- 路由详情展示自定义参数，复杂字段通过 tooltip 提供解释。
+- 响应式布局经过调整，在不同窗口宽度下保持信息层级。
+- 同层 Target 的状态、权重与名称更便于横向比较。
+
+这些调整看似细小，却直接影响日常配置复核：运维人员可以更快区分“配置存在但未启用”“参数来自自定义覆盖”和“当前路由确实参与调度”。
+
+## Provider 卡片：减少无效入口，突出真正操作
+
+Provider 卡片重新整理了布局和按钮交互，并移除未实际使用的 endpoint 复制入口。
+
+页面把注意力集中在真正影响运行的操作上：查看 Provider 状态、进入配置、维护凭证和确认路由引用。减少一个没有明确用途的按钮，也能降低用户误以为“复制 endpoint 就等于完成接入”的认知负担。
+
+## 请求日志增加 `external_system`
+
+同一个 OctaFuse 实例往往同时服务多个门户、业务系统或内部平台。仅凭用户和 API Key 可以完成鉴权归集，却不一定能快速判断请求属于哪一个外部系统。
+
+2.1.2 在请求日志读写路径中补充 `external_system`，覆盖 D1、PostgreSQL 与 MySQL。Admin Request Logs 同步展示这一字段，便于：
+
+- 区分不同门户或业务系统的流量
+- 按外部系统定位异常请求
+- 将网关日志与业务侧观测数据关联
+- 在共享用户体系下补充调用来源语义
+
+该字段属于增量信息，不改变原有用户、Key、模型或 Provider 归集方式。
+
+## 干净仓库也能直接启动 Admin 开发环境
+
+Admin 使用 Turbopack 本地开发时，干净 checkout 曾可能无法解析 `@octafuse/core` 源码。已经运行过构建或残留产物的工作目录不一定复现，这让问题更难察觉。
+
+2.1.2 修正 Next.js / Turbopack 的 core 源码解析配置。现在新克隆的仓库完成依赖安装后即可运行 Admin 开发命令，不再依赖预先生成的包产物。
+
+这项修复不会影响生产运行时，却能显著减少新贡献者和 CI 临时环境的启动差异。
+
+## 升级说明
+
+2.1.2 是兼容性补丁版本：
+
+- 数据库迁移：无
+- 配置变更：无
+- API 兼容性影响：无
+- 新增信息：请求日志中的 `external_system`
+
+建议更新 proxy、admin、migrate 三个镜像后滚动重启，并重点检查 Routes 拓扑、Provider 卡片、Request Logs 和 Admin 本地开发启动。
+
+- [GitHub Release v2.1.2](https://github.com/OctaFuse/octafuse-gateway/releases/tag/v2.1.2)
+- [完整 Changelog](https://github.com/OctaFuse/octafuse-gateway/blob/v2.1.2/CHANGELOG.md)

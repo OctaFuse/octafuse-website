@@ -1,0 +1,44 @@
+---
+title: 'OctaFuse 2.0: make complex routing visible'
+description: OctaFuse Gateway 2.0 introduced Surface → Pool → Target topology, priority tiers, visual strategy controls, and single-key Providers.
+publishDate: 2026-07-31
+updateLabel: VERSION 2.0.0
+template: splash
+prev: false
+next: false
+lastUpdated: false
+sidebar:
+  hidden: true
+---
+
+AI gateway routing used to be a collection of Provider keys, priorities, weights, and policies spread across forms. Operators configured the fields and then reconstructed the real request path in their heads.
+
+OctaFuse Gateway 2.0 made that path explicit:
+
+```text
+Client request → Request Surface → Route Pool → Upstream Target → Provider
+```
+
+![OctaFuse Admin routing](/screenshots/admin-routes.png)
+
+Surface describes the client protocol and operation. Pool groups upstreams that share failover behavior. Target represents the actual provider model to try. Configuration now sits on the stage where it takes effect.
+
+## Priority, strategy, and weight
+
+> **Priority chooses the tier, strategy orders a tier, and weight expresses preference inside it.**
+
+All Targets in the current tier are exhausted before the next tier is considered. Disabled Providers and Targets never enter the attempt plan. This makes patterns such as load sharing among primary accounts, cheaper fallbacks, and an expensive last-resort provider visible on one topology.
+
+:::note[Strategy names changed in 2.2]
+The 2.0 release used `affinity`, `weighted_random`, `strict`, and `round_robin`. Current canonical IDs are `cache_affinity`, `weighted_random`, `fixed_order`, and `weighted_round_robin`.
+:::
+
+Admin also previews the result of a strategy without sending a real request and explains whether the effective policy comes from the Pool, model, global setting, or system default.
+
+## A Provider represents one upstream account
+
+Version 2.0 also moved to one API key per Provider. Multiple accounts at the same vendor become multiple Providers, matching the upstream entities shown in routing. Credentials, status, routing, and troubleshooting now refer to the same real account.
+
+This release was a coordinated change to storage, runtime scheduling, and Admin UX. Its Surface → Pool → Target foundation enabled later Gemini routing consolidation and per-priority-tier policies.
+
+- [GitHub Release v2.0.0](https://github.com/OctaFuse/octafuse-gateway/releases/tag/v2.0.0)

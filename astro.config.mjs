@@ -74,6 +74,8 @@ var _hmt = _hmt || [];
 			components: {
 				Header: './src/components/Header.astro',
 				Footer: './src/components/Footer.astro',
+				Pagination: './src/components/updates/UpdatePagination.astro',
+				PageTitle: './src/components/PageTitle.astro',
 				ThemeProvider: './src/components/ThemeProvider.astro',
 				ThemeSelect: './src/components/ThemeSelect.astro',
 			},

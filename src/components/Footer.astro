@@ -4,6 +4,7 @@ import LastUpdated from 'virtual:starlight/components/LastUpdated';
 import Pagination from 'virtual:starlight/components/Pagination';
 
 const isEnglish = Astro.url.pathname.startsWith('/en/');
+const isUpdate = Astro.locals.starlightRoute.entry.data.publishDate !== undefined;
 const localePrefix = isEnglish ? '/en' : '/zh';
 const year = new Date().getFullYear();
 const groups = isEnglish
@@ -11,6 +12,7 @@ const groups = isEnglish
 			{
 				title: 'Explore',
 				links: [
+					{ label: 'Updates', href: `${localePrefix}/updates/` },
 					{ label: 'Documentation', href: `${localePrefix}/docs/` },
 					{ label: 'Quick start', href: `${localePrefix}/docs/quick-start/` },
 					{ label: 'Cloudflare deployment', href: `${localePrefix}/docs/deploy/cloudflare/` },
@@ -42,6 +44,7 @@ const groups = isEnglish
 			{
 				title: '探索',
 				links: [
+					{ label: '动态', href: `${localePrefix}/updates/` },
 					{ label: '产品文档', href: `${localePrefix}/docs/` },
 					{ label: '快速开始', href: `${localePrefix}/docs/quick-start/` },
 					{ label: 'Cloudflare 部署', href: `${localePrefix}/docs/deploy/cloudflare/` },
@@ -72,11 +75,12 @@ const groups = isEnglish
 ---
 
 <footer class="site-footer">
+	{isUpdate && <Pagination />}
 	<div class="page-meta sl-flex">
 		<EditLink />
 		<LastUpdated />
 	</div>
-	<Pagination />
+	{!isUpdate && <Pagination />}
 
 	<div class="footer-panel">
 		<div class="footer-brand">

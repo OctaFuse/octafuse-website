@@ -1,0 +1,148 @@
+---
+import { getCollection } from 'astro:content';
+import DefaultPagination from '@astrojs/starlight/components/Pagination.astro';
+
+const { entry } = Astro.locals.starlightRoute;
+const isUpdate = entry.data.publishDate !== undefined;
+const locale = entry.id.startsWith('en/') ? 'en' : 'zh';
+const prefix = `${locale}/updates/`;
+
+let previous: (typeof entry) | undefined;
+let next: (typeof entry) | undefined;
+
+if (isUpdate) {
+	const updates = (await getCollection('docs'))
+		.filter(
+			(item) =>
+				item.id.startsWith(prefix) &&
+				item.id !== `${prefix}index` &&
+				item.data.publishDate !== undefined,
+		)
+		.sort(
+			(a, b) =>
+				(a.data.publishDate?.getTime() ?? 0) - (b.data.publishDate?.getTime() ?? 0),
+		);
+	const currentIndex = updates.findIndex((item) => item.id === entry.id);
+
+	if (currentIndex > 0) previous = updates[currentIndex - 1];
+	if (currentIndex >= 0 && currentIndex < updates.length - 1) next = updates[currentIndex + 1];
+}
+
+const labels =
+	locale === 'en'
+		? { previous: 'Previous', back: 'Back to updates', next: 'Next', navigation: 'Update navigation' }
+		: { previous: '上一篇', back: '返回动态', next: '下一篇', navigation: '动态文章导航' };
+---
+
+{
+	isUpdate ? (
+		<nav class="update-pagination print:hidden" aria-label={labels.navigation}>
+			{previous ? (
+				<a class="update-pagination__article update-pagination__previous" href={`/${previous.id}/`} rel="prev">
+					<span class="update-pagination__label">← {labels.previous}</span>
+					<strong>{previous.data.title}</strong>
+				</a>
+			) : (
+				<span class="update-pagination__placeholder" aria-hidden="true" />
+			)}
+
+			<a class="update-pagination__back" href={`/${locale}/updates/`}>
+				{labels.back}
+			</a>
+
+			{next ? (
+				<a class="update-pagination__article update-pagination__next" href={`/${next.id}/`} rel="next">
+					<span class="update-pagination__label">{labels.next} →</span>
+					<strong>{next.data.title}</strong>
+				</a>
+			) : (
+				<span class="update-pagination__placeholder" aria-hidden="true" />
+			)}
+		</nav>
+	) : (
+		<DefaultPagination />
+	)
+}
+
+<style>
+	@layer starlight.core {
+		.update-pagination {
+			display: grid;
+			grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+			align-items: stretch;
+			gap: 0.75rem;
+		}
+
+		.update-pagination a {
+			border: 1px solid var(--of-card-border);
+			border-radius: 0.6rem;
+			background: var(--of-surface-card);
+			color: var(--of-text-secondary);
+			text-decoration: none;
+			box-shadow: var(--sl-shadow-sm);
+			transition:
+				border-color 0.15s ease,
+				color 0.15s ease,
+				transform 0.15s ease;
+		}
+
+		.update-pagination a:hover {
+			border-color: var(--of-accent);
+			color: var(--of-accent-strong);
+			transform: translateY(-1px);
+		}
+
+		.update-pagination__article {
+			display: flex;
+			min-width: 0;
+			flex-direction: column;
+			justify-content: center;
+			gap: 0.35rem;
+			padding: 0.9rem 1rem;
+		}
+
+		.update-pagination__article strong {
+			display: -webkit-box;
+			overflow: hidden;
+			color: var(--of-text-primary);
+			font-size: var(--sl-text-sm);
+			font-weight: 600;
+			line-height: 1.45;
+			-webkit-box-orient: vertical;
+			-webkit-line-clamp: 2;
+		}
+
+		.update-pagination__label {
+			color: var(--of-text-muted);
+			font-family: var(--sl-font-mono);
+			font-size: var(--sl-text-xs);
+		}
+
+		.update-pagination__next {
+			text-align: end;
+		}
+
+		.update-pagination__back {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			padding: 0.9rem 1.1rem;
+			font-weight: 600;
+			white-space: nowrap;
+		}
+
+		@media (max-width: 42rem) {
+			.update-pagination {
+				grid-template-columns: 1fr;
+			}
+
+			.update-pagination__back {
+				grid-row: 1;
+			}
+
+			.update-pagination__placeholder {
+				display: none;
+			}
+		}
+	}
+</style>

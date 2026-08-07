@@ -1,0 +1,161 @@
+---
+interface Props {
+	title: string;
+	description: string;
+	href: string;
+	date?: string;
+	label?: string;
+	cta?: string;
+	external?: boolean;
+	featured?: boolean;
+}
+
+const {
+	title,
+	description,
+	href,
+	date,
+	label = '动态',
+	cta = '阅读全文',
+	external = false,
+	featured = false,
+} = Astro.props;
+---
+
+<a
+	class:list={['update-card', { featured }]}
+	href={href}
+	target={external ? '_blank' : undefined}
+	rel={external ? 'noopener noreferrer' : undefined}
+>
+	<article>
+		<header>
+			<span class="update-label">{label}</span>
+			{date && <time datetime={date}>{date}</time>}
+		</header>
+		<h2>{title}</h2>
+		<p>{description}</p>
+		<footer>
+			<span>{cta}</span>
+			<span aria-hidden="true">{external ? '↗' : '→'}</span>
+		</footer>
+	</article>
+</a>
+
+<style>
+	.update-card {
+		position: relative;
+		display: block;
+		min-width: 0;
+		border: 1px solid var(--of-card-border);
+		border-radius: 0.85rem;
+		color: inherit;
+		text-decoration: none;
+		background:
+			linear-gradient(145deg, hsl(184 100% 55% / 0.075), transparent 44%),
+			var(--of-surface-card);
+		box-shadow: var(--sl-shadow-sm);
+		transition:
+			transform 160ms ease,
+			border-color 160ms ease,
+			box-shadow 160ms ease;
+		overflow: hidden;
+	}
+
+	.update-card::before {
+		position: absolute;
+		inset: 0 auto auto 0;
+		width: 100%;
+		height: 2px;
+		content: '';
+		background: linear-gradient(90deg, var(--of-accent), var(--of-accent-hover), transparent 76%);
+		opacity: 0.45;
+	}
+
+	.update-card:hover {
+		border-color: var(--of-card-border-hover);
+		box-shadow: var(--sl-shadow-md);
+		transform: translateY(-2px);
+	}
+
+	.update-card.featured {
+		grid-column: 1 / -1;
+		background:
+			linear-gradient(120deg, hsl(184 100% 55% / 0.14), transparent 40%),
+			linear-gradient(300deg, hsl(142 92% 62% / 0.07), transparent 42%),
+			var(--of-surface-card-solid);
+	}
+
+	article {
+		display: flex;
+		min-height: 100%;
+		padding: clamp(1.1rem, 2vw, 1.45rem);
+		flex-direction: column;
+	}
+
+	header,
+	footer {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 0.75rem;
+	}
+
+	header {
+		margin-bottom: 1rem;
+	}
+
+	.update-label {
+		padding: 0.22rem 0.48rem;
+		border: 1px solid var(--of-card-icon-border);
+		border-radius: 999px;
+		color: var(--of-accent-strong);
+		font-family: var(--sl-font-mono);
+		font-size: 0.66rem;
+		font-weight: 700;
+		letter-spacing: 0.06em;
+		line-height: 1.2;
+		background: var(--of-card-icon-bg);
+	}
+
+	time {
+		color: var(--of-text-muted);
+		font-family: var(--sl-font-mono);
+		font-size: 0.72rem;
+	}
+
+	h2 {
+		margin: 0;
+		padding: 0;
+		border: 0;
+		color: var(--of-text-primary);
+		font-size: clamp(1.05rem, 2vw, 1.3rem);
+		line-height: 1.42;
+	}
+
+	p {
+		margin: 0.7rem 0 1.25rem;
+		color: var(--of-text-secondary);
+		font-size: 0.91rem;
+		line-height: 1.7;
+	}
+
+	footer {
+		margin-top: auto;
+		color: var(--of-accent-strong);
+		font-size: 0.82rem;
+		font-weight: 700;
+	}
+
+	@media (max-width: 46rem) {
+		.update-card.featured {
+			grid-column: auto;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.update-card {
+			transition: none;
+		}
+	}
+</style>

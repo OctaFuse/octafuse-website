@@ -1,0 +1,51 @@
+---
+title: 'OctaFuse 2.1.1: identifiable errors and more precise circuits'
+description: OctaFuse Gateway 2.1.1 unifies user+model circuits, improves Failover and error-code contracts, and adds better upstream diagnostics.
+publishDate: 2026-08-03
+updateLabel: VERSION 2.1.1
+template: splash
+prev: false
+next: false
+lastUpdated: false
+sidebar:
+  hidden: true
+---
+
+**OctaFuse Gateway 2.1.1 is now available.**
+
+This release strengthens production reliability by aligning circuit state, Failover decisions, error responses, and diagnostics under one contract.
+
+## Unified user + model circuits
+
+Sensitive-content failures and ordinary upstream `400` responses now share one user+model backoff sequence:
+
+```text
+20 seconds → 1 minute → 3 minutes → 5 minutes → 10 minutes
+```
+
+Short-circuit responses still identify the reason with `circuit.sensitive_content` or `circuit.client_error`. Images and Audio no longer enter ordinary client-error circuits, because malformed media requests should not block later valid calls; sensitive-content circuits remain active.
+
+## Failover checks current Provider state
+
+The Failover loop now rechecks a Provider's circuit before each attempt, so an upstream that just entered cooldown is not called again in the same dispatch. Authentication-related `401` / `403` cooldown changes from ten minutes to five, retaining protection from repeated invalid credentials while recovering sooner from temporary auth problems.
+
+## Stable error codes
+
+Gateway-generated, circuit, and classified upstream errors gain a fixed `code` plus the response header:
+
+```http
+X-OctaFuse-Error-Code: circuit.client_error
+```
+
+Codes are grouped under `gateway.*`, `circuit.*`, and `upstream.*`. The existing `error` body shape remains compatible, while clients can stop parsing human-readable messages to make control-flow decisions.
+
+`gateway.upstream_request_failed` also includes a truncated summary of the original fetch failure, improving diagnosis in client logs and external observability systems.
+
+## Catalog updates
+
+Admin adds the production `qwen3.8-max` and `qwen3.7-flash` presets, corrects `qwen3.8-max-preview`, and aligns the token limits of `qwen3.7-plus` and `qwen3.7-max` to `128000`.
+
+No database migration or configuration change is required.
+
+- [GitHub Release v2.1.1](https://github.com/OctaFuse/octafuse-gateway/releases/tag/v2.1.1)
+- [Full changelog](https://github.com/OctaFuse/octafuse-gateway/blob/v2.1.1/CHANGELOG.md)

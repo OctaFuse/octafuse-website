@@ -1,0 +1,96 @@
+---
+title: OctaFuse 2.1.1：错误可识别，熔断更精准
+description: OctaFuse Gateway 2.1.1 统一 user+model 熔断，完善 Failover 与错误码契约，并增强上游请求失败诊断和阿里云模型预设。
+publishDate: 2026-08-03
+updateLabel: VERSION 2.1.1
+template: splash
+prev: false
+next: false
+lastUpdated: false
+sidebar:
+  hidden: true
+---
+
+**OctaFuse Gateway 2.1.1 正式发布。**
+
+这是一轮面向生产稳定性的补强：当上游返回错误时，网关不仅要决定“是否重试、是否切换 Provider”，还应该让调用方准确知道错误来自哪里、属于哪一类，以及下一步应该怎么处理。
+
+2.1.1 因此把熔断、Failover、错误响应和诊断日志放在同一套语义下重新梳理。
+
+## User + Model：用统一维度管理连续失败
+
+此前，敏感内容拥有独立熔断逻辑，普通上游 `400` 又由另一条路径处理。两套实现不仅增加维护成本，也容易让相同用户、相同模型的失败状态产生分歧。
+
+2.1.1 将它们统一为 **user + model 熔断**：
+
+```text
+20 秒 → 1 分钟 → 3 分钟 → 5 分钟 → 10 分钟
+```
+
+同一用户调用同一模型时，敏感内容和普通客户端错误共享逐级退避状态，不再按请求正文分别建立熔断记录。短路响应仍通过固定错误码区分类别：
+
+| 错误码 | 含义 |
+| --- | --- |
+| `circuit.sensitive_content` | 因敏感内容进入短路状态 |
+| `circuit.client_error` | 因普通上游客户端错误进入短路状态 |
+
+这种设计让“是否应该继续请求”与“为什么被短路”彼此独立：运行时共享一套稳定的退避机制，调用方仍能根据错误码做差异化提示。
+
+## Images / Audio：避免把输入问题扩大成服务熔断
+
+图像和音频接口的请求形态与文本模型不同。图片尺寸、文件格式、multipart 字段或音频参数不符合上游要求时，也可能收到 `400`，但这类错误通常不代表模型服务整体不可用。
+
+因此，2.1.1 将 Images / Audio 从普通 `client_error` 熔断中移除，只保留敏感内容触发。输入参数错误会正常返回给调用方，不再因为一次请求问题影响后续合法调用。
+
+## Failover：每一次尝试前都重新确认 Provider 状态
+
+一次请求的故障转移过程中，Provider 状态可能被前一个失败尝试更新。2.1.1 在 Failover 循环中重新检查熔断状态，避免继续请求刚刚进入冷却期的上游。
+
+同时，因 `401` / `403` 进入 Provider 冷却的时长从 10 分钟调整为 5 分钟。它仍能阻止无效凭证被持续重试，也减少临时鉴权异常恢复后的等待时间。
+
+## 固定错误码：让客户端不再解析自然语言
+
+过去，客户端往往只能依赖 HTTP 状态码和错误信息文本判断失败原因。文本适合人阅读，却不适合稳定的程序分支：一处措辞调整就可能破坏调用方逻辑。
+
+2.1.1 为网关生成、熔断和上游分类错误增加固定 `code`，并同步写入响应头：
+
+```http
+X-OctaFuse-Error-Code: circuit.client_error
+```
+
+错误码按照来源分组：
+
+- `gateway.*`：网关自身产生的路由、请求或执行错误
+- `circuit.*`：熔断与短路状态
+- `upstream.*`：对上游响应进行分类后的错误
+
+原有 `error` body 形状保持不变，`code` 和响应头都是增量字段。现有客户端无需修改；需要精确处理错误的客户端可以逐步开始使用固定契约。
+
+## 上游网络错误不再只剩一句“请求失败”
+
+对于 DNS、连接失败、TLS 或 fetch 异常，单纯返回 `upstream request failed` 很难定位问题。2.1.1 在 `gateway.upstream_request_failed` 的 message 中加入截断后的原始 fetch 错误摘要，与 `route_resolution_failed` 的诊断方式保持一致。
+
+这项信息同样有利于 Langfuse 等外部可观测系统：不需要访问 Proxy 内部日志，也能从错误响应与请求记录中获得更接近根因的线索。
+
+## 阿里云模型预设同步更新
+
+Admin 的阿里云模型目录新增：
+
+- `qwen3.8-max` 正式版
+- `qwen3.7-flash`
+
+同时修正 `qwen3.8-max-preview` 的缓存价格、模态和输出上限，并将 `qwen3.7-plus`、`qwen3.7-max` 的 `max_tokens` 对齐为 `128000`。
+
+## 升级说明
+
+2.1.1 不包含数据库迁移，也不要求修改现有配置。错误响应只增加固定字段和响应头，属于向后兼容变更。
+
+升级后建议重点验证：
+
+1. Chat / Messages / Gemini 的普通 `400` 与敏感内容短路错误码。
+2. Images / Audio 参数错误不会触发普通客户端错误熔断。
+3. 多 Provider Failover 会跳过已进入冷却的上游。
+4. 调用方和日志系统能够读取 `X-OctaFuse-Error-Code`。
+
+- [GitHub Release v2.1.1](https://github.com/OctaFuse/octafuse-gateway/releases/tag/v2.1.1)
+- [完整 Changelog](https://github.com/OctaFuse/octafuse-gateway/blob/v2.1.1/CHANGELOG.md)

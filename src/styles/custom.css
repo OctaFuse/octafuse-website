@@ -424,6 +424,15 @@ main a:not([class]) {
 	--sl-content-width: min(78rem, calc(100vw - 2rem));
 }
 
+/* Updates are a standalone editorial section, not part of the docs shell. */
+html:not([data-has-sidebar]):has(.update-archive) {
+	--sl-content-width: min(72rem, calc(100vw - 2rem));
+}
+
+html:not([data-has-sidebar]):has(.update-page-title) {
+	--sl-content-width: min(54rem, calc(100vw - 2rem));
+}
+
 /* Splash pages use the extra space for the capability map and card grids. */
 html[data-has-hero]:not([data-has-sidebar]) {
 	--sl-content-width: min(86rem, calc(100vw - 3rem));
@@ -449,6 +458,7 @@ html[data-theme='light'] main a:not([class]):hover {
 /* Tables — full width so thead/zebra backgrounds match the prose column */
 main table,
 .sl-markdown-content table {
+	display: table;
 	box-sizing: border-box;
 	width: 100%;
 	max-width: 100%;
@@ -465,6 +475,7 @@ main th,
 main td,
 .sl-markdown-content th,
 .sl-markdown-content td {
+	padding: 0.65rem 0.8rem;
 	border-color: var(--sl-color-hairline);
 	word-wrap: break-word;
 	overflow-wrap: break-word;

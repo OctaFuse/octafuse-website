@@ -1,0 +1,39 @@
+---
+title: 'OctaFuse 2.1.2: stable routing views and richer diagnostics'
+description: OctaFuse Gateway 2.1.2 improves Admin routing and Provider UX, adds external_system to request logs, and fixes clean-checkout Admin development.
+publishDate: 2026-08-05
+updateLabel: VERSION 2.1.2
+template: splash
+prev: false
+next: false
+lastUpdated: false
+sidebar:
+  hidden: true
+---
+
+**OctaFuse Gateway 2.1.2 is now available.**
+
+This patch focuses on predictable Admin views, clearer request attribution, and a reliable development setup from a clean checkout.
+
+## Stable route topology
+
+Targets within the same priority tier now use a deterministic order based on status, weight, and name. This does not change Proxy scheduling; it ensures identical configuration is rendered consistently across refreshes and makes primary/fallback comparisons easier.
+
+Route details also improve factor-status chips, accessibility text, custom-parameter presentation, tooltips, and responsive layout.
+
+## More focused Provider cards
+
+Provider card layout and actions have been simplified, including removal of an unused endpoint-copy entrypoint. The UI now emphasizes status, configuration, credentials, and the operations that affect live routing.
+
+## Request attribution with `external_system`
+
+Request-log reads and writes now carry `external_system` across D1, PostgreSQL, and MySQL, and Admin displays the field in Request Logs. Shared gateway installations can distinguish traffic from different portals and business systems without changing existing user, key, model, or Provider attribution.
+
+## Clean-checkout Admin development
+
+The Next.js / Turbopack configuration now resolves `@octafuse/core` source correctly in a fresh repository. Contributors and ephemeral CI environments can start Admin development without relying on previously generated package artifacts.
+
+Version 2.1.2 requires no database migration or configuration change. Update the proxy, admin, and migrate images and perform a rolling restart.
+
+- [GitHub Release v2.1.2](https://github.com/OctaFuse/octafuse-gateway/releases/tag/v2.1.2)
+- [Full changelog](https://github.com/OctaFuse/octafuse-gateway/blob/v2.1.2/CHANGELOG.md)

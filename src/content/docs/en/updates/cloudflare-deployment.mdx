@@ -1,0 +1,55 @@
+---
+title: Run OctaFuse on Cloudflare without managing a server
+description: Deploy OctaFuse with Cloudflare Workers and D1 to centralize AI Providers, API keys, budgets, billing, and request history.
+publishDate: 2026-07-24
+updateLabel: DEPLOYMENT
+template: splash
+prev: false
+next: false
+lastUpdated: false
+sidebar:
+  hidden: true
+---
+
+Independent developers and small teams often combine coding plans, token plans, official APIs, aggregators, and self-hosted models. Every upstream adds another Base URL, key, quota, and price to maintain.
+
+A self-hosted gateway turns those scattered resources into one client-facing URL and user key. OctaFuse can run on Cloudflare Workers + D1, so small deployments do not need a continuously managed server.
+
+## Deployment shape
+
+```text
+AI Client
+   │ user API key
+   ▼
+Proxy Worker ───┐
+                ├── shared D1 database
+Admin Worker ───┘
+   ▲
+   │ browser login / MASTER_KEY
+Operator
+```
+
+Proxy serves model and Tools traffic. Admin provides the configuration and operations control plane. Both Workers must bind to the same D1 database.
+
+## From an empty database to the first request
+
+The main path is:
+
+1. Prepare a Cloudflare account, Git, Node.js, and npm.
+2. Clone the repository and authenticate Wrangler.
+3. Run the bootstrap flow to create D1, Proxy, and Admin.
+4. Sign in to Admin and rotate the development Master Key immediately.
+5. Configure a Provider, Model, and Route.
+6. Create a user and issue a user API key.
+7. Verify `/v1/models` or send a Chat Completions request.
+
+:::tip[Use the current commands]
+Deployment scripts and migrations evolve with each release. Use the [latest quick start](/en/docs/quick-start/) and [Cloudflare deployment guide](/en/docs/deploy/cloudflare/) for executable commands.
+:::
+
+An empty `/catalog/models` response immediately after deployment is expected: the database does not yet contain your Providers or active Routes.
+
+Keep `ADMIN_PASSWORD`, the Admin API `MASTER_KEY`, and user API keys separate. They authenticate different surfaces and should never be substituted for one another.
+
+- [Current quick start](/en/docs/quick-start/)
+- [Cloudflare deployment guide](/en/docs/deploy/cloudflare/)

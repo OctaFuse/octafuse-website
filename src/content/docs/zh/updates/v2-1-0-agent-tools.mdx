@@ -1,0 +1,94 @@
+---
+title: OctaFuse 2.1：把 Agent Tools 也纳入统一网关
+description: OctaFuse Gateway 2.1 将 Web Search、Web Fetch、Deep Search 与 AI Detection 纳入统一鉴权、预算、计费、日志和审计体系。
+publishDate: 2026-08-02
+updateLabel: VERSION 2.1.0
+template: splash
+prev: false
+next: false
+lastUpdated: false
+sidebar:
+  hidden: true
+---
+
+过去谈 AI 网关，我们更关心模型调用：如何统一 OpenAI、Anthropic、Gemini 等协议，如何在多个 Provider 之间路由和故障转移，以及如何管理 Key、预算、Token 和调用日志。
+
+但当 Agent 真正进入业务，模型只负责“思考”，搜索网页、抓取正文、深度检索和垂直检测工具负责“行动”。如果每项工具都维护自己的密钥、价格、账单和日志，系统很快又会变成一组彼此割裂的烟囱。
+
+**OctaFuse Gateway 2.1 的重点，就是把模型之外的 Agent 能力也纳入统一网关。**
+
+## 四类 Agent Tools，一个产品入口
+
+2.1 版本已经覆盖四类常用能力：
+
+| 工具 | 用途 |
+| --- | --- |
+| Web Search | 联网搜索与结果聚合 |
+| Web Fetch | 抽取网页正文 |
+| Web Deep Search | 将检索与正文读取组合为一次调用 |
+| AI Detection | 检测文本的 AI 生成概率 |
+
+它们统一通过 `/v1/tools/*` 对外提供服务，并共享用户 API Key 鉴权、预算预检、调用计费、请求日志与审计能力。
+
+对 Agent 来说，只需持有一把 OctaFuse 用户 Key；对运营人员来说，可以在 Admin 中独立选择每种工具的引擎、凭证与价格，而不把供应商实现细节泄漏给客户端。
+
+## 新增 AI Detection
+
+2.1 新增端点：
+
+```http
+POST /v1/tools/ai-detection
+```
+
+调用方提交待检测文本后，Gateway 会完成：
+
+1. 校验用户 API Key 并进行预算预检。
+2. 对长文本自动分段。
+3. 调用当前启用的检测引擎。
+4. 汇总整体评分和分段结果。
+5. 成功后写入费用、扣减预算并记录日志。
+
+首个实现接入腾讯云 TMS，按字符计费单元结算。技术分段与计费单元彼此独立，因此未来替换或增加检测引擎时，客户端协议无需随之变化。
+
+## 三账本：成本、目录价和用户实付分开看
+
+一句“本次调用花了 0.01”无法说明这是供应商成本、公开价格，还是用户最终扣费。2.1 将 Agent Tools 的记账方式统一为三种口径：
+
+| 账本 | 含义 |
+| --- | --- |
+| `metered` | 供应侧实际成本 |
+| `standard` | 对外目录标准价 |
+| `charged` | 用户实际计费 |
+
+只有 `charged` 会累加到用户的 `budget_spent`。三种口径拆开后，可以直接计算单次调用的成本、收入与利润空间，也让业务系统不再自行实现一套工具扣费逻辑。
+
+## 调用前先查价格
+
+2.1 同时提供只读接口：
+
+```http
+GET /v1/tools/pricing
+```
+
+门户或客户端可以在调用前查询币种、计费方式、计费粒度以及三账本价格。接口不会返回引擎密钥，也不会暴露当前 Active 引擎名称；客户端购买的是稳定的 OctaFuse Tools 能力，而不是某一家供应商的内部实现。
+
+## Admin 从“能配置”走向“能运营”
+
+围绕 Agent Tools，Admin 补齐了完整管理闭环：
+
+- Tools 配置页统一控制敏感凭证显隐
+- 调用记录同时展示供应成本、目录价、用户计费与利润
+- Request Logs 区分模型请求与 Agent Tools 调用
+- 日志记录真实引擎 Provider，方便排查
+- Playground / Simulator 支持 AI Detection 联调
+- 被模型路由引用的 Provider 无法误删
+
+底层新增共享包 `@octafuse/tool-engines`，让 Proxy 与 Admin Playground 复用同一组工具引擎客户端，也为后续扩展更多工具和供应商建立清晰边界。
+
+## 从模型网关到 AI 能力总控
+
+2.0 解决的是“模型请求应该怎么走”；2.1 开始回答“Agent 调用了什么能力、上游成本多少、用户该付多少、整条链路能否审计”。
+
+如果你的 Agent 已经不只会聊天，还会搜索、抓取、分析并调用外部能力，那么这些调用也值得拥有统一入口、预算与账本。
+
+- [GitHub 仓库](https://github.com/OctaFuse/octafuse-gateway)

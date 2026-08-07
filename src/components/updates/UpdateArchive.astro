@@ -1,0 +1,43 @@
+---
+import { getCollection } from 'astro:content';
+import UpdateCard from './UpdateCard.astro';
+import UpdateGrid from './UpdateGrid.astro';
+
+interface Props {
+	locale: 'zh' | 'en';
+}
+
+const { locale } = Astro.props;
+const prefix = `${locale}/updates/`;
+const updates = (await getCollection('docs'))
+	.filter(
+		(entry) =>
+			entry.id.startsWith(prefix) &&
+			entry.id !== `${prefix}index` &&
+			entry.data.publishDate !== undefined,
+	)
+	.sort(
+		(a, b) =>
+			(b.data.publishDate?.getTime() ?? 0) - (a.data.publishDate?.getTime() ?? 0),
+	);
+
+const formatDate = (date: Date) => date.toISOString().slice(0, 10);
+---
+
+<div class="update-archive">
+	<UpdateGrid>
+		{
+			updates.map((entry) => (
+				<UpdateCard
+					featured={entry.data.featuredUpdate}
+					label={entry.data.updateLabel ?? (locale === 'en' ? 'UPDATE' : '动态')}
+					date={formatDate(entry.data.publishDate!)}
+					title={entry.data.title}
+					description={entry.data.description ?? ''}
+					href={`/${entry.id}/`}
+					cta={locale === 'en' ? 'Read the post' : '阅读全文'}
+				/>
+			))
+		}
+	</UpdateGrid>
+</div>

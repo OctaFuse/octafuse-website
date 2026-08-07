@@ -24,6 +24,7 @@ const catalogLinks = [
 	},
 ];
 const isCatalogPage = Astro.url.pathname.startsWith(`${localePrefix}/catalog/`);
+const isUpdatesPage = Astro.url.pathname.startsWith(`${localePrefix}/updates`);
 ---
 
 <div class="header">
@@ -32,6 +33,12 @@ const isCatalogPage = Astro.url.pathname.startsWith(`${localePrefix}/catalog/`);
 			<SiteTitle />
 		</div>
 		<nav class="primary-nav print:hidden" aria-label={isEnglish ? 'Primary navigation' : '主要导航'}>
+			<a
+				href={`${localePrefix}/updates/`}
+				aria-current={isUpdatesPage ? 'page' : undefined}
+			>
+				{isEnglish ? 'Updates' : '动态'}
+			</a>
 			<a
 				href={`${localePrefix}/docs/`}
 				aria-current={Astro.url.pathname.startsWith(`${localePrefix}/docs`) ? 'page' : undefined}

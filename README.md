@@ -60,11 +60,14 @@ npm run preview
 
 ```
 src/content/docs/
-  zh/          # 中文（默认语言）
-  en/          # 英文镜像
+  zh/             # 中文（默认语言）
+    updates/      # 动态与版本发布文章
+  en/             # 英文镜像
+    updates/      # Updates and release posts
 ```
 
 - `/zh/`、`/en/` — 官网首页（splash）
+- `/zh/updates/`、`/en/updates/` — 动态索引与版本发布文章
 - `/zh/docs/`、`/en/docs/` — 文档首页与导航下的子页
 
 ## 文档维护边界

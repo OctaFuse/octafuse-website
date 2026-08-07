@@ -1,0 +1,99 @@
+---
+title: 不用养服务器：在 Cloudflare Workers 上部署 OctaFuse
+description: 使用 Cloudflare Workers 与 D1 部署 OctaFuse，将散落的模型供应商、API Key、预算、计费与日志集中到统一 AI 网关。
+publishDate: 2026-07-24
+updateLabel: 部署实践
+template: splash
+prev: false
+next: false
+lastUpdated: false
+sidebar:
+  hidden: true
+---
+
+独立开发者和小团队通常同时购买多个 Coding Plan、Token Plan，也会接入官方模型、聚合平台和自托管服务。每个上游都有自己的 Base URL、API Key、额度与价格，客户端越多，切换和维护就越麻烦。
+
+自托管 AI 网关可以把这些资源收敛为一个入口：
+
+- 上游 Base URL 与 API Key 只在 Gateway 中集中维护。
+- Cursor、CLI、脚本和业务应用统一使用 Gateway URL 与用户 Key。
+- 自研产品可以复用用户、API Key、预算、计费、日志和审计能力。
+- 多个 Provider 通过 priority、策略与权重完成分流和故障转移。
+
+OctaFuse 默认支持部署到 Cloudflare Workers + D1，不必长期维护一台服务器，适合个人项目、原型和中小流量场景。
+
+## 部署后的结构
+
+```text
+AI Client
+   │ 用户 API Key
+   ▼
+Proxy Worker ───┐
+                ├── 共享 D1 数据库
+Admin Worker ───┘
+   ▲
+   │ 浏览器登录 / MASTER_KEY
+Operator
+```
+
+Proxy 负责模型与 Tools 请求，Admin 提供配置和运营控制面。两个 Worker 独立部署，但必须绑定同一个 D1 数据库。
+
+## 从零到可调用的主流程
+
+完整部署可以拆成六个阶段：
+
+1. 准备 Cloudflare 账号、Git、Node.js 与 npm。
+2. 克隆仓库并通过 Wrangler 登录 Cloudflare。
+3. 使用 bootstrap 创建 D1、Proxy Worker 与 Admin Worker。
+4. 登录 Admin，立即轮换开发占位的 Master Key。
+5. 配置 Provider、Model 与 Route，创建用户及用户 API Key。
+6. 调用 `/v1/models` 或 `/v1/chat/completions` 完成首次验证。
+
+仓库提供交互式 bootstrap，首次部署时只需规划两个名称：本地实例名和 Cloudflare 资源前缀。脚本会创建数据库、生成 Worker 配置、执行迁移、部署 Proxy / Admin，并设置 Admin 登录 Secret。
+
+:::tip[以当前文档为准]
+部署脚本和迁移会随版本演进。本文保留部署思路与关键检查点；实际执行时请使用[最新快速开始](/zh/docs/quick-start/)和[Cloudflare 部署文档](/zh/docs/deploy/cloudflare/)中的命令。
+:::
+
+## 部署成功不等于已经可以调用模型
+
+新数据库尚未包含你的供应商凭证和路由，因此公开模型目录返回空数组是正常现象。需要依次完成：
+
+### 1. Provider
+
+在 Admin 导入或创建上游 Provider，确认 endpoint，填写真实 API Key 并启用。
+
+### 2. Model
+
+导入内置模型或手动创建，检查模型 ID、输入输出模态与计价配置。
+
+### 3. Route
+
+把 Model 与 Provider 连接起来，填写上游模型名、协议、route group、priority 和 weight，并启用路由。
+
+### 4. User API Key
+
+创建用户，设置预算周期与额度，再为用户签发 API Key。客户端调用 Proxy 时使用用户 Key，而不是 Admin API 的 Master Key。
+
+## 三类凭证不要混用
+
+| 凭证 | 用途 | 建议存储位置 |
+| --- | --- | --- |
+| `ADMIN_PASSWORD` | 登录 Admin 网页 | Cloudflare Worker Secret |
+| `MASTER_KEY` | 调用 `/api/admin/*` | 服务端安全环境变量 / D1 配置 |
+| 用户 API Key | 调用 Proxy `/v1/*` | 用户或客户端密钥存储 |
+
+首次部署后，应立即把公开的开发占位 Master Key 替换为强随机值。不要把 Master Key 放入浏览器前端、公开仓库、截图或 CI 日志。
+
+## 为什么这条路径适合独立开发者
+
+- 无需单独购买和维护服务器。
+- Proxy、Admin 与数据库处于同一 Cloudflare 运行环境。
+- 可以从 `workers.dev` 免费域名开始，验证后再绑定自定义域名。
+- 一套网关可以同时服务个人客户端和自研产品。
+- 上游切换、预算和计费逻辑不再散落在每个业务项目里。
+
+当流量规模、合规要求或数据库需求发生变化时，OctaFuse 也支持 Docker + PostgreSQL / MySQL 部署，不需要改变客户端的统一接入方式。
+
+- [当前快速开始](/zh/docs/quick-start/)
+- [Cloudflare 部署文档](/zh/docs/deploy/cloudflare/)

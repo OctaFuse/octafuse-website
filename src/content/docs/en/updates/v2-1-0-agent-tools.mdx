@@ -1,0 +1,44 @@
+---
+title: 'OctaFuse 2.1: bring Agent Tools under one gateway'
+description: OctaFuse Gateway 2.1 brings Web Search, Web Fetch, Deep Search, and AI Detection into one authentication, budget, pricing, logging, and audit system.
+publishDate: 2026-08-02
+updateLabel: VERSION 2.1.0
+template: splash
+prev: false
+next: false
+lastUpdated: false
+sidebar:
+  hidden: true
+---
+
+Model calls are only one part of an agent workflow. Agents also search the web, fetch documents, run deeper research, and invoke specialized detection services. Giving every tool its own credentials, price model, bill, and log creates a new silo for every capability.
+
+OctaFuse Gateway 2.1 brings these non-model capabilities under the gateway too.
+
+## Four tools, one operating model
+
+The release covers Web Search, Web Fetch, Web Deep Search, and AI Detection. They share the `/v1/tools/*` product surface plus user-key authentication, budget checks, billing, request logs, and audit.
+
+Agents carry one OctaFuse user key. Operators configure the engine, credentials, and pricing for each tool in Admin without exposing provider details to clients.
+
+## AI Detection and three-ledger pricing
+
+The new `POST /v1/tools/ai-detection` endpoint authenticates the user, checks the budget, segments long text, calls the active detection engine, aggregates the result, charges the request, and writes a unified log.
+
+Tool calls use three distinct price views:
+
+| Ledger | Meaning |
+| --- | --- |
+| `metered` | Actual supplier cost |
+| `standard` | Public catalog price |
+| `charged` | Amount charged to the user |
+
+Only `charged` increases `budget_spent`. The read-only `GET /v1/tools/pricing` endpoint lets portals present pricing before a call without revealing engine credentials or the active provider.
+
+## From model routing to AI capability control
+
+Admin now shows supplier cost, list price, charged amount, profit, and the actual engine provider. Playground and Simulator can test AI Detection, while the shared `@octafuse/tool-engines` package keeps Proxy and Admin on the same client implementations.
+
+Version 2.0 answered where model traffic should go. Version 2.1 starts answering which capabilities an agent invoked, what they cost, what the user should pay, and whether the complete chain is auditable.
+
+- [GitHub repository](https://github.com/OctaFuse/octafuse-gateway)

@@ -1,0 +1,36 @@
+---
+title: 'OctaFuse 2.2.0: routing policy for every priority tier'
+description: OctaFuse Gateway 2.2.0 unifies Gemini Generate Content routing, adds per-priority-tier Route Pool strategies, and improves Admin configuration.
+publishDate: 2026-08-06
+updateLabel: VERSION 2.2.0
+featuredUpdate: true
+template: splash
+prev: false
+next: false
+lastUpdated: false
+sidebar:
+  hidden: true
+---
+
+**OctaFuse Gateway 2.2.0 is now available.** This release makes routing configuration more closely reflect real production traffic.
+
+## Highlights
+
+- **One Gemini routing semantic:** public Surfaces and upstream Targets now use `models.generate`. Streaming and non-streaming requests share one Route Pool while the actual wire action remains visible in `route_trace.gemini.action`.
+- **Per-tier routing strategies:** each priority tier in a Route Pool can override its ordering strategy, while unconfigured tiers continue to inherit the Pool, model, or global strategy.
+- **Canonical strategy IDs:** `cache_affinity`, `weighted_random`, `fixed_order`, and `weighted_round_robin` now form one contract across Admin, API, storage, and runtime.
+- **Clearer Admin controls:** visual strategy selectors expose the effective policy source and Failover rules for each tier.
+- **Agent Tools Provider cards:** credentials, activation, and Standard / Charged / Metered pricing now live in one focused workflow.
+
+## Upgrade notice
+
+- If all existing routing policies inherit the global configuration, you can upgrade to 2.2.0 without interruption.
+- If models, Pools, or priority tiers have their own policy configuration, requests may briefly fail while old and new data are inconsistent. Apply the database migrations and upgrade Proxy and Admin within the same maintenance window.
+
+## Get 2.2.0
+
+- [GitHub Release v2.2.0](https://github.com/OctaFuse/octafuse-gateway/releases/tag/v2.2.0)
+- [Full changelog](https://github.com/OctaFuse/octafuse-gateway/blob/v2.2.0/CHANGELOG.md)
+- [Migration index](https://github.com/OctaFuse/octafuse-gateway/blob/v2.2.0/docs/operators/README.md)
+- [Docker deployment and upgrades](https://github.com/OctaFuse/octafuse-gateway/blob/v2.2.0/docs/operators/deployment/docker.md)
+- [Cloudflare deployment and upgrades](https://github.com/OctaFuse/octafuse-gateway/blob/v2.2.0/docs/operators/deployment/cloudflare.md)

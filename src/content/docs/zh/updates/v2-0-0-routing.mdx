@@ -1,0 +1,85 @@
+---
+title: OctaFuse 2.0：把复杂路由画成一条看得懂的链路
+description: OctaFuse Gateway 2.0 引入 Surface → Pool → Target 路由拓扑、priority 分层、可视化策略与 Provider 单键模型。
+publishDate: 2026-07-31
+updateLabel: VERSION 2.0.0
+template: splash
+prev: false
+next: false
+lastUpdated: false
+sidebar:
+  hidden: true
+---
+
+以前配置 AI 网关，很像在修一台看不见内部结构的机器：Provider Key、priority、weight 和策略散落在不同字段里。配置完成后，还需要在脑中推演“这次请求究竟会打到哪个上游”。
+
+OctaFuse Gateway 2.0 的目标很直接：**打开页面就能看懂请求怎么走，用可视化流程完成多供应商、分流与故障转移配置。**
+
+## 先看请求怎么走，再决定在哪里配置
+
+2.0 引入新的路由拓扑：
+
+```text
+客户端请求
+   ↓
+Request Surface
+   ↓
+Route Pool
+   ↓
+Upstream Target
+   ↓
+Provider
+```
+
+Surface 描述客户端以什么协议和 operation 进入网关；Pool 表达一组共享故障转移规则的上游；Target 则是实际被尝试的供应商模型。
+
+![OctaFuse Admin 路由配置](/screenshots/admin-routes.png)
+
+配置项直接出现在真正生效的环节。页面不再只是表单集合，而是请求处理过程本身。
+
+## Priority、策略和权重，各自只负责一件事
+
+Route Pool 中的调度可以用三句话解释：
+
+> **Priority 决定先走哪一层，策略决定同层如何排序，weight 决定流量向谁倾斜。**
+
+- **Priority**：当前层全部失败后，才会进入下一层。
+- **Strategy**：决定同一层的 Target 如何排列与选择。
+- **Weight**：为同层分流提供比例或偏好信息。
+- **Status**：停用的 Provider 或 Target 不进入实际尝试计划。
+
+这让“主力账号之间分流、低成本上游优先、昂贵服务最终保底”等组合，都能在一张拓扑图中表达。
+
+## 路由策略不该只是一串内部 ID
+
+2.0 首次提供四种可切换策略，并在 Admin 中加入策略卡片和效果预览。配置者无需发出真实请求，就能理解哪些 Target 会先尝试、哪些属于回退层，以及策略来自 Pool、模型还是全局配置。
+
+:::note[策略名称已经更新]
+2.0 发布时使用 `affinity`、`weighted_random`、`strict`、`round_robin`。从 2.2.0 开始，canonical ID 为 `cache_affinity`、`weighted_random`、`fixed_order`、`weighted_round_robin`。本文使用当前名称描述相同能力。
+:::
+
+| 当前策略 | 适合场景 |
+| --- | --- |
+| `cache_affinity` | 尽量稳定命中同一上游，提高 Prompt Cache 命中率 |
+| `weighted_random` | 按权重随机分流，适合灰度与容量配比 |
+| `fixed_order` | 严格主备，始终按固定顺序尝试 |
+| `weighted_round_robin` | 按权重轮转，让流量分配更均匀可预期 |
+
+## 一个 Provider，就是一个真实上游账号
+
+2.0 同时完成 Provider 单键化：一个 Provider 维护一把上游 API Key。若同一家供应商有多个账号，就创建多个 Provider。
+
+这种模型让配置对象与现实中的账号一一对应：路由页看到的上游实体，就是运维人员要管理、启停和排障的那个账号。密钥不再藏在 Provider 下的一组二级列表中，路由与凭证的心智模型保持一致。
+
+## 一条更简单的配置路径
+
+1. 导入或创建 Provider，并填写上游 Key。
+2. 导入模型，创建对应 Route。
+3. 为 Route 设置 priority 与 weight。
+4. 选择或继承路由策略。
+5. 在拓扑和效果预览中确认尝试顺序。
+6. 使用 Playground 或 Simulator 验证真实链路。
+
+2.0 不只是一次界面调整，而是对数据库结构、运行时调度和管理体验的同步重构。它建立的 Surface → Pool → Target 基础，也成为后续 Gemini 路由收敛与 priority 分层策略的前提。
+
+- [GitHub Release v2.0.0](https://github.com/OctaFuse/octafuse-gateway/releases/tag/v2.0.0)

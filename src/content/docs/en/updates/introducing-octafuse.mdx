@@ -1,0 +1,41 @@
+---
+title: 'Why we built OctaFuse: consolidate scattered token resources'
+description: OctaFuse is a self-hostable AI capability gateway and operations control plane for Providers, user keys, budgets, billing, routing, and audit.
+publishDate: 2026-07-11
+updateLabel: INTRODUCTION
+template: splash
+prev: false
+next: false
+lastUpdated: false
+sidebar:
+  hidden: true
+---
+
+OctaFuse started with a simple problem: AI resources kept multiplying while the way we used them became more fragmented.
+
+Coding plans, token plans, official APIs, compatible endpoints, and self-hosted models each brought a Base URL, key, quota, and price. Every new client or product duplicated connection and switching logic.
+
+We needed more than another forwarding proxy. We needed an entrypoint we could operate ourselves.
+
+## Two original use cases
+
+Individual developers can consolidate subscriptions and Providers behind one Gateway URL and user key for editors, CLIs, scripts, and agents. Rotating an upstream credential or changing a route no longer requires updating every client.
+
+Teams and AI products also need user-key issuance, budgets, billing, audit, and automatic failover. OctaFuse keeps those shared concerns in the gateway so business applications do not build another credential store and charging system.
+
+![OctaFuse Admin Dashboard](/screenshots/admin-dashboard.png)
+
+## Open, self-hostable, and operational
+
+OctaFuse aims to preserve three qualities:
+
+1. **Open integration:** official Providers, aggregators, compatible endpoints, and self-hosted services can all be represented.
+2. **Self-hosting:** deploy on Cloudflare Workers + D1 or Docker with PostgreSQL / MySQL.
+3. **Complete governance:** routing, failover, user keys, budgets, billing, logs, and audit live beside request forwarding.
+
+Clients see a stable Gateway URL, user key, and model ID. Operators can change the Provider, account, price, or fallback chain behind that contract.
+
+OctaFuse began by consolidating model tokens. It now extends the same operating model to images, speech transcription, and Agent Tools—moving toward a self-hosted control plane for AI capabilities.
+
+- [GitHub repository](https://github.com/OctaFuse/octafuse-gateway)
+- [Quick start](/en/docs/quick-start/)
