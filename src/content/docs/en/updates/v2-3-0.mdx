@@ -24,11 +24,13 @@ In one sentence:
 
 ## Provider Sticky
 
-Sticky is optional and off by default:
+Sticky is optional and off by default. The key point: sticky binding is evaluated **before** the four routing strategies. Once Sticky is enabled, a valid binding keeps the user's requests on the Provider that was last allocated and succeeded—whether the Pool or priority tier uses `hash_affinity`, `weighted_random`, `weight_priority`, or `weighted_round_robin`. Tier strategies only run when there is no binding yet, or after a binding is cleared and routing must choose again. That is how a Route Pool can reliably get high Prompt Cache hit rates.
+
+How it works:
 
 1. Without a valid binding, routing still follows priority and the effective tier strategy.
 2. A successful request records the Target for the user, model, route group, and protocol.
-3. While valid, that Target is tried before normal priority tiers.
+3. While valid, that Target is tried before normal priority tiers and in-tier strategies.
 4. Each success renews the idle TTL; the default is 3600 seconds.
 5. A 429, 401 / 403, 5xx, 524, or network failure clears the binding and continues normal failover.
 
