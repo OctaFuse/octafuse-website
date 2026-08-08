@@ -39,12 +39,27 @@ Pool 先按 Target 的 `priority` **降序分层**，数字越大越先试；同
 
 | 策略 | 特点与适用场景 |
 |------|----------------|
-| `cache_affinity`（默认） | 同用户、模型、分组与协议稳定首选同一 Provider，Prompt Cache 命中率高；短时流量可能不完全均匀。 |
+| `hash_affinity`（默认） | 同用户、模型、分组与协议稳定首选同一 Provider，Prompt Cache 命中率高；短时流量可能不完全均匀。 |
 | `weighted_random` | 按 weight 加权随机分流，负载均衡性高，适合比例分摊或 A/B；缓存亲和较弱。 |
-| `fixed_order` | 同层按 weight 从高到低固定排序，适合可预测主备；首选 Provider 承担大部分流量。 |
+| `weight_priority` | 同层按 weight 从高到低固定排序，适合可预测主备；首选 Provider 承担大部分流量。 |
 | `weighted_round_robin` | 按 weight 轮转，更均匀；计数器按运行实例维护，多实例间不全局同步。 |
 
-跨供应商硬主备请使用不同 `priority`。策略覆盖顺序为：当前 `priority` 层覆盖 → Route Pool 默认 → 模型 capability 规则 → 模型 protocol 规则 → 模型默认 → 全局 `ROUTE_STRATEGY` → `cache_affinity`。
+跨供应商硬主备请使用不同 `priority`。策略覆盖顺序为：当前 `priority` 层覆盖 → Route Pool 默认 → 模型 capability 规则 → 模型 protocol 规则 → 模型默认 → 全局 `ROUTE_STRATEGY` → `hash_affinity`。
+
+<Aside type="caution" title="2.3.0 策略 ID 已硬切换">
+	`cache_affinity` 与 `fixed_order` 已分别改为 `hash_affinity` 与 `weight_priority`，v2.3.0 不再接受旧 ID。外部自动化、全局配置、Pool 和 priority 层配置都必须使用新名称。
+</Aside>
+
+## Provider Sticky
+
+Provider Sticky 是 **Route Pool 级的跨请求成功记忆**，不是第五种层内策略：
+
+- 无有效绑定时，仍按 priority 与上面的四种策略选路；成功后记录 Target。
+- 有效绑定会在空闲 TTL 内跨 priority 优先尝试；默认 TTL 为 3600 秒，每次成功会续期。
+- 429、401 / 403、5xx、524 或网络错误会解绑并继续常规故障转移；400、404 与图片客户端取消不会解绑。
+- Sticky 默认关闭。在 Routes Flow 的 Route Group / Pool 节点打开 Sticky 弹窗，可启用、调整 TTL、查看绑定分布与权重、按用户解绑或整池失效。
+
+`hash_affinity` 是无状态哈希，尽量让同一用户稳定首选同一 Provider；Sticky 则持久记住上次成功 Target，并在 D1 / Postgres / MySQL 中跨 Worker isolate 或 Node 实例共享。
 
 ## 故障转移与熔断
 

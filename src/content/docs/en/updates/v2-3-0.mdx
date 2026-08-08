@@ -1,0 +1,118 @@
+---
+title: 'OctaFuse 2.3.0: keep upstream selection stable across requests'
+description: OctaFuse Gateway 2.3.0 adds Route Pool Provider Sticky, binding observability and operations, plus the hash_affinity and weight_priority strategy IDs.
+publishDate: 2026-08-08
+updateLabel: VERSION 2.3.0
+featuredUpdate: true
+template: splash
+prev: false
+next: false
+lastUpdated: false
+sidebar:
+  hidden: true
+---
+
+**OctaFuse Gateway 2.3.0 is now available.**
+
+After failover finds a working upstream, sending the next request to the same Provider can materially improve Prompt Cache continuity and reduce unnecessary switching.
+
+Version 2.3.0 adds **Provider Sticky** to Route Pools. The gateway can remember the last successful Target for an idle TTL, while Admin exposes binding distribution, per-user unbind, and Pool-wide invalidation.
+
+In one sentence:
+
+> **The four strategies decide how to route without a binding; Provider Sticky remembers the successful result.**
+
+## Provider Sticky
+
+Sticky is optional and off by default:
+
+1. Without a valid binding, routing still follows priority and the effective tier strategy.
+2. A successful request records the Target for the user, model, route group, and protocol.
+3. While valid, that Target is tried before normal priority tiers.
+4. Each success renews the idle TTL; the default is 3600 seconds.
+5. A 429, 401 / 403, 5xx, 524, or network failure clears the binding and continues normal failover.
+
+Bindings live in D1, Postgres, or MySQL, so they are shared across Cloudflare Worker isolates and multiple Node instances. Storage failures fail open to the regular route plan instead of blocking inference.
+
+## Sticky versus `hash_affinity`
+
+`hash_affinity` is the default stateless tier strategy. It gives the same user, model, route group, and protocol a stable preferred Provider.
+
+Provider Sticky records the **Target that actually succeeded**:
+
+- It can prefer that Target across priority tiers.
+- It expires after an idle TTL.
+- Provider-attributable failures clear it.
+- A `sticky_epoch` bump can invalidate the entire Pool.
+
+The two features work together. When no binding is valid, routing returns to `hash_affinity` or the strategy configured for that tier.
+
+## Admin operations
+
+Open the Sticky dialog on the Route Group / Pool node in Routes Flow to:
+
+- Enable or disable Sticky and set its idle TTL.
+- Compare active binding share with each Target's route weight.
+- Look up a binding by user email or user ID.
+- Unbind one user so their next request selects normally.
+- Invalidate the entire Pool with an epoch bump.
+
+Routes Flow also improves topology, effective-policy, and priority-tier visualization so operators can compare configuration with the actual failover order.
+
+## `route_trace.sticky`
+
+Request logs can now include:
+
+```json
+{
+  "sticky": {
+    "lookup": "hit",
+    "attempted_target": "route-target-id",
+    "result": "kept"
+  }
+}
+```
+
+- `lookup` records outcomes such as `hit`, `miss`, `expired`, `invalid_epoch`, or `invalid_circuit`.
+- `attempted_target` is the bound Target tried before normal tiers.
+- `result` shows whether the binding was kept, cleared, created, or rebound, and can report storage errors.
+
+Compare these fields with cache-read tokens and upstream failover counts to verify that Sticky is improving cache continuity.
+
+## Strategy IDs now match Admin labels
+
+Version 2.3.0 renames two strategy IDs:
+
+| 2.2.0 ID | 2.3.0 ID |
+| --- | --- |
+| `cache_affinity` | `hash_affinity` |
+| `fixed_order` | `weight_priority` |
+
+`weighted_random` and `weighted_round_robin` are unchanged.
+
+**There are no aliases for the old IDs.** Automation, `ROUTE_STRATEGY`, model `route_policy`, Route Pool defaults, and priority-tier overrides must use the new names. Writing an old ID returns 400.
+
+## Upgrade to 2.3.0
+
+This release includes two database migrations:
+
+- **0020** adds Route Pool Sticky columns and `route_pool_sticky_bindings`.
+- **0021** rewrites persisted strategy IDs to `hash_affinity` / `weight_priority`.
+
+When upgrading from 2.2.0:
+
+1. Back up the database and pause Proxy traffic plus Admin configuration writes.
+2. Apply **0020 → 0021** in order.
+3. Immediately deploy Proxy, Admin, and migrate artifacts from the same release.
+4. Verify that no old strategy IDs remain, then restore traffic.
+5. Sticky stays off by default; enable it Pool by Pool and observe request logs.
+
+Do not mix old and new Proxy / Admin versions during the maintenance window because migration 0021 has no old-ID compatibility aliases.
+
+## Get 2.3.0
+
+- [GitHub Release v2.3.0](https://github.com/OctaFuse/octafuse-gateway/releases/tag/v2.3.0)
+- [Full changelog](https://github.com/OctaFuse/octafuse-gateway/blob/v2.3.0/CHANGELOG.md)
+- [Migration 0020: Provider Sticky](https://github.com/OctaFuse/octafuse-gateway/blob/v2.3.0/docs/operators/migrations/route-pool-sticky-routing-cutover.md)
+- [Migration 0021: strategy IDs](https://github.com/OctaFuse/octafuse-gateway/blob/v2.3.0/docs/operators/migrations/route-strategy-display-ids-cutover.md)
+- [Routing guide](/en/docs/guides/routing/)

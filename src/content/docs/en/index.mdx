@@ -70,8 +70,8 @@ AI capabilities are expanding beyond text models into image generation, Agent To
 	<Card title="Single-key Providers and presets" icon="approve-check">
 		Each Provider owns one upstream API key and status; represent multiple vendor accounts as separate Providers. Import Provider / Model presets in Admin, add the real key, then attach routes.
 	</Card>
-	<Card title="Four strategies and Provider circuits" icon="warning">
-		Choose `cache_affinity`, `weighted_random`, `fixed_order`, or `weighted_round_robin`, with optional per-priority-tier overrides in each Route Pool. Default cache_affinity keeps a stable preferred upstream for better Prompt Cache hits; 429, 401 / 403, and consecutive 5xx responses trigger Provider-level cooldowns.
+	<Card title="Four strategies, Provider Sticky, and circuits" icon="warning">
+		Choose `hash_affinity`, `weighted_random`, `weight_priority`, or `weighted_round_robin`, with optional per-priority-tier overrides. Provider Sticky can remember a successful Target across requests; 429, 401 / 403, and consecutive 5xx responses trigger Provider-level cooldowns.
 	</Card>
 	<Card title="User keys, budgets, and pricing" icon="padlock">
 		Govern access through External system → User → API Key. Budgets and reset periods belong to Users; API Keys authenticate and attribute usage. Model requests record **supplier cost**, **catalog list price**, and **charged to user**, with business-timezone daily schedule multipliers.

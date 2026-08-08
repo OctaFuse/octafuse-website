@@ -39,12 +39,27 @@ Pools first group Targets by `priority` **descending**; higher numbers try first
 
 | Strategy | Behavior and use |
 |----------|------------------|
-| `cache_affinity` (default) | Keeps a stable preferred Provider for the same user, model, group, and protocol, improving Prompt Cache hits; short-term traffic may be uneven. |
+| `hash_affinity` (default) | Keeps a stable preferred Provider for the same user, model, group, and protocol, improving Prompt Cache hits; short-term traffic may be uneven. |
 | `weighted_random` | Weighted random distribution with strong load balancing for proportional allocation or A/B; weaker cache affinity. |
-| `fixed_order` | Fixed high-to-low weight order for predictable primary / backup behavior; the first Provider gets most traffic. |
+| `weight_priority` | Fixed high-to-low weight order for predictable primary / backup behavior; the first Provider gets most traffic. |
 | `weighted_round_robin` | Weighted rotation for more even traffic; counters are per runtime instance and not globally synchronized. |
 
-Use different priorities for hard primary / backup across Providers. Precedence is: current priority-tier override → Route Pool default → model capability rule → model protocol rule → model default → global `ROUTE_STRATEGY` → `cache_affinity`.
+Use different priorities for hard primary / backup across Providers. Precedence is: current priority-tier override → Route Pool default → model capability rule → model protocol rule → model default → global `ROUTE_STRATEGY` → `hash_affinity`.
+
+<Aside type="caution" title="Strategy IDs changed in 2.3.0">
+	`cache_affinity` and `fixed_order` were renamed to `hash_affinity` and `weight_priority`. Version 2.3.0 does not accept the old IDs; update automation, global config, Pool defaults, and priority-tier overrides.
+</Aside>
+
+## Provider Sticky
+
+Provider Sticky is **cross-request success memory at the Route Pool level**, not a fifth ordering strategy:
+
+- Without a valid binding, routing still follows priority plus one of the four strategies above; a successful Target is then recorded.
+- A valid binding is tried before priority tiers during its idle TTL. The default is 3600 seconds and each successful request renews it.
+- 429, 401 / 403, 5xx, 524, and network failures clear the binding before normal failover. A 400, 404, or image client abort keeps it.
+- Sticky is off by default. Open the Sticky dialog on the Route Group / Pool node in Routes Flow to enable it, adjust TTL, compare binding share with route weight, unbind one user, or invalidate the whole Pool.
+
+`hash_affinity` is stateless hashing that gives a user a stable preferred Provider. Sticky persists the last successful Target in D1, Postgres, or MySQL and shares it across Worker isolates or Node instances.
 
 ## Failover and circuits
 

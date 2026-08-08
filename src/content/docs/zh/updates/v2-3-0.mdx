@@ -1,0 +1,118 @@
+---
+title: OctaFuse 2.3.0：让上游供应商的选择支持粘性绑定，让缓存命中更稳定
+description: OctaFuse Gateway 2.3.0 引入 Route Pool Provider Sticky、可观测绑定运维，并将路由策略 ID 对齐为 hash_affinity 与 weight_priority。
+publishDate: 2026-08-08
+updateLabel: VERSION 2.3.0
+featuredUpdate: true
+template: splash
+prev: false
+next: false
+lastUpdated: false
+sidebar:
+  hidden: true
+---
+
+**OctaFuse Gateway 2.3.0 正式发布。**
+
+当一次请求通过故障转移找到可用上游后，下一次请求是否还会回到同一家供应商，直接影响缓存命中、会话连续性和供应商侧状态的稳定程度。
+
+2.3.0 为 Route Pool 增加 **供应商粘性（Provider Sticky）配置**：网关可以记住用户上次成功的供应商，在粘滞 TTL 内优先复用；Admin 同时提供绑定分布、用户解绑与整池失效操作。
+
+一句话看懂 2.3.0：
+
+> **四种策略决定用户请求没有绑定供应商时如何选择供应商，供应商粘性（Provider Sticky）记住选路成功后的结果，以持续的粘性路由来保障缓存命中**
+
+## 01｜供应商粘性（Provider Sticky）：成功后继续走同一个目标
+
+Sticky 是 Route Pool 的可选能力，默认关闭：
+
+1. 没有有效绑定时，仍按 priority 与层内策略选路。
+2. 请求成功后，将用户、模型、路由组与协议对应到本次 Target。
+3. 绑定有效时，在常规 priority 层之前优先尝试该 Target。
+4. 每次成功会滑动续期；默认空闲 TTL 为 3600 秒。
+5. 429、401 / 403、5xx、524 或网络错误会解绑并继续故障转移。
+
+绑定存储在 D1、Postgres 或 MySQL 中，因此可以跨 Cloudflare Worker isolate 和多个 Node 实例共享。存储异常时会 fail open 到常规路由，不会因为 Sticky 不可用而直接阻断推理。
+
+## 02｜它与 `hash_affinity` 有什么区别
+
+`hash_affinity` 是默认的无状态层内策略：同一用户、模型、路由组和协议会稳定得到一个首选 Provider。
+
+Provider Sticky 则记录**上一次真正成功的 Target**：
+
+- 可以跨 priority 优先尝试绑定目标。
+- 可以通过 TTL 自动过期。
+- 可以在 Provider 故障时解绑。
+- 可以通过 `sticky_epoch` 让整个 Pool 的旧绑定失效。
+
+两者并不互斥。未命中绑定时，Sticky 仍会回到 `hash_affinity` 或你为该层选择的其它策略。
+
+## 03｜Admin Routes Flow 增加绑定运维
+
+在 Routes Flow 的 Route Group / Pool 节点打开 Sticky 弹窗后，可以：
+
+- 启用或关闭 Sticky，并设置空闲 TTL。
+- 查看当前有效绑定数，以及各 Target 的绑定占比与 route weight 对比。
+- 按用户邮箱或用户 ID 查找绑定。
+- 只解绑一个用户，让其下一次请求重新选路。
+- 整池 invalidate，通过 epoch bump 让所有用户在下一次请求重新选路。
+
+Routes Flow 的拓扑、策略来源与 priority 层展示也同步增强，便于把配置、实际尝试顺序和故障转移规则放在一张图里核对。
+
+## 04｜`route_trace.sticky`：知道绑定为何命中或失效
+
+请求日志现在可以记录：
+
+```json
+{
+  "sticky": {
+    "lookup": "hit",
+    "attempted_target": "route-target-id",
+    "result": "kept"
+  }
+}
+```
+
+- `lookup` 描述绑定读取结果，例如 `hit`、`miss`、`expired`、`invalid_epoch` 或 `invalid_circuit`。
+- `attempted_target` 是本次被前置尝试的 Target。
+- `result` 描述绑定被保持、清除、新建或重绑，也可能记录存储错误。
+
+运维时可以把这些字段与 cache read token、上游故障转移次数一起观察，判断 Sticky 是否真正提高了 Prompt Cache 连续性。
+
+## 05｜路由策略 ID 与界面名称正式对齐
+
+2.3.0 将两个策略 ID 改为与 Admin 展示名称一致：
+
+| 2.2.0 ID | 2.3.0 ID |
+| --- | --- |
+| `cache_affinity` | `hash_affinity` |
+| `fixed_order` | `weight_priority` |
+
+另外两个 ID 保持不变：`weighted_random`、`weighted_round_robin`。
+
+**旧 ID 没有兼容别名。** 外部自动化、`ROUTE_STRATEGY`、模型 `route_policy`、Route Pool 和 priority 层配置都必须使用新名称；写入旧 ID 会返回 400。
+
+## 升级到 2.3.0
+
+本次升级包含两项数据库迁移：
+
+- **0020**：增加 Route Pool Sticky 配置列与 `route_pool_sticky_bindings`。
+- **0021**：把持久化策略 ID 更新为 `hash_affinity` / `weight_priority`。
+
+从 2.2.0 升级时：
+
+1. 备份数据库，暂停 Proxy 流量与 Admin 配置写入。
+2. 按顺序执行 **0020 → 0021**。
+3. 立即部署同一版本的 Proxy、Admin 与 migrate 制品。
+4. 校验旧策略 ID 数量为 0，再恢复流量。
+5. Sticky 默认关闭，升级后按 Pool 逐步启用并观察日志。
+
+由于 0021 没有旧 ID 别名，升级窗口中不要混跑新旧 Proxy / Admin。
+
+## 获取 2.3.0
+
+- [GitHub Release v2.3.0](https://github.com/OctaFuse/octafuse-gateway/releases/tag/v2.3.0)
+- [完整 Changelog](https://github.com/OctaFuse/octafuse-gateway/blob/v2.3.0/CHANGELOG.md)
+- [0020 Provider Sticky 迁移](https://github.com/OctaFuse/octafuse-gateway/blob/v2.3.0/docs/operators/migrations/route-pool-sticky-routing-cutover.md)
+- [0021 策略 ID 迁移](https://github.com/OctaFuse/octafuse-gateway/blob/v2.3.0/docs/operators/migrations/route-strategy-display-ids-cutover.md)
+- [路由配置指南](/zh/docs/guides/routing/)

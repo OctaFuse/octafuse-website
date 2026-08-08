@@ -3,7 +3,7 @@ title: 'OctaFuse 2.2.0: routing policy for every priority tier'
 description: OctaFuse Gateway 2.2.0 unifies Gemini Generate Content routing, adds per-priority-tier Route Pool strategies, and improves Admin configuration.
 publishDate: 2026-08-06
 updateLabel: VERSION 2.2.0
-featuredUpdate: true
+featuredUpdate: false
 template: splash
 prev: false
 next: false
@@ -11,6 +11,8 @@ lastUpdated: false
 sidebar:
   hidden: true
 ---
+
+> **Later change:** migration 0021 in v2.3.0 renamed `cache_affinity` / `fixed_order` to `hash_affinity` / `weight_priority` with no compatibility aliases. The text below preserves the 2.2.0 release context; use the [v2.3.0 release notes](/en/updates/v2-3-0/) for current configuration.
 
 **OctaFuse Gateway 2.2.0 is now available.** This release makes routing configuration more closely reflect real production traffic.
 

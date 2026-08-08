@@ -29,7 +29,18 @@ import { Aside, Steps } from '@astrojs/starlight/components';
 
 展开区域可能包含与扣费相关的多段 JSON 摘要；若需精确公式或与账单对账，请结合主仓库文档或内部财务口径。
 
+## 观察 Provider Sticky
+
+Route Pool 启用 Provider Sticky 后，展开日志中的 `route_trace.sticky`：
+
+- `lookup`：绑定读取结果，例如 `hit`、`miss`、`expired`、`invalid_epoch`、`invalid_target` 或 `invalid_circuit`。
+- `attempted_target`：本次被优先尝试的绑定 Target。
+- `result`：绑定最终保持、清除、新建或重绑，也可能记录 `storage_error` / `unchanged`。
+
+把 Sticky 命中情况与 cache read token、上游故障转移次数一起观察：命中稳定但缓存收益没有改善时，应检查上游是否真正共享 Prompt Cache；频繁 `cleared` / `rebound` 时，应检查 Provider 429、5xx、鉴权错误与 TTL 是否合理。
+
 ## 下一步
 
 - [审计日志](/zh/docs/guides/audit-logs/) — 侧重预算与账户侧变更记录  
+- [路由配置](/zh/docs/guides/routing/) — 四种策略与 Provider Sticky
 - [Simulator](/zh/docs/features/simulator/) — 用浏览器携带密钥试打 Proxy  

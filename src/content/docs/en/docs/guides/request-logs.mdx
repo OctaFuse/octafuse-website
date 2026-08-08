@@ -29,7 +29,18 @@ Open **User → Request Logs**. This view lists **real inference calls through t
 
 Expanded panels may include charge-related JSON summaries; for exact formulas or finance reconciliation, follow your internal policy plus upstream docs linked from the [GitHub technical reference](/en/docs/github-reference/).
 
+## Observe Provider Sticky
+
+When a Route Pool has Provider Sticky enabled, expand `route_trace.sticky` in the request log:
+
+- `lookup` is the binding lookup outcome, such as `hit`, `miss`, `expired`, `invalid_epoch`, `invalid_target`, or `invalid_circuit`.
+- `attempted_target` is the bound Target tried before normal priority tiers.
+- `result` shows whether the binding was kept, cleared, created, or rebound; it can also report `storage_error` or `unchanged`.
+
+Compare Sticky outcomes with cache-read tokens and upstream failover counts. If hits are stable but cache benefit does not improve, verify that the upstream really shares Prompt Cache state. Frequent `cleared` / `rebound` results point to Provider 429s, 5xx responses, auth failures, or an unsuitable TTL.
+
 ## Next
 
 - [Audit logs](/en/docs/guides/audit-logs/) — budget and account-side changes  
+- [Routing](/en/docs/guides/routing/) — four strategies and Provider Sticky
 - [Simulator](/en/docs/features/simulator/) — browser-based calls to the Proxy with a real key  

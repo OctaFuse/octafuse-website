@@ -9,7 +9,7 @@ import { Aside, Steps } from '@astrojs/starlight/components';
 
 - **管理密钥（Master Key）**：用于服务端调用管理接口的 Bearer，与门户或脚本里配置的 **`GATEWAY_MASTER_KEY`** 必须一致。  
 - **业务时区**、**计费币种**：影响列表与统计中的时间、金额展示口径；业务时区同时用于路由 **Daily schedule**（每日时段调价）的窗口判定。  
-- **全局路由策略**：`ROUTE_STRATEGY` 可设为 `cache_affinity`（默认）、`weighted_random`、`fixed_order` 或 `weighted_round_robin`；模型规则、Route Pool 默认和 priority 层策略可继续覆盖。
+- **全局路由策略**：`ROUTE_STRATEGY` 可设为 `hash_affinity`（默认）、`weighted_random`、`weight_priority` 或 `weighted_round_robin`；模型规则、Route Pool 默认和 priority 层策略可继续覆盖。v2.3.0 不再接受旧 ID `cache_affinity` / `fixed_order`。
 - **告警 Webhook**（如飞书、企业微信）：可选，用于对接你们的事件通知。  
 - **自定义键值**：高级场景下可新增其他全局配置项（键名与含义请与运维约定一致）。
 
