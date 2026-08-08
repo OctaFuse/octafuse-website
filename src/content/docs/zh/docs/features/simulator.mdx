@@ -1,26 +1,26 @@
 ---
-title: Simulator
-description: 在浏览器中填写 Proxy 地址与用户 sk- 密钥，按各协议试发请求，用于联调与验收。
+title: 模拟器（Simulator）
+description: 在浏览器中填写代理服务（Proxy）地址与用户 `sk-…` 密钥，按各协议试发请求，用于联调与验收。
 ---
 
 import { Aside, Steps } from '@astrojs/starlight/components';
 
-在左侧 **Inference → Simulator** 打开。**Simulator** 在 **你的浏览器里** 直接向已部署的 **Proxy** 发请求：你填写 **Proxy 根地址** 与 **用户的 `sk-…` 密钥**，选择协议与模型等选项，从而验证 **鉴权、路由、预算扣减、请求日志** 等与线上一致的行为。
+在左侧的**推理（Inference）→ 模拟器（Simulator）**中打开。模拟器会在**你的浏览器中**直接向已部署的**代理服务**发送请求：填写**代理服务根地址**与**用户 API 密钥 `sk-…`**，再选择协议、模型等选项，即可验证**鉴权、路由、预算扣减、请求日志**等与线上一致的行为。
 
-这与 [Playground](/zh/docs/features/playground/) 不同：Playground 侧重「管理台代你直连上游试单条路由」，而 Simulator 侧重「像真实客户端一样打网关入口」。
+这与[调试台（Playground）](/zh/docs/features/playground/)不同：调试台侧重“由管理后台代你直连上游，试跑单条路由”，模拟器则侧重“像真实客户端一样调用网关入口”。
 
 <Aside type="caution" title="密钥">
-	**`sk-…` 会出现在浏览器里**，仅建议在测试环境或脱敏密钥下使用；生产问题优先在服务端用相同请求复现。
+	**`sk-…` 会出现在浏览器中**，仅建议在测试环境中使用或使用脱敏密钥；遇到生产问题时，优先在服务端使用相同请求复现。
 </Aside>
 
 ## 如何使用
 
 <Steps>
-1. 打开 **Simulator**。
-1. 填写 **Proxy 根地址**（与你们为应用配置的网关入口一致，含 `https://` 与端口）和 **`sk-…`**。
+1. 打开**模拟器（Simulator）**。
+1. 填写**代理服务根地址**（与你为应用配置的网关入口一致，包含 `https://` 与端口）和 **`sk-…`**。
 1. 选择协议形态、模型标识、可选 **路由组**（需与 [路由配置](/zh/docs/guides/routing/) 中一致）。验证图片生成时选择 Images / generations（或 edits）入口，见 [图片生成 / 编辑](/zh/docs/guides/images/)。
 1. 发送请求后，到 [请求日志](/zh/docs/guides/request-logs/) 中核对是否出现对应记录（含 `billing_kind` / image count）。
-1. 若与 Playground 表现不一致：检查 **用户预算**、**路由组**、**密钥是否被吊销** 等常见因素。
+1. 若与调试台表现不一致，请检查**用户预算**、**路由组**、**密钥是否被吊销**等常见因素。
 </Steps>
 
 页面可能会 **在本机浏览器** 记住你上次填写的地址、协议等，便于反复调试；更换环境或共用电脑时注意清理。

@@ -1,37 +1,37 @@
 ---
-title: Agent Tools
-description: 在 Admin Tools 通过 Provider 卡片配置第三方凭证、三账本单价、单 Active 引擎与调用记录。
+title: 智能体工具（Agent Tools）
+description: 在管理台的工具页面通过供应商卡片配置第三方凭证、三账本单价、单活跃引擎与调用记录。
 ---
 
 import { Aside, Steps } from '@astrojs/starlight/components';
 
-Agent Tools 是一组 **协议无关、可扩展** 的产品 API（与 `/v1/me` 同类），挂在 `POST /v1/tools/*`，供桌面 Agent 在模型发起 tool call 后调用。它们 **不是** OpenAI / Anthropic / Gemini 推理协议的一部分。
+智能体工具是一组**协议无关、可扩展**的产品 API（与 `/v1/me` 同类），挂载在 `POST /v1/tools/*`，供桌面智能体在模型发起工具调用后使用。它们**不是** OpenAI、Anthropic 或 Gemini 推理协议的一部分。
 
 当前已接入：
 
-| 工具 | 端点 | 可选 Provider |
+| 工具 | 端点 | 可选供应商（Provider） |
 |------|------|---------------|
-| Web Search | `POST /v1/tools/web-search` | 博查、Tavily、阿里云 CleverSee、腾讯云联网搜索 WSA |
-| Web Fetch | `POST /v1/tools/web-fetch` | Firecrawl、Tavily Extract、Jina Reader |
-| Web Deep Search | `POST /v1/tools/web-deep-search` | Firecrawl Search、Jina Search |
-| AI Detection | `POST /v1/tools/ai-detection` | 腾讯云 TMS（当前已实现） |
+| 网页搜索（Web Search） | `POST /v1/tools/web-search` | 博查、Tavily、阿里云 CleverSee、腾讯云联网搜索 WSA |
+| 网页抓取（Web Fetch） | `POST /v1/tools/web-fetch` | Firecrawl、Tavily Extract、Jina Reader |
+| 深度搜索（Web Deep Search） | `POST /v1/tools/web-deep-search` | Firecrawl Search、Jina Search |
+| AI 率检测（AI Detection） | `POST /v1/tools/ai-detection` | 腾讯云 TMS（当前已实现） |
 
 <Aside type="caution" title="依赖与限制">
 	- 需要你自备的 **第三方引擎 API Key**（以界面白名单为准）。
-	- **每种工具同时只有一个 Active 引擎**；未配置 Key 时调用返回 **503**。
-	- 联网工具按次计费；AI Detection 按 `billingUnitChars` 字符单元计费。上游失败不扣费。
-	- 每个 Provider 分别配置 **S 标准价 / C 用户扣费 / M 供应价**；仅 C 累加用户预算，三者可以不同。
-	- Tools 不应用模型 Route 的倍率或时段 schedule；卡片会提示未保存、缺凭证、暂不可用和亏损定价（C < M）。
+	- **每种工具同时只有一个活跃引擎（Active engine）**；未配置密钥时调用返回 **503**。
+	- 联网工具按次计费；AI 率检测按 `billingUnitChars` 字符单元计费。上游失败不扣费。
+	- 每个供应商分别配置 **S 标准价 / C 用户扣费 / M 供应价**；仅 C 累加用户预算，三者可以不同。
+	- 工具不应用模型路由的倍率或每日时段；卡片会提示未保存、缺少凭证、暂不可用和亏损定价（C < M）。
 </Aside>
 
 ## 在管理台里要做什么
 
 <Steps>
-1. 打开 **Tools → Configuration**。
-1. 在对应工具下点击 Provider 卡片，使用右侧抽屉填写凭证与 S / C / M 三账本单价（币种随系统计费币种）。
-1. **仅保存配置**用于预配置非 Active 引擎；**保存并启用**会保存草稿并切换该工具唯一的 Active。未实现或凭证不完整的引擎不可启用。
-1. 清空当前 Active 的凭证前，先保存并启用另一个凭证完整的引擎。
-1. 用用户 `sk-…` 调用对应 `/v1/tools/*`；在 **Tools → Invocations** 或 [请求日志](/zh/docs/guides/request-logs/) 查看记录（`provider_id=octafuse-tools`）。
+1. 打开工具配置（**Tools → Configuration**）。
+1. 在对应工具下点击供应商卡片，使用右侧抽屉填写凭证与 S / C / M 三账本单价（币种随系统计费币种变化）。
+1. 点击**仅保存配置（Save config only）**可预配置非活跃引擎；点击**保存并启用（Save & activate）**会保存草稿，并将其切换为该工具唯一的活跃引擎。未实现或凭证不完整的引擎不可启用。
+1. 清空当前活跃引擎的凭证前，请先保存并启用另一个凭证完整的引擎。
+1. 使用用户 `sk-…` 调用对应的 `/v1/tools/*`；在工具调用记录（**Tools → Invocations**）或 [请求日志](/zh/docs/guides/request-logs/) 中查看记录（`provider_id=octafuse-tools`）。
 </Steps>
 
 ## 客户端最小示例

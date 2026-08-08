@@ -1,11 +1,11 @@
 ---
-title: API Key 管理
-description: 在管理台为用户创建与管理 sk- 调用密钥，查看状态与预算摘要，支持吊销与删除。
+title: API 密钥管理
+description: 在管理台为用户创建与管理 sk- 调用密钥，查看状态与预算摘要，并支持吊销与删除。
 ---
 
 import { Aside, Steps } from '@astrojs/starlight/components';
 
-在左侧 **User → API Keys** 打开密钥页。**API Key**（`sk-…`）是应用调用网关 **Proxy** 时的凭证：请求头使用 **`Authorization: Bearer sk-…`**。
+在左侧**用户（User）→ API 密钥（API Keys）**打开密钥页。**API 密钥**（`sk-…`）是应用调用网关代理（Proxy）时的凭证：请求头使用 **`Authorization: Bearer sk-…`**。
 
 列表中会显示密钥状态、最近使用时间，以及与其所属用户相关的 **预算只读摘要**（预算归属在用户侧，便于一眼核对）。创建时可选择 **挂到已有用户**，或通过 **外部身份** 由系统在后台解析或创建对应用户（以创建向导为准）。
 
@@ -14,17 +14,17 @@ import { Aside, Steps } from '@astrojs/starlight/components';
 </Aside>
 
 <figure class="of-doc-figure">
-	<img src="/screenshots/admin-api-keys.png" alt="OctaFuse Admin API Keys 页面展示 Key 列表、用户预算和状态；邮箱与 Key 内容已打码。" loading="lazy" />
-	<figcaption>API Keys 页面展示密钥状态、归属用户和预算摘要。截图中的邮箱与 Key 片段已做马赛克处理。</figcaption>
+	<img src="/screenshots/admin-api-keys.png" alt="OctaFuse 管理后台 API 密钥（API Keys）页面展示密钥列表、用户预算和状态；邮箱与密钥内容已打码。" loading="lazy" />
+	<figcaption>API 密钥页面展示密钥状态、归属用户和预算摘要。截图中的邮箱与密钥片段已做马赛克处理。</figcaption>
 </figure>
 
 ## 在管理台里要做什么
 
 <Steps>
-1. 打开 **API Keys**。
+1. 打开 **API 密钥**。
 1. **新建**：按向导选择创建方式 → 选定或填写用户信息 → 填写密钥显示名等 → 保存后**立即复制**完整 `sk-…`（界面通常会提示「仅本次可见」）。
 1. **日常运维**：在列表中查看状态与摘要；需要时使用编辑、吊销、删除等操作。
-1. **自检**：用你的 Proxy 根地址调用 **`GET /v1/me`**，携带 `Bearer sk-…`，确认密钥可用且预算展示符合预期。
+1. **自检**：用你的网关代理根地址调用 **`GET /v1/me`**，携带 `Bearer sk-…`，确认密钥可用且预算展示符合预期。
 </Steps>
 
 ```bash

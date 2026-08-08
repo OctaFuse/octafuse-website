@@ -5,26 +5,26 @@ description: 在管理台维护模型目录：标识、展示名、厂商、标�
 
 import { Aside, Steps } from '@astrojs/starlight/components';
 
-在左侧 **Inference → Models** 打开模型页。**模型**是网关门面目录：客户端请求里的 **`model`** 会先到这一步维护的条目，再结合 [路由配置](/zh/docs/guides/routing/) 决定走哪条上游。页面上可新建、编辑、导入预设，并编辑分层定价；列表中会提示与该模型相关的路由情况。
+在左侧推理（**Inference**）下打开模型（**Models**）页面。模型是网关的门面目录：客户端请求中的 `model` 会先匹配这里维护的条目，再结合 [路由配置](/zh/docs/guides/routing/) 决定使用哪个上游。你可以在页面中新建、编辑或导入预设，并维护分层定价；列表中还会提示与模型相关的路由情况。
 
 <Aside type="tip" title="前置">
 	建议已配置至少一个 [供应商](/zh/docs/guides/providers/)。
 </Aside>
 
 <figure class="of-doc-figure">
-	<img src="/screenshots/admin-models.png" alt="OctaFuse Admin Models 页面展示模型目录、厂商筛选、能力字段和分层定价。" loading="lazy" />
-	<figcaption>Models 页面维护客户端可见的模型目录，包括模型标识、能力、厂商、路由状态和定价信息。</figcaption>
+	<img src="/screenshots/admin-models.png" alt="OctaFuse 管理后台模型（Models）页面展示模型目录、厂商筛选、能力字段和分层定价。" loading="lazy" />
+	<figcaption>模型页面维护客户端可见的模型目录，包括模型标识、能力、厂商、路由状态和定价信息。</figcaption>
 </figure>
 
 ## 在管理台里要做什么
 
 <Steps>
-1. 打开 **Models**。
-1. **新建或编辑**：设置与客户端、路由中一致的 **模型标识**、**展示名称**、**厂商** 等表单字段；按需填写上下文长度、输出上限等（以界面为准）。
+1. 打开模型（**Models**）页面。
+1. **新建或编辑**：设置与客户端和路由中一致的**模型标识**、**展示名称**、**厂商**等表单字段；按需填写上下文长度、输出上限等信息（以界面为准）。
 1. **从目录导入**：使用内置模型目录批量预填，导入后请核对并保存。
 1. **定价**：在页面中的分层定价编辑器里维护各档位价格（界面金额单位会随全局计费币种设置变化）。
-1. **保存后**：务必在 [路由配置](/zh/docs/guides/routing/) 中为该模型添加至少一条 **启用（active）** 的路由，否则客户端无法正常路由。
-1. **能力与计费模式**：图片模型核对 `image_billing_mode`（token / per_image），语音转写模型核对 `audio_billing_mode`（token / per_second）；默认 `hash_affinity` 路由策略会在协议粒度稳定首选 Provider。
+1. **保存后**：务必在 [路由配置](/zh/docs/guides/routing/) 中为该模型添加至少一条状态为 `active` 的路由，否则客户端无法正常路由。
+1. **能力与计费模式**：图片模型需核对 `image_billing_mode`（`token` / `per_image`），语音转写模型需核对 `audio_billing_mode`（`token` / `per_second`）；默认的 `hash_affinity` 路由策略会在协议粒度稳定首选同一供应商。
 </Steps>
 
 ## 客户端 `model` 怎么写
@@ -35,8 +35,8 @@ import { Aside, Steps } from '@astrojs/starlight/components';
 
 | 接口 | 鉴权 | 典型用途 |
 |------|------|----------|
-| **`GET /v1/models`** | 用户 `sk-…` | Agent / SDK；默认仅 LLM，可用 `kind=image` / `kind=audio` / `kind=all` |
-| **`GET /catalog/models`** | 无 | 门户公开 discovery；按 active 路由聚合协议与 route group |
+| **`GET /v1/models`** | 用户 `sk-…` | 智能体（Agent）与 SDK；默认仅返回 LLM，可用 `kind=image` / `kind=audio` / `kind=all` |
+| **`GET /catalog/models`** | 无 | 门户公开发现；按 `active` 路由聚合协议与路由组 |
 
 二者不是同一响应形态，请勿混用。图片生成定价见 [图片生成 / 编辑](/zh/docs/guides/images/)。
 

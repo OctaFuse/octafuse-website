@@ -1,6 +1,6 @@
 ---
 title: OctaFuse 2.1：把智能体工具也纳入统一网关
-description: OctaFuse Gateway 2.1 将网页搜索、网页抓取、深度搜索和 AI 文本检测纳入统一的鉴权、预算、计费、日志与审计体系。
+description: OctaFuse Gateway 2.1 将网页搜索、网页抓取、深度搜索和 AI 率检测纳入统一的鉴权、预算、计费、日志与审计体系。
 publishDate: 2026-08-02
 updateLabel: VERSION 2.1.0
 template: splash
@@ -23,16 +23,16 @@ sidebar:
 
 | 工具 | 用途 |
 | --- | --- |
-| Web Search | 联网搜索与结果聚合 |
-| Web Fetch | 抽取网页正文 |
-| Web Deep Search | 将检索与正文读取组合为一次调用 |
-| AI Detection | 检测文本的 AI 生成概率 |
+| 网页搜索（Web Search） | 联网搜索与结果聚合 |
+| 网页抓取（Web Fetch） | 抽取网页正文 |
+| 深度搜索（Web Deep Search） | 将检索与正文读取组合为一次调用 |
+| AI 率检测（AI Detection） | 检测文本的 AI 生成概率 |
 
 这些工具统一通过 `/v1/tools/*` 对外提供服务，共享用户 API Key 鉴权、预算预检、调用计费、请求日志和审计能力。
 
 对智能体来说，只需持有一把 OctaFuse 用户密钥；对运营人员来说，可以在管理后台（Admin）中独立选择每种工具的引擎、凭证和价格，而不会把供应商的实现细节暴露给客户端。
 
-## 新增 AI 文本检测（AI Detection）
+## 新增 AI 率检测（AI Detection）
 
 2.1 新增端点：
 
@@ -80,10 +80,10 @@ GET /v1/tools/pricing
 - 调用记录同时展示供应成本、目录价、用户计费与利润
 - 请求日志（Request Logs）区分模型请求与智能体工具调用
 - 日志记录实际使用的引擎供应商，方便排查
-- Playground / Simulator 支持 AI 文本检测联调
+- 调试台（Playground）/ 模拟器（Simulator）支持 AI 率检测联调
 - 被模型路由引用的供应商无法误删
 
-底层新增共享包 `@octafuse/tool-engines`，让代理和管理后台的 Playground 复用同一组工具引擎客户端，也为后续扩展更多工具与供应商建立清晰边界。
+底层新增共享包 `@octafuse/tool-engines`，让代理和管理后台的调试台复用同一组工具引擎客户端，也为后续扩展更多工具与供应商建立清晰边界。
 
 ## 从模型网关到 AI 能力控制台
 

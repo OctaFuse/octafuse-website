@@ -1,6 +1,6 @@
 ---
 title: Docker 部署
-description: 使用 Compose 或镜像在自有环境部署 Proxy + Admin + 数据库，适合内网、VPC 与全自托管。
+description: 使用 Compose 或镜像在自有环境部署代理服务（Proxy）+ 管理后台（Admin）+ 数据库，适合内网、VPC 与全自托管。
 ---
 
 import { Aside, Steps } from '@astrojs/starlight/components';
@@ -8,7 +8,7 @@ import { Aside, Steps } from '@astrojs/starlight/components';
 Docker 路径适合：**内网 / VPC**、**生产在自有机器或 K8s 上托管**、以及希望 **数据落在 Postgres/MySQL** 且与现有 DBA 流程一致的场景。默认推荐仍是 [Cloudflare Workers](/zh/docs/deploy/cloudflare/)（个人与小流量通常可走免费额度）。
 
 <Aside type="note" title="权威细节">
-	本页是面向部署者的常用路径摘要。镜像名、GHCR、MySQL/Postgres 差异、时区建议与完整环境变量表见 [GitHub 技术参考](/zh/docs/github-reference/) 中 **Docker / 自托管**。
+	本页是面向部署者的常用路径摘要。镜像名、GHCR、MySQL / Postgres 差异、时区建议与完整环境变量表见 [GitHub 技术参考](/zh/docs/github-reference/) 中的 **Docker / 自托管**。
 </Aside>
 
 ## 本地一键体验
@@ -19,17 +19,17 @@ cd octafuse-gateway
 docker compose -f docker/compose/quickstart.yml up --build
 ```
 
-该 compose 会启动 **Postgres + migrate + Proxy + Admin**：
+该 Compose 配置会启动 **Postgres + 迁移任务 + 代理服务 + 管理后台**：
 
-- Proxy: `http://localhost:8787`
-- Admin: `http://localhost:8789`，默认登录 `admin / changeme`
-- 默认管理 Bearer Key: `sk-dev-admin-key`
+- 代理服务：`http://localhost:8787`
+- 管理后台：`http://localhost:8789`，默认登录凭证为 `admin / changeme`
+- 默认管理 Bearer 密钥：`sk-dev-admin-key`
 
 如果本机端口冲突，可通过 `POSTGRES_HOST_PORT`、`GATEWAY_PROXY_HOST_PORT`、`GATEWAY_ADMIN_HOST_PORT` 调整宿主机端口。Cloudflare 默认路径见 [快速开始](/zh/docs/quick-start/)。
 
 ## 生产自建怎么跑
 
-生产通常有两种做法：**本地构建镜像**，或使用发布到 **GHCR / 私有 registry** 的预构建镜像。两种方式都建议遵循 **先 migrate，再启动 Proxy/Admin**；或者只在一个服务上启用 `AUTO_MIGRATE=1`。
+生产通常有两种做法：**本地构建镜像**，或使用发布到 **GHCR / 私有镜像仓库（registry）** 的预构建镜像。两种方式都建议遵循**先迁移，再启动代理服务 / 管理后台**；或者只在一个服务上启用 `AUTO_MIGRATE=1`。
 
 ### 方式 A：本地构建镜像 + 内置数据库
 
@@ -53,7 +53,7 @@ MySQL 场景必须设置 `DATABASE_DRIVER=mysql`，并使用 `mysql://...` 形�
 
 ### 方式 B：预构建镜像 + 外置 Postgres
 
-`docker/examples/` 保留了生产常用的拆分模板：仅 Proxy、仅 Admin、或同机同时启动 Proxy + Admin。环境文件不要提交到 Git，建议放在 `docker/deploy/`。
+`docker/examples/` 提供生产常用的拆分模板：仅运行代理服务、仅运行管理后台，或在同一台机器上同时启动两者。环境文件不要提交到 Git，建议放在 `docker/deploy/`。
 
 ```bash
 cp docker/examples/env.compose.external.example docker/deploy/.env.local
@@ -78,15 +78,15 @@ docker build -f Dockerfile.admin -t octafuse-admin:local .
 docker build -f Dockerfile.migrate -t octafuse-migrate:local .
 ```
 
-`Dockerfile.migrate` 是一次性迁移 Job；`Dockerfile.proxy` 与 `Dockerfile.admin` 是常驻应用进程。
+`Dockerfile.migrate` 是一次性迁移作业（Job）；`Dockerfile.proxy` 与 `Dockerfile.admin` 是常驻应用进程。
 
 ## 如何更新版本
 
-升级前先阅读该版本 [GitHub Release](https://github.com/OctaFuse/octafuse-gateway/releases) / Changelog 中的 **升级说明**（是否有破坏性变更、是否必须先迁移）。推荐顺序始终是：**先 migrate，再滚动重启 Proxy / Admin**（或只在一侧开 `AUTO_MIGRATE=1`）。
+升级前先阅读该版本的 [GitHub 发布说明（Release）](https://github.com/OctaFuse/octafuse-gateway/releases) / 更改日志（Changelog）中的**升级说明**（是否有破坏性变更、是否必须先迁移）。推荐顺序始终是：**先迁移，再滚动重启代理服务 / 管理后台**（或只在一侧启用 `AUTO_MIGRATE=1`）。
 
-### 预构建镜像（GHCR / 私有 registry）
+### 预构建镜像（GHCR / 私有镜像仓库）
 
-1. 在 `docker/deploy/.env.local`（或你的 env 文件）里把 `GATEWAY_PROXY_IMAGE` / `GATEWAY_ADMIN_IMAGE` / `GATEWAY_MIGRATE_IMAGE` 的 **tag** 改成目标版本（例如 `v2.1.2`；生产建议钉死 semver，避免长期漂在 `latest`）。
+1. 在 `docker/deploy/.env.local`（或你的环境文件）中，把 `GATEWAY_PROXY_IMAGE` / `GATEWAY_ADMIN_IMAGE` / `GATEWAY_MIGRATE_IMAGE` 的**标签（tag）**改成目标版本（例如 `v2.1.2`；生产环境建议固定语义化版本，避免长期使用 `latest`）。
 2. 拉取并迁移，再重建容器：
 
 ```bash
@@ -95,7 +95,7 @@ docker compose --env-file docker/deploy/.env.local -f docker/examples/gateway.co
 docker compose --env-file docker/deploy/.env.local -f docker/examples/gateway.compose.yml up -d
 ```
 
-若已启用 `AUTO_MIGRATE=1`，可在 `pull` 后直接 `up -d`（入口会在启动前跑幂等迁移）；仍建议先看 Release 说明确认本版迁移是否需要维护窗口。
+若已启用 `AUTO_MIGRATE=1`，可在 `pull` 后直接执行 `up -d`（入口会在启动前执行幂等迁移）；仍建议先查看发布说明，确认本版迁移是否需要维护窗口。
 
 ### 本地构建镜像（方式 A / C）
 
@@ -117,15 +117,15 @@ curl -fsS http://127.0.0.1:8789/api/admin/config \
   -H 'Authorization: Bearer <MASTER_KEY>'
 ```
 
-更细的镜像名、GHCR digest 与 Zeabur 注意项见 [GitHub · Docker / 自托管](https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/operators/deployment/docker.md)。
+更详细的镜像名、GHCR 摘要（digest）与 Zeabur 注意事项见 [GitHub · Docker / 自托管](https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/operators/deployment/docker.md)。
 
 ## 关键环境变量
 
 <Steps>
-1. `DATABASE_URL`：Proxy、Admin、migrate 必须指向同一个数据库。
+1. `DATABASE_URL`：代理服务、管理后台和迁移任务必须指向同一个数据库。
 1. `DATABASE_DRIVER`：Postgres 可省略；MySQL 必须为 `mysql`。
-1. `ADMIN_USERNAME` / `ADMIN_PASSWORD`：Admin 登录账号，仅 Admin 容器需要。
-1. `AUTO_MIGRATE`：可选。设为 `1` 时应用容器启动前自动执行幂等迁移；生产也可以改用独立 migrate Job。
+1. `ADMIN_USERNAME` / `ADMIN_PASSWORD`：管理后台登录账号，仅管理后台容器需要。
+1. `AUTO_MIGRATE`：可选。设为 `1` 时，应用容器会在启动前自动执行幂等迁移；生产环境也可以改用独立迁移作业。
 1. `GATEWAY_PROXY_PORT` / `GATEWAY_ADMIN_PORT`：仅影响宿主机端口映射；容器内仍监听 `8787` / `8789`。
 </Steps>
 
@@ -140,7 +140,7 @@ curl -fsS http://127.0.0.1:8789/api/admin/config \
 ```
 
 <Aside type="caution" title="生产请用 HTTPS">
-	本地与可信内网可用明文 HTTP 打开 Admin（如 `http://localhost:8789`），无需额外 Cookie 配置。生产环境请把 Proxy 与 Admin 放在反向代理之后配置 **TLS**。若已走 HTTPS，可按需设置可选加固 `ADMIN_COOKIE_SECURE=1`。下游系统需要配置 `GATEWAY_URL`、`GATEWAY_MASTER_URL`、`GATEWAY_MASTER_KEY`，见 [系统集成](/zh/docs/guides/integration/)。
+	本地与可信内网可用明文 HTTP 打开管理后台（如 `http://localhost:8789`），无需额外配置 Cookie。生产环境请将代理服务与管理后台放在反向代理之后，并配置 **TLS**。若已使用 HTTPS，可按需设置可选加固项 `ADMIN_COOKIE_SECURE=1`。下游系统需要配置 `GATEWAY_URL`、`GATEWAY_MASTER_URL`、`GATEWAY_MASTER_KEY`，见 [系统集成](/zh/docs/guides/integration/)。
 </Aside>
 
 ## 与 Cloudflare 方案如何选

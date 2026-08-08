@@ -5,11 +5,11 @@ description: 在管理台系统页维护管理密钥、业务时区、计费币�
 
 import { Aside, Steps } from '@astrojs/starlight/components';
 
-在左侧 **System → Config**（界面英文为 **Config**）打开系统配置。此处集中维护影响全站行为的参数，例如：
+在左侧系统（**System**）下打开配置（**Config**）页面。此处集中维护影响全站行为的参数，例如：
 
-- **管理密钥（Master Key）**：用于服务端调用管理接口的 Bearer，与门户或脚本里配置的 **`GATEWAY_MASTER_KEY`** 必须一致。  
-- **业务时区**、**计费币种**：影响列表与统计中的时间、金额展示口径；业务时区同时用于路由 **Daily schedule**（每日时段调价）的窗口判定。  
-- **全局路由策略**：`ROUTE_STRATEGY` 可设为 `hash_affinity`（默认）、`weighted_random`、`weight_priority` 或 `weighted_round_robin`；模型规则、Route Pool 默认和 priority 层策略可继续覆盖。v2.3.0 不再接受旧 ID `cache_affinity` / `fixed_order`。
+- **管理密钥（Master Key）**：用于服务端调用管理接口的 `Bearer`，与门户或脚本里配置的 `GATEWAY_MASTER_KEY` 必须一致。
+- **业务时区**、**计费币种**：影响列表与统计中的时间、金额展示口径；业务时区同时用于路由每日时段（**Daily schedule**）调价的窗口判定。
+- **全局路由策略**：`ROUTE_STRATEGY` 可设为 `hash_affinity`（默认）、`weighted_random`、`weight_priority` 或 `weighted_round_robin`；模型规则、路由池（**Route Pool**）默认策略和 `priority` 层策略可继续覆盖。v2.3.0 不再接受旧 ID `cache_affinity` / `fixed_order`。
 - **告警 Webhook**（如飞书、企业微信）：可选，用于对接你们的事件通知。  
 - **自定义键值**：高级场景下可新增其他全局配置项（键名与含义请与运维约定一致）。
 
@@ -22,16 +22,16 @@ import { Aside, Steps } from '@astrojs/starlight/components';
 ## 在管理台里要做什么
 
 <Steps>
-1. 打开 **Config**。
+1. 打开系统配置（**Config**）。
 1. 核对管理密钥、业务时区、计费币种是否符合组织规范。
-1. 在全局路由策略卡片中点击 **修改**，选择未被模型或 Route Pool 覆盖时使用的默认策略。
+1. 在全局路由策略（**Global route strategy**）卡片中点击**修改（Change）**，选择未被模型或路由池覆盖时使用的默认策略。
 1. 按需配置或轮换告警地址。
-1. 若有约定好的其他全局项，通过 **Add**（或等价入口）新增并保存。
+1. 若有约定好的其他全局项，通过**添加（Add）**（或等效入口）新增并保存。
 </Steps>
 
 ## 与自动化的关系
 
-服务端调用管理接口时，使用 **`GATEWAY_MASTER_URL`** 作为管理台根地址，在请求头携带 **`Authorization: Bearer <与界面中管理密钥一致>`**。完整接口列表见 [GitHub 技术参考](/zh/docs/github-reference/)。
+服务端调用管理接口时，使用 `GATEWAY_MASTER_URL` 作为管理台根地址，并在请求头中携带 `Authorization: Bearer <与界面中管理密钥一致>`。完整接口列表见 [GitHub 技术参考](/zh/docs/github-reference/)。
 
 ## 下一步
 

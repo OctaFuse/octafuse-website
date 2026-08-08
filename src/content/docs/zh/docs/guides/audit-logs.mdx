@@ -5,13 +5,13 @@ description: 在管理台查看与用户预算、用量扣减、密钥生命周�
 
 import { Aside, Steps } from '@astrojs/starlight/components';
 
-在左侧 **User → Audit Logs** 打开审计页。这里的记录关注 **「账户与预算侧发生了什么」**：例如预算调整、用量扣减、用户或密钥的创建与变更、管理台对用户/密钥的修改等，并尽量标注关联的密钥或请求上下文。
+在左侧**用户（User）→ 审计日志（Audit Logs）**打开审计页。这里的记录关注**“账户与预算侧发生了什么”**：例如预算调整、用量扣减、用户或密钥的创建与变更、管理台对用户 / 密钥的修改等，并尽量标注关联的密钥或请求上下文。
 
 它**不是**「在管理台里每一次改供应商、改路由菜单点击」的完整配置审计台账；若你需要配置变更追责，请结合变更管理流程或另行接入运维审计。
 
 <figure class="of-doc-figure">
-	<img src="/screenshots/admin-audit-logs.png" alt="OctaFuse Admin Audit Logs 页面展示审计事件、操作者、邮箱用户密钥、预算和变更详情；敏感标识已打码。" loading="lazy" />
-	<figcaption>Audit Logs 用来追踪管理侧用户、预算和密钥生命周期相关动作。截图中的邮箱、Key 与敏感标识已做马赛克处理。</figcaption>
+	<img src="/screenshots/admin-audit-logs.png" alt="OctaFuse 管理后台审计日志（Audit Logs）页面展示审计事件、操作者、用户邮箱、密钥、预算和变更详情；敏感标识已打码。" loading="lazy" />
+	<figcaption>审计日志用来追踪管理侧用户、预算和密钥生命周期相关动作。截图中的邮箱、密钥与敏感标识已做马赛克处理。</figcaption>
 </figure>
 
 <Aside type="tip" title="与请求日志的区别">
@@ -21,7 +21,7 @@ import { Aside, Steps } from '@astrojs/starlight/components';
 ## 在管理台里要做什么
 
 <Steps>
-1. 打开 **Audit Logs**。
+1. 打开**审计日志**。
 1. 用时间范围、用户邮箱、密钥、事件类型、操作者类型、原因码、来源等条件筛选（以页面为准）。
 1. 展开行查看预算计划说明、用户快照差异、变更详情等（界面会省略与列表重复的字段）。
 1. 若只关心某一用户：也可从 [用户管理](/zh/docs/guides/users/) 进入该用户详情页查看相关片段。

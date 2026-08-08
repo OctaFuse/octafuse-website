@@ -1,13 +1,13 @@
 ---
 title: 快速开始
-description: 用 Cloudflare 路径（本地 D1 → 一键上云）跑通 OctaFuse：启动 Proxy / Admin、健康检查、登录管理台。
+description: 用 Cloudflare 路径（本地 D1 → 一键上云）跑通 OctaFuse：启动代理服务和管理后台、执行健康检查并登录管理台。
 ---
 
 import { Aside, Steps } from '@astrojs/starlight/components';
 
 本页做一件事：按 **默认推荐的 Cloudflare 路径** 把 OctaFuse 跑起来，并能打开管理台。个人与小流量通常可在 Workers / D1 **免费额度**内完成部署与日常使用。
 
-更细的「怎么配供应商、路由、Key」见 **[使用指南](/zh/docs/guides/providers/)**。不用 Cloudflare 时见 [Docker 部署](/zh/docs/deploy/docker/)。
+更细的供应商、路由和密钥配置方法见 **[使用指南](/zh/docs/guides/providers/)**。不用 Cloudflare 时见 [Docker 部署](/zh/docs/deploy/docker/)。
 
 <Aside type="note" title="命令所在仓库">
 	以下命令在 **[octafuse-gateway](https://github.com/OctaFuse/octafuse-gateway)** 仓库**根目录**执行。
@@ -38,11 +38,11 @@ npm run dev:admin
 
 | 服务 | 地址 / 位置 |
 |------|-------------|
-| Proxy | `http://127.0.0.1:8787` |
-| Admin | `http://127.0.0.1:8789` |
+| 代理服务（Proxy） | `http://127.0.0.1:8787` |
+| 管理后台（Admin） | `http://127.0.0.1:8789` |
 | 控制台登录 | `admin` / `admin`（本地默认；首次 `dev:admin` 会自动生成 `packages/admin/.dev.vars`） |
 | 本地 D1 | `./.wrangler/state` |
-| Admin API Bearer | `sk-dev-admin-key`（管理 API，不是网页密码） |
+| 管理 API Bearer 密钥 | `sk-dev-admin-key`（管理 API，不是网页密码） |
 
 健康检查：
 
@@ -63,27 +63,27 @@ npm run bootstrap:cloudflare
 
 ## 登录管理台
 
-1. 本地打开 **`http://127.0.0.1:8789`**（上云后用 Admin URL）。
+1. 本地打开 **`http://127.0.0.1:8789`**（上云后使用管理后台地址）。
 2. 本地默认账号：**`admin` / `admin`**（仅本机；可改 `packages/admin/.dev.vars`）。上云时使用 bootstrap 设置的 `ADMIN_PASSWORD`。Docker 本地一键体验默认是 `admin` / `changeme`，见 [Docker 部署](/zh/docs/deploy/docker/)。
 
 <figure class="of-doc-figure">
-	<img src="/screenshots/admin-dashboard.png" alt="OctaFuse Admin Dashboard 登录后的总览页面。" loading="lazy" />
-	<figcaption>登录成功后，Dashboard 会显示 API Key、账户、请求、Token、费用、延迟和最近错误等运行概况。</figcaption>
+	<img src="/screenshots/admin-dashboard.png" alt="OctaFuse 管理后台仪表盘（Dashboard）登录后的总览页面。" loading="lazy" />
+	<figcaption>登录成功后，仪表盘（Dashboard）会显示 API 密钥、账户、请求、Token、费用、延迟和最近错误等运行概况。</figcaption>
 </figure>
 
 ## 建议的下一步（使用指南顺序）
 
 <Steps>
-1. [供应商配置](/zh/docs/guides/providers/) — 接入上游模型服务  
-1. [模型配置](/zh/docs/guides/models/) — 维护网关识别的模型目录  
-1. [路由配置](/zh/docs/guides/routing/) — 用 Surface → Pool → Target 把客户端 `model` 与 operation 映射到上游
-1. [Agent Tools](/zh/docs/guides/tools/)（可选）— 配置 Search / Fetch / Deep Search 的 Active 引擎
-1. [用户管理](/zh/docs/guides/users/) 与 [API Key 管理](/zh/docs/guides/api-keys/) — 谁可以调用、额度多少  
+1. [供应商（Providers）配置](/zh/docs/guides/providers/) — 接入上游模型服务
+1. [模型（Models）配置](/zh/docs/guides/models/) — 维护网关识别的模型目录
+1. [路由（Routes）配置](/zh/docs/guides/routing/) — 用请求入口（Request Surface）→ 路由池（Route Pool）→ 上游目标（Upstream Target）把客户端 `model` 与 `operation` 映射到上游
+1. [智能体工具（Agent Tools）](/zh/docs/guides/tools/)（可选）— 配置网页搜索（Web Search）、网页抓取（Web Fetch）和深度搜索（Web Deep Search）的启用引擎
+1. [用户（Users）管理](/zh/docs/guides/users/)与 [API 密钥（API Keys）管理](/zh/docs/guides/api-keys/) — 确定谁可以调用以及额度多少
 </Steps>
 
 ## 可选：立刻打一条测试请求
 
-在管理台里配好 **Provider + Model + Request Surface / Route Pool / Upstream Target + API Key** 后，将密钥与 `model` 换成真实值：
+在管理台里配好**供应商、模型、请求入口、路由池、上游目标和 API 密钥**后，将密钥与 `model` 换成真实值：
 
 ```bash
 curl -sS http://127.0.0.1:8787/v1/chat/completions \
@@ -92,7 +92,7 @@ curl -sS http://127.0.0.1:8787/v1/chat/completions \
   -d '{"model":"your-route-model","messages":[{"role":"user","content":"Hello"}]}'
 ```
 
-上云后把主机换成你的 Proxy URL。
+上云后把主机换成你的代理服务地址。
 
 ## 不用 Cloudflare？
 

@@ -5,22 +5,22 @@ description: 在管理台按时间、用户、密钥、模型等条件查询推�
 
 import { Aside, Steps } from '@astrojs/starlight/components';
 
-在左侧 **User → Request Logs** 打开请求日志。这里记录的是 **经 Proxy 的真实推理调用**：时间、密钥、用户、模型、路由组、状态等信息，用于排障与用量核对。
+在左侧**用户（User）→ 请求日志（Request Logs）**打开请求日志。这里记录的是**经网关代理（Proxy）的真实推理调用**：时间、密钥、用户、模型、路由组、状态等信息，用于排障与用量核对。
 
 <figure class="of-doc-figure">
-	<img src="/screenshots/admin-request-logs.png" alt="OctaFuse Admin Request Logs 页面展示请求状态、用户、模型、路由、Token、费用和利润；邮箱与敏感标识已打码。" loading="lazy" />
-	<figcaption>Request Logs 用来按时间、状态、模型、Provider、协议、用户等条件筛选调用记录。截图中的邮箱与敏感标识已做马赛克处理。</figcaption>
+	<img src="/screenshots/admin-request-logs.png" alt="OctaFuse 管理后台请求日志（Request Logs）页面展示请求状态、用户、模型、路由、Token、费用和利润；邮箱与敏感标识已打码。" loading="lazy" />
+	<figcaption>请求日志用来按时间、状态、模型、供应商、协议、用户等条件筛选调用记录。截图中的邮箱与敏感标识已做马赛克处理。</figcaption>
 </figure>
 
 <Aside type="tip" title="前置">
-	需要已有流量经过 **Proxy**。[Playground](/zh/docs/features/playground/) 的试跑方式**不会**出现在本日志中；若要产生与线上一致的记录，请用真实密钥调用 Proxy 或使用 [Simulator](/zh/docs/features/simulator/)。
+	需要已有流量经过**网关代理**。[调试台（Playground）](/zh/docs/features/playground/)的试跑方式**不会**出现在本日志中；若要产生与线上一致的记录，请用真实密钥调用网关代理或使用[模拟器（Simulator）](/zh/docs/features/simulator/)。
 </Aside>
 
 ## 在管理台里要做什么
 
 <Steps>
-1. 打开 **Request Logs**。
-1. 使用时间范围、状态、模型、用户邮箱、API Key、供应商、路由组、协议等条件缩小范围（以页面筛选项为准）。
+1. 打开**请求日志**。
+1. 使用时间范围、状态、模型、用户邮箱、API 密钥、供应商、路由组、协议等条件缩小范围（以页面筛选项为准）。
 1. 点击展开某一行，查看计费核对摘要、入口请求体、上游请求体、用量原始 JSON 等（可复制）。
 1. 核对金额与时间时，请与你在 **系统配置** 中设置的业务时区、计费币种保持一致理解。
 </Steps>
@@ -29,18 +29,18 @@ import { Aside, Steps } from '@astrojs/starlight/components';
 
 展开区域可能包含与扣费相关的多段 JSON 摘要；若需精确公式或与账单对账，请结合主仓库文档或内部财务口径。
 
-## 观察 Provider Sticky
+## 观察供应商粘性
 
-Route Pool 启用 Provider Sticky 后，展开日志中的 `route_trace.sticky`：
+路由池启用供应商粘性（Provider sticky）后，展开日志中的 `route_trace.sticky`：
 
 - `lookup`：绑定读取结果，例如 `hit`、`miss`、`expired`、`invalid_epoch`、`invalid_target` 或 `invalid_circuit`。
-- `attempted_target`：本次被优先尝试的绑定 Target。
+- `attempted_target`：本次优先尝试的绑定上游目标（Target）。
 - `result`：绑定最终保持、清除、新建或重绑，也可能记录 `storage_error` / `unchanged`。
 
-把 Sticky 命中情况与 cache read token、上游故障转移次数一起观察：命中稳定但缓存收益没有改善时，应检查上游是否真正共享 Prompt Cache；频繁 `cleared` / `rebound` 时，应检查 Provider 429、5xx、鉴权错误与 TTL 是否合理。
+将供应商粘性命中情况与缓存读取 Token、上游故障转移次数结合观察：命中稳定但缓存收益没有改善时，应检查上游是否真正共享提示词缓存（Prompt Cache）；频繁出现 `cleared` / `rebound` 时，应检查供应商返回的 429、5xx、鉴权错误与 TTL 是否合理。
 
 ## 下一步
 
 - [审计日志](/zh/docs/guides/audit-logs/) — 侧重预算与账户侧变更记录  
-- [路由配置](/zh/docs/guides/routing/) — 四种策略与 Provider Sticky
-- [Simulator](/zh/docs/features/simulator/) — 用浏览器携带密钥试打 Proxy  
+- [路由配置](/zh/docs/guides/routing/) — 四种策略与供应商粘性
+- [模拟器](/zh/docs/features/simulator/) — 用浏览器携带密钥试调网关代理

@@ -1,11 +1,11 @@
 ---
 title: 路由配置
-description: 使用 Request Surface、Route Pool 与 Upstream Target 配置协议操作、路由策略、优先级、权重、计费倍率和故障转移。
+description: 使用请求入口、路由池与上游目标配置协议操作、路由策略、优先级、权重、计费倍率和故障转移。
 ---
 
 import { Aside, Steps } from '@astrojs/starlight/components';
 
-在左侧 **Inference → Routes** 打开路由页。2.0 使用三层拓扑：客户端请求先按模型、路由组、协议与 operation 命中 **Request Surface**；Surface 指向一个 **Route Pool**；Pool 内包含多个具体的 **Upstream Target**。这样 Chat、Images、Audio 等操作可以使用独立故障转移池和路由策略。
+在左侧推理（**Inference**）下打开路由（**Routes**，页面标题为**模型路由（Model Routes）**）。2.0 使用三层拓扑：客户端请求先按模型、路由组、协议与操作命中请求入口（**Surface**）；请求入口指向一个路由池（**Route Pool**）；路由池内包含多个具体的上游目标（**Upstream targets**）。这样，聊天、图片、音频等操作可以使用独立的故障转移池和路由策略。
 
 列表支持多条件筛选；筛选结果会反映在浏览器地址栏，便于复制链接给同事查看同一视图。
 
@@ -14,19 +14,19 @@ import { Aside, Steps } from '@astrojs/starlight/components';
 </Aside>
 
 <figure class="of-doc-figure">
-	<img src="/screenshots/admin-routes.png" alt="OctaFuse Admin Routes 页面展示 Request Surface、路由组、策略与多个 Upstream Target 的拓扑关系。" loading="lazy" />
-	<figcaption>Routes 把客户端入口、路由策略与上游 Target 放在同一条链路中展示；同一模型可以按协议、operation 与 route group 拆分。</figcaption>
+	<img src="/screenshots/admin-routes.png" alt="OctaFuse 管理后台路由（Routes）页面展示请求入口、路由组、策略与多个上游目标的拓扑关系。" loading="lazy" />
+	<figcaption>路由页面把客户端入口、路由策略与上游目标放在同一条链路中展示；同一模型可以按协议、操作与路由组拆分。</figcaption>
 </figure>
 
 ## 在管理台里要做什么
 
 <Steps>
-1. 打开 **Routes**。
-1. **Request Surface**：选择客户端模型与 `route_group`（常用 `default`），再指定入口协议 / operation，例如 `openai.chat`、`anthropic.messages`、`openai.images.generations`；Gemini 流式与非流式统一选择 `gemini.models.generate`。
-1. **Route Pool**：让 Surface 指向一个故障转移池；可设置 Pool 默认策略，也可点击各 priority 层的策略 chip 单独覆盖该层。未设置时继续继承模型 / 全局策略。
-1. **Upstream Target**：选择 Provider、填写上游实际模型名与 operation，设置 **priority**（数字越大越先试）、**weight** 和启用状态。
-1. **计费**：在 Target 的 Billing 配置 **用户计费 / 供应成本** 相对目录标准价的基础倍率；如需对齐供应商高峰 / 闲时价，再配置 **Daily schedule**（每日时段倍率，时区见 [系统配置](/zh/docs/guides/system-config/)）。
-1. **保存后**：用 [Playground](/zh/docs/features/playground/) 针对单条路由做上游试跑；若要验证「真实密钥 + 网关入口」整条链路，请用 [Simulator](/zh/docs/features/simulator/)。
+1. 打开路由（**Routes**）。
+1. **请求入口（Surface）**：选择客户端模型与 `route_group`（常用 `default`），再指定入口协议和 `operation`，例如 `openai.chat`、`anthropic.messages`、`openai.images.generations`；Gemini 流式与非流式统一选择 `gemini.models.generate`。
+1. **路由池（Route Pool）**：让请求入口指向一个故障转移池；可设置路由池的默认策略，也可点击各 `priority` 层的策略（**Policy**）芯片，单独覆盖该层。未设置时继续继承模型或全局策略。
+1. **上游目标（Upstream Target）**：选择供应商（**Provider**），填写上游实际模型名与 `operation`，设置 `priority`（数字越大越先尝试）、`weight` 和启用状态。
+1. **计费**：在上游目标中设置用户计费（**Charged cost**）和供应成本（**Metered cost**）相对目录标准价的基础倍率；如需对齐供应商的高峰价和闲时价，再配置每日时段（**Daily schedule**）倍率，时区见 [系统配置](/zh/docs/guides/system-config/)。
+1. **保存后**：用[调试台（Playground）](/zh/docs/features/playground/)针对单条路由做上游试跑；若要验证“真实密钥 + 网关入口”整条链路，请用[模拟器（Simulator）](/zh/docs/features/simulator/)。
 </Steps>
 
 ## 与客户端的关系
@@ -35,39 +35,39 @@ import { Aside, Steps } from '@astrojs/starlight/components';
 
 ## 路由顺序与四种策略
 
-Pool 先按 Target 的 `priority` **降序分层**，数字越大越先试；同一 priority 层再按生效策略与 `weight` 排序：
+路由池先按上游目标的 `priority` **降序分层**，数字越大越先尝试；同一 `priority` 层再按生效策略与 `weight` 排序：
 
 | 策略 | 特点与适用场景 |
 |------|----------------|
-| `hash_affinity`（默认） | 同用户、模型、分组与协议稳定首选同一 Provider，Prompt Cache 命中率高；短时流量可能不完全均匀。 |
-| `weighted_random` | 按 weight 加权随机分流，负载均衡性高，适合比例分摊或 A/B；缓存亲和较弱。 |
-| `weight_priority` | 同层按 weight 从高到低固定排序，适合可预测主备；首选 Provider 承担大部分流量。 |
-| `weighted_round_robin` | 按 weight 轮转，更均匀；计数器按运行实例维护，多实例间不全局同步。 |
+| `hash_affinity`（默认） | 同一用户、模型、分组与协议会稳定首选同一供应商，提示词缓存（Prompt Cache）命中率高；短时流量可能不完全均匀。 |
+| `weighted_random` | 按 `weight` 加权随机分流，负载均衡性高，适合比例分摊或 A/B；缓存亲和较弱。 |
+| `weight_priority` | 同层按 `weight` 从高到低固定排序，适合可预测的主备结构；首选供应商承担大部分流量。 |
+| `weighted_round_robin` | 按 `weight` 轮转，更均匀；计数器按运行实例维护，多实例间不全局同步。 |
 
-跨供应商硬主备请使用不同 `priority`。策略覆盖顺序为：当前 `priority` 层覆盖 → Route Pool 默认 → 模型 capability 规则 → 模型 protocol 规则 → 模型默认 → 全局 `ROUTE_STRATEGY` → `hash_affinity`。
+跨供应商硬主备请使用不同的 `priority`。策略覆盖顺序为：当前 `priority` 层覆盖 → 路由池默认 → 模型能力规则 → 模型协议规则 → 模型默认 → 全局 `ROUTE_STRATEGY` → `hash_affinity`。
 
 <Aside type="caution" title="2.3.0 策略 ID 已硬切换">
-	`cache_affinity` 与 `fixed_order` 已分别改为 `hash_affinity` 与 `weight_priority`，v2.3.0 不再接受旧 ID。外部自动化、全局配置、Pool 和 priority 层配置都必须使用新名称。
+	`cache_affinity` 与 `fixed_order` 已分别改为 `hash_affinity` 与 `weight_priority`，v2.3.0 不再接受旧 ID。外部自动化、全局配置、路由池和 `priority` 层配置都必须使用新名称。
 </Aside>
 
-## Provider Sticky
+## 供应商粘性
 
-Provider Sticky 是 **Route Pool 级的跨请求成功记忆**，不是第五种层内策略：
+供应商粘性（**Provider sticky**）是**路由池级的跨请求成功记忆**，不是第五种层内策略：
 
-- 无有效绑定时，仍按 priority 与上面的四种策略选路；成功后记录 Target。
-- 有效绑定会在空闲 TTL 内跨 priority 优先尝试；默认 TTL 为 3600 秒，每次成功会续期。
+- 无有效绑定时，仍按 `priority` 与上面的四种策略选路；成功后记录上游目标。
+- 有效绑定会在空闲 TTL 内跨 `priority` 优先尝试；默认 TTL 为 3600 秒，每次成功会续期。
 - 429、401 / 403、5xx、524 或网络错误会解绑并继续常规故障转移；400、404 与图片客户端取消不会解绑。
-- Sticky 默认关闭。在 Routes Flow 的 Route Group / Pool 节点打开 Sticky 弹窗，可启用、调整 TTL、查看绑定分布与权重、按用户解绑或整池失效。
+- 供应商粘性默认关闭。在拓扑视图（**Topology**）的路由组或路由池节点中，点击供应商粘性状态芯片（关闭时显示**粘性 · 关闭**，英文 UI 为 **Sticky · Off**），打开供应商粘性设置；你可以在此启用或关闭该功能、调整 TTL、查看绑定分布与权重、按用户解绑或让整个路由池的绑定失效。
 
-`hash_affinity` 是无状态哈希，尽量让同一用户稳定首选同一 Provider；Sticky 则持久记住上次成功 Target，并在 D1 / Postgres / MySQL 中跨 Worker isolate 或 Node 实例共享。
+`hash_affinity` 是无状态哈希，尽量让同一用户稳定首选同一供应商；供应商粘性则持久记住上次成功的上游目标，并在 D1、Postgres、MySQL 中跨 Worker isolate 或 Node 实例共享。
 
 ## 故障转移与熔断
 
-可重试的 429、401 / 403、5xx 与网络错误会继续尝试下一个 Target；Provider 会按错误类型进入不同冷却时间。若所有候选都处于熔断状态，Proxy 返回 429 并携带 `Retry-After`。
+可重试的 429、401 / 403、5xx 与网络错误会继续尝试下一个上游目标；供应商会按错误类型进入不同冷却时间。若所有候选都处于熔断状态，Proxy 返回 429 并携带 `Retry-After`。
 
 ## 说明
 
-**Playground** 直连单条 Target，不经过 Pool 策略、故障转移、用户计费或请求日志；完整行为请用真实 Proxy 调用或 **Simulator** 验证。图片生成路由须为 OpenAI 协议，见 [图片生成 / 编辑](/zh/docs/guides/images/)。
+调试台直连单个上游目标，不经过路由池策略、故障转移、用户计费或请求日志；完整行为请用真实代理调用或模拟器验证。图片生成路由须为 OpenAI 协议，见[图片生成 / 编辑](/zh/docs/guides/images/)。
 
 ## 下一步
 

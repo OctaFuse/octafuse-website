@@ -1,19 +1,19 @@
 ---
 title: 系统集成
-description: 业务门户与网关对接：推理走 Proxy，开通与运维走管理接口；环境变量与安全边界说明。
+description: 业务门户与网关对接：推理走代理服务，开通与运维走管理接口；环境变量与安全边界说明。
 ---
 
 import { Aside } from '@astrojs/starlight/components';
 
-「系统集成」指你的业务系统如何同时使用 **网关 Proxy（推理）** 与 **管理台背后的管理接口（开通与运维）**。管理台左侧另有 **Analytics（用量与可靠性）** 等菜单，与本文所述接口相互独立、按需使用。
+“系统集成”指你的业务系统如何同时使用**代理服务（Proxy，推理）**与**管理后台的管理接口（开通与运维）**。管理后台左侧另有**分析（Analytics）**等菜单，与本文所述接口相互独立，可按需使用。
 
 ## 环境变量（常见）
 
 | 变量 | 用途 |
 |------|------|
-| `GATEWAY_URL` | **Proxy** 的根地址；应用或 SDK 发推理请求时使用 |
-| `GATEWAY_MASTER_URL` | **管理台** 的根地址；服务端调用其下的 **管理 API** 时使用 |
-| `GATEWAY_MASTER_KEY` | 与管理台 **系统配置** 中的管理密钥一致的 Bearer，**仅放在服务端** |
+| `GATEWAY_URL` | **代理服务**的根地址；应用或 SDK 发推理请求时使用 |
+| `GATEWAY_MASTER_URL` | **管理后台**的根地址；服务端调用其下的**管理 API** 时使用 |
+| `GATEWAY_MASTER_KEY` | 与管理后台**系统配置**中的管理密钥一致的 Bearer，**仅放在服务端** |
 
 <Aside type="caution" title="安全">
 	管理密钥与用户 **`sk-…`** 均不可下发到不可信的浏览器或公开仓库。
@@ -22,15 +22,15 @@ import { Aside } from '@astrojs/starlight/components';
 ## 推理（应用侧）
 
 - 协议与路径以当前网关版本为准（例如常见的 OpenAI 兼容聊天接口等），鉴权为 **`Authorization: Bearer sk-…`**。  
-- 可使用 **`GET /v1/me`**（向 **Proxy** 发起、携带用户密钥）查看与预算相关的摘要，便于在自家产品里展示额度（字段以当前版本为准）。
+- 可使用 **`GET /v1/me`**（向代理服务发起并携带用户密钥）查看预算摘要，便于在自家产品中展示额度（字段以当前版本为准）。
 
 ## 控制面（服务端）
 
-典型流程：用户在你的门户注册成功 → 服务端用管理密钥调用管理接口 **创建或更新网关用户** → **创建 API Key** → 将 `sk-…` 仅返回给可信环境或仅保存在服务端。
+典型流程：用户在你的门户注册成功 → 服务端用管理密钥调用管理接口**创建或更新网关用户** → **创建 API 密钥** → 将 `sk-…` 仅返回给可信环境或仅保存在服务端。
 
 接口索引与约定见 [GitHub 技术参考](/zh/docs/github-reference/)。
 
 ## 下一步
 
-- [Docker 部署](/zh/docs/deploy/docker/) / [Cloudflare Workers 部署](/zh/docs/deploy/cloudflare/)  
-- [Playground](/zh/docs/features/playground/) / [Simulator](/zh/docs/features/simulator/)  
+- [Docker 部署](/zh/docs/deploy/docker/) / [Cloudflare Workers 部署](/zh/docs/deploy/cloudflare/)
+- [调试台](/zh/docs/features/playground/) / [模拟器](/zh/docs/features/simulator/)

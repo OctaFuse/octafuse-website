@@ -15,7 +15,7 @@ alwaysApply: false
 
 示例：
 
-- 首次出现：供应商（Provider）、路由池（Route Pool）、上游目标（Target）。
-- 操作指引：在路由流程图（Routes Flow）的路由池（Route Pool）节点中打开供应商粘性（Provider Sticky）设置。
+- 首次出现：供应商（Provider）、路由池（Route Pool）、上游目标（Upstream Target）。
+- 操作指引：在拓扑视图（Topology）的路由池（Route Pool）节点中打开供应商粘性（Provider sticky）设置。
 - 后续表述：供应商、路由池、上游目标、供应商粘性。
 - 配置标识：`hash_affinity`、`route_trace.sticky`、`/v1/models`。

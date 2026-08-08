@@ -1,31 +1,31 @@
 ---
 title: 图片生成 / 编辑
-description: 配置 OpenAI 兼容图片生成 / 编辑：模型目录价（token / per_image）、OpenAI 协议路由，以及 Playground / Simulator 验收。
+description: 配置 OpenAI 兼容图片生成 / 编辑：模型目录价（Token / `per_image`）、OpenAI 协议路由，以及调试台 / 模拟器验收。
 ---
 
 import { Aside, Steps } from '@astrojs/starlight/components';
 
-Gateway 对外提供 OpenAI 兼容的 **`POST /v1/images/generations`** 与 **`POST /v1/images/edits`**（multipart）。鉴权与 Chat 相同（用户 `sk-…`）；模型须挂 **OpenAI 协议** 的 active 路由，并在目录里配置 Image 计价。
+网关对外提供 OpenAI 兼容的 **`POST /v1/images/generations`** 与 **`POST /v1/images/edits`**（multipart）。鉴权与聊天请求相同（用户 `sk-…`）；模型须挂载**已启用的 OpenAI 协议路由**，并在目录中配置图片计价。
 
 <Aside type="tip" title="前置">
-	请先完成 [供应商](/zh/docs/guides/providers/)（含 Images generations 端点）与 [模型](/zh/docs/guides/models/)。字段级契约见 [GitHub 技术参考 · image-models](https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/developers/reference/image-models.md)。
+	请先完成[供应商（Providers）](/zh/docs/guides/providers/)（含图片生成端点）与[模型（Models）](/zh/docs/guides/models/)配置。字段级契约见 [GitHub 技术参考 · image-models](https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/developers/reference/image-models.md)。
 </Aside>
 
 ## 在管理台里要做什么
 
 <Steps>
-1. **Provider**：为 OpenAI / 兼容上游配置 Key；`endpoints.openai.base` 可派生 `…/images/generations`，或写完整 `images.generations` URL。Seedream 等无 OpenAI edits 形态的上游 **不要** 写 `base`（避免派生死链 edits）。
-1. **Models**：导入或手建图片生成预设（`output` 含 `image`）。确认 `image_billing_mode`：
-	- **`token`**：按上游 usage 的 image / text token 分项计价（如 GPT Image）。
-	- **`per_image`**：按张目录价（如 Seedream），可选参考图 input 单价。
-1. **Routes**：为该模型添加 **OpenAI** 协议、**启用** 状态的路由。
-1. **验收**：Playground 试单条路由出图（不计用户账单）；Simulator 走真实 Proxy → 在 [请求日志](/zh/docs/guides/request-logs/) 核对 `billing_kind` / image count 与扣费。
+1. **供应商**：为 OpenAI 或兼容上游配置密钥；`endpoints.openai.base` 可派生 `…/images/generations`，也可填写完整的 `images.generations` URL。Seedream 等不支持 OpenAI 编辑接口形态的上游**不要**填写 `base`（避免派生出无效的编辑接口地址）。
+1. **模型**：导入或手动创建图片生成预设（`output` 含 `image`）。确认 `image_billing_mode`：
+	- **`token`**：按上游 `usage` 中的图片 / 文本 Token 分项计价（如 GPT Image）。
+	- **`per_image`**：按张目录价（如 Seedream），可选参考图输入单价。
+1. **路由（Routes）**：为该模型添加 **OpenAI** 协议且状态为**启用**的路由。
+1. **验收**：在调试台（Playground）通过单条路由试生成图片（不计入用户账单）；再使用模拟器（Simulator）发起真实的网关代理请求，并在[请求日志（Request Logs）](/zh/docs/guides/request-logs/)中核对 `billing_kind`、图片数量与扣费。
 </Steps>
 
 ## 与模型列表的关系
 
-- 默认 **`GET /v1/models`**（需用户 Key）只返回 LLM，**不含**纯图片生成模型；可传 `kind=image` / `kind=all`。
-- 门户 discovery 用公开 **`GET /catalog/models`**（无需 Key），与 `/v1/models` 分工不同。
+- 默认 **`GET /v1/models`**（需要用户密钥）只返回大语言模型（LLM），**不含**纯图片生成模型；可传 `kind=image` / `kind=all`。
+- 门户的模型发现功能使用公开的 **`GET /catalog/models`**（无需密钥），与 `/v1/models` 分工不同。
 
 ## 客户端最小示例
 
@@ -38,7 +38,7 @@ curl -sS "$GATEWAY_URL/v1/images/generations" \
 
 ## 下一步
 
-- [Agent Tools](/zh/docs/guides/tools/)  
-- [路由配置](/zh/docs/guides/routing/) · [Simulator](/zh/docs/features/simulator/)
+- [智能体工具（Agent Tools）](/zh/docs/guides/tools/)
+- [路由配置](/zh/docs/guides/routing/) · [模拟器](/zh/docs/features/simulator/)
 
 

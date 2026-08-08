@@ -1,6 +1,6 @@
 ---
 title: OctaFuse
-description: 可自托管的开源 AI 能力网关与运营控制面：统一接入 Chat、图片生成 / 编辑、语音转写与 Agent Tools，以 Surface → Pool → Target 管理路由、预算、计费和审计。支持 Cloudflare Workers + D1 及 Docker / Postgres / MySQL。AGPLv3。
+description: 可自托管的开源 AI 能力网关与运营控制面：统一接入对话、图片生成 / 编辑、语音转写与智能体工具，以请求入口 → 路由池 → 上游目标管理路由、预算、计费和审计。支持 Cloudflare Workers + D1 及 Docker / Postgres / MySQL。AGPLv3。
 template: splash
 sidebar:
   hidden: true
@@ -22,30 +22,30 @@ hero:
 
 import { Card, CardGrid } from '@astrojs/starlight/components';
 
-AI 能力正在从文本模型扩展到图片生成、Agent Tools、私有模型与更多专用服务。供应商、兼容端点、Coding Plan、自托管服务和团队内部账号，各有自己的 **Base URL**、密钥、额度、价格与日志；应用真正需要的是一个稳定入口、一套可控路由、清楚的预算和可追溯的调用记录。
+AI 能力正在从文本模型扩展到图片生成、智能体工具（Agent Tools）、私有模型与更多专用服务。供应商（Provider）、兼容端点、Coding Plan、自托管服务和团队内部账号，各有自己的基础地址（Base URL）、密钥、额度、价格与日志；应用真正需要的是一个稳定入口、一套可控路由、清楚的预算和可追溯的调用记录。
 
-**OctaFuse 是可自托管的 AI 能力网关与运营控制面。** 你可以统一接入官方 Provider、第三方兼容端点、图片生成与编辑、语音转写、Agent Tools 和私有模型服务，并通过 Request Surface → Route Pool → Upstream Target 管理路由、故障转移、Provider 熔断、预算、计费、审计和管理 API。对客户端而言，仍然是一个 Gateway URL 和一把用户 Key。
+**OctaFuse 是可自托管的 AI 能力网关与运营控制面。** 你可以统一接入官方供应商、第三方兼容端点、图片生成与编辑、语音转写、智能体工具和私有模型服务，并通过请求入口（Request Surface）→ 路由池（Route Pool）→ 上游目标（Upstream Target）管理路由、故障转移、供应商熔断、预算、计费、审计和管理 API。对客户端而言，仍然只需一个网关地址（Gateway URL）和一把用户 API 密钥。
 
 ## 应用场景
 
 <CardGrid stagger>
 	<Card title="个人开发者与工具链" icon="add-document">
-		把模型订阅、Coding Plan、图片生成、Agent Tools 与备用上游汇总成一个 Gateway。Cursor、CLI、脚本或自研工具只需要配置一个 Gateway URL 和一把用户 Key。
+		把模型订阅、Coding Plan、图片生成、智能体工具与备用上游汇总到一个网关。Cursor、CLI、脚本或自研工具只需配置一个网关地址和一把用户 API 密钥。
 	</Card>
-	<Card title="AI 应用与 Agent 团队" icon="laptop">
-		业务代码面向稳定模型 ID 和统一协议开发。模型切换、灰度路线、备用 Provider、失败降级和默认参数都放在网关层调整。
+	<Card title="AI 应用与智能体团队" icon="laptop">
+		业务代码面向稳定模型 ID 和统一协议开发。模型切换、灰度路由、备用供应商、失败降级和默认参数都在网关层调整。
 	</Card>
 	<Card title="团队平台与 IT 管理" icon="setting">
-		为部门、项目、成员或客户分别创建用户与 API Key，配置预算周期、状态和 metadata，让模型调用治理从业务服务里独立出来。
+		为部门、项目、成员或客户分别创建用户与 API 密钥，配置预算周期、状态和元数据（`metadata`），让模型调用治理从业务服务中独立出来。
 	</Card>
 	<Card title="API 代理与分销服务" icon="external">
-		接入多个上游 Provider；同一供应商有多个账号时创建多个 Provider。对下游客户发独立 Key，并通过请求日志、成本口径和审计记录做分客户管理。
+		接入多个上游供应商；同一供应商有多个账号时，可创建多条供应商配置。为下游客户签发独立密钥，并通过请求日志、成本口径和审计记录按客户管理。
 	</Card>
 	<Card title="私有与混合模型入口" icon="setting">
 		把自托管兼容服务、内部模型、Ollama / vLLM 旁路和公网模型放在同一套路由体系后面，对外暴露一致的访问方式。
 	</Card>
 	<Card title="成本与稳定性运营" icon="analytics">
-		通过模型、Provider、用户和可靠性维度观察用量与失败情况，再调整 Route Pool 策略、priority / weight、预算方案与按时段调价。
+		从模型、供应商、用户和可靠性维度观察用量与失败情况，再调整路由池策略、`priority` / `weight`、预算方案与分时调价。
 	</Card>
 </CardGrid>
 
@@ -56,46 +56,46 @@ AI 能力正在从文本模型扩展到图片生成、Agent Tools、私有模型
 		支持 OpenAI Chat、Images、Audio Transcriptions 与 Models，Anthropic Messages，以及 Gemini `generateContent` / `streamGenerateContent`；门户可用公开 `GET /catalog/models` 发现能力。
 	</Card>
 	<Card title="图片生成 / 编辑" icon="open-book">
-		OpenAI 兼容 `POST /v1/images/generations` 与 `edits`；目录价支持 token 分项与按张（`per_image`）。Playground / Simulator 可联调出图与计费日志。
+		OpenAI 兼容 `POST /v1/images/generations` 与 `edits`；目录价支持 Token 分项与按张（`per_image`）。调试台（Playground）/ 模拟器（Simulator）可用于联调出图与计费日志。
 	</Card>
-	<Card title="Agent Tools" icon="puzzle">
-		面向 Agent 的可扩展产品 API（`/v1/tools/*`）。Web Search 支持博查、Tavily、CleverSee、腾讯云 WSA；Web Fetch 支持 Firecrawl、Tavily Extract、Jina Reader；Deep Search 支持 Firecrawl Search、Jina Search。
+	<Card title="智能体工具" icon="puzzle">
+		面向智能体的可扩展产品 API（`/v1/tools/*`）。网页搜索（Web Search）支持博查、Tavily、CleverSee、腾讯云 WSA；网页抓取（Web Fetch）支持 Firecrawl、Tavily Extract、Jina Reader；深度搜索（Web Deep Search）支持 Firecrawl Search、Jina Search。
 	</Card>
-	<Card title="Surface → Pool → Target 路由" icon="random">
-		客户端请求先按协议与 operation 命中 Request Surface，再进入 Route Pool；Pool 内按 priority 分层，同层根据策略与 weight 排序 Upstream Target，失败后自动切换。
+	<Card title="请求入口 → 路由池 → 上游目标" icon="random">
+		客户端请求先按协议与 `operation` 命中请求入口，再进入路由池；路由池内按 `priority` 分层，同层根据策略与 `weight` 排序上游目标，失败后自动切换。
 	</Card>
-	<Card title="预置 Provider 与 Models" icon="document">
-		Admin 可一键导入大量供应商 / 模型预设：除官方模型厂外，还覆盖聚合平台与各类 Coding / Token Plan，预填 Base URL 与模型目录价等信息，无需到处查找再手工维护。
+	<Card title="预置供应商与模型" icon="document">
+		管理后台（Admin）可一键导入大量供应商 / 模型预设：除官方模型厂商外，还覆盖聚合平台与各类 Coding / Token Plan，预填基础地址与模型目录价等信息，无需到处查找后再手工维护。
 	</Card>
-	<Card title="单 Key Provider 与预置导入" icon="approve-check">
-		一个 Provider 维护一把上游 API Key 与启用状态；同一供应商多账号用多个 Provider 表达。Admin 可一键导入 Provider / Model 模板，再补齐真实 Key 并挂载路由。
+	<Card title="单密钥供应商与预置导入" icon="approve-check">
+		一条供应商配置维护一把上游 API 密钥及其启用状态；同一供应商的多个账号用多条供应商配置表示。管理后台可一键导入供应商 / 模型模板，再补齐真实密钥并挂载路由。
 	</Card>
-	<Card title="四种策略、Provider Sticky 与熔断" icon="warning">
-		支持 `hash_affinity`、`weighted_random`、`weight_priority`、`weighted_round_robin`，并可按 Route Pool 的 priority 层覆盖。可选 Provider Sticky 跨请求记住成功 Target；429、401 / 403 与连续 5xx 会触发 Provider 级冷却。
+	<Card title="四种策略、供应商粘性与熔断" icon="warning">
+		支持 `hash_affinity`、`weighted_random`、`weight_priority`、`weighted_round_robin`，并可按路由池的 `priority` 层覆盖。可选的供应商粘性（Provider sticky）可跨请求记住成功的上游目标；429、401 / 403 与连续 5xx 会触发供应商级冷却。
 	</Card>
-	<Card title="用户 Key、预算与计费" icon="padlock">
-		External system → User → API Key 分层治理；预算与周期归属 User，调用由 API Key 鉴权和归集。模型请求同时记 **供应成本**、**目录标准价**、**用户计费**，并支持业务时区下的每日时段倍率。
+	<Card title="用户 API 密钥、预算与计费" icon="padlock">
+		按外部系统（External system）→ 用户（User）→ API 密钥（API Key）分层治理；预算与周期归属用户，调用通过 API 密钥鉴权和归集。模型请求同时记录 **供应成本**、**目录标准价**、**用户计费**，并支持业务时区下的每日时段倍率。
 	</Card>
-	<Card title="日志、审计与 Analytics" icon="magnifier">
-		请求日志记录协议 / operation、模型、route group、Surface、Pool、Target、Provider、token、状态和三类成本；审计日志记录预算扣减、周期重置与用户 / Key 生命周期。
+	<Card title="日志、审计与分析" icon="magnifier">
+		请求日志记录协议 / `operation`、模型、`route_group`、请求入口、路由池、上游目标、供应商、Token、状态和三类成本；审计日志记录预算扣减、周期重置与用户 / 密钥生命周期。
 	</Card>
-	<Card title="Playground 与 Simulator" icon="open-book">
-		Playground 在 Admin 内测试单条 route；Simulator 用真实用户 Key 模拟客户端调用，检查鉴权、路由、计费与日志链路。
+	<Card title="调试台与模拟器" icon="open-book">
+		调试台在管理后台内测试单条路由；模拟器使用真实的用户 API 密钥模拟客户端调用，检查鉴权、路由、计费与日志链路。
 	</Card>
 	<Card title="部署与系统集成" icon="rocket">
-		默认 **Cloudflare Workers + D1**（个人与小流量通常可在免费额度内运行）；也可 Node / Docker + PostgreSQL 或 MySQL 8。外部门户可通过 **`/api/admin/*`** 自动开通用户、发 Key、同步预算。
+		默认 **Cloudflare Workers + D1**（个人与小流量通常可在免费额度内运行）；也可使用 Node / Docker + PostgreSQL 或 MySQL 8。外部门户可通过 **`/api/admin/*`** 自动开通用户、签发密钥并同步预算。
 	</Card>
 </CardGrid>
 
 ## 下一步
 
-默认路径是 **Cloudflare**：本机 Wrangler + 本地 D1 跑通后，用一条 CLI 部署到你的账号；再配置 Provider、模型与 route，创建用户 Key，把客户端指向 Gateway Base URL。
+默认路径是 **Cloudflare**：在本机通过 Wrangler + 本地 D1 跑通后，用一条 CLI 命令部署到你的账号；再配置供应商、模型与路由，创建用户 API 密钥，并把客户端指向网关基础地址（Gateway Base URL）。
 
 - [**快速开始**](/zh/docs/quick-start/) — 本地 D1 → Cloudflare 上云
 - [OctaFuse 动态](/zh/updates/) — 版本发布、产品进展与实践分享
 - [供应商配置](/zh/docs/guides/providers/) · [模型配置](/zh/docs/guides/models/) · [路由配置](/zh/docs/guides/routing/)
-- [Provider Catalog](/zh/catalog/providers/) · [Model Catalog](/zh/catalog/models/) — 查询 Gateway 内置、可直接导入的静态预设
-- [Images](/zh/docs/guides/images/) · [Agent Tools](/zh/docs/guides/tools/) · [Analytics](/zh/docs/guides/analytics/)
+- [供应商目录（Provider Catalog）](/zh/catalog/providers/) · [模型目录（Model Catalog）](/zh/catalog/models/) — 查询网关内置、可直接导入的静态预设
+- [图片生成](/zh/docs/guides/images/) · [智能体工具](/zh/docs/guides/tools/) · [分析](/zh/docs/guides/analytics/)
 - [请求日志](/zh/docs/guides/request-logs/) · [审计日志](/zh/docs/guides/audit-logs/) · [系统配置](/zh/docs/guides/system-config/)
 - [Cloudflare 部署](/zh/docs/deploy/cloudflare/) · [Docker 部署](/zh/docs/deploy/docker/)
 - [GitHub 技术参考](/zh/docs/github-reference/) — API、架构、迁移和运维文档索引

@@ -1,40 +1,40 @@
 ---
-title: Playground
-description: 在管理台选定一个 Upstream Target，编辑请求体直连上游试跑，用于验证配置且不消耗用户密钥额度。
+title: 调试台（Playground）
+description: 在管理后台（Admin）选定一个上游目标（Upstream Target），编辑请求体并直连上游试跑，用于验证配置且不消耗用户密钥额度。
 ---
 
 import { Aside, Steps } from '@astrojs/starlight/components';
 
-在左侧 **Inference → Playground** 打开。**Playground** 用来在 **不经过业务用户的 `sk-…` 计费路径** 的前提下，针对 **一个已配置的 Upstream Target** 向对应上游发一次试跑请求，快速确认供应商地址、密钥、上游模型名等是否正确。
+在左侧的**推理（Inference）→ 调试台（Playground）**中打开。调试台不会经过业务用户的 `sk-…` 计费路径，而是针对**一个已配置的上游目标**向对应上游发出一次试跑请求，帮助你快速确认供应商地址、密钥、上游模型名等配置是否正确。
 
-试跑 **不会**写入请求日志、扣减用户预算，也 **不会**经过 Route Pool 的策略、熔断与故障转移——完整行为请用真实 Proxy 调用或 [Simulator](/zh/docs/features/simulator/) 验证。Agent Tools 请直接调用 `/v1/tools/*`。
+试跑**不会**写入请求日志、扣减用户预算，也**不会**经过路由池（Route Pool）的策略、熔断与故障转移。请使用真实的代理服务（Proxy）调用或[模拟器（Simulator）](/zh/docs/features/simulator/)验证完整行为。智能体工具（Agent Tools）请直接调用 `/v1/tools/*`。
 
 <Aside type="tip" title="适用场景">
-	刚改完供应商或路由时，先用 Playground 确认能打通上游，再让业务流量切换。
+	刚修改完供应商或路由时，先用调试台确认上游可以连通，再切换业务流量。
 </Aside>
 
 <figure class="of-doc-figure">
-	<img src="/screenshots/admin-playground.png" alt="OctaFuse Admin Playground 中选择路由、编辑 JSON 请求体并查看响应。" loading="lazy" />
-	<figcaption>Playground 左侧选择一条路由并编辑请求体，右侧查看选中路由信息和上游响应。</figcaption>
+	<img src="/screenshots/admin-playground.png" alt="在 OctaFuse 管理后台的调试台中选择路由、编辑 JSON 请求体并查看响应。" loading="lazy" />
+	<figcaption>在调试台左侧选择一条路由并编辑请求体，在右侧查看所选路由的信息和上游响应。</figcaption>
 </figure>
 
 ## 如何使用
 
 <Steps>
-1. 打开 **Playground**。
+1. 打开**调试台（Playground）**。
 1. 在路由下拉框中选择 **一条路由**（界面会用图标区分是否处于启用状态）。
 1. 按当前协议（OpenAI / Anthropic / Gemini）编辑 JSON 请求体；可使用页面提供的模板起步。图片生成请选 **OpenAI** 协议且挂了 Images 的路由，见 [图片生成 / 编辑](/zh/docs/guides/images/)。
 1. 发送后查看响应状态、错误信息与正文；需要时留意响应头中的延迟等诊断信息。
 </Steps>
 
-## 与 Simulator 的区别
+## 与模拟器的区别
 
 | 工具 | 典型用途 |
 |------|----------|
-| Playground | 运维/开发验证 **单个 Target → 上游** 是否配通 |
-| [Simulator](/zh/docs/features/simulator/) | 用真实 **`sk-…`** 从浏览器打 **Proxy**，验证鉴权、路由、预算与日志整条链路 |
+| 调试台 | 供运维 / 开发人员验证**单个上游目标 → 上游**是否配置正确 |
+| [模拟器](/zh/docs/features/simulator/) | 使用真实的 **`sk-…`** 从浏览器调用**代理服务**，验证鉴权、路由、预算与日志整条链路 |
 
 ## 下一步
 
 - [路由配置](/zh/docs/guides/routing/)  
-- [Simulator](/zh/docs/features/simulator/)  
+- [模拟器](/zh/docs/features/simulator/)

@@ -34,6 +34,11 @@ How it works:
 4. Each success renews the idle TTL; the default is 3600 seconds.
 5. A 429, 401 / 403, 5xx, 524, or network failure clears the binding and continues normal failover.
 
+<figure class="of-doc-figure">
+	<img src="/screenshots/v2-3-0-provider-sticky-settings.jpg" alt="Provider sticky settings with the enable control, idle TTL, and an explanation of the routing behavior." loading="lazy" />
+	<figcaption>Enable Provider sticky on a Route Pool and set its idle TTL. The dialog explains that the last successful Provider is tried first and other Providers are used after it fails.</figcaption>
+</figure>
+
 Bindings live in D1, Postgres, or MySQL, so they are shared across Cloudflare Worker isolates and multiple Node instances. Storage failures fail open to the regular route plan instead of blocking inference.
 
 ## Sticky versus `hash_affinity`
@@ -49,9 +54,16 @@ Provider Sticky records the **Target that actually succeeded**:
 
 The two features work together. When no binding is valid, routing returns to `hash_affinity` or the strategy configured for that tier.
 
-## Admin operations
+## Topology and binding operations
 
-Open the Sticky dialog on the Route Group / Pool node in Routes Flow to:
+Summary works well for a quick scan. When one model has many Providers split across multiple priority tiers, switch to **Topology** to see request surfaces, route groups, priority tiers, and failover order more clearly.
+
+<figure class="of-doc-figure">
+	<img src="/screenshots/v2-3-0-route-topology.jpg" alt="Routes Topology view showing multiple route groups, priority tiers, upstream targets, policies, and sticky status." loading="lazy" />
+	<figcaption>Topology keeps complex Route Pools readable when they contain many Providers and priority tiers, with strategy and sticky status visible in the same view.</figcaption>
+</figure>
+
+Open the Provider sticky dialog from a Route Group or Route Pool node in **Topology** to:
 
 - Enable or disable Sticky and set its idle TTL.
 - Compare active binding share with each Target's route weight.
@@ -59,7 +71,12 @@ Open the Sticky dialog on the Route Group / Pool node in Routes Flow to:
 - Unbind one user so their next request selects normally.
 - Invalidate the entire Pool with an epoch bump.
 
-Routes Flow also improves topology, effective-policy, and priority-tier visualization so operators can compare configuration with the actual failover order.
+<figure class="of-doc-figure">
+	<img src="/screenshots/v2-3-0-provider-sticky-bindings.jpg" alt="Enabled Provider sticky settings showing binding distribution, user binding lookup, and Pool-wide binding invalidation." loading="lazy" />
+	<figcaption>After enabling Sticky, operators can compare binding share with route weight, look up individual user bindings, and invalidate all Pool bindings when traffic must be reassigned.</figcaption>
+</figure>
+
+Topology also shows effective policies and priority tiers so operators can compare configuration with the actual failover order.
 
 ## `route_trace.sticky`
 
