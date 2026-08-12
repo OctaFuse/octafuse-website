@@ -1,0 +1,174 @@
+---
+title: OctaFuse 2.4.0：让 DashScope 语音能力进入统一路由
+description: OctaFuse Gateway 2.4.0 新增 DashScope 原生 ASR、TTS 与实时音频路由，简化百炼及千问 Token Plan 接入，并以具名 Admin API Keys 替代单一 MASTER_KEY。
+publishDate: 2026-08-12
+publish_at: 2026-08-12
+updateLabel: VERSION 2.4.0
+featuredUpdate: true
+template: splash
+prev: false
+next: false
+lastUpdated: false
+sidebar:
+  hidden: true
+site_external_id: "octafuse-release-v2-4-0"
+---
+
+当语音识别和语音合成进入真实业务，网关面对的不再只是一次普通的 HTTP 请求：ASR 可能需要同步转换或异步任务，TTS 可能返回完整音频或持续输出音频流，实时语音还需要在 WebSocket 上双向传递文本、事件与二进制帧。
+
+2.4.0 将这些差异纳入 OctaFuse 的统一路由体系。应用可以继续使用 OpenAI 兼容的音频接口，也可以直接使用 DashScope 原生实时协议；网关负责根据路由配置选择百炼上游、转换请求，并记录真实用量。
+
+Provider 导入也同步覆盖了阿里云百炼标准服务、百炼 Coding Plan 和千问 AI 平台 Token Plan，套餐专属端点不再需要逐项手工填写。
+
+与此同时，管理面的认证方式也完成了一次重要升级：单一的 `MASTER_KEY` 被具名、可轮换、可吊销、可配置权限的 **Admin API Keys** 取代。不同系统、自动化任务和运维场景可以使用彼此隔离的最小权限凭证。
+
+一句话看懂 2.4.0：
+
+> **把 ASR、流式 TTS 和实时语音纳入同一套路由与计费体系，再用具名密钥按调用身份与使用场景划清管理权限。**
+
+## 01｜DashScope 语音能力进入统一路由
+
+2.4.0 新增 DashScope 协议族以及一组明确的音频操作和适配器。这里的 DashScope 表示上游协议，而不是供应商名称：同一个 Alibaba Cloud Provider 可以同时提供 OpenAI 兼容端点与 DashScope 原生端点。
+
+对于调用方，常用入口保持简洁：
+
+| 能力 | 请求入口 | 说明 |
+| --- | --- | --- |
+| ASR | `POST /v1/audio/transcriptions` | 保留 OpenAI 兼容的 multipart 调用方式 |
+| TTS | `POST /v1/audio/speech` | 支持一次性音频和 HTTP 流式输出 |
+| 实时 ASR / TTS | `GET /v1/dashscope/realtime` | 通过 WebSocket 转发 DashScope 原生事件 |
+
+![Qwen Audio 3.0 TTS Plus 从 OpenAI 音频请求入口路由到 Alibaba Cloud 上游](/screenshots/v2-4-0-dashscope-tts-route.png)
+
+*应用仍然调用统一的 `/v1/audio/speech`；路由池根据模型和策略选择 Alibaba Cloud 上游，再由目标配置决定实际的 DashScope 模型与适配器。*
+
+这张路由图展示了 OctaFuse 一贯的分层方式：左侧请求入口（Request Surface）描述客户端如何调用，中间模型负责能力映射，右侧上游目标（Upstream Target）描述请求最终如何到达供应商。公开模型名与真实的 Provider model 相互独立，因此应用不需要感知供应商侧的模型命名和端点差异。
+
+跨协议调用不会依赖模型名称猜测。配置路由时，需要明确选择适配器：例如把 OpenAI multipart ASR 转换为 Qwen-ASR 或 Fun-ASR 请求，或者把 OpenAI speech 请求转换为 SpeechSynthesizer、Qwen-TTS、MiniMax 等 DashScope 接口。显式适配器让配置错误能够直接暴露，也避免网关在运行时进行不透明的协议猜测。
+
+## 02｜阿里百炼与千问 Token Plan：统一路由 LLM、ASR、TTS
+
+阿里体系内的标准服务与订阅套餐使用不同的 API Key、额度和 Base URL。2.4.0 在 Provider 导入目录中将它们拆成三套独立预设，避免套餐端点与按量端点混用：
+
+| Provider 预设 | OctaFuse 直接配置的能力 | 使用时注意 |
+| --- | --- | --- |
+| **阿里云百炼** | OpenAI 兼容对话、DashScope 原生 ASR / TTS 与实时音频 | 使用百炼标准 API Key 和按量服务端点 |
+| **阿里云百炼（Coding Plan）** | OpenAI、Anthropic 兼容的文本模型调用 | 使用 Coding Plan 专属 Key 与 `coding.dashscope.aliyuncs.com`，不可与按量端点混用 |
+| **千问 AI 平台（Token Plan）** | OpenAI、Anthropic 兼容对话；`qwen-audio-3.0-tts-plus` TTS；`qwen-audio-3.0-realtime-plus` 实时语音 | 使用 `sk-sp-` 套餐 Key 与 `token-plan.cn-beijing.maas.aliyuncs.com` 专属端点 |
+
+实际接入时，从 Provider 导入目录选择对应预设，填入套餐 Key，再导入或创建需要的模型并挂到路由池即可。OctaFuse 会保留套餐专属端点，避免请求误走百炼按量地址、导致套餐 Credits 没有生效。
+
+根据阿里云当前公布的 Token Plan 模型清单，除千问 `qwen3.8-max`、`qwen3.7-max`、`qwen3.7-plus`、`qwen3.6-plus` / `flash` 外，团队版还覆盖 DeepSeek、Kimi、GLM、MiniMax 等文本模型。2.4.0 的音频路由则直接对应套餐中的 `qwen-audio-3.0-tts-plus` 和 `qwen-audio-3.0-realtime-plus`，因此既可以把套餐作为 AI 编程 / Agent 的文本上游，也可以在支持范围内接入语音合成和实时语音。
+
+需要特别说明：Token Plan 与 Coding Plan 的官方使用范围是兼容的 **AI 编程和智能体工具中的交互式调用**，不适用于自动化脚本、工作流平台或自定义应用后端。OctaFuse 只负责协议、路由与凭证配置，不会改变套餐本身的授权边界。官方套餐还列出了图片和视频模型，但这些模型使用独立生成接口，不属于 2.4.0 Token Plan 预设当前直接覆盖的路由范围。
+
+- [阿里云百炼 Token Plan 概述](https://help.aliyun.com/zh/model-studio/token-plan-overview)
+- [Token Plan / Coding Plan 第三方工具接入与使用限制](https://help.aliyun.com/zh/model-studio/more-tools)
+
+## 03｜从文件请求到实时 WebSocket
+
+文件、流式和实时音频拥有不同的生命周期，2.4.0 分别处理这些路径：
+
+- **同步文件 ASR**：将上传内容转换为上游模型要求的请求体，并把识别结果映射回兼容响应。
+- **异步文件 ASR**：接受 DashScope 可访问的公网 `file_url`，完成任务提交和结果查询；网关不会代替调用方上传文件。
+- **HTTP / SSE TTS**：支持完整音频响应和持续音频分片，避免无界缓冲大文件。
+- **Realtime ASR / TTS**：通过 `/v1/dashscope/realtime` 建立 WebSocket，转发 DashScope 的 task 或 session 事件以及二进制音频帧。
+
+实时连接仍然使用 OctaFuse 用户 API Key 鉴权，并以网关公开模型完成路由：
+
+```text
+wss://<gateway>/v1/dashscope/realtime?model=<gateway-model>&operation=<operation>
+Authorization: Bearer <gateway-api-key>
+```
+
+网关只替换启动事件里的模型名，后续文本、二进制帧和服务端事件保持原协议转发。Cloudflare Worker 与 Node.js Proxy 均支持这条实时链路，并共用鉴权、初始连接故障转移、用量记录和路由配置。
+
+## 04｜ASR 与 TTS：按时长、Token 或字符分别记账
+
+语音识别和语音合成虽然都属于音频能力，却不能共用同一种计费单位。OctaFuse 会根据模型的定价配置选择对应口径：
+
+| 能力 | 计费模式 | 用量来源 | 请求日志 |
+| --- | --- | --- | --- |
+| ASR | 按秒 | 上游返回的音频时长；文件接口缺失时按文件信息估算，并记录来源 | `billing_kind=audio_per_second`、`audio_duration_seconds` |
+| ASR | 按 Token | 上游 `usage` 中的 input、output、audio 与 text tokens | `billing_kind=audio_tokens` 及各类 Token 数量 |
+| TTS | 按字符 | 上游返回的 `usage.characters` | `billing_kind=audio_per_character`、`audio_characters` |
+
+ASR 可以适配按音频时长收费的模型，也可以适配按音频与文本 Token 收费的转写模型；用量、计费模式和最终费用会一并进入请求日志。2.4.0 新增的部分是 TTS 字符计费：请求日志增加 `audio_characters`，按照上游返回的有效字符数和模型配置的字符单价独立记账。
+
+这样一来，运维人员可以在同一套请求日志里核对最终命中的供应商与模型、协议、操作、适配器、上游 Request ID，以及本次请求究竟按秒、Token 还是字符计费。
+
+日志不会保存音频二进制；文本请求仍遵循现有的请求体日志策略。TTS 如果没有返回真实字符用量，网关不会用输入文本长度补算最终费用，也不会把预算预估伪装成最终账单。
+
+## 05｜从单一 `MASTER_KEY` 到具名、分权的管理密钥
+
+过去，外部系统、自动化任务和运维工具通常共享同一个 `MASTER_KEY` 调用 Admin API。这种方式虽然简单，却难以回答三个常见问题：这次调用来自谁、这个场景实际需要哪些权限，以及发生泄露时如何只轮换受影响的凭证。
+
+2.4.0 将浏览器会话与 Bearer Key 身份分离，并新增 **系统集成 → 集成密钥（Integration Keys）**：
+
+![Integration Keys 页面展示从旧 MASTER_KEY 迁移生成的 legacy-master](/screenshots/v2-4-0-integration-keys.png)
+
+*升级迁移会把旧 `MASTER_KEY` 复制为全权限的 `legacy-master`，保证现有调用方继续工作；稳定后应按调用身份和使用场景拆分密钥并逐步替换。*
+
+每把集成密钥都可以：
+
+- 使用独立名称标识系统、集成、自动化任务或运维场景
+- 按用户、用户 Key、Provider、模型、路由、配置、分析、日志或 Playground 分配权限
+- 为同一系统拆分只读、写入或专项操作凭证，避免权限不必要地扩散
+- 单独轮换或吊销，不影响无关调用方
+- 记录最后使用时间，便于清理闲置凭证
+
+只有 Console Session 可以创建、修改和吊销集成密钥。任何 Bearer Key，即使拥有 `*` 权限，也不能管理 `/admin/access-keys/*`。这条边界可以避免某个调用方凭借自身密钥继续创建新的管理凭证。
+
+升级后，旧 `MASTER_KEY` 的值仍可以通过 `legacy-master` 调用 Admin API，兼容性不会立即中断。但推荐尽快为门户、自动化脚本和运维工具分别创建最小权限 Key，更新它们的 `GATEWAY_MASTER_KEY` 或等价配置，验证无误后再轮换或吊销 `legacy-master`。
+
+## 06｜预设、联调与路由运维同步增强
+
+围绕新的音频能力，Admin 也补齐了配置和联调入口：
+
+- Qwen Token Plan 与 Provider 导入支持 DashScope 音频端点。
+- ASR / TTS 模型目录和路由适配器可直接选择。
+- Playground 支持 DashScope Realtime 连接联调。
+- 阿里云 TTS 定价得到修正，并新增 CosyVoice 3.5 预设。
+- Routes Flow 改进粘滞绑定摘要、刷新、用户数和拓扑默认密度，复杂路由更容易浏览。
+
+这些能力让“配置 Provider → 建立音频模型 → 创建路由 → 在 Playground 联调 → 查看请求日志”形成完整的管理闭环。
+
+## 升级到 2.4.0
+
+本次版本包含四项数据库迁移：
+
+- **0022**：为请求日志增加 `audio_characters`。
+- **0023**：新增 `admin_api_keys` 与 `admin_sessions`，并把旧 `MASTER_KEY` 复制为 `legacy-master`。
+- **0024**：删除遗留的 `system_config.MASTER_KEY` 配置行。
+- **0025**：为用户审计日志增加检索索引。
+
+升级时请在同一个维护窗口内：
+
+1. 备份数据库，暂停 Proxy 流量和 Admin 配置写入。
+2. 按顺序执行 **0022 → 0023 → 0024 → 0025**。
+3. 立即部署同一版本的 Proxy、Admin 和 migrate 制品，不要混合运行新旧版本。
+4. 验证 Admin 登录、`legacy-master` 兼容调用和具名 Key 权限。
+5. 分别完成 DashScope ASR、TTS、Realtime，以及既有 chat、messages、Gemini 和 images 请求的冒烟测试。
+6. 按调用身份和使用场景创建最小权限 Key，完成替换后轮换或吊销 `legacy-master`。
+
+客户端推理 URL 没有变化。此次升级的主要兼容性窗口位于 Admin 认证迁移，因此 0023 / 0024 与新 Admin、Proxy 必须作为同一版本部署。
+
+## 获取 2.4.0
+
+- [GitHub Release v2.4.0](https://github.com/OctaFuse/octafuse-gateway/releases/tag/v2.4.0)
+- [完整变更日志](https://github.com/OctaFuse/octafuse-gateway/blob/v2.4.0/CHANGELOG.md)
+- [DashScope 原生音频架构](https://github.com/OctaFuse/octafuse-gateway/blob/v2.4.0/docs/developers/architecture/dashscope-audio.md)
+- [Admin API 与集成密钥](https://github.com/OctaFuse/octafuse-gateway/blob/v2.4.0/docs/developers/api/admin.md)
+- [Docker 部署与升级](https://github.com/OctaFuse/octafuse-gateway/blob/v2.4.0/docs/operators/deployment/docker.md)
+- [Cloudflare 部署与升级](https://github.com/OctaFuse/octafuse-gateway/blob/v2.4.0/docs/operators/deployment/cloudflare.md)
+
+感谢 [@samchaolau](https://github.com/samchaolau) 通过 [#93](https://github.com/OctaFuse/octafuse-gateway/pull/93) 贡献 DashScope ASR / TTS 路由与实时音频能力。
+
+OctaFuse 是一个可自托管的开源 AI 能力网关与运营控制台。它为模型、图片、语音和智能体工具提供统一入口，并将路由、密钥、预算、计费、日志与审计留在你自己的基础设施中。
+
+如果你正在统一管理多个模型供应商、语音能力或不同场景的管理权限，可以从官网了解 OctaFuse，或直接前往 GitHub 查看源码和部署文档：
+
+- [OctaFuse 官网](https://octafuse.dev/zh/)
+- [GitHub 仓库](https://github.com/OctaFuse/octafuse-gateway)
+
+如果 OctaFuse 对你的项目有帮助，欢迎在 GitHub 上点一个 **Star**。你的关注和反馈，会帮助我们继续完善路由、协议适配与自托管体验。

@@ -1,0 +1,172 @@
+---
+title: 'OctaFuse 2.4.0: route DashScope speech through one gateway'
+description: OctaFuse Gateway 2.4.0 adds native DashScope ASR, TTS, and realtime audio routing, easier Model Studio and Qwen Token Plan onboarding, plus named Admin API Keys.
+publishDate: 2026-08-12
+updateLabel: VERSION 2.4.0
+featuredUpdate: true
+template: splash
+prev: false
+next: false
+lastUpdated: false
+sidebar:
+  hidden: true
+---
+
+Production speech workloads are more than ordinary HTTP calls. ASR may use synchronous conversion or asynchronous jobs, TTS may return a complete audio file or stream chunks, and realtime speech must carry text, events, and binary frames in both directions over WebSocket.
+
+Version 2.4.0 brings these paths into the OctaFuse routing model. Applications can keep using OpenAI-compatible audio endpoints or connect with the native DashScope realtime protocol. The gateway selects the Alibaba Cloud upstream, applies the configured adapter, and records real usage.
+
+Provider imports now also cover Alibaba Cloud Model Studio, Model Studio Coding Plan, and Qwen AI Platform Token Plan without requiring every plan-specific endpoint to be entered manually.
+
+The Admin control plane also receives an important security upgrade. A single shared `MASTER_KEY` is replaced by named **Admin API Keys** that can be scoped, rotated, and revoked. Different systems, automation jobs, and operations workflows can use isolated least-privilege credentials.
+
+In one sentence:
+
+> **Route ASR, streaming TTS, and realtime speech through one billing-aware gateway, then separate Admin permissions by caller identity and use case.**
+
+## DashScope speech in the unified routing model
+
+Version 2.4.0 adds the DashScope protocol family with explicit audio operations and adapters. DashScope identifies an upstream protocol, not a vendor: one Alibaba Cloud Provider can expose both OpenAI-compatible and native DashScope endpoints.
+
+The common client surfaces remain straightforward:
+
+| Capability | Request surface | Behavior |
+| --- | --- | --- |
+| ASR | `POST /v1/audio/transcriptions` | Keeps the OpenAI-compatible multipart contract |
+| TTS | `POST /v1/audio/speech` | Supports complete audio responses and HTTP streaming |
+| Realtime ASR / TTS | `GET /v1/dashscope/realtime` | Relays native DashScope events over WebSocket |
+
+<figure class="of-doc-figure">
+	<img src="/screenshots/v2-4-0-dashscope-tts-route.png" alt="Qwen Audio 3.0 TTS Plus routed from the OpenAI audio request surface to an Alibaba Cloud upstream" loading="lazy" />
+	<figcaption>The application keeps calling <code>/v1/audio/speech</code>. The Route Pool selects the Alibaba Cloud upstream, while the Target configuration determines the DashScope model and adapter.</figcaption>
+</figure>
+
+The route view follows the same layers used across OctaFuse. The Request Surface describes how the client calls the gateway, the gateway model maps the public capability, and the Upstream Target describes how the request reaches the Provider. Public model IDs and Provider model names remain independent, so applications do not need to know vendor-specific names or endpoint layouts.
+
+Cross-protocol calls use an explicit adapter instead of guessing from model names. A route can convert OpenAI multipart ASR to Qwen-ASR or Fun-ASR, or map OpenAI speech requests to SpeechSynthesizer, Qwen-TTS, or MiniMax DashScope APIs. Explicit adapters make configuration errors visible and keep protocol conversion predictable.
+
+## Model Studio and Qwen Token Plan: unified routing for LLM, ASR, and TTS
+
+Alibaba's standard API service and subscription plans use different credentials, quotas, and Base URLs. Version 2.4.0 keeps them as three separate Provider presets so plan traffic cannot accidentally use a pay-as-you-go endpoint:
+
+| Provider preset | Directly configured by OctaFuse | Important boundary |
+| --- | --- | --- |
+| **Alibaba Cloud Model Studio** | OpenAI-compatible chat plus native DashScope ASR, TTS, and realtime audio | Uses the standard Model Studio API key and pay-as-you-go endpoints |
+| **Alibaba Cloud Model Studio (Coding Plan)** | OpenAI- and Anthropic-compatible text-model calls | Uses the plan key and `coding.dashscope.aliyuncs.com`; do not mix it with pay-as-you-go endpoints |
+| **Qwen AI Platform (Token Plan)** | OpenAI- and Anthropic-compatible chat; `qwen-audio-3.0-tts-plus` TTS; `qwen-audio-3.0-realtime-plus` realtime speech | Uses an `sk-sp-` plan key with dedicated `token-plan.cn-beijing.maas.aliyuncs.com` endpoints |
+
+Choose the matching preset, add the plan key, then import or create the required models and attach them to a Route Pool. OctaFuse preserves the dedicated plan endpoints so requests do not fall through to the standard Model Studio service and miss the plan's Credits.
+
+Alibaba's current Token Plan catalog includes Qwen `qwen3.8-max`, `qwen3.7-max`, `qwen3.7-plus`, and `qwen3.6-plus` / `flash`; the team plan also lists text models from DeepSeek, Kimi, GLM, and MiniMax. Version 2.4.0 directly maps its audio routing to the catalog's `qwen-audio-3.0-tts-plus` and `qwen-audio-3.0-realtime-plus` models.
+
+Token Plan and Coding Plan are officially limited to interactive use in compatible AI coding and agent tools. They are not licensed for automation scripts, workflow platforms, or custom application backends. OctaFuse provides protocol, routing, and credential configuration but does not change those product terms. Alibaba also lists image and video models in Token Plan; their dedicated generation APIs are outside the routes directly configured by the 2.4.0 Token Plan preset.
+
+- [Alibaba Cloud Model Studio Token Plan overview](https://help.aliyun.com/zh/model-studio/token-plan-overview)
+- [Third-party tool access and usage restrictions](https://help.aliyun.com/zh/model-studio/more-tools)
+
+## File, streaming, and realtime audio
+
+Each audio lifecycle has a separate path:
+
+- **Synchronous file ASR** maps uploaded content to the upstream request and converts the result back to a compatible response.
+- **Asynchronous file ASR** accepts a public `file_url` reachable by DashScope, then handles job submission and status queries. The gateway does not upload the source file on the client's behalf.
+- **HTTP / SSE TTS** supports complete responses and continuous audio chunks without unbounded buffering.
+- **Realtime ASR / TTS** uses `/v1/dashscope/realtime` to relay native task or session events and binary audio frames.
+
+Realtime connections still use an OctaFuse user API key and a public gateway model:
+
+```text
+wss://<gateway>/v1/dashscope/realtime?model=<gateway-model>&operation=<operation>
+Authorization: Bearer <gateway-api-key>
+```
+
+The gateway replaces only the model in the startup event. Later text, binary frames, and server events keep the native protocol. Cloudflare Workers and the Node.js Proxy both support this path and share authentication, initial-connect failover, usage recording, and route configuration.
+
+## Bill ASR and TTS by seconds, tokens, or characters
+
+Speech recognition and synthesis are both audio capabilities, but they do not share one billing unit. OctaFuse selects the model's configured pricing mode:
+
+| Capability | Billing mode | Usage source | Request log |
+| --- | --- | --- | --- |
+| ASR | Per second | Audio duration returned by the upstream; file metadata is used as an estimate when the response omits it, with the source recorded | `billing_kind=audio_per_second`, `audio_duration_seconds` |
+| ASR | Per token | Input, output, audio, and text tokens from upstream `usage` | `billing_kind=audio_tokens` plus token counts |
+| TTS | Per character | Upstream `usage.characters` | `billing_kind=audio_per_character`, `audio_characters` |
+
+ASR can therefore represent either duration-priced models or transcription models priced by audio and text tokens. Usage, billing mode, and resulting cost are stored together. The new part in 2.4.0 is TTS character billing: `audio_characters` records the effective character usage returned by the upstream and applies the model's per-character price.
+
+Operators can inspect the final Provider and model, protocol, operation, adapter, upstream request ID, and whether a request was billed by seconds, tokens, or characters in the same request log. Audio binaries are not stored. If TTS does not return real character usage, the gateway does not substitute input length for the final charge or present a budget estimate as the final bill.
+
+## Named, scoped Admin keys instead of one `MASTER_KEY`
+
+External systems, automation jobs, and operations tools previously tended to share one `MASTER_KEY` for Admin API access. That made it difficult to identify the caller, limit each use case to the permissions it needed, or rotate one compromised credential without disrupting unrelated clients.
+
+Version 2.4.0 separates browser sessions from Bearer identities and adds **System Integration → Integration Keys**:
+
+<figure class="of-doc-figure">
+	<img src="/screenshots/v2-4-0-integration-keys.png" alt="Integration Keys showing the legacy-master credential migrated from the previous MASTER_KEY" loading="lazy" />
+	<figcaption>The upgrade copies the previous <code>MASTER_KEY</code> into a full-permission <code>legacy-master</code> credential so existing clients keep working. After the deployment is stable, split credentials by caller identity and use case.</figcaption>
+</figure>
+
+Each integration key can:
+
+- Identify a system, integration, automation job, or operations workflow with an independent name.
+- Receive scoped permissions for users, user keys, Providers, models, routes, configuration, analytics, logs, or Playground execution.
+- Split read-only, write, or specialized operations for the same system instead of expanding one credential's permissions.
+- Be rotated or revoked without affecting unrelated callers.
+- Expose its last-used time for credential cleanup.
+
+Only a Console Session can create, edit, or revoke Integration Keys. No Bearer Key—including one with `*`—can manage `/admin/access-keys/*`. This boundary prevents a caller from using its own credential to mint another Admin credential.
+
+The old `MASTER_KEY` value continues to work through the migrated `legacy-master` key until it is revoked. Create named least-privilege keys based on caller identity and use case; update each caller's `GATEWAY_MASTER_KEY` or equivalent setting; verify the integrations; then rotate or revoke `legacy-master`.
+
+## Admin configuration and operations
+
+Admin adds the supporting workflow for the new audio capabilities:
+
+- Qwen Token Plan and Provider imports include DashScope audio endpoints.
+- ASR / TTS catalog entries and route adapters are available for selection.
+- Playground can exercise DashScope Realtime connections.
+- Alibaba Cloud TTS pricing is corrected and CosyVoice 3.5 presets are included.
+- Routes Flow improves Sticky binding summaries, refresh, user counts, and default topology density.
+
+The result is a complete workflow from Provider configuration to audio model and route creation, Playground verification, and request-log inspection.
+
+## Upgrade to 2.4.0
+
+This release contains four database migrations:
+
+- **0022** adds `audio_characters` to request logs.
+- **0023** adds `admin_api_keys` and `admin_sessions`, then copies the old `MASTER_KEY` into `legacy-master`.
+- **0024** removes the legacy `system_config.MASTER_KEY` row.
+- **0025** adds a lookup index for user audit logs.
+
+Complete the upgrade in one maintenance window:
+
+1. Back up the database and pause Proxy traffic plus Admin configuration writes.
+2. Apply **0022 → 0023 → 0024 → 0025** in order.
+3. Immediately deploy Proxy, Admin, and migrate artifacts from the same release. Do not mix old and new versions.
+4. Verify Admin login, `legacy-master` compatibility, and named-key permissions.
+5. Smoke-test DashScope ASR, TTS, and Realtime, plus existing chat, messages, Gemini, and images traffic.
+6. Create least-privilege keys by caller identity and use case, move the integrations, then rotate or revoke `legacy-master`.
+
+Client inference URLs are unchanged. The primary compatibility window is the Admin authentication cutover, so migrations 0023 / 0024 and the new Admin and Proxy must be deployed as one version.
+
+## Get 2.4.0
+
+- [GitHub Release v2.4.0](https://github.com/OctaFuse/octafuse-gateway/releases/tag/v2.4.0)
+- [Full changelog](https://github.com/OctaFuse/octafuse-gateway/blob/v2.4.0/CHANGELOG.md)
+- [Native DashScope audio architecture](https://github.com/OctaFuse/octafuse-gateway/blob/v2.4.0/docs/developers/architecture/dashscope-audio.md)
+- [Admin API and Integration Keys](https://github.com/OctaFuse/octafuse-gateway/blob/v2.4.0/docs/developers/api/admin.md)
+- [Docker deployment and upgrades](https://github.com/OctaFuse/octafuse-gateway/blob/v2.4.0/docs/operators/deployment/docker.md)
+- [Cloudflare deployment and upgrades](https://github.com/OctaFuse/octafuse-gateway/blob/v2.4.0/docs/operators/deployment/cloudflare.md)
+
+Thank you to [@samchaolau](https://github.com/samchaolau) for contributing DashScope ASR / TTS routing and realtime audio support in [#93](https://github.com/OctaFuse/octafuse-gateway/pull/93).
+
+OctaFuse is a self-hostable open-source AI capability gateway and operations console. It provides one interface for models, images, speech, and agent tools while keeping routing, keys, budgets, billing, logs, and audit data in your own infrastructure.
+
+If you are consolidating multiple model Providers, speech capabilities, or scoped Admin access, visit the website to learn more or head to GitHub for the source and deployment documentation:
+
+- [OctaFuse website](https://octafuse.dev/en/)
+- [GitHub repository](https://github.com/OctaFuse/octafuse-gateway)
+
+If OctaFuse is useful to your project, consider giving the repository a **Star**. Your interest and feedback help us keep improving routing, protocol adapters, and the self-hosted experience.
