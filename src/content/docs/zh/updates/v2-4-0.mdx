@@ -12,6 +12,9 @@ lastUpdated: false
 sidebar:
   hidden: true
 site_external_id: "octafuse-release-v2-4-0"
+site_post_id: 501
+site_status: "published"
+canonical_url: "https://didispace.com/posts/501"
 ---
 
 当语音识别和语音合成进入真实业务，网关面对的不再只是一次普通的 HTTP 请求：ASR 可能需要同步转换或异步任务，TTS 可能返回完整音频或持续输出音频流，实时语音还需要在 WebSocket 上双向传递文本、事件与二进制帧。
@@ -133,36 +136,7 @@ ASR 可以适配按音频时长收费的模型，也可以适配按音频与文�
 
 这些能力让“配置 Provider → 建立音频模型 → 创建路由 → 在 Playground 联调 → 查看请求日志”形成完整的管理闭环。
 
-## 升级到 2.4.0
-
-本次版本包含四项数据库迁移：
-
-- **0022**：为请求日志增加 `audio_characters`。
-- **0023**：新增 `admin_api_keys` 与 `admin_sessions`，并把旧 `MASTER_KEY` 复制为 `legacy-master`。
-- **0024**：删除遗留的 `system_config.MASTER_KEY` 配置行。
-- **0025**：为用户审计日志增加检索索引。
-
-升级时请在同一个维护窗口内：
-
-1. 备份数据库，暂停 Proxy 流量和 Admin 配置写入。
-2. 按顺序执行 **0022 → 0023 → 0024 → 0025**。
-3. 立即部署同一版本的 Proxy、Admin 和 migrate 制品，不要混合运行新旧版本。
-4. 验证 Admin 登录、`legacy-master` 兼容调用和具名 Key 权限。
-5. 分别完成 DashScope ASR、TTS、Realtime，以及既有 chat、messages、Gemini 和 images 请求的冒烟测试。
-6. 按调用身份和使用场景创建最小权限 Key，完成替换后轮换或吊销 `legacy-master`。
-
-客户端推理 URL 没有变化。此次升级的主要兼容性窗口位于 Admin 认证迁移，因此 0023 / 0024 与新 Admin、Proxy 必须作为同一版本部署。
-
-## 获取 2.4.0
-
-- [GitHub Release v2.4.0](https://github.com/OctaFuse/octafuse-gateway/releases/tag/v2.4.0)
-- [完整变更日志](https://github.com/OctaFuse/octafuse-gateway/blob/v2.4.0/CHANGELOG.md)
-- [DashScope 原生音频架构](https://github.com/OctaFuse/octafuse-gateway/blob/v2.4.0/docs/developers/architecture/dashscope-audio.md)
-- [Admin API 与集成密钥](https://github.com/OctaFuse/octafuse-gateway/blob/v2.4.0/docs/developers/api/admin.md)
-- [Docker 部署与升级](https://github.com/OctaFuse/octafuse-gateway/blob/v2.4.0/docs/operators/deployment/docker.md)
-- [Cloudflare 部署与升级](https://github.com/OctaFuse/octafuse-gateway/blob/v2.4.0/docs/operators/deployment/cloudflare.md)
-
-感谢 [@samchaolau](https://github.com/samchaolau) 通过 [#93](https://github.com/OctaFuse/octafuse-gateway/pull/93) 贡献 DashScope ASR / TTS 路由与实时音频能力。
+## 小结
 
 OctaFuse 是一个可自托管的开源 AI 能力网关与运营控制台。它为模型、图片、语音和智能体工具提供统一入口，并将路由、密钥、预算、计费、日志与审计留在你自己的基础设施中。
 

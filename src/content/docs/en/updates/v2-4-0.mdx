@@ -131,36 +131,7 @@ Admin adds the supporting workflow for the new audio capabilities:
 
 The result is a complete workflow from Provider configuration to audio model and route creation, Playground verification, and request-log inspection.
 
-## Upgrade to 2.4.0
-
-This release contains four database migrations:
-
-- **0022** adds `audio_characters` to request logs.
-- **0023** adds `admin_api_keys` and `admin_sessions`, then copies the old `MASTER_KEY` into `legacy-master`.
-- **0024** removes the legacy `system_config.MASTER_KEY` row.
-- **0025** adds a lookup index for user audit logs.
-
-Complete the upgrade in one maintenance window:
-
-1. Back up the database and pause Proxy traffic plus Admin configuration writes.
-2. Apply **0022 → 0023 → 0024 → 0025** in order.
-3. Immediately deploy Proxy, Admin, and migrate artifacts from the same release. Do not mix old and new versions.
-4. Verify Admin login, `legacy-master` compatibility, and named-key permissions.
-5. Smoke-test DashScope ASR, TTS, and Realtime, plus existing chat, messages, Gemini, and images traffic.
-6. Create least-privilege keys by caller identity and use case, move the integrations, then rotate or revoke `legacy-master`.
-
-Client inference URLs are unchanged. The primary compatibility window is the Admin authentication cutover, so migrations 0023 / 0024 and the new Admin and Proxy must be deployed as one version.
-
-## Get 2.4.0
-
-- [GitHub Release v2.4.0](https://github.com/OctaFuse/octafuse-gateway/releases/tag/v2.4.0)
-- [Full changelog](https://github.com/OctaFuse/octafuse-gateway/blob/v2.4.0/CHANGELOG.md)
-- [Native DashScope audio architecture](https://github.com/OctaFuse/octafuse-gateway/blob/v2.4.0/docs/developers/architecture/dashscope-audio.md)
-- [Admin API and Integration Keys](https://github.com/OctaFuse/octafuse-gateway/blob/v2.4.0/docs/developers/api/admin.md)
-- [Docker deployment and upgrades](https://github.com/OctaFuse/octafuse-gateway/blob/v2.4.0/docs/operators/deployment/docker.md)
-- [Cloudflare deployment and upgrades](https://github.com/OctaFuse/octafuse-gateway/blob/v2.4.0/docs/operators/deployment/cloudflare.md)
-
-Thank you to [@samchaolau](https://github.com/samchaolau) for contributing DashScope ASR / TTS routing and realtime audio support in [#93](https://github.com/OctaFuse/octafuse-gateway/pull/93).
+## Summary
 
 OctaFuse is a self-hostable open-source AI capability gateway and operations console. It provides one interface for models, images, speech, and agent tools while keeping routing, keys, budgets, billing, logs, and audit data in your own infrastructure.
 
