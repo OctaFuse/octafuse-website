@@ -63,11 +63,6 @@ Provider 导入也同步覆盖了阿里云百炼标准服务、百炼 Coding Pla
 
 根据阿里云当前公布的 Token Plan 模型清单，除千问 `qwen3.8-max`、`qwen3.7-max`、`qwen3.7-plus`、`qwen3.6-plus` / `flash` 外，团队版还覆盖 DeepSeek、Kimi、GLM、MiniMax 等文本模型。2.4.0 的音频路由则直接对应套餐中的 `qwen-audio-3.0-tts-plus` 和 `qwen-audio-3.0-realtime-plus`，因此既可以把套餐作为 AI 编程 / Agent 的文本上游，也可以在支持范围内接入语音合成和实时语音。
 
-需要特别说明：Token Plan 与 Coding Plan 的官方使用范围是兼容的 **AI 编程和智能体工具中的交互式调用**，不适用于自动化脚本、工作流平台或自定义应用后端。OctaFuse 只负责协议、路由与凭证配置，不会改变套餐本身的授权边界。官方套餐还列出了图片和视频模型，但这些模型使用独立生成接口，不属于 2.4.0 Token Plan 预设当前直接覆盖的路由范围。
-
-- [阿里云百炼 Token Plan 概述](https://help.aliyun.com/zh/model-studio/token-plan-overview)
-- [Token Plan / Coding Plan 第三方工具接入与使用限制](https://help.aliyun.com/zh/model-studio/more-tools)
-
 ## 03｜从文件请求到实时 WebSocket
 
 文件、流式和实时音频拥有不同的生命周期，2.4.0 分别处理这些路径：
