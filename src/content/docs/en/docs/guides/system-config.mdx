@@ -1,37 +1,32 @@
 ---
 title: System config
-description: Set the admin master key business timezone billing currency alert webhooks and other globals in Admin System → Config.
+description: Set business timezone, billing currency, global routing strategy, alert webhooks, and other global values in Admin System → Config.
 ---
 
 import { Aside, Steps } from '@astrojs/starlight/components';
 
-Open **System → Config** (labeled **Config** in English). This screen groups global settings such as:
+Open **System → Config**. This screen groups global settings such as:
 
-- **Master key** for server-to-admin API calls — must match **`GATEWAY_MASTER_KEY`** in your portal/backend.  
-- **Business timezone** and **billing currency** — affect how times and money render across Admin; business timezone also drives route **Daily schedule** (time-of-day pricing) window evaluation.  
-- **Global route strategy** — set `ROUTE_STRATEGY` to `hash_affinity` (default), `weighted_random`, `weight_priority`, or `weighted_round_robin`; model rules, Route Pool defaults, and priority-tier policies can override it. Version 2.3.0 no longer accepts the old `cache_affinity` / `fixed_order` IDs.
-- **Alert webhooks** (e.g. Feishu / WeCom) — optional incident notifications.  
-- **Custom entries** — advanced globals your team agrees on (names and meanings are operational contracts).
+- **Business timezone** and **billing currency** — affect how times and money render across Admin; business timezone also drives route **Daily schedule** window evaluation.
+- **Global route strategy** — set `ROUTE_STRATEGY` to `hash_affinity` (default), `weighted_random`, `weight_priority`, or `weighted_round_robin`; model rules, Route Pool defaults, and priority-tier policies can override it.
+- **Alert webhooks** (for example Feishu or WeCom) — optional incident notifications.
+- **Custom entries** — advanced global values whose names and meanings your team defines.
 
 Sensitive values can be **shown or hidden** in the UI for screen-sharing.
 
-<Aside type="caution" title="Security">
-	After rotating the master key, update every script and backend that calls Admin. Use strong random values in production — not samples from docs.
+<Aside type="note" title="Integration Keys are managed separately">
+	Admin API Keys no longer live in System Config. Create named least-privilege keys for each system and use case under **System Integration → Integration Keys**. See [Integration](/en/docs/guides/integration/).
 </Aside>
 
 ## What to do in Admin
 
 <Steps>
 1. Open **Config**.
-1. Verify master key, business timezone, and billing currency match your policy.
+1. Verify business timezone and billing currency match your policy.
 1. On the global route strategy card, click **Change** and select the fallback used when no model or Route Pool policy overrides it.
-1. Configure or rotate alert URLs if you use them.
+1. Configure or rotate alert URLs if needed.
 1. Add any other agreed global entries via **Add** (or the equivalent control) and save.
 </Steps>
-
-## Automation
-
-Backends call Admin HTTP APIs on **`GATEWAY_MASTER_URL`** with **`Authorization: Bearer <same value as the master key in this screen>`**. Endpoint index: [GitHub technical reference](/en/docs/github-reference/).
 
 ## Next
 

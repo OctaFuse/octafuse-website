@@ -42,7 +42,7 @@ npm run dev:admin
 | 管理后台（Admin） | `http://127.0.0.1:8789` |
 | 控制台登录 | `admin` / `admin`（本地默认；首次 `dev:admin` 会自动生成 `packages/admin/.dev.vars`） |
 | 本地 D1 | `./.wrangler/state` |
-| 管理 API Bearer 密钥 | `sk-dev-admin-key`（管理 API，不是网页密码） |
+| 管理 API Bearer 密钥 | 登录后台后在 **Integration Keys** 创建（管理 API 使用，不是网页密码） |
 
 健康检查：
 
@@ -93,6 +93,8 @@ curl -sS http://127.0.0.1:8787/v1/chat/completions \
 ```
 
 上云后把主机换成你的代理服务地址。
+
+如果模型已经配置 Responses 请求入口，也可以把路径换成 `/v1/responses`，并按 Responses 请求格式发送 `input`。
 
 ## 不用 Cloudflare？
 

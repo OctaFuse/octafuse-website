@@ -1,0 +1,104 @@
+---
+title: 'OctaFuse 2.5.0: bring the OpenAI Responses API into unified routing'
+description: OctaFuse Gateway 2.5.0 adds an OpenAI Responses-compatible endpoint, rebuilds the Routes and Provider workspaces, and expands the Gemini, GLM, Grok, and DeepSeek model catalog.
+publishDate: 2026-08-15
+updateLabel: VERSION 2.5.0
+featuredUpdate: true
+template: splash
+prev: false
+next: false
+lastUpdated: false
+sidebar:
+  hidden: true
+---
+
+The OpenAI Responses API is becoming an important entry point for a new generation of agent and multimodal applications. It combines a unified input structure with typed events for streaming output, reasoning, and final usage.
+
+Version 2.5.0 brings `POST /v1/responses` into the OctaFuse gateway. Applications can keep their existing user keys, budgets, and public model IDs while using the same Surface routing, failover, and asynchronous billing pipeline already used for Chat.
+
+This release also rebuilds the Admin Routes and Provider workspaces. Routes can be inspected by request surface or by model, models without an active Surface are collected in one place, and Provider cards expose protocol capabilities, key status, and route counts at a glance.
+
+In one sentence:
+
+> **Bring the OpenAI Responses API into unified routing, then make the relationships among Providers, models, and request surfaces easier to configure and verify.**
+
+## OpenAI Responses in the unified routing model
+
+Applications can now call the Responses-compatible endpoint directly:
+
+```bash
+curl https://<gateway>/v1/responses \
+  -H "Authorization: Bearer <gateway-api-key>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "gpt-5.6-luna",
+    "input": [{"role": "user", "content": "Hello"}],
+    "stream": true,
+    "store": false
+  }'
+```
+
+The `model` remains the public OctaFuse model ID. A caller can also select a route group with `model:route_group`. After authentication and budget checks, the gateway resolves the `/v1/responses` Surface to a route pool and upstream target, then replaces the public ID with the Provider model name.
+
+Responses supports both non-streaming JSON and typed SSE with `stream=true`. It shares user keys, budgets, routing policies, failover, and asynchronous billing with Chat, so teams do not need a separate governance path for the new API. Existing Chat, Messages, Gemini, Images, and Audio endpoints remain unchanged.
+
+### Stream typed events and record real usage
+
+For a streaming Responses request, the gateway relays the upstream typed SSE events and extracts usage from the terminal `response.completed` or `response.incomplete` event. Reasoning and cached tokens join input and output tokens in the existing usage and billing pipeline.
+
+Applications keep the native Responses event model, while operators can still see the Provider, model, cost, and status selected by OctaFuse. Streaming semantics and centralized accounting no longer need separate integrations.
+
+### Why stateful calls require a stable upstream
+
+`previous_response_id` refers to response state stored by the upstream Provider. If a follow-up call moves to another target, that target cannot resolve the original ID even when it exposes the same model name.
+
+OctaFuse therefore forwards `previous_response_id` only when a route has one upstream target or otherwise guarantees that the target cannot change. If a multi-target route cannot preserve that ownership, the gateway returns `409 responses.state_route_unavailable` instead of silently sending the call to the wrong upstream.
+
+This release focuses on creating and streaming Responses. It does not implement Conversations, background retrieve/cancel, or automatic Chat-to-Responses conversion. Stateful agents should use a stable target; applications that need cross-provider failover should carry their context explicitly.
+
+## Routes workspace: from a global overview to model-level troubleshooting
+
+As one model gains Chat, Responses, Messages, Images, or Audio surfaces, a flat route list no longer makes configuration gaps easy to spot. Version 2.5.0 adds three complementary views:
+
+- **Overview** groups topology by request surface, making it easy to see which targets an endpoint can reach.
+- **By model** focuses on one public model and shows its route groups, priorities, weights, sticky policy, and failover relationships.
+- **Unrouted models** collects models without an enabled request surface and provides a direct path to add a Surface, route group, or upstream target.
+
+![OpenAI Responses request surface and models that are not yet connected to a route](/screenshots/v2-5-0-responses-overview-unrouted.png)
+
+*The Overview groups the full topology by request surface. Models without an active request surface are collected in the Unrouted models section.*
+
+![Routes workspace showing the default and free route groups for Qwen3.7 Plus](/screenshots/v2-5-0-routes-by-model.png)
+
+*The By model view puts the request surface, route groups, and all upstream targets for one public model into a single topology while preserving status, kind, vendor, and Provider filters.*
+
+The new workspace reduces navigation among Models, Routes, and Providers, and makes it much easier to detect a model that was imported but never connected to an active request surface.
+
+## Provider management: protocol capabilities and endpoint configuration
+
+The Provider list is now a card grid with filters for status and protocol capability. Each card shows whether an API key is configured, how many routes are active, and whether the Provider supports Chat, Responses, Messages, or other protocol surfaces.
+
+![Provider cards showing protocol capabilities, key status, and route counts](/screenshots/v2-5-0-provider-cards.png)
+
+*Providers can be filtered by OpenAI, Anthropic, Gemini, or DashScope capability. Protocol badges make Responses support visible without opening each Provider.*
+
+The Provider editor also organizes endpoints by protocol. An OpenAI-compatible upstream can define `endpoints.openai.responses` explicitly or derive `/v1/responses` from `openai.base`, covering both conventional compatible services and Providers with a dedicated Responses URL.
+
+## Testing and model presets complete the Responses workflow
+
+Playground and Simulator now include a Responses mode. Operators can switch between Chat and Responses in Admin to verify non-streaming output, SSE events, and the selected upstream target.
+
+The model catalog adds `gemini-3.7-flash`, `glm-5.3`, `grok-4.6`, and `grok-imagine-image-2.0`, updates the production DeepSeek V4 Pro specifications, and completes 200K-context tiered pricing for the Grok 4.5 and 4 families.
+
+Version 2.5.0 has no database migration. Update the Proxy, Admin, and migrate images and perform a rolling restart. To enable Responses, configure the Provider endpoint, then connect an `openai + responses` request surface to a same-protocol passthrough upstream.
+
+## Summary
+
+Version 2.5.0 is more than a new endpoint. It brings Responses calls, typed streaming events, usage, and state constraints into the existing OctaFuse governance model, while the new Routes and Provider workspaces reduce the cost of operating multi-model, multi-protocol routing.
+
+OctaFuse is a self-hostable open-source AI gateway and operations console. It gives models, images, speech, and agent tools a unified entry point while keeping routing, keys, budgets, billing, logs, and audit data in your own infrastructure.
+
+- [OctaFuse website](https://octafuse.dev/)
+- [GitHub repository](https://github.com/OctaFuse/octafuse-gateway)
+
+If OctaFuse helps your project, please give it a **Star** on GitHub. Your feedback helps us keep improving routing, protocol support, and the self-hosted experience.

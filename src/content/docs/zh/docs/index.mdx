@@ -22,7 +22,7 @@ OctaFuse 是可自托管的 AI 能力网关与运营控制面。文档按工作�
 	<a class="of-doc-path" href="/zh/docs/guides/integration/">
 		<span class="of-doc-path-index">02</span>
 		<strong>我要接入自己的系统</strong>
-		<small>区分代理服务（Proxy）/ 管理后台（Admin）、用户 API 密钥 / 主密钥（Master Key）、门户后台自动开通流程。</small>
+		<small>区分代理服务（Proxy）/ 管理后台（Admin）、用户 API 密钥 / 集成密钥、门户后台自动开通流程。</small>
 	</a>
 	<a class="of-doc-path" href="/zh/docs/deploy/cloudflare/">
 		<span class="of-doc-path-index">03</span>
@@ -43,8 +43,8 @@ OctaFuse 是可自托管的 AI 能力网关与运营控制面。文档按工作�
 		<figcaption>仪表盘（Dashboard）：安装后先看运行概况、请求量、Token、费用与最近错误。</figcaption>
 	</figure>
 	<figure class="of-doc-figure">
-		<img src="/screenshots/admin-routes.png" alt="OctaFuse 管理后台路由（Routes）页面展示请求入口、策略与上游目标的完整路由拓扑。" loading="lazy" />
-		<figcaption>路由（Routes）：沿请求入口（Surface）→ 策略（Policy）→ 上游目标（Upstream targets）路径配置协议、路由组、策略、优先级和权重。</figcaption>
+		<img src="/screenshots/v2-5-0-routes-by-model.png" alt="OctaFuse 管理后台 Routes 工作台按模型展示请求入口、路由组与上游目标。" loading="lazy" />
+		<figcaption>路由（Routes）：在总览与按模型视角之间切换，检查请求入口、路由组、策略与上游目标。</figcaption>
 	</figure>
 	<figure class="of-doc-figure">
 		<img src="/screenshots/admin-playground.png" alt="OctaFuse 管理后台调试台（Playground）展示路由选择、请求体和响应区域。" loading="lazy" />
@@ -71,8 +71,8 @@ OctaFuse 是可自托管的 AI 能力网关与运营控制面。文档按工作�
 	<LinkCard title="系统集成" description="代理服务、管理后台与密钥的边界" href="/zh/docs/guides/integration/" />
 	<LinkCard title="图片生成 / 编辑" description="图片 Token 与按张计费" href="/zh/docs/guides/images/" />
 	<LinkCard title="智能体工具" description="可扩展工具 API；当前含联网类" href="/zh/docs/guides/tools/" />
-	<LinkCard title="调试台" description="单条路由直连上游试跑" href="/zh/docs/features/playground/" />
-	<LinkCard title="模拟器" description="用真实密钥验证完整代理链路" href="/zh/docs/features/simulator/" />
+	<LinkCard title="调试台" description="联调 Chat、Responses、Images 等上游能力" href="/zh/docs/features/playground/" />
+	<LinkCard title="模拟器" description="用真实密钥验证 Responses 等完整代理链路" href="/zh/docs/features/simulator/" />
 	<LinkCard title="Cloudflare 部署" description="Worker + 管理后台 + D1（推荐）" href="/zh/docs/deploy/cloudflare/" />
 	<LinkCard title="Docker 部署" description="自托管、Postgres / MySQL、镜像" href="/zh/docs/deploy/docker/" />
 </CardGrid>
@@ -84,5 +84,5 @@ OctaFuse 是可自托管的 AI 能力网关与运营控制面。文档按工作�
 | 看调用是否成功 | [请求日志](/zh/docs/guides/request-logs/) |
 | 看用量与成本趋势 | [分析](/zh/docs/guides/analytics/) |
 | 看预算、密钥生命周期和用户侧审计 | [审计日志](/zh/docs/guides/audit-logs/) |
-| 配置管理密钥、业务时区、计费币种、告警 | [系统配置](/zh/docs/guides/system-config/) |
+| 配置业务时区、计费币种、路由策略和告警 | [系统配置](/zh/docs/guides/system-config/) |
 | 查 API、迁移、架构、计费细节 | [GitHub 技术参考](/zh/docs/github-reference/) |

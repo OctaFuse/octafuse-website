@@ -23,7 +23,7 @@ This compose starts **Postgres + migrate + Proxy + Admin**:
 
 - Proxy: `http://localhost:8787`
 - Admin: `http://localhost:8789`, default login `admin / changeme`
-- Default admin Bearer key: `sk-dev-admin-key`
+- Local compatibility Admin key: `sk-dev-admin-key` (`legacy-master`, local quickstart only; create a named key under **Integration Keys** after signing in)
 
 If local ports conflict, set `POSTGRES_HOST_PORT`, `GATEWAY_PROXY_HOST_PORT`, or `GATEWAY_ADMIN_HOST_PORT`. For the Cloudflare default path, see [Quick start](/en/docs/quick-start/).
 
@@ -86,7 +86,7 @@ Before upgrading, read the **Upgrade notes** in that version’s [GitHub Release
 
 ### Prebuilt images (GHCR / private registry)
 
-1. In `docker/deploy/.env.local` (or your env file), bump the **tag** on `GATEWAY_PROXY_IMAGE` / `GATEWAY_ADMIN_IMAGE` / `GATEWAY_MIGRATE_IMAGE` (for example `v2.1.2`; pin semver in production instead of floating on `latest`).
+1. In `docker/deploy/.env.local` (or your env file), bump the **tag** on `GATEWAY_PROXY_IMAGE` / `GATEWAY_ADMIN_IMAGE` / `GATEWAY_MIGRATE_IMAGE` (for example `v2.5.0`; pin semver in production instead of floating on `latest`).
 2. Pull, migrate, then recreate containers:
 
 ```bash
@@ -114,7 +114,7 @@ For the local quickstart (`quickstart.yml`): `git pull`, then `docker compose -f
 ```bash
 curl -fsS http://127.0.0.1:8787/health
 curl -fsS http://127.0.0.1:8789/api/admin/config \
-  -H 'Authorization: Bearer <MASTER_KEY>'
+  -H 'Authorization: Bearer <ADMIN_API_KEY>'
 ```
 
 Image names, GHCR digests, and Zeabur notes: [GitHub · Docker / self-hosted](https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/operators/deployment/docker.md).
@@ -136,11 +136,11 @@ For Postgres, keep the connection/session timezone at UTC; when using `DATABASE_
 ```bash
 curl -fsS http://127.0.0.1:8787/health
 curl -fsS http://127.0.0.1:8789/api/admin/config \
-  -H 'Authorization: Bearer sk-dev-admin-key'
+  -H 'Authorization: Bearer <ADMIN_API_KEY>'
 ```
 
 <Aside type="caution" title="Use HTTPS in production">
-	Local and trusted LAN setups can open Admin over plain HTTP (for example `http://localhost:8789`) with no extra cookie settings. In production, put Proxy and Admin behind a reverse proxy with **TLS**. If you already serve Admin over HTTPS, you can optionally set `ADMIN_COOKIE_SECURE=1` for hardening. Downstream systems need `GATEWAY_URL`, `GATEWAY_MASTER_URL`, and `GATEWAY_MASTER_KEY`; see [Integration](/en/docs/guides/integration/).
+	Local and trusted LAN setups can open Admin over plain HTTP (for example `http://localhost:8789`) with no extra cookie settings. In production, put Proxy and Admin behind a reverse proxy with **TLS**. If you already serve Admin over HTTPS, you can optionally set `ADMIN_COOKIE_SECURE=1` for hardening. Downstream systems need `GATEWAY_URL`, `GATEWAY_MASTER_URL`, and a named Admin API Key created under Integration Keys (the environment variable can remain `GATEWAY_MASTER_KEY`); see [Integration](/en/docs/guides/integration/).
 </Aside>
 
 ## vs Cloudflare

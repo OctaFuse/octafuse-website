@@ -4,10 +4,10 @@
   "source": {
     "repo": "OctaFuse/octafuse-gateway",
     "ref": "main",
-    "commit": "9a931dfb6b76e4e72e87618ce797075b88ca518a"
+    "commit": "59c80bf119823dd747da88db3081944bd689273c"
   },
   "source_path": "packages/admin/lib/model-presets",
-  "count": 80,
+  "count": 100,
   "items": [
     {
       "id": "qwen3.8-max",
@@ -786,6 +786,600 @@
         ]
       },
       "released": "2026-03-15",
+      "vendor_label": "Alibaba Cloud",
+      "kind": "llm",
+      "source_path": "packages/admin/lib/model-presets/aliyun.json"
+    },
+    {
+      "id": "qwen-audio-3.0-asr-flash-streaming",
+      "display_name": "Qwen Audio 3.0 ASR Flash Streaming",
+      "description": "DashScope real-time speech recognition for low-latency streaming audio.",
+      "i18n": {
+        "en": "DashScope real-time speech recognition for low-latency streaming audio.",
+        "zh": "DashScope 实时语音识别模型，适合低延迟流式音频输入。"
+      },
+      "vendor": "aliyun",
+      "pricing": {
+        "usd": {
+          "audio_billing_mode": "per_second",
+          "audio": {
+            "price_per_second": 0.000047142857,
+            "minimum_seconds": 1
+          }
+        },
+        "cny": {
+          "audio_billing_mode": "per_second",
+          "audio": {
+            "price_per_second": 0.00033,
+            "minimum_seconds": 1
+          }
+        }
+      },
+      "modalities": {
+        "input": [
+          "audio"
+        ],
+        "output": [
+          "text"
+        ]
+      },
+      "vendor_label": "Alibaba Cloud",
+      "kind": "llm",
+      "source_path": "packages/admin/lib/model-presets/aliyun.json"
+    },
+    {
+      "id": "qwen-audio-3.0-asr-flash-filetrans",
+      "display_name": "Qwen Audio 3.0 ASR Flash Filetrans",
+      "description": "DashScope asynchronous speech recognition for recorded audio files.",
+      "i18n": {
+        "en": "DashScope asynchronous speech recognition for recorded audio files.",
+        "zh": "DashScope 非实时语音识别模型，适合录音文件转写。"
+      },
+      "vendor": "aliyun",
+      "pricing": {
+        "usd": {
+          "audio_billing_mode": "per_second",
+          "audio": {
+            "price_per_second": 0.000031428571,
+            "minimum_seconds": 1
+          }
+        },
+        "cny": {
+          "audio_billing_mode": "per_second",
+          "audio": {
+            "price_per_second": 0.00022,
+            "minimum_seconds": 1
+          }
+        }
+      },
+      "modalities": {
+        "input": [
+          "audio"
+        ],
+        "output": [
+          "text"
+        ]
+      },
+      "vendor_label": "Alibaba Cloud",
+      "kind": "llm",
+      "source_path": "packages/admin/lib/model-presets/aliyun.json"
+    },
+    {
+      "id": "qwen-audio-3.0-asr-flash",
+      "display_name": "Qwen Audio 3.0 ASR Flash",
+      "description": "DashScope synchronous speech recognition for short recorded audio.",
+      "i18n": {
+        "en": "DashScope synchronous speech recognition for short recorded audio.",
+        "zh": "DashScope 同步语音识别模型，适合短录音转写。"
+      },
+      "vendor": "aliyun",
+      "pricing": {
+        "usd": {
+          "audio_billing_mode": "per_second",
+          "audio": {
+            "price_per_second": 0.000031428571,
+            "minimum_seconds": 1
+          }
+        },
+        "cny": {
+          "audio_billing_mode": "per_second",
+          "audio": {
+            "price_per_second": 0.00022,
+            "minimum_seconds": 1
+          }
+        }
+      },
+      "modalities": {
+        "input": [
+          "audio"
+        ],
+        "output": [
+          "text"
+        ]
+      },
+      "vendor_label": "Alibaba Cloud",
+      "kind": "llm",
+      "source_path": "packages/admin/lib/model-presets/aliyun.json"
+    },
+    {
+      "id": "qwen3-asr-flash-realtime",
+      "display_name": "Qwen3 ASR Flash Realtime",
+      "description": "DashScope Qwen3 ASR real-time speech recognition over WebSocket sessions.",
+      "i18n": {
+        "en": "DashScope Qwen3 ASR real-time speech recognition over WebSocket sessions.",
+        "zh": "DashScope Qwen3 ASR 实时语音识别，使用 WebSocket 会话模式。"
+      },
+      "vendor": "aliyun",
+      "pricing": {
+        "usd": {
+          "audio_billing_mode": "per_second",
+          "audio": {
+            "price_per_second": 0.000047142857,
+            "minimum_seconds": 1
+          }
+        },
+        "cny": {
+          "audio_billing_mode": "per_second",
+          "audio": {
+            "price_per_second": 0.00033,
+            "minimum_seconds": 1
+          }
+        }
+      },
+      "modalities": {
+        "input": [
+          "audio"
+        ],
+        "output": [
+          "text"
+        ]
+      },
+      "vendor_label": "Alibaba Cloud",
+      "kind": "llm",
+      "source_path": "packages/admin/lib/model-presets/aliyun.json"
+    },
+    {
+      "id": "qwen3-asr-flash-filetrans",
+      "display_name": "Qwen3 ASR Flash Filetrans",
+      "description": "DashScope Qwen3 ASR asynchronous speech recognition for recorded audio files.",
+      "i18n": {
+        "en": "DashScope Qwen3 ASR asynchronous speech recognition for recorded audio files.",
+        "zh": "DashScope Qwen3 ASR 非实时语音识别，适合录音文件转写。"
+      },
+      "vendor": "aliyun",
+      "pricing": {
+        "usd": {
+          "audio_billing_mode": "per_second",
+          "audio": {
+            "price_per_second": 0.000031428571,
+            "minimum_seconds": 1
+          }
+        },
+        "cny": {
+          "audio_billing_mode": "per_second",
+          "audio": {
+            "price_per_second": 0.00022,
+            "minimum_seconds": 1
+          }
+        }
+      },
+      "modalities": {
+        "input": [
+          "audio"
+        ],
+        "output": [
+          "text"
+        ]
+      },
+      "vendor_label": "Alibaba Cloud",
+      "kind": "llm",
+      "source_path": "packages/admin/lib/model-presets/aliyun.json"
+    },
+    {
+      "id": "qwen3-asr-flash",
+      "display_name": "Qwen3 ASR Flash",
+      "description": "DashScope Qwen3 ASR for synchronous audio transcription.",
+      "i18n": {
+        "en": "DashScope Qwen3 ASR for synchronous audio transcription.",
+        "zh": "DashScope Qwen3 ASR 同步语音识别模型。"
+      },
+      "vendor": "aliyun",
+      "pricing": {
+        "usd": {
+          "audio_billing_mode": "per_second",
+          "audio": {
+            "price_per_second": 0.000031428571,
+            "minimum_seconds": 1
+          }
+        },
+        "cny": {
+          "audio_billing_mode": "per_second",
+          "audio": {
+            "price_per_second": 0.00022,
+            "minimum_seconds": 1
+          }
+        }
+      },
+      "modalities": {
+        "input": [
+          "audio"
+        ],
+        "output": [
+          "text"
+        ]
+      },
+      "vendor_label": "Alibaba Cloud",
+      "kind": "llm",
+      "source_path": "packages/admin/lib/model-presets/aliyun.json"
+    },
+    {
+      "id": "fun-asr-realtime",
+      "display_name": "Fun-ASR Realtime",
+      "description": "DashScope Fun-ASR real-time speech recognition over WebSocket streaming.",
+      "i18n": {
+        "en": "DashScope Fun-ASR real-time speech recognition over WebSocket streaming.",
+        "zh": "DashScope Fun-ASR 实时语音识别，使用 WebSocket 流式输入。"
+      },
+      "vendor": "aliyun",
+      "pricing": {
+        "usd": {
+          "audio_billing_mode": "per_second",
+          "audio": {
+            "price_per_second": 0.000047142857,
+            "minimum_seconds": 1
+          }
+        },
+        "cny": {
+          "audio_billing_mode": "per_second",
+          "audio": {
+            "price_per_second": 0.00033,
+            "minimum_seconds": 1
+          }
+        }
+      },
+      "modalities": {
+        "input": [
+          "audio"
+        ],
+        "output": [
+          "text"
+        ]
+      },
+      "vendor_label": "Alibaba Cloud",
+      "kind": "llm",
+      "source_path": "packages/admin/lib/model-presets/aliyun.json"
+    },
+    {
+      "id": "fun-asr",
+      "display_name": "Fun-ASR",
+      "description": "DashScope Fun-ASR asynchronous speech recognition for recorded audio files.",
+      "i18n": {
+        "en": "DashScope Fun-ASR asynchronous speech recognition for recorded audio files.",
+        "zh": "DashScope Fun-ASR 非实时语音识别，适合录音文件转写。"
+      },
+      "vendor": "aliyun",
+      "pricing": {
+        "usd": {
+          "audio_billing_mode": "per_second",
+          "audio": {
+            "price_per_second": 0.000031428571,
+            "minimum_seconds": 1
+          }
+        },
+        "cny": {
+          "audio_billing_mode": "per_second",
+          "audio": {
+            "price_per_second": 0.00022,
+            "minimum_seconds": 1
+          }
+        }
+      },
+      "modalities": {
+        "input": [
+          "audio"
+        ],
+        "output": [
+          "text"
+        ]
+      },
+      "vendor_label": "Alibaba Cloud",
+      "kind": "llm",
+      "source_path": "packages/admin/lib/model-presets/aliyun.json"
+    },
+    {
+      "id": "qwen-audio-3.0-tts-plus",
+      "display_name": "Qwen Audio 3.0 TTS Plus",
+      "description": "DashScope high-quality text-to-speech model billed by generated characters.",
+      "i18n": {
+        "en": "DashScope high-quality text-to-speech model billed by generated characters.",
+        "zh": "DashScope 高质量语音合成模型，按生成字符数计费。"
+      },
+      "vendor": "aliyun",
+      "pricing": {
+        "usd": {
+          "audio_billing_mode": "per_character",
+          "audio": {
+            "price_per_character": 0.00002,
+            "minimum_characters": 0
+          }
+        },
+        "cny": {
+          "audio_billing_mode": "per_character",
+          "audio": {
+            "price_per_character": 0.00014,
+            "minimum_characters": 0
+          }
+        }
+      },
+      "modalities": {
+        "input": [
+          "text"
+        ],
+        "output": [
+          "audio"
+        ]
+      },
+      "vendor_label": "Alibaba Cloud",
+      "kind": "llm",
+      "source_path": "packages/admin/lib/model-presets/aliyun.json"
+    },
+    {
+      "id": "qwen-audio-3.0-tts-flash",
+      "display_name": "Qwen Audio 3.0 TTS Flash",
+      "description": "DashScope low-latency text-to-speech model billed by generated characters.",
+      "i18n": {
+        "en": "DashScope low-latency text-to-speech model billed by generated characters.",
+        "zh": "DashScope 低延迟语音合成模型，按生成字符数计费。"
+      },
+      "vendor": "aliyun",
+      "pricing": {
+        "usd": {
+          "audio_billing_mode": "per_character",
+          "audio": {
+            "price_per_character": 0.0000142857143,
+            "minimum_characters": 0
+          }
+        },
+        "cny": {
+          "audio_billing_mode": "per_character",
+          "audio": {
+            "price_per_character": 0.0001,
+            "minimum_characters": 0
+          }
+        }
+      },
+      "modalities": {
+        "input": [
+          "text"
+        ],
+        "output": [
+          "audio"
+        ]
+      },
+      "vendor_label": "Alibaba Cloud",
+      "kind": "llm",
+      "source_path": "packages/admin/lib/model-presets/aliyun.json"
+    },
+    {
+      "id": "cosyvoice-v1",
+      "display_name": "CosyVoice V1",
+      "description": "DashScope text-to-speech model with streaming synthesis support.",
+      "i18n": {
+        "en": "DashScope text-to-speech model with streaming synthesis support.",
+        "zh": "DashScope CosyVoice V1 语音合成模型，支持流式合成。"
+      },
+      "vendor": "aliyun",
+      "pricing": {
+        "usd": {
+          "audio_billing_mode": "per_character",
+          "audio": {
+            "price_per_character": 0.0000285714286,
+            "minimum_characters": 0
+          }
+        },
+        "cny": {
+          "audio_billing_mode": "per_character",
+          "audio": {
+            "price_per_character": 0.0002,
+            "minimum_characters": 0
+          }
+        }
+      },
+      "modalities": {
+        "input": [
+          "text"
+        ],
+        "output": [
+          "audio"
+        ]
+      },
+      "vendor_label": "Alibaba Cloud",
+      "kind": "llm",
+      "source_path": "packages/admin/lib/model-presets/aliyun.json"
+    },
+    {
+      "id": "cosyvoice-v2",
+      "display_name": "CosyVoice V2",
+      "description": "DashScope text-to-speech model with streaming synthesis support.",
+      "i18n": {
+        "en": "DashScope text-to-speech model with streaming synthesis support.",
+        "zh": "DashScope CosyVoice V2 语音合成模型，支持流式合成。"
+      },
+      "vendor": "aliyun",
+      "pricing": {
+        "usd": {
+          "audio_billing_mode": "per_character",
+          "audio": {
+            "price_per_character": 0.0000285714286,
+            "minimum_characters": 0
+          }
+        },
+        "cny": {
+          "audio_billing_mode": "per_character",
+          "audio": {
+            "price_per_character": 0.0002,
+            "minimum_characters": 0
+          }
+        }
+      },
+      "modalities": {
+        "input": [
+          "text"
+        ],
+        "output": [
+          "audio"
+        ]
+      },
+      "vendor_label": "Alibaba Cloud",
+      "kind": "llm",
+      "source_path": "packages/admin/lib/model-presets/aliyun.json"
+    },
+    {
+      "id": "cosyvoice-v3-flash",
+      "display_name": "CosyVoice V3 Flash",
+      "description": "DashScope low-latency text-to-speech model billed by generated characters.",
+      "i18n": {
+        "en": "DashScope low-latency text-to-speech model billed by generated characters.",
+        "zh": "DashScope CosyVoice V3 Flash 低延迟语音合成模型。"
+      },
+      "vendor": "aliyun",
+      "pricing": {
+        "usd": {
+          "audio_billing_mode": "per_character",
+          "audio": {
+            "price_per_character": 0.0000142857143,
+            "minimum_characters": 0
+          }
+        },
+        "cny": {
+          "audio_billing_mode": "per_character",
+          "audio": {
+            "price_per_character": 0.0001,
+            "minimum_characters": 0
+          }
+        }
+      },
+      "modalities": {
+        "input": [
+          "text"
+        ],
+        "output": [
+          "audio"
+        ]
+      },
+      "vendor_label": "Alibaba Cloud",
+      "kind": "llm",
+      "source_path": "packages/admin/lib/model-presets/aliyun.json"
+    },
+    {
+      "id": "cosyvoice-v3-plus",
+      "display_name": "CosyVoice V3 Plus",
+      "description": "DashScope high-quality text-to-speech model billed by generated characters.",
+      "i18n": {
+        "en": "DashScope high-quality text-to-speech model billed by generated characters.",
+        "zh": "DashScope CosyVoice V3 Plus 高质量语音合成模型。"
+      },
+      "vendor": "aliyun",
+      "pricing": {
+        "usd": {
+          "audio_billing_mode": "per_character",
+          "audio": {
+            "price_per_character": 0.0000285714286,
+            "minimum_characters": 0
+          }
+        },
+        "cny": {
+          "audio_billing_mode": "per_character",
+          "audio": {
+            "price_per_character": 0.0002,
+            "minimum_characters": 0
+          }
+        }
+      },
+      "modalities": {
+        "input": [
+          "text"
+        ],
+        "output": [
+          "audio"
+        ]
+      },
+      "vendor_label": "Alibaba Cloud",
+      "kind": "llm",
+      "source_path": "packages/admin/lib/model-presets/aliyun.json"
+    },
+    {
+      "id": "cosyvoice-v3.5-flash",
+      "display_name": "CosyVoice V3.5 Flash",
+      "description": "DashScope CosyVoice 3.5 Flash TTS with voice cloning/design and instruction control; billed by generated characters.",
+      "i18n": {
+        "en": "DashScope CosyVoice 3.5 Flash TTS with voice cloning/design and instruction control; billed by generated characters.",
+        "zh": "DashScope CosyVoice V3.5 Flash 语音合成，支持声音复刻/设计与指令控制，按生成字符数计费。"
+      },
+      "vendor": "aliyun",
+      "pricing": {
+        "usd": {
+          "audio_billing_mode": "per_character",
+          "audio": {
+            "price_per_character": 0.0000114285714,
+            "minimum_characters": 0
+          }
+        },
+        "cny": {
+          "audio_billing_mode": "per_character",
+          "audio": {
+            "price_per_character": 0.00008,
+            "minimum_characters": 0
+          }
+        }
+      },
+      "modalities": {
+        "input": [
+          "text"
+        ],
+        "output": [
+          "audio"
+        ]
+      },
+      "released": "2026-02-27",
+      "vendor_label": "Alibaba Cloud",
+      "kind": "llm",
+      "source_path": "packages/admin/lib/model-presets/aliyun.json"
+    },
+    {
+      "id": "cosyvoice-v3.5-plus",
+      "display_name": "CosyVoice V3.5 Plus",
+      "description": "DashScope CosyVoice 3.5 Plus high-expressiveness TTS with voice cloning/design and instruction control; billed by generated characters.",
+      "i18n": {
+        "en": "DashScope CosyVoice 3.5 Plus high-expressiveness TTS with voice cloning/design and instruction control; billed by generated characters.",
+        "zh": "DashScope CosyVoice V3.5 Plus 高表现力语音合成，支持声音复刻/设计与指令控制，按生成字符数计费。"
+      },
+      "vendor": "aliyun",
+      "pricing": {
+        "usd": {
+          "audio_billing_mode": "per_character",
+          "audio": {
+            "price_per_character": 0.0000214285714,
+            "minimum_characters": 0
+          }
+        },
+        "cny": {
+          "audio_billing_mode": "per_character",
+          "audio": {
+            "price_per_character": 0.00015,
+            "minimum_characters": 0
+          }
+        }
+      },
+      "modalities": {
+        "input": [
+          "text"
+        ],
+        "output": [
+          "audio"
+        ]
+      },
+      "released": "2026-02-27",
       "vendor_label": "Alibaba Cloud",
       "kind": "llm",
       "source_path": "packages/admin/lib/model-presets/aliyun.json"
@@ -1651,6 +2245,105 @@
       "source_path": "packages/admin/lib/model-presets/bytedance.json"
     },
     {
+      "id": "deepseek-v4-pro",
+      "display_name": "DeepSeek V4 Pro",
+      "description": "The official DeepSeek V4 Pro flagship for advanced reasoning, coding, and sustained agent workloads. The 0813 production checkpoint keeps 1M context and dual thinking modes under the same API name.",
+      "i18n": {
+        "en": "The official DeepSeek V4 Pro flagship for advanced reasoning, coding, and sustained agent workloads. The 0813 production checkpoint keeps 1M context and dual thinking modes under the same API name.",
+        "zh": "DeepSeek V4 Pro 正式版旗舰模型，面向高级推理、编程与持续 Agent 任务。0813 生产检查点沿用同一 API 名称，提供 1M 上下文与思考/非思考双模式。"
+      },
+      "vendor": "deepseek",
+      "context_window": 1000000,
+      "max_tokens": 384000,
+      "tags": [
+        "New"
+      ],
+      "pricing": {
+        "usd": {
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 0.435,
+              "output_price": 0.87,
+              "cache_read_price": 0.003625,
+              "cache_write_price": null
+            }
+          ]
+        },
+        "cny": {
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 3,
+              "output_price": 6,
+              "cache_read_price": 0.025,
+              "cache_write_price": null
+            }
+          ]
+        }
+      },
+      "modalities": {
+        "input": [
+          "text"
+        ],
+        "output": [
+          "text"
+        ]
+      },
+      "released": "2026-08-13",
+      "vendor_label": "DeepSeek",
+      "kind": "llm",
+      "source_path": "packages/admin/lib/model-presets/deepseek.json"
+    },
+    {
+      "id": "deepseek-v4-flash",
+      "display_name": "DeepSeek V4 Flash",
+      "description": "The official DeepSeek V4 Flash model for fast long-context reasoning, coding, and agents. The 0731 post-training refresh keeps the mixture-of-experts architecture while strengthening agentic coding and tool use.",
+      "i18n": {
+        "en": "The official DeepSeek V4 Flash model for fast long-context reasoning, coding, and agents. The 0731 post-training refresh keeps the mixture-of-experts architecture while strengthening agentic coding and tool use.",
+        "zh": "DeepSeek V4 Flash 正式版，面向高速长上下文推理、编程与 Agent。0731 后训练刷新保持混合专家架构，同时强化 Agent 编程与工具调用。"
+      },
+      "vendor": "deepseek",
+      "context_window": 1000000,
+      "max_tokens": 384000,
+      "pricing": {
+        "usd": {
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 0.14,
+              "output_price": 0.28,
+              "cache_read_price": 0.0028,
+              "cache_write_price": null
+            }
+          ]
+        },
+        "cny": {
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 1,
+              "output_price": 2,
+              "cache_read_price": 0.02,
+              "cache_write_price": null
+            }
+          ]
+        }
+      },
+      "modalities": {
+        "input": [
+          "text"
+        ],
+        "output": [
+          "text"
+        ]
+      },
+      "released": "2026-07-31",
+      "vendor_label": "DeepSeek",
+      "kind": "llm",
+      "source_path": "packages/admin/lib/model-presets/deepseek.json"
+    },
+    {
       "id": "deepseek-v3.2",
       "display_name": "DeepSeek-V3.2",
       "description": "An efficient DeepSeek model combining strong reasoning with agentic tool use. Its sparse-attention design targets efficient long-context reasoning while preserving strong tool-use performance.",
@@ -1694,102 +2387,6 @@
         ]
       },
       "released": "2025-12-01",
-      "vendor_label": "DeepSeek",
-      "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/deepseek.json"
-    },
-    {
-      "id": "deepseek-v4-flash",
-      "display_name": "DeepSeek V4 Flash",
-      "description": "A fast DeepSeek mixture-of-experts model for long-context reasoning and coding. The efficiency-focused mixture-of-experts architecture activates only a small portion of its parameters for fast long-context inference.",
-      "i18n": {
-        "en": "A fast DeepSeek mixture-of-experts model for long-context reasoning and coding. The efficiency-focused mixture-of-experts architecture activates only a small portion of its parameters for fast long-context inference.",
-        "zh": "面向长上下文推理与编程任务的高速 DeepSeek 混合专家模型。效率优先的混合专家架构仅激活少量参数，以实现快速的长上下文推理。"
-      },
-      "vendor": "deepseek",
-      "context_window": 1000000,
-      "max_tokens": 384000,
-      "pricing": {
-        "usd": {
-          "tiers": [
-            {
-              "upto": null,
-              "input_price": 0.14,
-              "output_price": 0.28,
-              "cache_read_price": 0.028,
-              "cache_write_price": null
-            }
-          ]
-        },
-        "cny": {
-          "tiers": [
-            {
-              "upto": null,
-              "input_price": 1,
-              "output_price": 2,
-              "cache_read_price": 0.02,
-              "cache_write_price": null
-            }
-          ]
-        }
-      },
-      "modalities": {
-        "input": [
-          "text"
-        ],
-        "output": [
-          "text"
-        ]
-      },
-      "released": "2026-04-24",
-      "vendor_label": "DeepSeek",
-      "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/deepseek.json"
-    },
-    {
-      "id": "deepseek-v4-pro",
-      "display_name": "DeepSeek V4 Pro",
-      "description": "A large DeepSeek mixture-of-experts model for advanced reasoning, coding, and agents. Its large mixture-of-experts design is aimed at advanced reasoning, coding, and sustained agent workloads.",
-      "i18n": {
-        "en": "A large DeepSeek mixture-of-experts model for advanced reasoning, coding, and agents. Its large mixture-of-experts design is aimed at advanced reasoning, coding, and sustained agent workloads.",
-        "zh": "面向高级推理、编程与 Agent 的大型 DeepSeek 混合专家模型。大规模混合专家架构面向高级推理、编程和持续运行的 Agent 任务。"
-      },
-      "vendor": "deepseek",
-      "context_window": 1000000,
-      "max_tokens": 384000,
-      "pricing": {
-        "usd": {
-          "tiers": [
-            {
-              "upto": null,
-              "input_price": 0.435,
-              "output_price": 0.87,
-              "cache_read_price": 0.003625,
-              "cache_write_price": null
-            }
-          ]
-        },
-        "cny": {
-          "tiers": [
-            {
-              "upto": null,
-              "input_price": 3,
-              "output_price": 6,
-              "cache_read_price": 0.025,
-              "cache_write_price": null
-            }
-          ]
-        }
-      },
-      "modalities": {
-        "input": [
-          "text"
-        ],
-        "output": [
-          "text"
-        ]
-      },
-      "released": "2026-04-24",
       "vendor_label": "DeepSeek",
       "kind": "llm",
       "source_path": "packages/admin/lib/model-presets/deepseek.json"
@@ -1913,6 +2510,61 @@
       "vendor_label": "Google",
       "kind": "image",
       "source_path": "packages/admin/lib/model-presets/google-image.json"
+    },
+    {
+      "id": "gemini-3.7-flash",
+      "display_name": "Gemini 3.7 Flash",
+      "description": "A high-efficiency Gemini workhorse for coding, agents, and knowledge work. It improves first-pass code accuracy, multi-step tool use, and production-ready application output over Gemini 3.6 Flash.",
+      "i18n": {
+        "en": "A high-efficiency Gemini workhorse for coding, agents, and knowledge work. It improves first-pass code accuracy, multi-step tool use, and production-ready application output over Gemini 3.6 Flash.",
+        "zh": "面向编程、Agent 与知识工作的高效率 Gemini 主力模型。相较 Gemini 3.6 Flash，提升首轮代码准确率、多步工具调用与可上线应用产出。"
+      },
+      "vendor": "google",
+      "context_window": 1000000,
+      "max_tokens": 64000,
+      "tags": [
+        "New"
+      ],
+      "pricing": {
+        "usd": {
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 1.5,
+              "output_price": 7.5,
+              "cache_read_price": 0.15,
+              "cache_write_price": 0.08333
+            }
+          ]
+        },
+        "cny": {
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 10.5,
+              "output_price": 52.5,
+              "cache_read_price": 1.05,
+              "cache_write_price": 0.58331
+            }
+          ]
+        }
+      },
+      "modalities": {
+        "input": [
+          "text",
+          "image",
+          "audio",
+          "video",
+          "file"
+        ],
+        "output": [
+          "text"
+        ]
+      },
+      "released": "2026-08-13",
+      "vendor_label": "Google",
+      "kind": "llm",
+      "source_path": "packages/admin/lib/model-presets/google.json"
     },
     {
       "id": "gemini-3.6-flash",
@@ -3745,6 +4397,50 @@
       "source_path": "packages/admin/lib/model-presets/tencent.json"
     },
     {
+      "id": "grok-imagine-image-2.0",
+      "display_name": "Grok Imagine Image 2.0",
+      "description": "xAI's Imagine Image 2.0 model for precise generation, editing, and multi-reference creative work. It follows detailed instructions, preserves identity across edits, and supports 1K/2K output.",
+      "i18n": {
+        "en": "xAI's Imagine Image 2.0 model for precise generation, editing, and multi-reference creative work. It follows detailed instructions, preserves identity across edits, and supports 1K/2K output.",
+        "zh": "xAI Imagine Image 2.0 模型，面向精确生成、编辑与多参考图创作。指令遵循更细，编辑时保持主体一致，并支持 1K/2K 输出。"
+      },
+      "vendor": "xai",
+      "context_window": null,
+      "max_tokens": null,
+      "tags": [
+        "New"
+      ],
+      "pricing": {
+        "usd": {
+          "image_billing_mode": "per_image",
+          "image": {
+            "default": 0.04,
+            "uncertain_result_policy": "requested"
+          }
+        },
+        "cny": {
+          "image_billing_mode": "per_image",
+          "image": {
+            "default": 0.28,
+            "uncertain_result_policy": "requested"
+          }
+        }
+      },
+      "modalities": {
+        "input": [
+          "text",
+          "image"
+        ],
+        "output": [
+          "image"
+        ]
+      },
+      "released": "2026-08-07",
+      "vendor_label": "xAI (Grok)",
+      "kind": "image",
+      "source_path": "packages/admin/lib/model-presets/xai-image.json"
+    },
+    {
       "id": "grok-imagine-image-quality",
       "display_name": "Grok Imagine Image Quality",
       "description": "A high-fidelity xAI model for fast image generation, editing, and reference-guided creation.",
@@ -3755,9 +4451,6 @@
       "vendor": "xai",
       "context_window": null,
       "max_tokens": null,
-      "tags": [
-        "New"
-      ],
       "pricing": {
         "usd": {
           "image_billing_mode": "per_image",
@@ -3803,12 +4496,12 @@
       "source_path": "packages/admin/lib/model-presets/xai-image.json"
     },
     {
-      "id": "grok-4.5",
-      "display_name": "Grok 4.5",
-      "description": "A frontier Grok model for coding, knowledge work, STEM, and demanding reasoning. It is positioned as xAI’s highest-capability option for frontier coding, knowledge work, and STEM tasks.",
+      "id": "grok-4.6",
+      "display_name": "Grok 4.6",
+      "description": "A frontier Grok model for long-running agents, coding, and knowledge work. It focuses on multi-step agents, ambitious interactive and visual work, and sustained coding trajectories.",
       "i18n": {
-        "en": "A frontier Grok model for coding, knowledge work, STEM, and demanding reasoning. It is positioned as xAI’s highest-capability option for frontier coding, knowledge work, and STEM tasks.",
-        "zh": "面向编程、知识工作、STEM 与复杂推理的前沿 Grok 模型。定位为 xAI 面向前沿编程、知识工作和 STEM 任务的最高能力档位。"
+        "en": "A frontier Grok model for long-running agents, coding, and knowledge work. It focuses on multi-step agents, ambitious interactive and visual work, and sustained coding trajectories.",
+        "zh": "面向长时运行 Agent、编程与知识工作的前沿 Grok 模型。侧重多步 Agent、复杂交互与视觉任务，以及可持续推进的编程轨迹。"
       },
       "vendor": "xai",
       "context_window": 500000,
@@ -3820,10 +4513,17 @@
         "usd": {
           "tiers": [
             {
-              "upto": null,
+              "upto": 200000,
               "input_price": 2,
               "output_price": 6,
               "cache_read_price": 0.5,
+              "cache_write_price": null
+            },
+            {
+              "upto": null,
+              "input_price": 4,
+              "output_price": 12,
+              "cache_read_price": 1,
               "cache_write_price": null
             }
           ]
@@ -3831,10 +4531,80 @@
         "cny": {
           "tiers": [
             {
-              "upto": null,
+              "upto": 200000,
               "input_price": 14,
               "output_price": 42,
               "cache_read_price": 3.5,
+              "cache_write_price": null
+            },
+            {
+              "upto": null,
+              "input_price": 28,
+              "output_price": 84,
+              "cache_read_price": 7,
+              "cache_write_price": null
+            }
+          ]
+        }
+      },
+      "modalities": {
+        "input": [
+          "text",
+          "image"
+        ],
+        "output": [
+          "text"
+        ]
+      },
+      "released": "2026-08-12",
+      "vendor_label": "xAI (Grok)",
+      "kind": "llm",
+      "source_path": "packages/admin/lib/model-presets/xai.json"
+    },
+    {
+      "id": "grok-4.5",
+      "display_name": "Grok 4.5",
+      "description": "A general-purpose Grok model for coding, knowledge work, STEM, and demanding reasoning. It supports both reasoning and non-reasoning modes for agentic software and workflow tasks.",
+      "i18n": {
+        "en": "A general-purpose Grok model for coding, knowledge work, STEM, and demanding reasoning. It supports both reasoning and non-reasoning modes for agentic software and workflow tasks.",
+        "zh": "面向编程、知识工作、STEM 与复杂推理的通用 Grok 模型。支持思考与非思考模式，适合 Agent 软件工程与工作流任务。"
+      },
+      "vendor": "xai",
+      "context_window": 500000,
+      "max_tokens": 128000,
+      "pricing": {
+        "usd": {
+          "tiers": [
+            {
+              "upto": 200000,
+              "input_price": 2,
+              "output_price": 6,
+              "cache_read_price": 0.3,
+              "cache_write_price": null
+            },
+            {
+              "upto": null,
+              "input_price": 4,
+              "output_price": 12,
+              "cache_read_price": 0.6,
+              "cache_write_price": null
+            }
+          ]
+        },
+        "cny": {
+          "tiers": [
+            {
+              "upto": 200000,
+              "input_price": 14,
+              "output_price": 42,
+              "cache_read_price": 2.1,
+              "cache_write_price": null
+            },
+            {
+              "upto": null,
+              "input_price": 28,
+              "output_price": 84,
+              "cache_read_price": 4.2,
               "cache_write_price": null
             }
           ]
@@ -3869,10 +4639,17 @@
         "usd": {
           "tiers": [
             {
-              "upto": null,
+              "upto": 200000,
               "input_price": 1.25,
               "output_price": 2.5,
               "cache_read_price": 0.2,
+              "cache_write_price": null
+            },
+            {
+              "upto": null,
+              "input_price": 2.5,
+              "output_price": 5,
+              "cache_read_price": 0.4,
               "cache_write_price": null
             }
           ]
@@ -3880,10 +4657,17 @@
         "cny": {
           "tiers": [
             {
-              "upto": null,
+              "upto": 200000,
               "input_price": 8.75,
               "output_price": 17.5,
               "cache_read_price": 1.4,
+              "cache_write_price": null
+            },
+            {
+              "upto": null,
+              "input_price": 17.5,
+              "output_price": 35,
+              "cache_read_price": 2.8,
               "cache_write_price": null
             }
           ]
@@ -4358,6 +5142,57 @@
         ]
       },
       "released": "2026-06-13",
+      "vendor_label": "Zhipu AI",
+      "kind": "llm",
+      "source_path": "packages/admin/lib/model-presets/zhipu.json"
+    },
+    {
+      "id": "glm-5.3",
+      "display_name": "GLM-5.3",
+      "description": "A flagship GLM model for long-horizon coding, agents, and security review. It keeps the GLM-5.2 base and raises coding and agent performance through post-training.",
+      "i18n": {
+        "en": "A flagship GLM model for long-horizon coding, agents, and security review. It keeps the GLM-5.2 base and raises coding and agent performance through post-training.",
+        "zh": "面向长程编程、Agent 与安全审查的 GLM 旗舰模型。沿用 GLM-5.2 基座，通过后训练提升编程与智能体表现。"
+      },
+      "vendor": "zhipu",
+      "context_window": 1000000,
+      "max_tokens": 128000,
+      "tags": [
+        "New"
+      ],
+      "pricing": {
+        "usd": {
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 1.4,
+              "output_price": 4.4,
+              "cache_read_price": 0.26,
+              "cache_write_price": null
+            }
+          ]
+        },
+        "cny": {
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 8,
+              "output_price": 28,
+              "cache_read_price": 2,
+              "cache_write_price": null
+            }
+          ]
+        }
+      },
+      "modalities": {
+        "input": [
+          "text"
+        ],
+        "output": [
+          "text"
+        ]
+      },
+      "released": "2026-08-14",
       "vendor_label": "Zhipu AI",
       "kind": "llm",
       "source_path": "packages/admin/lib/model-presets/zhipu.json"

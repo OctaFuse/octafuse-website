@@ -100,7 +100,7 @@ After `deploy:*` or `db:migrate:remote`, generated `wrangler.jsonc` may include 
 ## Secrets and downstream
 
 - **`ADMIN_PASSWORD`**: set by bootstrap; or `npx wrangler secret put ADMIN_PASSWORD --name <ADMIN_WORKER_NAME>`.
-- Downstream: `GATEWAY_URL` (Proxy), `GATEWAY_MASTER_URL` (Admin), `GATEWAY_MASTER_KEY` (D1 `system_config.MASTER_KEY`). Rotate if still the seed `sk-dev-admin-key`.
+- Downstream: `GATEWAY_URL` (Proxy), `GATEWAY_MASTER_URL` (Admin), and a named Admin API Key created under **System Integration → Integration Keys** (the environment variable can remain `GATEWAY_MASTER_KEY`).
 
 ## vs Docker
 

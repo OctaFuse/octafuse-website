@@ -179,7 +179,7 @@ function renderCatalogOutputs(data, gatewayPath, source) {
 			},
 		},
 		links: row.catalog?.links ?? {},
-		protocols: ['openai', 'anthropic', 'gemini'].filter((protocol) => Boolean(row.endpoints?.[protocol])),
+		protocols: ['openai', 'anthropic', 'gemini', 'dashscope'].filter((protocol) => Boolean(row.endpoints?.[protocol])),
 		endpoints: row.endpoints ?? {},
 		description: row.description != null && String(row.description).trim() ? String(row.description).trim() : null,
 		source_path: data.catalog.providerPresets,

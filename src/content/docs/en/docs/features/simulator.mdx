@@ -5,7 +5,7 @@ description: From the browser call your deployed Proxy with base URL and user sk
 
 import { Aside, Steps } from '@astrojs/starlight/components';
 
-Open **Inference → Simulator**. **Simulator** runs **in your browser** against the deployed **Proxy**: you enter the **Proxy base URL** and a **user `sk-…` key**, pick protocol and model options, and send — exercising **auth, routing, budget, and request logs** like a real client.
+Open **Inference → Simulator**. **Simulator** runs **in your browser** against the deployed **Proxy**: enter the **Proxy base URL** and a **user `sk-…` key**, choose Chat, Responses, Images, or another mode plus a model, and send — exercising **auth, routing, budget, and request logs** like a real client.
 
 This differs from [Playground](/en/docs/features/playground/), which focuses on **Admin-assisted upstream probes** for a single route.
 
@@ -18,7 +18,7 @@ This differs from [Playground](/en/docs/features/playground/), which focuses on 
 <Steps>
 1. Open **Simulator**.
 1. Enter the **Proxy base URL** (same entry point you give apps, including `https://` and port) and the **`sk-…`** key.
-1. Choose protocol, model id, optional **route group** (must match [Routing](/en/docs/guides/routing/)). For image checks, use the Images / generations (or edits) entry — see [Image generation / edit](/en/docs/guides/images/).
+1. Choose Chat, Responses, Images, or another mode, a model id, and an optional **route group** (must match [Routing](/en/docs/guides/routing/)). For image checks, use the Images / generations (or edits) entry — see [Image generation / edit](/en/docs/guides/images/).
 1. Send, then confirm rows in [Request logs](/en/docs/guides/request-logs/) (including `billing_kind` / image counts).
 1. If results differ from Playground: check **user budget**, **route group**, and **key status** (revoked, etc.).
 </Steps>

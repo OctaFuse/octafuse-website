@@ -22,7 +22,7 @@ OctaFuse is a self-hostable AI capability gateway and operations control plane. 
 	<a class="of-doc-path" href="/en/docs/guides/integration/">
 		<span class="of-doc-path-index">02</span>
 		<strong>I am integrating a system</strong>
-		<small>Proxy vs Admin, user keys vs master keys, portal provisioning flows.</small>
+		<small>Proxy vs Admin, user API keys vs Integration Keys, and portal provisioning flows.</small>
 	</a>
 	<a class="of-doc-path" href="/en/docs/deploy/cloudflare/">
 		<span class="of-doc-path-index">03</span>
@@ -43,8 +43,8 @@ OctaFuse is a self-hostable AI capability gateway and operations control plane. 
 		<figcaption>Dashboard: start with operations, requests, tokens, spend, and recent errors.</figcaption>
 	</figure>
 	<figure class="of-doc-figure">
-		<img src="/screenshots/admin-routes.png" alt="OctaFuse Admin Routes page showing the full topology from Surface and policy to Upstream Targets." loading="lazy" />
-		<figcaption>Routes: follow Surface → Policy → Upstream to configure protocols, route groups, strategies, priority, and weight.</figcaption>
+		<img src="/screenshots/v2-5-0-routes-by-model.png" alt="OctaFuse Admin Routes workspace showing request surfaces, route groups, and upstream targets by model." loading="lazy" />
+		<figcaption>Routes: switch between Overview and By model to inspect request surfaces, route groups, policies, and upstream targets.</figcaption>
 	</figure>
 	<figure class="of-doc-figure">
 		<img src="/screenshots/admin-playground.png" alt="OctaFuse Admin Playground showing route selection, request body, and response panels." loading="lazy" />
@@ -71,8 +71,8 @@ OctaFuse is a self-hostable AI capability gateway and operations control plane. 
 	<LinkCard title="Integration" description="Proxy / Admin / key boundaries" href="/en/docs/guides/integration/" />
 	<LinkCard title="Image generation / edit" description="Images with token / per-image billing" href="/en/docs/guides/images/" />
 	<LinkCard title="Agent Tools" description="Extensible tool APIs; web tools ship today" href="/en/docs/guides/tools/" />
-	<LinkCard title="Playground" description="Probe one route upstream" href="/en/docs/features/playground/" />
-	<LinkCard title="Simulator" description="Validate the full Proxy path with a real key" href="/en/docs/features/simulator/" />
+	<LinkCard title="Playground" description="Probe Chat, Responses, Images, and other upstream capabilities" href="/en/docs/features/playground/" />
+	<LinkCard title="Simulator" description="Validate Responses and other full Proxy paths with a real key" href="/en/docs/features/simulator/" />
 	<LinkCard title="Cloudflare deployment" description="Worker + Admin + D1 (recommended)" href="/en/docs/deploy/cloudflare/" />
 	<LinkCard title="Docker deployment" description="Self-hosting, Postgres / MySQL, images" href="/en/docs/deploy/docker/" />
 </CardGrid>
@@ -84,5 +84,5 @@ OctaFuse is a self-hostable AI capability gateway and operations control plane. 
 | Inspect whether a call succeeded | [Request logs](/en/docs/guides/request-logs/) |
 | Inspect usage and cost trends | [Analytics](/en/docs/guides/analytics/) |
 | Inspect budget, key lifecycle, and user-side audit | [Audit logs](/en/docs/guides/audit-logs/) |
-| Configure master key, business timezone, billing currency, alerts | [System config](/en/docs/guides/system-config/) |
+| Configure business timezone, billing currency, routing strategy, and alerts | [System config](/en/docs/guides/system-config/) |
 | Read APIs, migrations, architecture, billing details | [GitHub technical reference](/en/docs/github-reference/) |

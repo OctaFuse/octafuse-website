@@ -23,7 +23,7 @@ docker compose -f docker/compose/quickstart.yml up --build
 
 - 代理服务：`http://localhost:8787`
 - 管理后台：`http://localhost:8789`，默认登录凭证为 `admin / changeme`
-- 默认管理 Bearer 密钥：`sk-dev-admin-key`
+- 本地兼容管理密钥：`sk-dev-admin-key`（`legacy-master`，仅用于本地体验；登录后请在 **Integration Keys** 创建具名密钥）
 
 如果本机端口冲突，可通过 `POSTGRES_HOST_PORT`、`GATEWAY_PROXY_HOST_PORT`、`GATEWAY_ADMIN_HOST_PORT` 调整宿主机端口。Cloudflare 默认路径见 [快速开始](/zh/docs/quick-start/)。
 
@@ -86,7 +86,7 @@ docker build -f Dockerfile.migrate -t octafuse-migrate:local .
 
 ### 预构建镜像（GHCR / 私有镜像仓库）
 
-1. 在 `docker/deploy/.env.local`（或你的环境文件）中，把 `GATEWAY_PROXY_IMAGE` / `GATEWAY_ADMIN_IMAGE` / `GATEWAY_MIGRATE_IMAGE` 的**标签（tag）**改成目标版本（例如 `v2.1.2`；生产环境建议固定语义化版本，避免长期使用 `latest`）。
+1. 在 `docker/deploy/.env.local`（或你的环境文件）中，把 `GATEWAY_PROXY_IMAGE` / `GATEWAY_ADMIN_IMAGE` / `GATEWAY_MIGRATE_IMAGE` 的**标签（tag）**改成目标版本（例如 `v2.5.0`；生产环境建议固定语义化版本，避免长期使用 `latest`）。
 2. 拉取并迁移，再重建容器：
 
 ```bash
@@ -114,7 +114,7 @@ docker compose -f docker/compose/node-pg.yml up -d --build gateway-proxy gateway
 ```bash
 curl -fsS http://127.0.0.1:8787/health
 curl -fsS http://127.0.0.1:8789/api/admin/config \
-  -H 'Authorization: Bearer <MASTER_KEY>'
+  -H 'Authorization: Bearer <ADMIN_API_KEY>'
 ```
 
 更详细的镜像名、GHCR 摘要（digest）与 Zeabur 注意事项见 [GitHub · Docker / 自托管](https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/operators/deployment/docker.md)。
@@ -136,11 +136,11 @@ Postgres 建议让连接或实例保持 UTC；如果用 `DATABASE_URL` 控制，
 ```bash
 curl -fsS http://127.0.0.1:8787/health
 curl -fsS http://127.0.0.1:8789/api/admin/config \
-  -H 'Authorization: Bearer sk-dev-admin-key'
+  -H 'Authorization: Bearer <ADMIN_API_KEY>'
 ```
 
 <Aside type="caution" title="生产请用 HTTPS">
-	本地与可信内网可用明文 HTTP 打开管理后台（如 `http://localhost:8789`），无需额外配置 Cookie。生产环境请将代理服务与管理后台放在反向代理之后，并配置 **TLS**。若已使用 HTTPS，可按需设置可选加固项 `ADMIN_COOKIE_SECURE=1`。下游系统需要配置 `GATEWAY_URL`、`GATEWAY_MASTER_URL`、`GATEWAY_MASTER_KEY`，见 [系统集成](/zh/docs/guides/integration/)。
+	本地与可信内网可用明文 HTTP 打开管理后台（如 `http://localhost:8789`），无需额外配置 Cookie。生产环境请将代理服务与管理后台放在反向代理之后，并配置 **TLS**。若已使用 HTTPS，可按需设置可选加固项 `ADMIN_COOKIE_SECURE=1`。下游系统需要配置 `GATEWAY_URL`、`GATEWAY_MASTER_URL`，以及在 Integration Keys 页面创建的具名 Admin API Key（环境变量可继续命名为 `GATEWAY_MASTER_KEY`），见 [系统集成](/zh/docs/guides/integration/)。
 </Aside>
 
 ## 与 Cloudflare 方案如何选

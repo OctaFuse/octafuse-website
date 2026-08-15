@@ -5,7 +5,7 @@ description: 在管理后台（Admin）选定一个上游目标（Upstream Targe
 
 import { Aside, Steps } from '@astrojs/starlight/components';
 
-在左侧的**推理（Inference）→ 调试台（Playground）**中打开。调试台不会经过业务用户的 `sk-…` 计费路径，而是针对**一个已配置的上游目标**向对应上游发出一次试跑请求，帮助你快速确认供应商地址、密钥、上游模型名等配置是否正确。
+在左侧的**推理（Inference）→ 调试台（Playground）**中打开。调试台支持 Chat、Responses、Images 等模式，不经过业务用户的 `sk-…` 计费路径，而是针对**一个已配置的上游目标**向对应上游发出试跑请求，帮助你快速确认供应商地址、密钥、上游模型名等配置是否正确。
 
 试跑**不会**写入请求日志、扣减用户预算，也**不会**经过路由池（Route Pool）的策略、熔断与故障转移。请使用真实的代理服务（Proxy）调用或[模拟器（Simulator）](/zh/docs/features/simulator/)验证完整行为。智能体工具（Agent Tools）请直接调用 `/v1/tools/*`。
 
@@ -23,7 +23,7 @@ import { Aside, Steps } from '@astrojs/starlight/components';
 <Steps>
 1. 打开**调试台（Playground）**。
 1. 在路由下拉框中选择 **一条路由**（界面会用图标区分是否处于启用状态）。
-1. 按当前协议（OpenAI / Anthropic / Gemini）编辑 JSON 请求体；可使用页面提供的模板起步。图片生成请选 **OpenAI** 协议且挂了 Images 的路由，见 [图片生成 / 编辑](/zh/docs/guides/images/)。
+1. 选择 Chat、Responses、Images 等模式并编辑请求体；可使用页面提供的模板起步。图片生成请选 **OpenAI** 协议且挂了 Images 的路由，见 [图片生成 / 编辑](/zh/docs/guides/images/)。
 1. 发送后查看响应状态、错误信息与正文；需要时留意响应头中的延迟等诊断信息。
 </Steps>
 

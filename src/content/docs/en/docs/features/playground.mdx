@@ -5,7 +5,7 @@ description: Pick one Upstream Target in Admin, edit a JSON body, and probe the 
 
 import { Aside, Steps } from '@astrojs/starlight/components';
 
-Open **Inference → Playground**. **Playground** sends a **probe** for **one selected Upstream Target** straight to its upstream, so you can verify URLs, credentials, and upstream model names **without** using a customer **`sk-…`** on the normal billing path.
+Open **Inference → Playground**. Playground supports Chat, Responses, Images, and other modes. It sends a **probe** for **one selected Upstream Target** straight to its upstream, so you can verify URLs, credentials, and upstream model names **without** using a customer **`sk-…`** on the normal billing path.
 
 It does **not** write request logs, debit user budgets, or run Route Pool strategy, circuits, and failover. Validate the full behavior with real Proxy calls or [Simulator](/en/docs/features/simulator/). Call Agent Tools directly through `/v1/tools/*`.
 
@@ -23,7 +23,7 @@ It does **not** write request logs, debit user budgets, or run Route Pool strate
 <Steps>
 1. Open **Playground**.
 1. Choose **one route** from the dropdown (icons indicate enabled vs disabled).
-1. Edit the JSON body for the current protocol; start from the built-in templates if helpful. For image generation, pick an **OpenAI** route with Images configured — see [Image generation / edit](/en/docs/guides/images/).
+1. Choose Chat, Responses, Images, or another available mode and edit the request body; start from a built-in template if helpful. For image generation, pick an **OpenAI** route with Images configured — see [Image generation / edit](/en/docs/guides/images/).
 1. Send and read status, errors, and body; check response headers for latency-style hints when troubleshooting.
 </Steps>
 

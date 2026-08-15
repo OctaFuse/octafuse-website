@@ -5,24 +5,24 @@ description: Add upstream vendors in Admin with per-protocol base URLs and an AP
 
 import { Aside, Steps } from '@astrojs/starlight/components';
 
-In Admin, open **Inference → Providers**. A **Provider** represents one upstream service account. Each record contains **OpenAI-compatible**, **Anthropic**, and **Gemini** endpoints, **one upstream API key**, and an `active` / `disabled` status. Create multiple Providers when you have multiple accounts at the same vendor.
+In Admin, open **Inference → Providers**. A **Provider** represents one upstream service account with protocol endpoints, one upstream API key, and an enabled status. Cards show key status, active route counts, and protocol capabilities, with filters for status and OpenAI, Anthropic, Gemini, or DashScope support.
 
 <Aside type="tip" title="Prerequisite">
 	Finish [Quick start](/en/docs/quick-start/) so you can sign in to Admin.
 </Aside>
 
 <figure class="of-doc-figure">
-	<img src="/screenshots/admin-providers.png" alt="OctaFuse Admin New Provider form with name, API key, status, and OpenAI, Anthropic, and Gemini endpoint settings." loading="lazy" />
-	<figcaption>Each Provider represents one upstream account and API key. Configure only the protocol base URLs or capability endpoints that account supports.</figcaption>
+	<img src="/screenshots/v2-5-0-provider-cards.png" alt="OctaFuse Admin Provider cards showing protocol capabilities, API key status, and active route counts." loading="lazy" />
+	<figcaption>Provider cards expose keys, routes, and protocol capabilities at a glance; edit a card to configure protocol-specific Base URLs or endpoints.</figcaption>
 </figure>
 
 ## What to do in Admin
 
 <Steps>
 1. In the sidebar under **Inference**, open **Providers**.
-1. **Create or edit**: set the display name, per-protocol endpoints (`base` or full capability URLs — follow upstream docs for `/v1` paths), one **API Key**, status, and optional notes.
+1. **Create or edit**: set the display name, one **API Key**, status, and optional notes, then configure Base URLs or capability endpoints on each protocol tab. OpenAI Responses can use an explicit endpoint or derive `/v1/responses` from the OpenAI Base URL.
 1. **Multiple accounts**: create one Provider per vendor account, then add multiple Upstream Targets to the same Route Pool. Configure priority, weight, and distribution strategy under [Routing](/en/docs/guides/routing/).
-1. **Import from catalog**: use the built-in catalog to pre-fill endpoints; you still need a valid **API Key**. For Images, confirm generations (and edits when needed); see [Images](/en/docs/guides/images/).
+1. **Import from catalog**: use the built-in catalog to pre-fill endpoints; you still need a valid **API Key**. For Responses or Images, confirm the matching capability appears on the card.
 1. After saving, go to [Routing](/en/docs/guides/routing/) to bind models to this vendor and protocol; use [Playground](/en/docs/features/playground/) or [Simulator](/en/docs/features/simulator/) to validate connectivity.
 </Steps>
 

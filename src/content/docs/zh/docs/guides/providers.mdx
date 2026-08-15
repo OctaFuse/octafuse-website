@@ -5,24 +5,24 @@ description: 在管理台添加上游供应商，配置各协议的访问地址�
 
 import { Aside, Steps } from '@astrojs/starlight/components';
 
-在管理台左侧的推理（**Inference**）下打开供应商（**Providers**）页面。一个供应商条目表示一个上游服务账号：你可以分别填写 OpenAI 兼容、Anthropic、Gemini 协议的访问地址，并维护一把上游 API Key 及 `active` / `disabled` 状态。如需接入同一供应商的多个账号，请创建多个供应商条目。
+在管理台左侧的推理（**Inference**）下打开供应商（**Providers**）页面。一个 Provider 表示一个上游服务账号，包含协议端点、一把上游 API Key 及启用状态。页面以卡片展示密钥状态、活动路由数和协议能力，并支持按状态及 OpenAI、Anthropic、Gemini、DashScope 协议筛选。
 
 <Aside type="tip" title="前置">
 	请先完成 [快速开始](/zh/docs/quick-start/)，能登录管理台。
 </Aside>
 
 <figure class="of-doc-figure">
-	<img src="/screenshots/admin-providers.png" alt="OctaFuse 管理后台新建供应商（Provider）表单，展示名称、API Key、启用状态以及 OpenAI、Anthropic、Gemini 端点配置。" loading="lazy" />
-	<figcaption>新建供应商时，每个上游账号维护一把 API Key，并按实际能力填写各协议的 Base URL 或独立端点。</figcaption>
+	<img src="/screenshots/v2-5-0-provider-cards.png" alt="OctaFuse 管理后台 Provider 卡片展示协议能力、API Key 状态和活动路由数量。" loading="lazy" />
+	<figcaption>Provider 卡片让密钥、路由和协议能力一目了然；编辑时再按协议分页配置 Base URL 或独立端点。</figcaption>
 </figure>
 
 ## 在管理台里要做什么
 
 <Steps>
 1. 在侧栏**推理（Inference）**下进入供应商（**Providers**）。
-1. **新建或编辑**：填写名称、各协议的访问地址（基础地址或按能力配置的完整 URL；是否与 `/v1` 等路径拼接请严格按上游文档）、一把 **API Key**、状态与可选说明。
+1. **新建或编辑**：填写名称、一把 **API Key**、状态与可选说明，再按协议分页配置 Base URL 或独立端点。OpenAI Responses 可填写独立端点，也可根据 OpenAI Base URL 派生 `/v1/responses`。
 1. **多个账号**：同一供应商有多把账号密钥时，为每个账号创建一个供应商条目，再在同一路由池（**Route Pool**）中添加多个上游目标（**Upstream Target**）；`priority`、`weight` 与分流策略在 [路由配置](/zh/docs/guides/routing/) 中维护。
-1. **从目录导入**：使用页面提供的模板目录，可快速预填各协议的访问地址；导入后仍需补全或核对 **API Key**。运行图片生成时，请确认 `generations` 端点，以及需要时的 `edits` 端点；详见 [图片生成 / 编辑](/zh/docs/guides/images/)。
+1. **从目录导入**：使用页面提供的模板目录快速预填协议端点；导入后仍需补全或核对 **API Key**。运行 Responses 或图片生成时，请确认卡片显示对应协议能力。
 1. **保存后**：到 [路由配置](/zh/docs/guides/routing/) 把模型与供应商、协议类型关联起来；需要试连通时，可用[调试台（Playground）](/zh/docs/features/playground/)或[模拟器（Simulator）](/zh/docs/features/simulator/)。
 </Steps>
 

@@ -1,6 +1,6 @@
 ---
 title: OctaFuse
-description: 可自托管的开源 AI 能力网关与运营控制面：统一接入对话、图片生成 / 编辑、语音转写与智能体工具，以请求入口 → 路由池 → 上游目标管理路由、预算、计费和审计。支持 Cloudflare Workers + D1 及 Docker / Postgres / MySQL。AGPLv3。
+description: 可自托管的开源 AI 能力网关与运营控制面：统一接入 Chat、Responses、图片、语音与智能体工具，以请求入口 → 路由池 → 上游目标管理路由、预算、计费和审计。支持 Cloudflare Workers + D1 及 Docker / Postgres / MySQL。AGPLv3。
 template: splash
 sidebar:
   hidden: true
@@ -8,7 +8,7 @@ hero:
   title: '<span class="of-hero-heading"><img src="/favicon.svg" class="of-hero-logo" width="104" height="104" alt="" /><span class="of-hero-heading-text"><span class="of-hero-kicker">AI Gateway & Control Plane</span><span class="of-hero-title">OctaFuse</span></span></span>'
   tagline: 统一 AI 能力，掌控每一次调用。
   image:
-    html: '<div class="of-gateway-console" aria-label="OctaFuse AI 能力网关架构"><div class="of-console-top"><span></span><strong>capability.route</strong><code>live</code></div><div class="of-console-grid"><div class="of-console-lane of-console-capabilities" aria-label="上游能力"><p class="of-console-label">Upstream capabilities</p><div class="of-console-node"><i>LLM</i><span><strong>推理模型</strong><small>chat · code · reasoning</small></span></div><div class="of-console-node"><i>IMG</i><span><strong>图像模型</strong><small>generate · edit · vision</small></span></div><div class="of-console-node"><i>AUD</i><span><strong>音频模型</strong><small>transcribe · diarize · ASR</small></span></div><div class="of-console-node"><i>VID</i><span><strong>视频模型</strong><small>generate · edit · understand</small></span></div><div class="of-console-node"><i>EXT</i><span><strong>外部能力</strong><small>search · fetch · tools</small></span></div></div><div class="of-console-core"><span>OctaFuse</span><strong>Capability Gateway</strong><div class="of-console-core-tags"><small>route</small><small>keys</small><small>budget</small><small>failover</small><small>billing</small><small>audit</small></div></div><div class="of-console-lane of-console-interfaces" aria-label="统一访问面"><p class="of-console-label">Unified access</p><div class="of-console-node"><i>TXT</i><span><strong>Chat API</strong><small>OpenAI · Anthropic · Gemini</small></span></div><div class="of-console-node"><i>IMG</i><span><strong>Images API</strong><small>generations · edits</small></span></div><div class="of-console-node"><i>AUD</i><span><strong>Audio API</strong><small>transcriptions · ASR</small></span></div><div class="of-console-node"><i>TOOL</i><span><strong>Tools API</strong><small>可扩展的 Agent 能力</small></span></div><div class="of-console-node"><i>ADM</i><span><strong>Admin API</strong><small>用户 · Key · 预算 · 日志</small></span></div></div></div><div class="of-console-metrics"><span><strong>5</strong> 能力类型</span><span><strong>N+</strong> 上游服务</span><span><strong>1</strong> 统一网关</span><span><strong>5</strong> 访问面</span></div></div>'
+    html: '<div class="of-gateway-console" aria-label="OctaFuse AI 能力网关架构"><div class="of-console-top"><span></span><strong>capability.route</strong><code>live</code></div><div class="of-console-grid"><div class="of-console-lane of-console-capabilities" aria-label="上游能力"><p class="of-console-label">Upstream capabilities</p><div class="of-console-node"><i>LLM</i><span><strong>推理模型</strong><small>chat · code · reasoning</small></span></div><div class="of-console-node"><i>IMG</i><span><strong>图像模型</strong><small>generate · edit · vision</small></span></div><div class="of-console-node"><i>AUD</i><span><strong>音频模型</strong><small>ASR · TTS · realtime</small></span></div><div class="of-console-node"><i>VID</i><span><strong>视频模型</strong><small>generate · edit · understand</small></span></div><div class="of-console-node"><i>EXT</i><span><strong>外部能力</strong><small>search · fetch · tools</small></span></div></div><div class="of-console-core"><span>OctaFuse</span><strong>Capability Gateway</strong><div class="of-console-core-tags"><small>route</small><small>keys</small><small>budget</small><small>failover</small><small>billing</small><small>audit</small></div></div><div class="of-console-lane of-console-interfaces" aria-label="统一访问面"><p class="of-console-label">Unified access</p><div class="of-console-node"><i>TXT</i><span><strong>LLM APIs</strong><small>Chat · Responses · Messages</small></span></div><div class="of-console-node"><i>IMG</i><span><strong>Images API</strong><small>generations · edits</small></span></div><div class="of-console-node"><i>AUD</i><span><strong>Audio API</strong><small>ASR · TTS · realtime</small></span></div><div class="of-console-node"><i>TOOL</i><span><strong>Tools API</strong><small>可扩展的 Agent 能力</small></span></div><div class="of-console-node"><i>ADM</i><span><strong>Admin API</strong><small>用户 · Key · 预算 · 日志</small></span></div></div></div><div class="of-console-metrics"><span><strong>5</strong> 能力类型</span><span><strong>N+</strong> 上游服务</span><span><strong>1</strong> 统一网关</span><span><strong>5</strong> 访问面</span></div></div>'
   actions:
     - text: 快速开始
       link: /zh/docs/quick-start/
@@ -24,7 +24,7 @@ import { Card, CardGrid } from '@astrojs/starlight/components';
 
 AI 能力正在从文本模型扩展到图片生成、智能体工具（Agent Tools）、私有模型与更多专用服务。供应商（Provider）、兼容端点、Coding Plan、自托管服务和团队内部账号，各有自己的基础地址（Base URL）、密钥、额度、价格与日志；应用真正需要的是一个稳定入口、一套可控路由、清楚的预算和可追溯的调用记录。
 
-**OctaFuse 是可自托管的 AI 能力网关与运营控制面。** 你可以统一接入官方供应商、第三方兼容端点、图片生成与编辑、语音转写、智能体工具和私有模型服务，并通过请求入口（Request Surface）→ 路由池（Route Pool）→ 上游目标（Upstream Target）管理路由、故障转移、供应商熔断、预算、计费、审计和管理 API。对客户端而言，仍然只需一个网关地址（Gateway URL）和一把用户 API 密钥。
+**OctaFuse 是可自托管的 AI 能力网关与运营控制面。** 你可以统一接入 Chat、Responses、图片生成与编辑、ASR、TTS、实时语音、智能体工具和私有模型服务，并通过请求入口（Request Surface）→ 路由池（Route Pool）→ 上游目标（Upstream Target）管理路由、故障转移、供应商熔断、预算、计费、审计和管理 API。对客户端而言，仍然只需一个网关地址（Gateway URL）和一把用户 API 密钥。
 
 ## 应用场景
 
@@ -53,7 +53,7 @@ AI 能力正在从文本模型扩展到图片生成、智能体工具（Agent To
 
 <CardGrid stagger>
 	<Card title="多协议与多模态统一入口" icon="external">
-		支持 OpenAI Chat、Images、Audio Transcriptions 与 Models，Anthropic Messages，以及 Gemini `generateContent` / `streamGenerateContent`；门户可用公开 `GET /catalog/models` 发现能力。
+		支持 OpenAI Chat、Responses、Images、Audio 与 Models，Anthropic Messages、Gemini `generateContent` / `streamGenerateContent`，以及 DashScope 原生音频；门户可用公开 `GET /catalog/models` 发现能力。
 	</Card>
 	<Card title="图片生成 / 编辑" icon="open-book">
 		OpenAI 兼容 `POST /v1/images/generations` 与 `edits`；目录价支持 Token 分项与按张（`per_image`）。调试台（Playground）/ 模拟器（Simulator）可用于联调出图与计费日志。

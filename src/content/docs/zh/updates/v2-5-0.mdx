@@ -1,0 +1,77 @@
+---
+title: OctaFuse 2.5.0：让 OpenAI Responses API 进入统一路由
+description: OctaFuse Gateway 2.5.0 新增 OpenAI Responses API 兼容接口，升级路由与供应商管理工作台，并扩充 Gemini、GLM、Grok、DeepSeek 等模型预设。
+publishDate: 2026-08-15
+publish_at: 2026-08-15
+updateLabel: VERSION 2.5.0
+featuredUpdate: true
+template: splash
+prev: false
+next: false
+lastUpdated: false
+sidebar:
+  hidden: true
+---
+
+2.5.0 将 OpenAI Responses API 纳入 OctaFuse 的统一路由体系。应用可以继续使用现有的用户 API Key、预算和公开模型，通过 `POST /v1/responses` 访问支持 Responses 的上游。
+
+管理后台也同步升级了 Routes 与 Providers 工作台，让请求入口、公开模型、路由组和上游目标之间的关系更加直观。
+
+一句话看懂 2.5.0：
+
+> **统一路由 OpenAI Responses API，并让多模型、多协议的配置与排查更加简单。**
+
+## 01｜统一路由 OpenAI Responses API
+
+2.5.0 新增 OpenAI Responses 兼容接口，支持非流式 JSON 和 `stream=true` 的 SSE 事件流，并沿用 Chat 已有的鉴权、预算、路由、故障转移和异步记账能力。
+
+流式请求的输入、输出、推理和缓存 Token 都会进入现有的用量统计与计费链路。已有的 Chat、Messages、Gemini、Images 和 Audio 接口不受影响。
+
+对于使用 `previous_response_id` 的连续调用，路由需要保证请求回到同一个上游目标；无法保证时，网关会明确返回错误，避免状态错乱。当前版本主要支持 Responses 的创建与流式调用。
+
+## 02｜全新的 Routes 工作台
+
+新版 Routes 工作台提供两种查看方式，并将尚未接入请求入口的模型集中展示：
+
+- **总览（Overview）**：按请求入口查看完整路由拓扑。
+- **按模型（By model）**：查看单个模型的路由组、优先级、权重和故障转移关系。
+- **未接线模型（Unrouted models）**：快速发现已导入但尚未配置请求入口的模型。
+
+![OpenAI Responses 请求入口及尚未接入路由的模型](/screenshots/v2-5-0-responses-overview-unrouted.png)
+
+*总览视角按请求入口展示完整拓扑，并在页面底部集中列出未接线模型。*
+
+![Routes 工作台按模型查看 Qwen3.7 Plus 的默认与 free 路由组](/screenshots/v2-5-0-routes-by-model.png)
+
+*按模型视角可以在一张拓扑图中查看同一模型的不同路由组和全部上游目标。*
+
+配合状态、类型、厂商和 Provider 筛选，复杂路由的配置检查与问题排查会更加直接。
+
+## 03｜Provider 管理更直观
+
+Provider 列表改为卡片网格，每张卡片都会展示 API Key 状态、活动路由数量，以及 Chat、Responses、Messages 等协议能力。列表还支持按启用状态和协议筛选。
+
+![Provider 卡片展示协议能力、密钥状态和路由数量](/screenshots/v2-5-0-provider-cards.png)
+
+*无需逐个打开 Provider，即可快速确认密钥、路由和协议配置。*
+
+Provider 编辑界面也会按协议管理端点。Responses 可以使用独立地址，也可以根据 OpenAI Base URL 自动生成 `/v1/responses`。
+
+## 04｜联调入口与模型预设同步更新
+
+- Playground 和 Simulator 新增 Responses 模式，可以直接验证普通响应、SSE 事件和实际命中的路由目标。
+- 模型预设新增 `gemini-3.7-flash`、`glm-5.3`、`grok-4.6` 和 `grok-imagine-image-2.0`。
+- DeepSeek V4 Pro 规格和 Grok 4 系列阶梯价格同步更新。
+
+2.5.0 不包含数据库迁移，更新 Proxy、Admin 与 migrate 镜像后滚动重启即可。
+
+## 小结
+
+2.5.0 的重点，是让 Responses API 可以直接进入 OctaFuse 现有的路由与治理体系，同时通过全新的 Routes 和 Providers 工作台，降低多模型、多协议环境的管理成本。
+
+OctaFuse 是一个可自托管的开源 AI 能力网关与运营控制台。它为模型、图片、语音和智能体工具提供统一入口，并将路由、密钥、预算、计费、日志与审计留在你自己的基础设施中。
+
+- [OctaFuse 官网](https://octafuse.dev/zh/)
+- [GitHub 仓库](https://github.com/OctaFuse/octafuse-gateway)
+
+如果 OctaFuse 对你的项目有帮助，欢迎在 GitHub 上点一个 **Star**。你的关注和反馈，会帮助我们继续完善路由、协议适配与自托管体验。

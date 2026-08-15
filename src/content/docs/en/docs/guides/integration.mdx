@@ -13,20 +13,22 @@ import { Aside } from '@astrojs/starlight/components';
 |----------|------|
 | `GATEWAY_URL` | **Proxy** origin — where apps/SDKs send inference requests |
 | `GATEWAY_MASTER_URL` | **Admin** origin — where backends call **admin APIs** |
-| `GATEWAY_MASTER_KEY` | Bearer matching the **master key** in Admin **Config** — **server-side only** |
+| `GATEWAY_MASTER_KEY` | A named Admin API Key created under **System Integration → Integration Keys** — **server-side only**; the environment-variable name can remain unchanged |
 
 <Aside type="caution" title="Security">
-	Never ship the master key or user **`sk-…`** keys to untrusted browsers or public repos.
+	Never ship Integration Keys or user **`sk-…`** keys to untrusted browsers or public repos. Give each external system an independent least-privilege Integration Key.
 </Aside>
 
 ## Inference (apps)
 
-- Paths and payloads follow the current gateway release (e.g. common OpenAI-compatible chat endpoints). Auth: **`Authorization: Bearer sk-…`**.  
+- Paths and payloads follow the current gateway release, including OpenAI-compatible Chat and Responses endpoints. Auth: **`Authorization: Bearer sk-…`**.
 - Optional **`GET /v1/me`** on the **Proxy** with the user key returns budget-related summaries for your UI (fields vary by release).
 
 ## Control plane (servers)
 
-Typical flow: after signup, your backend uses the master key to **create or update gateway users** and **create API keys**, then returns `sk-…` only to trusted environments or stores it server-side only.
+Typical flow: after signup, your backend uses a named Integration Key to **create or update gateway users** and **create API keys**, then returns `sk-…` only to trusted environments or stores it server-side only.
+
+Upgrades migrate the old `MASTER_KEY` value into a full-permission `legacy-master` key. Rotate or revoke it after external systems switch to named least-privilege keys.
 
 API index: [GitHub technical reference](/en/docs/github-reference/).
 

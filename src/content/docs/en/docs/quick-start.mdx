@@ -42,7 +42,7 @@ npm run dev:admin
 | Admin | `http://127.0.0.1:8789` |
 | Console login | `admin` / `admin` (local default; first `dev:admin` auto-creates `packages/admin/.dev.vars`) |
 | Local D1 | `./.wrangler/state` |
-| Admin API Bearer | `sk-dev-admin-key` (management API, not the console password) |
+| Admin API Bearer | Create one under **Integration Keys** after signing in (management API, not the console password) |
 
 Health check:
 
@@ -93,6 +93,8 @@ curl -sS http://127.0.0.1:8787/v1/chat/completions \
 ```
 
 After cloud deploy, use your Proxy URL as the host.
+
+If the model has a Responses request surface, you can instead call `/v1/responses` with a Responses-style `input` body.
 
 ## Not using Cloudflare?
 

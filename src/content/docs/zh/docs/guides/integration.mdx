@@ -13,20 +13,22 @@ import { Aside } from '@astrojs/starlight/components';
 |------|------|
 | `GATEWAY_URL` | **代理服务**的根地址；应用或 SDK 发推理请求时使用 |
 | `GATEWAY_MASTER_URL` | **管理后台**的根地址；服务端调用其下的**管理 API** 时使用 |
-| `GATEWAY_MASTER_KEY` | 与管理后台**系统配置**中的管理密钥一致的 Bearer，**仅放在服务端** |
+| `GATEWAY_MASTER_KEY` | 在 **系统集成 → 集成密钥（Integration Keys）** 创建的具名 Admin API Key，**仅放在服务端**；环境变量名可继续沿用 |
 
 <Aside type="caution" title="安全">
-	管理密钥与用户 **`sk-…`** 均不可下发到不可信的浏览器或公开仓库。
+	集成密钥与用户 **`sk-…`** 均不可下发到不可信的浏览器或公开仓库。不同外部系统应使用彼此独立、权限最小化的集成密钥。
 </Aside>
 
 ## 推理（应用侧）
 
-- 协议与路径以当前网关版本为准（例如常见的 OpenAI 兼容聊天接口等），鉴权为 **`Authorization: Bearer sk-…`**。  
+- 协议与路径以当前网关版本为准，例如 OpenAI 兼容的 Chat 与 Responses 接口；鉴权为 **`Authorization: Bearer sk-…`**。
 - 可使用 **`GET /v1/me`**（向代理服务发起并携带用户密钥）查看预算摘要，便于在自家产品中展示额度（字段以当前版本为准）。
 
 ## 控制面（服务端）
 
-典型流程：用户在你的门户注册成功 → 服务端用管理密钥调用管理接口**创建或更新网关用户** → **创建 API 密钥** → 将 `sk-…` 仅返回给可信环境或仅保存在服务端。
+典型流程：用户在你的门户注册成功 → 服务端用具名集成密钥调用管理接口**创建或更新网关用户** → **创建 API 密钥** → 将 `sk-…` 仅返回给可信环境或仅保存在服务端。
+
+升级环境会把旧 `MASTER_KEY` 迁移为全权限的 `legacy-master`。确认外部系统已经改用具名、最小权限密钥后，应轮换或吊销 `legacy-master`。
 
 接口索引与约定见 [GitHub 技术参考](/zh/docs/github-reference/)。
 

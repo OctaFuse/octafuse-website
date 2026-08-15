@@ -100,7 +100,7 @@ npm run deploy:cloudflare -- <instance> --admin-only
 ## Secret 与下游配置
 
 - **`ADMIN_PASSWORD`**：引导脚本会写入；也可执行 `npx wrangler secret put ADMIN_PASSWORD --name <ADMIN_WORKER_NAME>`。
-- 下游门户：`GATEWAY_URL`（代理服务）、`GATEWAY_MASTER_URL`（管理后台）、`GATEWAY_MASTER_KEY`（D1 `system_config.MASTER_KEY`）。种子为 `sk-dev-admin-key` 时，须在管理后台的系统配置（Config）中**轮换**。
+- 下游门户：`GATEWAY_URL`（代理服务）、`GATEWAY_MASTER_URL`（管理后台），以及在 **系统集成 → 集成密钥** 创建的具名 Admin API Key（环境变量可继续命名为 `GATEWAY_MASTER_KEY`）。
 
 ## 与 Docker 自建如何选
 

@@ -5,24 +5,24 @@ description: Configure protocol operations, strategies, priority, weight, billin
 
 import { Aside, Steps } from '@astrojs/starlight/components';
 
-Open **Inference → Routes**. Version 2.0 uses three layers: a client request resolves a **Request Surface** by model, route group, protocol, and operation; the Surface points to a **Route Pool**; the Pool contains concrete **Upstream Targets**. Chat, Images, Audio, and other operations can therefore use independent failover pools and strategies.
+Open **Inference → Routes**. A client request resolves a **Request Surface** by model, route group, protocol, and operation; the Surface points to a **Route Pool**; the Pool contains concrete **Upstream Targets**. Chat, Responses, Images, Audio, and other operations can therefore use independent failover pools and strategies.
 
-The list supports rich filters; the current filter set is reflected in the browser address bar so you can share a link to the same view.
+The workspace provides **Overview** and **By model** views, plus an **Unrouted models** section for models without an active request surface. Status, kind, route-group, vendor, and Provider filters are reflected in the browser address bar so you can share the same view.
 
 <Aside type="tip" title="Prerequisite">
 	Complete [Providers](/en/docs/guides/providers/) and [Models](/en/docs/guides/models/) first.
 </Aside>
 
 <figure class="of-doc-figure">
-	<img src="/screenshots/admin-routes.png" alt="OctaFuse Admin Routes page showing the topology from Request Surface and route group through policy to Upstream Targets." loading="lazy" />
-	<figcaption>Routes keeps the client surface, routing policy, and upstream targets on one visible path. A model can use separate paths by protocol, operation, and route group.</figcaption>
+	<img src="/screenshots/v2-5-0-responses-overview-unrouted.png" alt="OctaFuse Admin Routes Overview showing request surfaces, models, route groups, upstream targets, and unrouted models." loading="lazy" />
+	<figcaption>Overview groups the full topology by request surface and lists unrouted models below; By model focuses on one public model.</figcaption>
 </figure>
 
 ## What to do in Admin
 
 <Steps>
 1. Open **Routes**.
-1. **Request Surface**: choose the client model and `route_group` (often `default`), then the incoming protocol / operation, such as `openai.chat`, `anthropic.messages`, or `openai.images.generations`. Gemini streaming and non-streaming routes both use `gemini.models.generate`.
+1. **Request Surface**: choose the client model and `route_group` (often `default`), then the incoming protocol / operation, such as `openai.chat`, `openai.responses`, `anthropic.messages`, or `openai.images.generations`. Gemini streaming and non-streaming routes both use `gemini.models.generate`.
 1. **Route Pool**: point the Surface to a failover pool. Set a Pool default strategy, or click a priority-tier strategy chip to override only that tier; unset values continue through the model / global inheritance chain.
 1. **Upstream Target**: choose a Provider, upstream model name and operation, then set **priority** (higher tries first), **weight**, and status.
 1. **Billing**: set **charged to user** and **supplier cost** multipliers on the Target. Add a **Daily schedule** for vendor peak / off-peak pricing; its timezone comes from [System config](/en/docs/guides/system-config/).
