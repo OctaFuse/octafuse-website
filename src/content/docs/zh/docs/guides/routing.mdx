@@ -25,9 +25,15 @@ import { Aside, Steps } from '@astrojs/starlight/components';
 1. **请求入口（Surface）**：选择客户端模型与 `route_group`（常用 `default`），再指定入口协议和 `operation`，例如 `openai.chat`、`openai.responses`、`anthropic.messages`、`openai.images.generations`；Gemini 流式与非流式统一选择 `gemini.models.generate`。
 1. **路由池（Route Pool）**：让请求入口指向一个故障转移池；可设置路由池的默认策略，也可点击各 `priority` 层的策略（**Policy**）芯片，单独覆盖该层。未设置时继续继承模型或全局策略。
 1. **上游目标（Upstream Target）**：选择供应商（**Provider**），填写上游实际模型名与 `operation`，设置 `priority`（数字越大越先尝试）、`weight` 和启用状态。
+1. **自定义参数（Custom params）**：按需填写供应商扩展参数或路由默认值。它们会与上游请求体深度合并，客户端显式传入的字段优先。
 1. **计费**：在上游目标中设置用户计费（**Charged cost**）和供应成本（**Metered cost**）相对目录标准价的基础倍率；如需对齐供应商的高峰价和闲时价，再配置每日时段（**Daily schedule**）倍率，时区见 [系统配置](/zh/docs/guides/system-config/)。
 1. **保存后**：用[调试台（Playground）](/zh/docs/features/playground/)针对单条路由做上游试跑；若要验证“真实密钥 + 网关入口”整条链路，请用[模拟器（Simulator）](/zh/docs/features/simulator/)。
 </Steps>
+
+<figure class="of-doc-figure">
+	<img src="/screenshots/v2-5-0-route-editor.png" alt="OctaFuse 路由编辑页面集中配置客户端入口、上游映射、自定义参数与计费倍率。" loading="lazy" />
+	<figcaption>打开任一上游目标，即可在同一页面完成协议映射、路由参数与计费倍率配置。</figcaption>
+</figure>
 
 ## 与客户端的关系
 

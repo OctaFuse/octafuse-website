@@ -25,9 +25,15 @@ The workspace provides **Overview** and **By model** views, plus an **Unrouted m
 1. **Request Surface**: choose the client model and `route_group` (often `default`), then the incoming protocol / operation, such as `openai.chat`, `openai.responses`, `anthropic.messages`, or `openai.images.generations`. Gemini streaming and non-streaming routes both use `gemini.models.generate`.
 1. **Route Pool**: point the Surface to a failover pool. Set a Pool default strategy, or click a priority-tier strategy chip to override only that tier; unset values continue through the model / global inheritance chain.
 1. **Upstream Target**: choose a Provider, upstream model name and operation, then set **priority** (higher tries first), **weight**, and status.
+1. **Custom params**: add Provider-specific extensions or route defaults when needed. They are deep-merged into the upstream request body, with explicit client fields taking precedence.
 1. **Billing**: set **charged to user** and **supplier cost** multipliers on the Target. Add a **Daily schedule** for vendor peak / off-peak pricing; its timezone comes from [System config](/en/docs/guides/system-config/).
 1. After saving, use [Playground](/en/docs/features/playground/) for a single-route upstream check; use [Simulator](/en/docs/features/simulator/) to exercise the full Proxy path with a real `sk-` key.
 </Steps>
+
+<figure class="of-doc-figure">
+	<img src="/screenshots/v2-5-0-route-editor.png" alt="OctaFuse route editor showing the client surface, upstream mapping, custom parameters, and billing multipliers." loading="lazy" />
+	<figcaption>Open any upstream target to configure protocol mapping, route parameters, and billing multipliers on one page.</figcaption>
+</figure>
 
 ## Client impact
 
