@@ -37,7 +37,7 @@ The common client surfaces remain straightforward:
 | Realtime ASR / TTS | `GET /v1/dashscope/realtime` | Relays native DashScope events over WebSocket |
 
 <figure class="of-doc-figure">
-	<img src="/screenshots/v2-4-0-dashscope-tts-route.png" alt="Qwen Audio 3.0 TTS Plus routed from the OpenAI audio request surface to an Alibaba Cloud upstream" loading="lazy" />
+	<img src="/screenshots/v2-4-0-dashscope-tts-route.webp" alt="Qwen Audio 3.0 TTS Plus routed from the OpenAI audio request surface to an Alibaba Cloud upstream" loading="lazy" />
 	<figcaption>The application keeps calling <code>/v1/audio/speech</code>. The Route Pool selects the Alibaba Cloud upstream, while the Target configuration determines the DashScope model and adapter.</figcaption>
 </figure>
 
@@ -98,7 +98,7 @@ External systems, automation jobs, and operations tools previously tended to sha
 Version 2.4.0 separates browser sessions from Bearer identities and adds **System Integration → Integration Keys**:
 
 <figure class="of-doc-figure">
-	<img src="/screenshots/v2-4-0-integration-keys.png" alt="Integration Keys showing the legacy-master credential migrated from the previous MASTER_KEY" loading="lazy" />
+	<img src="/screenshots/v2-4-0-integration-keys.webp" alt="Integration Keys showing the legacy-master credential migrated from the previous MASTER_KEY" loading="lazy" />
 	<figcaption>The upgrade copies the previous <code>MASTER_KEY</code> into a full-permission <code>legacy-master</code> credential so existing clients keep working. After the deployment is stable, split credentials by caller identity and use case.</figcaption>
 </figure>
 

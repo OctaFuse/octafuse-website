@@ -13,6 +13,11 @@ import { Aside, Steps } from '@astrojs/starlight/components';
 	**`sk-…` 会出现在浏览器中**，仅建议在测试环境中使用或使用脱敏密钥；遇到生产问题时，优先在服务端使用相同请求复现。
 </Aside>
 
+<figure class="of-doc-figure">
+	<img src="/screenshots/v2-6-0-simulator-routing-target.webp" alt="OctaFuse Simulator 选择 Gemini 模型后显示匹配路由组与可用客户端协议。" loading="lazy" />
+	<figcaption>先选择客户端可见模型和路由组，Simulator 会根据匹配的请求入口显示可用协议；再填写 Proxy 地址与测试密钥发送请求。</figcaption>
+</figure>
+
 ## 如何使用
 
 <Steps>
@@ -22,6 +27,8 @@ import { Aside, Steps } from '@astrojs/starlight/components';
 1. 发送请求后，到 [请求日志](/zh/docs/guides/request-logs/) 中核对是否出现对应记录（含 `billing_kind` / image count）。
 1. 若与调试台表现不一致，请检查**用户预算**、**路由组**、**密钥是否被吊销**等常见因素。
 </Steps>
+
+Simulator 按你选择的**客户端请求入口**决定请求协议和路径，而不是按最终上游目标的协议发送。例如客户端从 OpenAI Audio 入口进入、路由再通过显式适配器转到 DashScope 时，Simulator 仍会构造 OpenAI 侧请求。这可以更准确地复现真实客户端行为。
 
 页面可能会 **在本机浏览器** 记住你上次填写的地址、协议等，便于反复调试；更换环境或共用电脑时注意清理。
 

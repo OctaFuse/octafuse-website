@@ -1,0 +1,111 @@
+---
+title: 'OctaFuse 2.6.0: safer Vertex AI auth, image billing, and daily operations'
+description: OctaFuse Gateway 2.6.0 adds project-scoped Vertex AI service-account auth, explicit image billing and no-charge failure rules, daily schedule overrides, stronger Playground and Simulator workflows, and new Provider presets.
+publishDate: 2026-08-19
+updateLabel: VERSION 2.6.0
+featuredUpdate: true
+template: splash
+prev: false
+next: false
+lastUpdated: false
+sidebar:
+  hidden: true
+---
+
+OctaFuse Gateway 2.6.0 focuses on project-scoped Vertex AI authentication and image billing, making Provider onboarding, time-of-day pricing, and failed-request charges easier to configure and verify.
+
+Admin also improves route editing, Playground, and Simulator, while adding import presets for BytePlus, Alibaba Cloud Model Studio International, Meta Model API, Cerebras, SambaNova, DeepInfra, Novita, Command Code, Hugging Face, Vercel, and more.
+
+In one sentence:
+
+> **Standardize project-scoped Vertex AI service-account auth, clarify image and schedule billing, and make everyday configuration and testing more efficient.**
+
+## Project-scoped Vertex AI now uses one service-account flow
+
+Paste a GCP service-account JSON into the Provider credential field. Before sending a request, Gateway signs a JWT, exchanges it for an OAuth 2.0 access token, and calls Vertex AI with `Authorization: Bearer`.
+
+The same credential can serve both Vertex AI paths:
+
+- **OpenAI-compatible endpoint** at `.../endpoints/openapi` for Chat Completions-compatible calls.
+- **Native Gemini endpoint** under the project-scoped `publishers/google/models` path.
+
+The service-account JSON is never appended to `?key=` or forwarded unchanged. For the OpenAI-compatible endpoint, Gateway automatically adds `google/` when the route's `provider_model_name` omits it; native Gemini keeps the original model name.
+
+Playground uses the same credential parsing and access-token exchange as Proxy, so operators can verify project IDs, IAM access, and upstream model names before sending production traffic.
+
+![OctaFuse Provider template catalog filtered to the two Google Vertex AI onboarding options](/screenshots/v2-6-0-provider-import-vertex.webp)
+
+*Click Import on Providers and search for Vertex to distinguish Express Mode API-key onboarding from project-scoped service-account onboarding.*
+
+## Explicit image billing and no-charge failures
+
+Image models now declare one `image_billing_mode`:
+
+- **`token`** meters upstream text and image Token usage, as used by GPT Image and Gemini image models.
+- **`per_image`** charges confirmed output images and can include reference-image input pricing, as used by Seedream, GLM Image, and Grok Image.
+
+Version 2.6.0 also aligns failure handling: client cancellation, Gateway timeout, explicit upstream 4xx / 5xx responses, network failures, and empty results do not charge the user. Budget preflight only decides whether a request may reach the upstream; it is no longer the final charge for an uncertain result.
+
+To avoid interpreting old data as per-image pricing, a legacy `image` block without an explicit `image_billing_mode` is no longer billable. Legacy profiles with valid `image_*` Token prices continue to resolve as Token billing.
+
+![OctaFuse Models filtered to Image, with per-image and token-based prices visible on model cards](/screenshots/v2-6-0-model-image-billing.webp)
+
+*Model cards show `/img` or `/M` directly, making the active image-billing model visible before routes are configured.*
+
+## Daily schedules override default factors
+
+Target billing now has a simpler mental model. The default Charged and Metered factors apply outside configured windows. When a Daily schedule window matches, the factors on that row directly override the defaults.
+
+New configuration writes `schedule.mode: "override"`. Existing configuration without `mode` keeps the historical multiplication behavior, preserving deployed pricing semantics.
+
+The Routes workspace also improves factor formatting, schedule hints, and topology presentation so operators can see how a Target will be priced before saving.
+
+![OctaFuse route editor with default billing factors and two Daily schedule windows](/screenshots/v2-6-0-route-billing-schedule.webp)
+
+*Review client mapping, upstream mapping, catalog rates, default factors, and Daily schedule overrides in one route editor.*
+
+## Better Playground, Simulator, and Provider catalog workflows
+
+Playground adds more Chat, Responses, Anthropic, and Gemini request samples, plus richer observation of streaming output, terminal usage, and Gemini tool-call arguments. Simulator now derives its protocol from the selected client request surface, matching how a real client enters Proxy.
+
+![OctaFuse Playground with one route selected and the Tool stream request sample loaded](/screenshots/v2-6-0-playground-tool-stream.webp)
+
+*Load Tool stream and other samples after selecting one route. Playground does not debit user budgets, write request logs, or execute Route Pool failover.*
+
+![OctaFuse Simulator showing OpenAI and Gemini request protocols for a selected Gemini model](/screenshots/v2-6-0-simulator-routing-target.webp)
+
+*Simulator starts from the client-visible model and route group, then derives the available protocol and request path from matching request surfaces.*
+
+The Provider catalog adds international endpoints, official model APIs, inference platforms, and aggregation gateways. The website's [Provider Catalog](/en/catalog/providers/) and [Model Catalog](/en/catalog/models/) are now synchronized to v2.6.0.
+
+The model preset `gemini-3.1-flash-lite-preview` is replaced by Google's current model ID, `gemini-3.1-flash-lite`. The model remains in preview. Existing database rows are not renamed automatically; delete and re-import them or update the ID manually.
+
+## Upgrade to 2.6.0
+
+There is no database schema change. Pull the v2.6.0 Proxy, Admin, and migrate images, run the one-shot migrate job as usual, then roll Proxy and Admin.
+
+Before upgrading, review [GitHub Release v2.6.0](https://github.com/OctaFuse/octafuse-gateway/releases/tag/v2.6.0) and the [full changelog](https://github.com/OctaFuse/octafuse-gateway/blob/v2.6.0/CHANGELOG.md).
+
+For built-in image models with old pricing in Postgres, preview the optional data update first:
+
+```bash
+node scripts/db/migrate-image-billing-modes.mjs --dry-run
+```
+
+Re-run with `--apply` only after reviewing the output. The script automates known built-in model IDs only; MySQL, D1, and custom models require a manual `image_billing_mode` review.
+
+After upgrading, verify:
+
+- Project ID, IAM permission, OpenAI-compatible calls, and native Gemini calls for project-scoped Vertex AI.
+- `token` / `per_image` configuration and no-charge cancellation, timeout, and upstream failure behavior for every image model.
+- Schedule overrides in matching windows and preserved multiplication semantics for legacy configuration.
+- Playground streaming and Gemini tool calls, then the full Proxy path in Simulator.
+
+## Summary
+
+Version 2.6.0 does not add a new client endpoint. Instead, it strengthens authentication, billing, and operations around existing capabilities: Vertex AI credentials no longer depend on ambiguous `?key=` setup, uncertain image failures have a clear no-charge boundary, and schedule pricing now matches the way Admin presents it.
+
+- [OctaFuse website](https://octafuse.dev/en/)
+- [GitHub repository](https://github.com/OctaFuse/octafuse-gateway)
+
+If OctaFuse helps your project, please give it a **Star** on GitHub. Your feedback helps us keep improving routing, protocol support, and the self-hosted experience.

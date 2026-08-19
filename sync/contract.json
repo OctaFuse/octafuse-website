@@ -167,8 +167,8 @@
 					"path": "docs/developers/reference/image-models.md",
 					"label": { "zh": "文生图模型", "en": "Image models" },
 					"description": {
-						"zh": "gpt-image-2 与 Seedream：端点、参数、计费折算与运营验收。",
-						"en": "gpt-image-2 and Seedream: endpoints, parameters, billing conversion, and ops acceptance."
+						"zh": "图片模型端点、参数、Token / 按张计费、异常不扣费与运营验收。",
+						"en": "Image endpoints, parameters, Token / per-image billing, no-charge failures, and ops acceptance."
 					}
 				},
 				{

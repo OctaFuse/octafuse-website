@@ -56,7 +56,7 @@ AI capabilities are expanding beyond text models into image generation, Agent To
 		Supports OpenAI Chat, Responses, Images, Audio, and Models; Anthropic Messages; Gemini `generateContent` / `streamGenerateContent`; and native DashScope audio. Portals can discover capabilities through public `GET /catalog/models`.
 	</Card>
 	<Card title="Image generation / edit" icon="open-book">
-		OpenAI-compatible `POST /v1/images/generations` and `edits`, with token-metered and per-image (`per_image`) catalog pricing. Playground / Simulator cover image smoke and billing logs.
+		OpenAI-compatible `POST /v1/images/generations` and `edits`, with explicit Token or per-image (`per_image`) pricing. Client cancellation, Gateway timeout, and explicit upstream failures do not charge.
 	</Card>
 	<Card title="Agent Tools" icon="puzzle">
 		Extensible product APIs for agents (`/v1/tools/*`). Web Search supports Bocha, Tavily, CleverSee, and Tencent Cloud WSA; Web Fetch supports Firecrawl, Tavily Extract, and Jina Reader; Deep Search supports Firecrawl Search and Jina Search.
@@ -65,7 +65,7 @@ AI capabilities are expanding beyond text models into image generation, Agent To
 		Client requests resolve a protocol and operation Request Surface, then enter a Route Pool. Pools group Upstream Targets by priority and order each tier with strategy plus weight before automatic failover.
 	</Card>
 	<Card title="Provider and model presets" icon="document">
-		One-click Admin import for a large preset catalog: official model vendors plus aggregation platforms and Coding / Token Plans, with Base URLs and catalog pricing prefilled so you are not hunting docs to maintain endpoints by hand.
+		One-click Admin import for project-scoped Vertex AI, BytePlus, Model Studio International, Meta Model API, Cerebras, SambaNova, Hugging Face, Vercel, and many model, aggregation, and Coding / Token Plan presets.
 	</Card>
 	<Card title="Single-key Providers and presets" icon="approve-check">
 		Each Provider owns one upstream API key and status; represent multiple vendor accounts as separate Providers. Import Provider / Model presets in Admin, add the real key, then attach routes.
@@ -74,13 +74,13 @@ AI capabilities are expanding beyond text models into image generation, Agent To
 		Choose `hash_affinity`, `weighted_random`, `weight_priority`, or `weighted_round_robin`, with optional per-priority-tier overrides. Provider Sticky can remember a successful Target across requests; 429, 401 / 403, and consecutive 5xx responses trigger Provider-level cooldowns.
 	</Card>
 	<Card title="User keys, budgets, and pricing" icon="padlock">
-		Govern access through External system → User → API Key. Budgets and reset periods belong to Users; API Keys authenticate and attribute usage. Model requests record **supplier cost**, **catalog list price**, and **charged to user**, with business-timezone daily schedule multipliers.
+		Govern access through External system → User → API Key. Model requests record **supplier cost**, **catalog list price**, and **charged to user**. Matching Daily schedule windows override default factors while legacy configuration keeps multiplication semantics.
 	</Card>
 	<Card title="Logs, audit, analytics" icon="magnifier">
 		Request logs capture protocol / operation, model, route group, Surface, Pool, Target, Provider, tokens, status, and three cost views. Audit logs track budget charges, resets, and user / key lifecycle events.
 	</Card>
 	<Card title="Playground and Simulator" icon="open-book">
-		Playground tests a single Admin route. Simulator uses a real user key from the browser to verify auth, routing, billing, and logs.
+		Playground uses built-in samples to test one route and observe streams and Gemini tool calls. Simulator derives the protocol from the client request surface and uses a real user key to verify auth, routing, billing, and logs.
 	</Card>
 	<Card title="Deployment and integration" icon="rocket">
 		Default **Cloudflare Workers + D1** (individuals and light traffic can usually stay in the free tier); or Node / Docker with PostgreSQL or MySQL 8. External portals can provision users, keys, and budgets through **`/api/admin/*`**.

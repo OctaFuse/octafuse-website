@@ -41,7 +41,7 @@ Provider 导入也同步覆盖了阿里云百炼标准服务、百炼 Coding Pla
 | TTS | `POST /v1/audio/speech` | 支持一次性音频和 HTTP 流式输出 |
 | 实时 ASR / TTS | `GET /v1/dashscope/realtime` | 通过 WebSocket 转发 DashScope 原生事件 |
 
-![Qwen Audio 3.0 TTS Plus 从 OpenAI 音频请求入口路由到 Alibaba Cloud 上游](/screenshots/v2-4-0-dashscope-tts-route.png)
+![Qwen Audio 3.0 TTS Plus 从 OpenAI 音频请求入口路由到 Alibaba Cloud 上游](/screenshots/v2-4-0-dashscope-tts-route.webp)
 
 *应用仍然调用统一的 `/v1/audio/speech`；路由池根据模型和策略选择 Alibaba Cloud 上游，再由目标配置决定实际的 DashScope 模型与适配器。*
 
@@ -103,7 +103,7 @@ ASR 可以适配按音频时长收费的模型，也可以适配按音频与文�
 
 2.4.0 将浏览器会话与 Bearer Key 身份分离，并新增 **系统集成 → 集成密钥（Integration Keys）**：
 
-![Integration Keys 页面展示从旧 MASTER_KEY 迁移生成的 legacy-master](/screenshots/v2-4-0-integration-keys.png)
+![Integration Keys 页面展示从旧 MASTER_KEY 迁移生成的 legacy-master](/screenshots/v2-4-0-integration-keys.webp)
 
 *升级迁移会把旧 `MASTER_KEY` 复制为全权限的 `legacy-master`，保证现有调用方继续工作；稳定后应按调用身份和使用场景拆分密钥并逐步替换。*
 

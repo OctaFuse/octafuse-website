@@ -1,34 +1,47 @@
 ---
 title: 供应商配置
-description: 在管理台添加上游供应商，配置各协议的访问地址与 API Key，供路由与转发使用。
+description: 在管理台添加上游供应商，配置各协议的访问地址与 API Key 或服务账号凭证，供路由与转发使用。
 ---
 
 import { Aside, Steps } from '@astrojs/starlight/components';
 
-在管理台左侧的推理（**Inference**）下打开供应商（**Providers**）页面。一个 Provider 表示一个上游服务账号，包含协议端点、一把上游 API Key 及启用状态。页面以卡片展示密钥状态、活动路由数和协议能力，并支持按状态及 OpenAI、Anthropic、Gemini、DashScope 协议筛选。
+在管理台左侧的推理（**Inference**）下打开供应商（**Providers**）页面。一个 Provider 表示一个上游账号，包含协议端点、一份上游凭证及启用状态。凭证通常是 API Key；项目级 Vertex AI 也可以使用 GCP 服务账号 JSON。页面以卡片展示凭证状态、活动路由数和协议能力，并支持按状态及 OpenAI、Anthropic、Gemini、DashScope 协议筛选。
 
 <Aside type="tip" title="前置">
 	请先完成 [快速开始](/zh/docs/quick-start/)，能登录管理台。
 </Aside>
 
 <figure class="of-doc-figure">
-	<img src="/screenshots/v2-5-0-provider-cards.png" alt="OctaFuse 管理后台 Provider 卡片展示协议能力、API Key 状态和活动路由数量。" loading="lazy" />
-	<figcaption>Provider 卡片让密钥、路由和协议能力一目了然；编辑时再按协议分页配置 Base URL 或独立端点。</figcaption>
+	<img src="/screenshots/v2-6-0-provider-import-vertex.webp" alt="OctaFuse 管理后台 Provider 模板目录筛选出 Vertex AI Express Mode 与项目级接入方式。" loading="lazy" />
+	<figcaption>点击 Import 后可按名称筛选模板；Vertex AI 的 Express Mode 使用 API Key，项目级模板使用服务账号并同时支持 OpenAI 与 Gemini 协议。</figcaption>
 </figure>
 
 ## 在管理台里要做什么
 
 <Steps>
 1. 在侧栏**推理（Inference）**下进入供应商（**Providers**）。
-1. **新建或编辑**：填写名称、一把 **API Key**、状态与可选说明，再按协议分页配置 Base URL 或独立端点。OpenAI Responses 可填写独立端点，也可根据 OpenAI Base URL 派生 `/v1/responses`。
+1. **新建或编辑**：填写名称、一份**上游凭证**、状态与可选说明，再按协议分页配置 Base URL 或独立端点。OpenAI Responses 可填写独立端点，也可根据 OpenAI Base URL 派生 `/v1/responses`。
 1. **多个账号**：同一供应商有多把账号密钥时，为每个账号创建一个供应商条目，再在同一路由池（**Route Pool**）中添加多个上游目标（**Upstream Target**）；`priority`、`weight` 与分流策略在 [路由配置](/zh/docs/guides/routing/) 中维护。
-1. **从目录导入**：使用页面提供的模板目录快速预填协议端点；导入后仍需补全或核对 **API Key**。运行 Responses 或图片生成时，请确认卡片显示对应协议能力。
+1. **从目录导入**：使用页面提供的模板目录快速预填协议端点；导入后仍需补全或核对上游凭证。目录已收录项目级 Vertex AI、BytePlus、阿里云百炼国际站、Meta Model API、Cerebras、SambaNova、DeepInfra、Novita、Command Code、Hugging Face 和 Vercel 等模板。运行 Responses 或图片生成时，请确认卡片显示对应协议能力。
 1. **保存后**：到 [路由配置](/zh/docs/guides/routing/) 把模型与供应商、协议类型关联起来；需要试连通时，可用[调试台（Playground）](/zh/docs/features/playground/)或[模拟器（Simulator）](/zh/docs/features/simulator/)。
 </Steps>
 
 ## Gemini 内容生成
 
-标准 Gemini 服务只需把 Base URL 配置到 `{model}` 之前，例如 `https://generativelanguage.googleapis.com/v1beta/models`。对于非标准上游，请在 URL 覆盖（**URL overrides**）中使用单一 `models.generate` 模板，形如 `https://example.com/v1beta/models/{model}:{action}`；`{action}` 会在运行时替换为 `generateContent` 或 `streamGenerateContent`。历史双模板仍可兼容读取，但新配置应使用统一模板。
+标准 Gemini 服务只需把 Base URL 配置到 `{model}` 之前，例如 `https://generativelanguage.googleapis.com/v1beta/models`。Gemini 端点的鉴权方式可选择 `query-key`（通过 `?key=` 传递）或 `bearer`（通过 `Authorization: Bearer` 传递）；未设置时默认为 `query-key`。
+
+对于非标准上游，请在 URL 覆盖（**URL overrides**）中使用单一 `models.generate` 模板，形如 `https://example.com/v1beta/models/{model}:{action}`；`{action}` 会在运行时替换为 `generateContent` 或 `streamGenerateContent`。历史双模板仍可兼容读取，但新配置应使用统一模板。
+
+## 项目级 Vertex AI
+
+从供应商目录导入 **Google Vertex AI（替换项目 ID）** 模板后：
+
+1. 将端点中的 `YOUR_PROJECT_ID` 替换为实际 GCP 项目 ID；如需区域端点，同时调整 `global`。
+1. 在供应商凭证栏粘贴完整的 **GCP 服务账号 JSON**，不要填写 Vertex API Key，也不要把 JSON 拼接到 `?key=`。
+1. Gateway 会自动换取 OAuth 2.0 access token，并让 OpenAI 兼容端点和原生 Gemini 端点都使用 Bearer 鉴权。
+1. 通过 Vertex AI 的 OpenAI 兼容端点调用 Google 模型时，路由中的 `provider_model_name` 可填写裸模型名；缺少的 `google/` 前缀会自动补齐。原生 Gemini 路由不加此前缀。
+
+保存后先用[调试台（Playground）](/zh/docs/features/playground/)验证服务账号权限与端点，再用[模拟器（Simulator）](/zh/docs/features/simulator/)验证真实 Proxy 链路。
 
 ## 常见注意点
 

@@ -3,8 +3,8 @@
   "catalog": "models",
   "source": {
     "repo": "OctaFuse/octafuse-gateway",
-    "ref": "main",
-    "commit": "59c80bf119823dd747da88db3081944bd689273c"
+    "ref": "v2.6.0",
+    "commit": "5911f2d7ee01459b507fc2a4edfbbb999bb5873c"
   },
   "source_path": "packages/admin/lib/model-presets",
   "count": 100,
@@ -2263,9 +2263,9 @@
           "tiers": [
             {
               "upto": null,
-              "input_price": 0.435,
-              "output_price": 0.87,
-              "cache_read_price": 0.003625,
+              "input_price": 0.66,
+              "output_price": 1.98,
+              "cache_read_price": 0.022,
               "cache_write_price": null
             }
           ]
@@ -2274,9 +2274,9 @@
           "tiers": [
             {
               "upto": null,
-              "input_price": 3,
-              "output_price": 6,
-              "cache_read_price": 0.025,
+              "input_price": 4.5,
+              "output_price": 13.5,
+              "cache_read_price": 0.15,
               "cache_write_price": null
             }
           ]
@@ -2311,9 +2311,9 @@
           "tiers": [
             {
               "upto": null,
-              "input_price": 0.14,
-              "output_price": 0.28,
-              "cache_read_price": 0.0028,
+              "input_price": 0.22,
+              "output_price": 0.66,
+              "cache_read_price": 0.007,
               "cache_write_price": null
             }
           ]
@@ -2322,9 +2322,9 @@
           "tiers": [
             {
               "upto": null,
-              "input_price": 1,
-              "output_price": 2,
-              "cache_read_price": 0.02,
+              "input_price": 1.5,
+              "output_price": 4.5,
+              "cache_read_price": 0.05,
               "cache_write_price": null
             }
           ]
@@ -2841,8 +2841,8 @@
       "source_path": "packages/admin/lib/model-presets/google.json"
     },
     {
-      "id": "gemini-3.1-flash-lite-preview",
-      "display_name": "Gemini 3.1 Flash Lite Preview",
+      "id": "gemini-3.1-flash-lite",
+      "display_name": "Gemini 3.1 Flash Lite",
       "description": "A high-efficiency Gemini preview optimized for high-volume, latency-sensitive applications. It is tuned for high-volume workloads while approaching the quality of larger Flash models.",
       "i18n": {
         "en": "A high-efficiency Gemini preview optimized for high-volume, latency-sensitive applications. It is tuned for high-volume workloads while approaching the quality of larger Flash models.",

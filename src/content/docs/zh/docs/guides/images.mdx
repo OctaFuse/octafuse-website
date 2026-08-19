@@ -22,6 +22,22 @@ import { Aside, Steps } from '@astrojs/starlight/components';
 1. **验收**：在调试台（Playground）通过单条路由试生成图片（不计入用户账单）；再使用模拟器（Simulator）发起真实的网关代理请求，并在[请求日志（Request Logs）](/zh/docs/guides/request-logs/)中核对 `billing_kind`、图片数量与扣费。
 </Steps>
 
+<figure class="of-doc-figure">
+	<img src="/screenshots/v2-6-0-model-image-billing.webp" alt="OctaFuse 模型页面按 Image 类型筛选，并在卡片上显示按张或按 Token 价格。" loading="lazy" />
+	<figcaption>先在 Models 页面选择 Image：`/img` 表示按张计费，`/M` 表示按 Token 计费；再进入模型编辑页核对完整价目。</figcaption>
+</figure>
+
+## 成功、取消与失败如何计费
+
+- `token` 模式以成功响应中的真实 `usage` 为最终计费依据；入口的 Token 估算只用于预算预检。
+- `per_image` 模式按成功响应中确认返回的图片张数计费，可选叠加参考图输入费用。
+- 客户端取消、Gateway 超时、明确的上游 4xx / 5xx、网络错误与空结果均不扣费，但仍会留下零费用日志供排查。
+- 仅包含旧版 `image` 块但没有显式 `image_billing_mode` 的配置不再计费；包含有效 `image_*` Token 单价的旧配置仍按 `token` 模式处理。
+
+<Aside type="caution" title="升级旧图片价目">
+	Postgres 中使用内置图片模型旧价目的部署，可先运行 `node scripts/db/migrate-image-billing-modes.mjs --dry-run`，确认后再运行 `--apply`。脚本只自动处理已知的内置模型 ID；MySQL、D1 与自定义模型需要人工核对。
+</Aside>
+
 ## 与模型列表的关系
 
 - 默认 **`GET /v1/models`**（需要用户密钥）只返回大语言模型（LLM），**不含**纯图片生成模型；可传 `kind=image` / `kind=all`。
@@ -40,5 +56,3 @@ curl -sS "$GATEWAY_URL/v1/images/generations" \
 
 - [智能体工具（Agent Tools）](/zh/docs/guides/tools/)
 - [路由配置](/zh/docs/guides/routing/) · [模拟器](/zh/docs/features/simulator/)
-
-

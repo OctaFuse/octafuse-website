@@ -56,7 +56,7 @@ AI 能力正在从文本模型扩展到图片生成、智能体工具（Agent To
 		支持 OpenAI Chat、Responses、Images、Audio 与 Models，Anthropic Messages、Gemini `generateContent` / `streamGenerateContent`，以及 DashScope 原生音频；门户可用公开 `GET /catalog/models` 发现能力。
 	</Card>
 	<Card title="图片生成 / 编辑" icon="open-book">
-		OpenAI 兼容 `POST /v1/images/generations` 与 `edits`；目录价支持 Token 分项与按张（`per_image`）。调试台（Playground）/ 模拟器（Simulator）可用于联调出图与计费日志。
+		OpenAI 兼容 `POST /v1/images/generations` 与 `edits`；目录价明确区分 Token 与按张（`per_image`）计费，客户端取消、Gateway 超时和明确的上游失败不扣费。
 	</Card>
 	<Card title="智能体工具" icon="puzzle">
 		面向智能体的可扩展产品 API（`/v1/tools/*`）。网页搜索（Web Search）支持博查、Tavily、CleverSee、腾讯云 WSA；网页抓取（Web Fetch）支持 Firecrawl、Tavily Extract、Jina Reader；深度搜索（Web Deep Search）支持 Firecrawl Search、Jina Search。
@@ -65,7 +65,7 @@ AI 能力正在从文本模型扩展到图片生成、智能体工具（Agent To
 		客户端请求先按协议与 `operation` 命中请求入口，再进入路由池；路由池内按 `priority` 分层，同层根据策略与 `weight` 排序上游目标，失败后自动切换。
 	</Card>
 	<Card title="预置供应商与模型" icon="document">
-		管理后台（Admin）可一键导入大量供应商 / 模型预设：除官方模型厂商外，还覆盖聚合平台与各类 Coding / Token Plan，预填基础地址与模型目录价等信息，无需到处查找后再手工维护。
+		管理后台（Admin）可一键导入项目级 Vertex AI、BytePlus、百炼国际站、Meta Model API、Cerebras、SambaNova、Hugging Face、Vercel 等供应商，以及大量模型、聚合平台和 Coding / Token Plan 预设。
 	</Card>
 	<Card title="单密钥供应商与预置导入" icon="approve-check">
 		一条供应商配置维护一把上游 API 密钥及其启用状态；同一供应商的多个账号用多条供应商配置表示。管理后台可一键导入供应商 / 模型模板，再补齐真实密钥并挂载路由。
@@ -74,13 +74,13 @@ AI 能力正在从文本模型扩展到图片生成、智能体工具（Agent To
 		支持 `hash_affinity`、`weighted_random`、`weight_priority`、`weighted_round_robin`，并可按路由池的 `priority` 层覆盖。可选的供应商粘性（Provider sticky）可跨请求记住成功的上游目标；429、401 / 403 与连续 5xx 会触发供应商级冷却。
 	</Card>
 	<Card title="用户 API 密钥、预算与计费" icon="padlock">
-		按外部系统（External system）→ 用户（User）→ API 密钥（API Key）分层治理；预算与周期归属用户，调用通过 API 密钥鉴权和归集。模型请求同时记录 **供应成本**、**目录标准价**、**用户计费**，并支持业务时区下的每日时段倍率。
+		按外部系统（External system）→ 用户（User）→ API 密钥（API Key）分层治理。模型请求同时记录 **供应成本**、**目录标准价**、**用户计费**；每日时段命中后可直接覆盖默认倍率，旧配置仍兼容叠乘语义。
 	</Card>
 	<Card title="日志、审计与分析" icon="magnifier">
 		请求日志记录协议 / `operation`、模型、`route_group`、请求入口、路由池、上游目标、供应商、Token、状态和三类成本；审计日志记录预算扣减、周期重置与用户 / 密钥生命周期。
 	</Card>
 	<Card title="调试台与模拟器" icon="open-book">
-		调试台在管理后台内测试单条路由；模拟器使用真实的用户 API 密钥模拟客户端调用，检查鉴权、路由、计费与日志链路。
+		调试台通过内置请求样例测试单条路由，并观察流式响应与 Gemini 工具调用；模拟器按客户端请求入口选择协议，使用真实用户 API 密钥检查鉴权、路由、计费与日志链路。
 	</Card>
 	<Card title="部署与系统集成" icon="rocket">
 		默认 **Cloudflare Workers + D1**（个人与小流量通常可在免费额度内运行）；也可使用 Node / Docker + PostgreSQL 或 MySQL 8。外部门户可通过 **`/api/admin/*`** 自动开通用户、签发密钥并同步预算。

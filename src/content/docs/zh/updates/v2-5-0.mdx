@@ -4,7 +4,7 @@ description: OctaFuse Gateway 2.5.0 新增 OpenAI Responses API 兼容接口，�
 publishDate: 2026-08-15
 publish_at: 2026-08-15
 updateLabel: VERSION 2.5.0
-featuredUpdate: true
+featuredUpdate: false
 template: splash
 prev: false
 next: false
@@ -41,17 +41,17 @@ canonical_url: "https://didispace.com/posts/503"
 - **按模型（By model）**：查看单个模型的路由组、优先级、权重和故障转移关系。
 - **未接线模型（Unrouted models）**：快速发现已导入但尚未配置请求入口的模型。
 
-![OpenAI Responses 请求入口及尚未接入路由的模型](/screenshots/v2-5-0-responses-overview-unrouted.png)
+![OpenAI Responses 请求入口及尚未接入路由的模型](/screenshots/v2-5-0-responses-overview-unrouted.webp)
 
 *总览视角按请求入口展示完整拓扑，并在页面底部集中列出未接线模型。*
 
-![Routes 工作台按模型查看 Qwen3.7 Plus 的默认与 free 路由组](/screenshots/v2-5-0-routes-by-model.png)
+![Routes 工作台按模型查看 Qwen3.7 Plus 的默认与 free 路由组](/screenshots/v2-5-0-routes-by-model.webp)
 
 *按模型视角可以在一张拓扑图中查看同一模型的不同路由组和全部上游目标。*
 
 拓扑不仅用于查看。打开任一路由，即可在同一页面配置协议与 operation 映射、路由组、上游目标、自定义参数和计费倍率。
 
-![路由编辑页面集中配置客户端入口、上游映射、自定义参数与计费倍率](/screenshots/v2-5-0-route-editor.png)
+![路由编辑页面集中配置客户端入口、上游映射、自定义参数与计费倍率](/screenshots/v2-5-0-route-editor.webp)
 
 *从客户端模型到上游 Provider，路由关系和关键参数可以在一个页面内完成配置。*
 
@@ -61,7 +61,7 @@ canonical_url: "https://didispace.com/posts/503"
 
 Provider 列表改为卡片网格，每张卡片都会展示 API Key 状态、活动路由数量，以及 Chat、Responses、Messages 等协议能力。列表还支持按启用状态和协议筛选。
 
-![Provider 卡片展示协议能力、密钥状态和路由数量](/screenshots/v2-5-0-provider-cards.png)
+![Provider 卡片展示协议能力、密钥状态和路由数量](/screenshots/v2-5-0-provider-cards.webp)
 
 *无需逐个打开 Provider，即可快速确认密钥、路由和协议配置。*
 

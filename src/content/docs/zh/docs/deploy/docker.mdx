@@ -86,7 +86,7 @@ docker build -f Dockerfile.migrate -t octafuse-migrate:local .
 
 ### 预构建镜像（GHCR / 私有镜像仓库）
 
-1. 在 `docker/deploy/.env.local`（或你的环境文件）中，把 `GATEWAY_PROXY_IMAGE` / `GATEWAY_ADMIN_IMAGE` / `GATEWAY_MIGRATE_IMAGE` 的**标签（tag）**改成目标版本（例如 `v2.5.0`；生产环境建议固定语义化版本，避免长期使用 `latest`）。
+1. 在 `docker/deploy/.env.local`（或你的环境文件）中，把 `GATEWAY_PROXY_IMAGE` / `GATEWAY_ADMIN_IMAGE` / `GATEWAY_MIGRATE_IMAGE` 的**标签（tag）**改成目标版本（例如 `v2.6.0`；生产环境建议固定语义化版本，避免长期使用 `latest`）。
 2. 拉取并迁移，再重建容器：
 
 ```bash

@@ -12,8 +12,8 @@ Open **Inference → Models**. **Models** are catalog entries: the client **`mod
 </Aside>
 
 <figure class="of-doc-figure">
-	<img src="/screenshots/admin-models.png" alt="OctaFuse Admin Models page showing model catalog, vendor filters, capability fields, and tiered pricing." loading="lazy" />
-	<figcaption>Models is the client-facing catalog: model ids, capabilities, vendor grouping, route status, and pricing live here.</figcaption>
+	<img src="/screenshots/v2-6-0-model-import.webp" alt="OctaFuse Admin importing image-model presets from the static model catalog." loading="lazy" />
+	<figcaption>Click Import to filter the catalog by model kind. Presets whose IDs already exist in Gateway are disabled so import cannot overwrite current configuration.</figcaption>
 </figure>
 
 ## What to do in Admin
@@ -26,6 +26,10 @@ Open **Inference → Models**. **Models** are catalog entries: the client **`mod
 1. After saving, add at least one **active** route in [Routing](/en/docs/guides/routing/) or clients cannot resolve the model.
 1. **Capabilities and billing mode**: for Images, verify `image_billing_mode` (token / per_image); for transcription, verify `audio_billing_mode` (token / per_second). Default `hash_affinity` routing keeps a stable preferred Provider at protocol granularity.
 </Steps>
+
+<Aside type="note" title="Gemini 3.1 Flash-Lite model ID">
+	The built-in preset now uses `gemini-3.1-flash-lite` instead of `gemini-3.1-flash-lite-preview`. The model remains in preview. Static presets do not overwrite imported rows; delete and re-import or edit the model ID manually.
+</Aside>
 
 ## How clients pass `model`
 

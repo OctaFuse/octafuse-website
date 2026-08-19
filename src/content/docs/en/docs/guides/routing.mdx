@@ -14,7 +14,7 @@ The workspace provides **Overview** and **By model** views, plus an **Unrouted m
 </Aside>
 
 <figure class="of-doc-figure">
-	<img src="/screenshots/v2-5-0-responses-overview-unrouted.png" alt="OctaFuse Admin Routes Overview showing request surfaces, models, route groups, upstream targets, and unrouted models." loading="lazy" />
+	<img src="/screenshots/v2-5-0-responses-overview-unrouted.webp" alt="OctaFuse Admin Routes Overview showing request surfaces, models, route groups, upstream targets, and unrouted models." loading="lazy" />
 	<figcaption>Overview groups the full topology by request surface and lists unrouted models below; By model focuses on one public model.</figcaption>
 </figure>
 
@@ -26,14 +26,25 @@ The workspace provides **Overview** and **By model** views, plus an **Unrouted m
 1. **Route Pool**: point the Surface to a failover pool. Set a Pool default strategy, or click a priority-tier strategy chip to override only that tier; unset values continue through the model / global inheritance chain.
 1. **Upstream Target**: choose a Provider, upstream model name and operation, then set **priority** (higher tries first), **weight**, and status.
 1. **Custom params**: add Provider-specific extensions or route defaults when needed. They are deep-merged into the upstream request body, with explicit client fields taking precedence.
-1. **Billing**: set **charged to user** and **supplier cost** multipliers on the Target. Add a **Daily schedule** for vendor peak / off-peak pricing; its timezone comes from [System config](/en/docs/guides/system-config/).
+1. **Billing**: set default **charged to user** and **supplier cost** factors on the Target. Add a **Daily schedule** for vendor peak / off-peak pricing. A matching row overrides the defaults; its timezone comes from [System config](/en/docs/guides/system-config/).
 1. After saving, use [Playground](/en/docs/features/playground/) for a single-route upstream check; use [Simulator](/en/docs/features/simulator/) to exercise the full Proxy path with a real `sk-` key.
 </Steps>
 
 <figure class="of-doc-figure">
-	<img src="/screenshots/v2-5-0-route-editor.png" alt="OctaFuse route editor showing the client surface, upstream mapping, custom parameters, and billing multipliers." loading="lazy" />
-	<figcaption>Open any upstream target to configure protocol mapping, route parameters, and billing multipliers on one page.</figcaption>
+	<img src="/screenshots/v2-6-0-route-billing-schedule.webp" alt="OctaFuse route editor showing client mapping, upstream mapping, default billing factors, and Daily schedule windows." loading="lazy" />
+	<figcaption>Open any Upstream Target to review protocol mapping, catalog rates, default Charged / Metered factors, and Daily schedule overrides on one page.</figcaption>
 </figure>
+
+## Default factors and Daily schedule
+
+Starting in 2.6.0, Daily schedules saved by Admin use `schedule.mode: "override"`:
+
+- Outside every window, the Target's default Charged / Metered factors apply.
+- Inside a matching window, that row's Charged / Metered factors apply directly instead of multiplying the defaults.
+- Both sides share start and end times but can use different Charged and Metered factors.
+- Existing data without `schedule.mode` keeps the historical “default factor × window factor” behavior.
+
+Gateway evaluates the window at request entry using the business timezone. A long stream does not change factors when it crosses a window boundary.
 
 ## Client impact
 

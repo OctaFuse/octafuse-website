@@ -7,7 +7,7 @@ import { Aside, Steps } from '@astrojs/starlight/components';
 
 Open **System → Config**. This screen groups global settings such as:
 
-- **Business timezone** and **billing currency** — affect how times and money render across Admin; business timezone also drives route **Daily schedule** window evaluation.
+- **Business timezone** and **billing currency** — affect how times and money render across Admin; business timezone also drives route **Daily schedule** window evaluation. New configuration uses a matching row as the effective factor and the route default outside windows; legacy configuration without `schedule.mode` keeps multiplication semantics.
 - **Global route strategy** — set `ROUTE_STRATEGY` to `hash_affinity` (default), `weighted_random`, `weight_priority`, or `weighted_round_robin`; model rules, Route Pool defaults, and priority-tier policies can override it.
 - **Alert webhooks** (for example Feishu or WeCom) — optional incident notifications.
 - **Custom entries** — advanced global values whose names and meanings your team defines.

@@ -1,34 +1,47 @@
 ---
 title: Providers
-description: Add upstream vendors in Admin with per-protocol base URLs and an API key for routing and forwarding.
+description: Add upstream vendors in Admin with per-protocol URLs and an API key or service-account credential for routing and forwarding.
 ---
 
 import { Aside, Steps } from '@astrojs/starlight/components';
 
-In Admin, open **Inference → Providers**. A **Provider** represents one upstream service account with protocol endpoints, one upstream API key, and an enabled status. Cards show key status, active route counts, and protocol capabilities, with filters for status and OpenAI, Anthropic, Gemini, or DashScope support.
+In Admin, open **Inference → Providers**. A **Provider** represents one upstream account with protocol endpoints, one credential, and an enabled status. The credential is usually an API key; project-scoped Vertex AI can use a GCP service-account JSON. Cards show credential status, active route counts, and protocol capabilities, with filters for status and OpenAI, Anthropic, Gemini, or DashScope support.
 
 <Aside type="tip" title="Prerequisite">
 	Finish [Quick start](/en/docs/quick-start/) so you can sign in to Admin.
 </Aside>
 
 <figure class="of-doc-figure">
-	<img src="/screenshots/v2-5-0-provider-cards.png" alt="OctaFuse Admin Provider cards showing protocol capabilities, API key status, and active route counts." loading="lazy" />
-	<figcaption>Provider cards expose keys, routes, and protocol capabilities at a glance; edit a card to configure protocol-specific Base URLs or endpoints.</figcaption>
+	<img src="/screenshots/v2-6-0-provider-import-vertex.webp" alt="OctaFuse Admin Provider template catalog filtered to Vertex AI Express Mode and project-scoped onboarding." loading="lazy" />
+	<figcaption>Filter templates after clicking Import. Vertex AI Express Mode uses an API key; the project-scoped preset uses a service account and supports both OpenAI and Gemini protocols.</figcaption>
 </figure>
 
 ## What to do in Admin
 
 <Steps>
 1. In the sidebar under **Inference**, open **Providers**.
-1. **Create or edit**: set the display name, one **API Key**, status, and optional notes, then configure Base URLs or capability endpoints on each protocol tab. OpenAI Responses can use an explicit endpoint or derive `/v1/responses` from the OpenAI Base URL.
+1. **Create or edit**: set the display name, one **upstream credential**, status, and optional notes, then configure Base URLs or capability endpoints on each protocol tab. OpenAI Responses can use an explicit endpoint or derive `/v1/responses` from the OpenAI Base URL.
 1. **Multiple accounts**: create one Provider per vendor account, then add multiple Upstream Targets to the same Route Pool. Configure priority, weight, and distribution strategy under [Routing](/en/docs/guides/routing/).
-1. **Import from catalog**: use the built-in catalog to pre-fill endpoints; you still need a valid **API Key**. For Responses or Images, confirm the matching capability appears on the card.
+1. **Import from catalog**: use the built-in catalog to pre-fill endpoints; you still need a valid upstream credential. The catalog includes project-scoped Vertex AI, BytePlus, Alibaba Cloud Model Studio International, Meta Model API, Cerebras, SambaNova, DeepInfra, Novita, Command Code, Hugging Face, Vercel, and more. For Responses or Images, confirm the matching capability appears on the card.
 1. After saving, go to [Routing](/en/docs/guides/routing/) to bind models to this vendor and protocol; use [Playground](/en/docs/features/playground/) or [Simulator](/en/docs/features/simulator/) to validate connectivity.
 </Steps>
 
 ## Gemini Generate Content
 
-For standard Gemini services, set the Base URL to the path immediately before `{model}`, for example `https://generativelanguage.googleapis.com/v1beta/models`. For a non-standard upstream, use one Advanced **`models.generate`** template such as `https://example.com/v1beta/models/{model}:{action}`; `{action}` resolves to `generateContent` or `streamGenerateContent` at runtime. Legacy per-action templates remain readable, but new configuration should use the unified template.
+For standard Gemini services, set the Base URL to the path immediately before `{model}`, for example `https://generativelanguage.googleapis.com/v1beta/models`. Gemini endpoint auth can be `query-key` (send `?key=`) or `bearer` (send `Authorization: Bearer`); the default is `query-key`.
+
+For a non-standard upstream, use one Advanced **`models.generate`** template such as `https://example.com/v1beta/models/{model}:{action}`; `{action}` resolves to `generateContent` or `streamGenerateContent` at runtime. Legacy per-action templates remain readable, but new configuration should use the unified template.
+
+## Project-scoped Vertex AI
+
+After importing **Google Vertex AI (replace project ID)** from the Provider catalog:
+
+1. Replace `YOUR_PROJECT_ID` in the endpoints with the real GCP project ID; change `global` too if you need a regional endpoint.
+1. Paste the complete **GCP service-account JSON** into the Provider credential field. Do not enter a Vertex API key or append the JSON to `?key=`.
+1. Gateway exchanges the credential for an OAuth 2.0 access token and uses Bearer auth for both the OpenAI-compatible and native Gemini endpoints.
+1. On the Vertex AI OpenAI-compatible endpoint, the route may use a bare Google model name; Gateway adds a missing `google/` prefix. Native Gemini routes remain unprefixed.
+
+Use [Playground](/en/docs/features/playground/) to validate IAM and endpoint configuration first, then [Simulator](/en/docs/features/simulator/) for the real Proxy path.
 
 ## Notes
 

@@ -14,7 +14,7 @@ import { Aside, Steps } from '@astrojs/starlight/components';
 </Aside>
 
 <figure class="of-doc-figure">
-	<img src="/screenshots/v2-5-0-responses-overview-unrouted.png" alt="OctaFuse 管理后台 Routes 总览展示请求入口、模型、路由组、上游目标与未接线模型。" loading="lazy" />
+	<img src="/screenshots/v2-5-0-responses-overview-unrouted.webp" alt="OctaFuse 管理后台 Routes 总览展示请求入口、模型、路由组、上游目标与未接线模型。" loading="lazy" />
 	<figcaption>总览按请求入口汇总完整拓扑，页面底部集中列出尚未接线的模型；按模型视角则聚焦单个公开模型。</figcaption>
 </figure>
 
@@ -26,14 +26,25 @@ import { Aside, Steps } from '@astrojs/starlight/components';
 1. **路由池（Route Pool）**：让请求入口指向一个故障转移池；可设置路由池的默认策略，也可点击各 `priority` 层的策略（**Policy**）芯片，单独覆盖该层。未设置时继续继承模型或全局策略。
 1. **上游目标（Upstream Target）**：选择供应商（**Provider**），填写上游实际模型名与 `operation`，设置 `priority`（数字越大越先尝试）、`weight` 和启用状态。
 1. **自定义参数（Custom params）**：按需填写供应商扩展参数或路由默认值。它们会与上游请求体深度合并，客户端显式传入的字段优先。
-1. **计费**：在上游目标中设置用户计费（**Charged cost**）和供应成本（**Metered cost**）相对目录标准价的基础倍率；如需对齐供应商的高峰价和闲时价，再配置每日时段（**Daily schedule**）倍率，时区见 [系统配置](/zh/docs/guides/system-config/)。
+1. **计费**：在上游目标中设置用户计费（**Charged cost**）和供应成本（**Metered cost**）相对目录标准价的默认倍率；如需对齐供应商的高峰价和闲时价，再配置每日时段（**Daily schedule**）。命中时段后，该行倍率会覆盖默认倍率；时区见 [系统配置](/zh/docs/guides/system-config/)。
 1. **保存后**：用[调试台（Playground）](/zh/docs/features/playground/)针对单条路由做上游试跑；若要验证“真实密钥 + 网关入口”整条链路，请用[模拟器（Simulator）](/zh/docs/features/simulator/)。
 </Steps>
 
 <figure class="of-doc-figure">
-	<img src="/screenshots/v2-5-0-route-editor.png" alt="OctaFuse 路由编辑页面集中配置客户端入口、上游映射、自定义参数与计费倍率。" loading="lazy" />
-	<figcaption>打开任一上游目标，即可在同一页面完成协议映射、路由参数与计费倍率配置。</figcaption>
+	<img src="/screenshots/v2-6-0-route-billing-schedule.webp" alt="OctaFuse 路由编辑器集中展示客户端入口、上游映射、默认计费倍率和每日覆盖时段。" loading="lazy" />
+	<figcaption>打开任一上游目标，可在同一页面核对协议映射、目录标准价、Charged / Metered 默认倍率及 Daily schedule 覆盖时段。</figcaption>
 </figure>
+
+## 默认倍率与每日时段
+
+2.6.0 起，Admin 新保存的每日时段使用 `schedule.mode: "override"`：
+
+- 未命中任何时段时，使用上游目标的默认 Charged / Metered 倍率。
+- 命中时段时，直接使用该行的 Charged / Metered 倍率，不再与默认倍率相乘。
+- 两侧共用相同的起止时间，但可以分别填写用户计费倍率与供应成本倍率。
+- 为兼容已部署配置，未设置 `schedule.mode` 的旧数据仍沿用“默认倍率 × 时段倍率”的叠乘规则。
+
+窗口按请求进入 Gateway 的时刻和业务时区判定；长时间流式请求不会在跨越时段边界后切换倍率。
 
 ## 与客户端的关系
 

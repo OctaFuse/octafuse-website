@@ -7,7 +7,7 @@ import { Aside, Steps } from '@astrojs/starlight/components';
 
 在左侧系统（**System**）下打开配置（**Config**）页面。此处集中维护影响全站行为的参数，例如：
 
-- **业务时区**、**计费币种**：影响列表与统计中的时间、金额展示口径；业务时区同时用于路由每日时段（**Daily schedule**）调价的窗口判定。
+- **业务时区**、**计费币种**：影响列表与统计中的时间、金额展示口径；业务时区同时用于路由每日时段（**Daily schedule**）调价的窗口判定。新配置命中时段后直接使用该行倍率，未命中时使用路由默认倍率；未设置 `schedule.mode` 的旧配置仍保持叠乘语义。
 - **全局路由策略**：`ROUTE_STRATEGY` 可设为 `hash_affinity`（默认）、`weighted_random`、`weight_priority` 或 `weighted_round_robin`；模型规则、路由池默认策略和 `priority` 层策略可继续覆盖。
 - **告警 Webhook**（如飞书、企业微信）：可选，用于对接事件通知。
 - **自定义键值**：高级场景下可新增其他全局配置项（键名与含义请与运维约定一致）。

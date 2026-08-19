@@ -35,7 +35,7 @@ canonical_url: "https://didispace.com/posts/495"
 
 过去，Gemini 的 `generateContent` 与 `streamGenerateContent` 会作为两个操作出现在路由配置中。它们在客户端侧确实是两个不同的请求动作，但从网关治理的角度看，通常属于同一项能力，并共享同一组上游和故障转移策略。
 
-![Gemini 路由统一使用 models.generate 操作](/screenshots/v2-2-0-gemini-route-operation.png)
+![Gemini 路由统一使用 models.generate 操作](/screenshots/v2-2-0-gemini-route-operation.webp)
 
 *Gemini 流式与非流式请求统一配置为 `models.generate`，实际请求动作仍由代理根据客户端请求生成。*
 
@@ -57,7 +57,7 @@ models.generate
 
 路由池原本已经支持优先级分层：只有高优先级上游全部失败后，才会进入下一层。但在 2.2.0 之前，同一路由池内的所有层只能共享同一套路由策略。
 
-![路由池优先级分层与故障转移拓扑](/screenshots/v2-2-0-route-topology.png)
+![路由池优先级分层与故障转移拓扑](/screenshots/v2-2-0-route-topology.webp)
 
 *同一个模型可以拥有多个路由组；每个路由池按照优先级组织首选层和备用层。*
 
@@ -70,7 +70,7 @@ models.generate
 | `fixed_order` | 严格按固定顺序尝试，适合主备链路 |
 | `weighted_round_robin` | 按权重轮转，适合更均匀、可预期的流量分配 |
 
-![优先级层策略选择与生效预览](/screenshots/v2-2-0-tier-strategy.png)
+![优先级层策略选择与生效预览](/screenshots/v2-2-0-tier-strategy.webp)
 
 *策略选择器会说明适用场景、取舍、生效来源，并在保存前展示当前层的实际排序效果。*
 
@@ -112,7 +112,7 @@ models.generate
 
 2.2.0 还重新设计了智能体工具供应商卡片。现在可以通过卡片和右侧抽屉集中维护：
 
-![智能体工具供应商配置总览](/screenshots/v2-2-0-agent-tools-providers.png)
+![智能体工具供应商配置总览](/screenshots/v2-2-0-agent-tools-providers.webp)
 
 *网页搜索（Web Search）、网页抓取（Web Fetch）、深度搜索（Web Deep Search）和 AI 率检测（AI Detection）的当前供应商、凭证状态与三账本价格集中呈现。*
 

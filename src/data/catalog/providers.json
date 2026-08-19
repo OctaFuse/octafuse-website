@@ -3,11 +3,11 @@
   "catalog": "providers",
   "source": {
     "repo": "OctaFuse/octafuse-gateway",
-    "ref": "main",
-    "commit": "59c80bf119823dd747da88db3081944bd689273c"
+    "ref": "v2.6.0",
+    "commit": "5911f2d7ee01459b507fc2a4edfbbb999bb5873c"
   },
   "source_path": "packages/admin/lib/provider-import-presets.json",
-  "count": 42,
+  "count": 55,
   "items": [
     {
       "catalog_key": "0",
@@ -148,6 +148,71 @@
     },
     {
       "catalog_key": "4",
+      "name": "BytePlus ModelArk",
+      "vendor_key": "volcengine",
+      "vendor_label": "ByteDance Volcengine",
+      "i18n": {
+        "zh": {
+          "name": "BytePlus ModelArk",
+          "description": "火山方舟国际站（BytePlus）按量端点，覆盖对话与图片生成。"
+        },
+        "en": {
+          "name": "BytePlus ModelArk",
+          "description": "International Volcengine ModelArk endpoints for chat and image generation."
+        }
+      },
+      "links": {
+        "platform": "https://console.byteplus.com/ark/",
+        "api_keys": "https://console.byteplus.com/ark/region:ark+ap-southeast-1/apiKey"
+      },
+      "protocols": [
+        "openai"
+      ],
+      "endpoints": {
+        "openai": {
+          "endpoints": {
+            "chat": "https://ark.ap-southeast.bytepluses.com/api/v3/chat/completions",
+            "images.generations": "https://ark.ap-southeast.bytepluses.com/api/v3/images/generations"
+          }
+        }
+      },
+      "description": "BytePlus ModelArk (Volcengine international, ap-southeast). Capability URLs only: chat/completions + images/generations. Do not mix with China-region ark.cn-beijing.volces.com.",
+      "source_path": "packages/admin/lib/provider-import-presets.json"
+    },
+    {
+      "catalog_key": "5",
+      "name": "BytePlus ModelArk (Coding Plan)",
+      "vendor_key": "volcengine",
+      "vendor_label": "ByteDance Volcengine",
+      "i18n": {
+        "zh": {
+          "name": "BytePlus ModelArk（Coding Plan）",
+          "description": "BytePlus ModelArk Coding Plan 专用对话端点。"
+        },
+        "en": {
+          "name": "BytePlus ModelArk (Coding Plan)",
+          "description": "Coding Plan chat endpoints for BytePlus ModelArk."
+        }
+      },
+      "links": {
+        "platform": "https://console.byteplus.com/ark/",
+        "api_keys": "https://console.byteplus.com/ark/region:ark+ap-southeast-1/apiKey"
+      },
+      "protocols": [
+        "openai"
+      ],
+      "endpoints": {
+        "openai": {
+          "endpoints": {
+            "chat": "https://ark.ap-southeast.bytepluses.com/api/coding/v3/chat/completions"
+          }
+        }
+      },
+      "description": "BytePlus ModelArk Coding Plan–only endpoints (/api/coding…). Do not mix with the standard /api/v3 path or plan quota will not apply.",
+      "source_path": "packages/admin/lib/provider-import-presets.json"
+    },
+    {
+      "catalog_key": "6",
       "name": "Alibaba Cloud Bailian",
       "vendor_key": "aliyun",
       "vendor_label": "Alibaba Cloud",
@@ -183,7 +248,7 @@
       "source_path": "packages/admin/lib/provider-import-presets.json"
     },
     {
-      "catalog_key": "5",
+      "catalog_key": "7",
       "name": "Alibaba Cloud Bailian (Coding Plan)",
       "vendor_key": "aliyun",
       "vendor_label": "Alibaba Cloud",
@@ -219,7 +284,77 @@
       "source_path": "packages/admin/lib/provider-import-presets.json"
     },
     {
-      "catalog_key": "6",
+      "catalog_key": "8",
+      "name": "Alibaba Cloud Bailian (International)",
+      "vendor_key": "aliyun",
+      "vendor_label": "Alibaba Cloud",
+      "i18n": {
+        "zh": {
+          "name": "阿里云百炼（国际站）",
+          "description": "阿里云百炼国际站按量端点，提供 OpenAI 兼容对话与 DashScope 原生音频接口。"
+        },
+        "en": {
+          "name": "Alibaba Cloud Model Studio (International)",
+          "description": "International pay-as-you-go Model Studio endpoints for OpenAI-compatible chat plus native DashScope audio."
+        }
+      },
+      "links": {
+        "platform": "https://modelstudio.console.alibabacloud.com/"
+      },
+      "protocols": [
+        "openai",
+        "dashscope"
+      ],
+      "endpoints": {
+        "openai": {
+          "endpoints": {
+            "chat": "https://dashscope-intl.aliyuncs.com/compatible-mode/v1/chat/completions"
+          }
+        },
+        "dashscope": {
+          "base": "https://dashscope-intl.aliyuncs.com/api/v1"
+        }
+      },
+      "description": "Singapore / international Model Studio pay-as-you-go. Do not mix with China-region dashscope.aliyuncs.com or Coding Plan coding-intl.dashscope.aliyuncs.com keys.",
+      "source_path": "packages/admin/lib/provider-import-presets.json"
+    },
+    {
+      "catalog_key": "9",
+      "name": "Alibaba Cloud Bailian (Coding Plan International)",
+      "vendor_key": "aliyun",
+      "vendor_label": "Alibaba Cloud",
+      "i18n": {
+        "zh": {
+          "name": "阿里云百炼（Coding Plan 国际站）",
+          "description": "阿里云百炼国际站 Coding Plan 专用端点，使用独立的套餐 Key 与额度。"
+        },
+        "en": {
+          "name": "Alibaba Cloud Model Studio (Coding Plan International)",
+          "description": "International Coding Plan endpoints that use plan-specific keys and quota."
+        }
+      },
+      "links": {
+        "platform": "https://modelstudio.console.alibabacloud.com/"
+      },
+      "protocols": [
+        "openai",
+        "anthropic"
+      ],
+      "endpoints": {
+        "openai": {
+          "endpoints": {
+            "chat": "https://coding-intl.dashscope.aliyuncs.com/v1/chat/completions"
+          }
+        },
+        "anthropic": {
+          "base": "https://coding-intl.dashscope.aliyuncs.com/apps/anthropic"
+        }
+      },
+      "description": "International Coding Plan–only endpoints and plan keys (sk-sp-*). Do not mix with dashscope-intl.aliyuncs.com pay-as-you-go or China-region coding.dashscope.aliyuncs.com.",
+      "source_path": "packages/admin/lib/provider-import-presets.json"
+    },
+    {
+      "catalog_key": "10",
       "name": "Qwen AI Platform (Token Plan)",
       "vendor_key": "aliyun",
       "vendor_label": "Alibaba Cloud",
@@ -262,7 +397,7 @@
       "source_path": "packages/admin/lib/provider-import-presets.json"
     },
     {
-      "catalog_key": "7",
+      "catalog_key": "11",
       "name": "Tencent Hunyuan",
       "vendor_key": "tencent",
       "vendor_label": "Tencent",
@@ -293,7 +428,7 @@
       "source_path": "packages/admin/lib/provider-import-presets.json"
     },
     {
-      "catalog_key": "8",
+      "catalog_key": "12",
       "name": "Tencent TokenHub (Hy Token Plan)",
       "vendor_key": "tencent",
       "vendor_label": "Tencent",
@@ -328,7 +463,7 @@
       "source_path": "packages/admin/lib/provider-import-presets.json"
     },
     {
-      "catalog_key": "9",
+      "catalog_key": "13",
       "name": "Baidu Qianfan",
       "vendor_key": "baidu",
       "vendor_label": "Baidu",
@@ -359,7 +494,7 @@
       "source_path": "packages/admin/lib/provider-import-presets.json"
     },
     {
-      "catalog_key": "10",
+      "catalog_key": "14",
       "name": "Zhipu GLM",
       "vendor_key": "zhipu",
       "vendor_label": "Zhipu AI",
@@ -389,7 +524,7 @@
       "source_path": "packages/admin/lib/provider-import-presets.json"
     },
     {
-      "catalog_key": "11",
+      "catalog_key": "15",
       "name": "Zhipu GLM (Coding Plan)",
       "vendor_key": "zhipu",
       "vendor_label": "Zhipu AI",
@@ -425,7 +560,7 @@
       "source_path": "packages/admin/lib/provider-import-presets.json"
     },
     {
-      "catalog_key": "12",
+      "catalog_key": "16",
       "name": "Z.AI GLM (International)",
       "vendor_key": "zhipu",
       "vendor_label": "Zhipu AI",
@@ -454,7 +589,7 @@
       "source_path": "packages/admin/lib/provider-import-presets.json"
     },
     {
-      "catalog_key": "13",
+      "catalog_key": "17",
       "name": "Z.AI GLM (Coding Plan)",
       "vendor_key": "zhipu",
       "vendor_label": "Zhipu AI",
@@ -489,7 +624,7 @@
       "source_path": "packages/admin/lib/provider-import-presets.json"
     },
     {
-      "catalog_key": "14",
+      "catalog_key": "18",
       "name": "Meituan LongCat",
       "vendor_key": "meituan",
       "vendor_label": "Meituan LongCat",
@@ -524,7 +659,7 @@
       "source_path": "packages/admin/lib/provider-import-presets.json"
     },
     {
-      "catalog_key": "15",
+      "catalog_key": "19",
       "name": "Moonshot AI",
       "vendor_key": "moonshot",
       "vendor_label": "Moonshot AI",
@@ -556,7 +691,7 @@
       "source_path": "packages/admin/lib/provider-import-presets.json"
     },
     {
-      "catalog_key": "16",
+      "catalog_key": "20",
       "name": "Kimi Code (Coding API)",
       "vendor_key": "moonshot",
       "vendor_label": "Moonshot AI",
@@ -587,7 +722,7 @@
       "source_path": "packages/admin/lib/provider-import-presets.json"
     },
     {
-      "catalog_key": "17",
+      "catalog_key": "21",
       "name": "MiniMax",
       "vendor_key": "minimax",
       "vendor_label": "MiniMax",
@@ -622,7 +757,7 @@
       "source_path": "packages/admin/lib/provider-import-presets.json"
     },
     {
-      "catalog_key": "18",
+      "catalog_key": "22",
       "name": "OpenAI",
       "vendor_key": "openai",
       "vendor_label": "OpenAI",
@@ -652,7 +787,7 @@
       "source_path": "packages/admin/lib/provider-import-presets.json"
     },
     {
-      "catalog_key": "19",
+      "catalog_key": "23",
       "name": "Anthropic",
       "vendor_key": "anthropic",
       "vendor_label": "Anthropic",
@@ -682,7 +817,43 @@
       "source_path": "packages/admin/lib/provider-import-presets.json"
     },
     {
-      "catalog_key": "20",
+      "catalog_key": "24",
+      "name": "Meta Model API",
+      "vendor_key": "meta",
+      "vendor_label": "Meta (Llama)",
+      "i18n": {
+        "zh": {
+          "name": "Meta Model API",
+          "description": "Meta 官方 Model API（Muse Spark），支持 OpenAI Chat / Responses 与 Anthropic Messages。"
+        },
+        "en": {
+          "name": "Meta Model API",
+          "description": "Meta’s official Model API for Muse Spark, with OpenAI Chat/Responses and Anthropic Messages."
+        }
+      },
+      "links": {
+        "platform": "https://llama.developer.meta.com/docs"
+      },
+      "protocols": [
+        "openai",
+        "anthropic"
+      ],
+      "endpoints": {
+        "openai": {
+          "endpoints": {
+            "chat": "https://api.meta.ai/v1/chat/completions",
+            "responses": "https://api.meta.ai/v1/responses"
+          }
+        },
+        "anthropic": {
+          "base": "https://api.meta.ai"
+        }
+      },
+      "description": "Meta Model API (Muse Spark): OpenAI chat/completions + responses, and Anthropic Messages (root appends /v1/messages). Auth is Bearer MODEL_API_KEY. See llama.developer.meta.com / dev.meta.ai docs.",
+      "source_path": "packages/admin/lib/provider-import-presets.json"
+    },
+    {
+      "catalog_key": "25",
       "name": "Google Gemini (Generative Language API)",
       "vendor_key": "google",
       "vendor_label": "Google",
@@ -716,7 +887,7 @@
       "source_path": "packages/admin/lib/provider-import-presets.json"
     },
     {
-      "catalog_key": "21",
+      "catalog_key": "26",
       "name": "Google Vertex AI (Express Mode · API Key)",
       "vendor_key": "google",
       "vendor_label": "Google",
@@ -741,11 +912,47 @@
           "base": "https://aiplatform.googleapis.com/v1/publishers/google/models"
         }
       },
-      "description": "Vertex Express: base includes the full prefix `/v1/publishers/google/models` (use `.../v1beta1/publishers/google/models` for v1beta1). API key via `key=`; no project/location/OAuth required. Express has no official OpenAI-compatible endpoint.",
+      "description": "Vertex Express: base includes the full prefix `/v1/publishers/google/models` (use `.../v1beta1/publishers/google/models` for v1beta1). API key via `key=`; no project/location/OAuth required. Express has no official OpenAI-compatible endpoint—use the project-scoped Vertex preset for Chat Completions.",
       "source_path": "packages/admin/lib/provider-import-presets.json"
     },
     {
-      "catalog_key": "22",
+      "catalog_key": "27",
+      "name": "Google Vertex AI (replace project ID)",
+      "vendor_key": "google",
+      "vendor_label": "Google",
+      "i18n": {
+        "zh": {
+          "name": "Google Vertex AI（请替换项目 ID）",
+          "description": "正式 Vertex：OpenAI Chat Completions 与原生 Gemini；导入后替换项目 ID，API Key 栏粘贴 GCP 服务账号 JSON。"
+        },
+        "en": {
+          "name": "Google Vertex AI (replace project ID)",
+          "description": "Full Vertex: OpenAI Chat Completions plus native Gemini. Replace the project ID; paste a GCP service account JSON as the API key."
+        }
+      },
+      "links": {
+        "platform": "https://console.cloud.google.com/vertex-ai"
+      },
+      "protocols": [
+        "openai",
+        "gemini"
+      ],
+      "endpoints": {
+        "openai": {
+          "endpoints": {
+            "chat": "https://aiplatform.googleapis.com/v1/projects/YOUR_PROJECT_ID/locations/global/endpoints/openapi/chat/completions"
+          }
+        },
+        "gemini": {
+          "base": "https://aiplatform.googleapis.com/v1/projects/YOUR_PROJECT_ID/locations/global/publishers/google/models",
+          "auth": "bearer"
+        }
+      },
+      "description": "Replace YOUR_PROJECT_ID (and `global` if you need a regional endpoint). Official Vertex OpenAI Chat Completions is `.../endpoints/openapi/chat/completions` (image gen uses chat `modalities`, not /images/generations). Native Gemini uses project-scoped `.../publishers/google/models` with Bearer. Paste a GCP service account JSON as the API key; the gateway exchanges it for an OAuth access token used by both protocols. A Vertex API key only works with Express / native Gemini `?key=`, not this OpenAI endpoint. Missing `google/` on OpenAI `provider_model_name` is added automatically (Gemini native stays unprefixed).",
+      "source_path": "packages/admin/lib/provider-import-presets.json"
+    },
+    {
+      "catalog_key": "28",
       "name": "Mistral AI",
       "vendor_key": "mistral",
       "vendor_label": "Mistral AI",
@@ -777,7 +984,7 @@
       "source_path": "packages/admin/lib/provider-import-presets.json"
     },
     {
-      "catalog_key": "23",
+      "catalog_key": "29",
       "name": "Groq (OpenAI Compatible)",
       "vendor_key": "groq",
       "vendor_label": "Groq",
@@ -809,7 +1016,76 @@
       "source_path": "packages/admin/lib/provider-import-presets.json"
     },
     {
-      "catalog_key": "24",
+      "catalog_key": "30",
+      "name": "Cerebras",
+      "vendor_key": "cerebras",
+      "vendor_label": "Cerebras",
+      "i18n": {
+        "zh": {
+          "name": "Cerebras",
+          "description": "Cerebras Inference 的 OpenAI 兼容高速对话 API。"
+        },
+        "en": {
+          "name": "Cerebras",
+          "description": "Cerebras Inference’s high-speed OpenAI-compatible chat API."
+        }
+      },
+      "links": {
+        "platform": "https://cloud.cerebras.ai/",
+        "api_keys": "https://cloud.cerebras.ai/"
+      },
+      "protocols": [
+        "openai"
+      ],
+      "endpoints": {
+        "openai": {
+          "endpoints": {
+            "chat": "https://api.cerebras.ai/v1/chat/completions"
+          }
+        }
+      },
+      "description": null,
+      "source_path": "packages/admin/lib/provider-import-presets.json"
+    },
+    {
+      "catalog_key": "31",
+      "name": "SambaNova Cloud",
+      "vendor_key": "sambanova",
+      "vendor_label": "SambaNova",
+      "i18n": {
+        "zh": {
+          "name": "SambaNova Cloud",
+          "description": "SambaNova Cloud 推理 API，支持 OpenAI Chat / Responses 与 Anthropic Messages。"
+        },
+        "en": {
+          "name": "SambaNova Cloud",
+          "description": "SambaNova Cloud inference API with OpenAI Chat/Responses and Anthropic Messages."
+        }
+      },
+      "links": {
+        "platform": "https://cloud.sambanova.ai/",
+        "api_keys": "https://cloud.sambanova.ai/apis"
+      },
+      "protocols": [
+        "openai",
+        "anthropic"
+      ],
+      "endpoints": {
+        "openai": {
+          "endpoints": {
+            "chat": "https://api.sambanova.ai/v1/chat/completions",
+            "responses": "https://api.sambanova.ai/v1/responses"
+          }
+        },
+        "anthropic": {
+          "base": "https://api.sambanova.ai"
+        }
+      },
+      "description": "SambaCloud OpenAI chat/completions + responses, and Anthropic Messages (root appends /v1/messages). See docs.sambanova.ai.",
+      "source_path": "packages/admin/lib/provider-import-presets.json"
+    },
+    {
+      "catalog_key": "32",
       "name": "xAI (Grok)",
       "vendor_key": "xai",
       "vendor_label": "xAI (Grok)",
@@ -838,7 +1114,7 @@
       "source_path": "packages/admin/lib/provider-import-presets.json"
     },
     {
-      "catalog_key": "25",
+      "catalog_key": "33",
       "name": "Together AI",
       "vendor_key": "together",
       "vendor_label": "Together AI",
@@ -867,7 +1143,7 @@
       "source_path": "packages/admin/lib/provider-import-presets.json"
     },
     {
-      "catalog_key": "26",
+      "catalog_key": "34",
       "name": "Fireworks AI",
       "vendor_key": "fireworks",
       "vendor_label": "Fireworks AI",
@@ -898,7 +1174,71 @@
       "source_path": "packages/admin/lib/provider-import-presets.json"
     },
     {
-      "catalog_key": "27",
+      "catalog_key": "35",
+      "name": "DeepInfra",
+      "vendor_key": "deepinfra",
+      "vendor_label": "DeepInfra",
+      "i18n": {
+        "zh": {
+          "name": "DeepInfra",
+          "description": "DeepInfra 开源模型推理的 OpenAI 兼容对话 API。"
+        },
+        "en": {
+          "name": "DeepInfra",
+          "description": "DeepInfra’s OpenAI-compatible chat API for hosted open-source models."
+        }
+      },
+      "links": {
+        "platform": "https://deepinfra.com/",
+        "api_keys": "https://deepinfra.com/dash/api_keys"
+      },
+      "protocols": [
+        "openai"
+      ],
+      "endpoints": {
+        "openai": {
+          "endpoints": {
+            "chat": "https://api.deepinfra.com/v1/openai/chat/completions"
+          }
+        }
+      },
+      "description": "OpenAI-compatible Chat Completions only on this template (SDK base is /v1/openai). See docs.deepinfra.com.",
+      "source_path": "packages/admin/lib/provider-import-presets.json"
+    },
+    {
+      "catalog_key": "36",
+      "name": "Novita AI",
+      "vendor_key": "novita",
+      "vendor_label": "Novita AI",
+      "i18n": {
+        "zh": {
+          "name": "Novita AI",
+          "description": "Novita 模型云的 OpenAI 兼容对话 API。"
+        },
+        "en": {
+          "name": "Novita AI",
+          "description": "Novita’s OpenAI-compatible chat API."
+        }
+      },
+      "links": {
+        "platform": "https://novita.ai/",
+        "api_keys": "https://novita.ai/settings"
+      },
+      "protocols": [
+        "openai"
+      ],
+      "endpoints": {
+        "openai": {
+          "endpoints": {
+            "chat": "https://api.novita.ai/openai/v1/chat/completions"
+          }
+        }
+      },
+      "description": null,
+      "source_path": "packages/admin/lib/provider-import-presets.json"
+    },
+    {
+      "catalog_key": "37",
       "name": "Perplexity",
       "vendor_key": "perplexity",
       "vendor_label": "Perplexity",
@@ -929,7 +1269,7 @@
       "source_path": "packages/admin/lib/provider-import-presets.json"
     },
     {
-      "catalog_key": "28",
+      "catalog_key": "38",
       "name": "Cohere (OpenAI Compatibility)",
       "vendor_key": "cohere",
       "vendor_label": "Cohere",
@@ -960,7 +1300,7 @@
       "source_path": "packages/admin/lib/provider-import-presets.json"
     },
     {
-      "catalog_key": "29",
+      "catalog_key": "39",
       "name": "NVIDIA NIM (integrate.api)",
       "vendor_key": "nvidia",
       "vendor_label": "NVIDIA",
@@ -991,7 +1331,7 @@
       "source_path": "packages/admin/lib/provider-import-presets.json"
     },
     {
-      "catalog_key": "30",
+      "catalog_key": "40",
       "name": "Azure OpenAI (replace resource name)",
       "vendor_key": "azure",
       "vendor_label": "Microsoft Azure",
@@ -1020,7 +1360,7 @@
       "source_path": "packages/admin/lib/provider-import-presets.json"
     },
     {
-      "catalog_key": "31",
+      "catalog_key": "41",
       "name": "StepFun",
       "vendor_key": "stepfun",
       "vendor_label": "StepFun",
@@ -1051,7 +1391,7 @@
       "source_path": "packages/admin/lib/provider-import-presets.json"
     },
     {
-      "catalog_key": "32",
+      "catalog_key": "42",
       "name": "Baichuan AI",
       "vendor_key": "baichuan",
       "vendor_label": "Baichuan AI",
@@ -1082,7 +1422,7 @@
       "source_path": "packages/admin/lib/provider-import-presets.json"
     },
     {
-      "catalog_key": "33",
+      "catalog_key": "43",
       "name": "Xiaomi MiMo",
       "vendor_key": "xiaomi",
       "vendor_label": "Xiaomi Mimo",
@@ -1113,7 +1453,7 @@
       "source_path": "packages/admin/lib/provider-import-presets.json"
     },
     {
-      "catalog_key": "34",
+      "catalog_key": "44",
       "name": "Xiaomi MiMo (Token Plan)",
       "vendor_key": "xiaomi",
       "vendor_label": "Xiaomi Mimo",
@@ -1148,18 +1488,18 @@
       "source_path": "packages/admin/lib/provider-import-presets.json"
     },
     {
-      "catalog_key": "35",
+      "catalog_key": "45",
       "name": "Qiniu AI",
       "vendor_key": "qiniu",
       "vendor_label": "Qiniu",
       "i18n": {
         "zh": {
           "name": "七牛云 AI",
-          "description": "七牛云 AI 大模型推理（Token API），支持 OpenAI 与 Anthropic 兼容协议。"
+          "description": "七牛云 AI 大模型推理（Token API），支持 OpenAI、Anthropic 与 Gemini（Vertex 兼容 + Bearer）。"
         },
         "en": {
           "name": "Qiniu AI",
-          "description": "Qiniu AI Token API with OpenAI- and Anthropic-compatible access."
+          "description": "Qiniu AI Token API with OpenAI, Anthropic, and Gemini (Vertex-compatible, Bearer)."
         }
       },
       "links": {
@@ -1168,7 +1508,8 @@
       },
       "protocols": [
         "openai",
-        "anthropic"
+        "anthropic",
+        "gemini"
       ],
       "endpoints": {
         "openai": {
@@ -1178,13 +1519,17 @@
         },
         "anthropic": {
           "base": "https://api.qnaigc.com"
+        },
+        "gemini": {
+          "base": "https://api.qnaigc.com/bypass/vertex/v1/models",
+          "auth": "bearer"
         }
       },
-      "description": "Qiniu AI Token API (api.qnaigc.com): OpenAI chat/completions + Anthropic Messages root. Image generation uses chat modalities, not /images/generations—keep openai as chat-only. Overseas host api.modelink.ai is a separate template if needed. See developer.qiniu.com/aitokenapi.",
+      "description": "Qiniu AI Token API (api.qnaigc.com): OpenAI chat/completions + Anthropic Messages root + Gemini Vertex-compatible bypass (/bypass/vertex/v1/models, Bearer). Image generation uses chat modalities, not /images/generations—keep openai as chat-only. Overseas host: swap api.qnaigc.com → api.modelink.ai (same paths, including Gemini). See developer.qiniu.com/aitokenapi.",
       "source_path": "packages/admin/lib/provider-import-presets.json"
     },
     {
-      "catalog_key": "36",
+      "catalog_key": "46",
       "name": "OpenRouter",
       "vendor_key": "openrouter",
       "vendor_label": "OpenRouter",
@@ -1217,7 +1562,7 @@
       "source_path": "packages/admin/lib/provider-import-presets.json"
     },
     {
-      "catalog_key": "37",
+      "catalog_key": "47",
       "name": "OpenCode Zen",
       "vendor_key": "opencode",
       "vendor_label": "OpenCode Zen",
@@ -1257,7 +1602,7 @@
       "source_path": "packages/admin/lib/provider-import-presets.json"
     },
     {
-      "catalog_key": "38",
+      "catalog_key": "48",
       "name": "OpenCode Go",
       "vendor_key": "opencode",
       "vendor_label": "OpenCode Zen",
@@ -1293,18 +1638,120 @@
       "source_path": "packages/admin/lib/provider-import-presets.json"
     },
     {
-      "catalog_key": "39",
+      "catalog_key": "49",
+      "name": "Command Code",
+      "vendor_key": "commandcode",
+      "vendor_label": "Command Code",
+      "i18n": {
+        "zh": {
+          "name": "Command Code",
+          "description": "Command Code Provider API，按模型分别使用 OpenAI Chat Completions 或 Anthropic Messages。"
+        },
+        "en": {
+          "name": "Command Code",
+          "description": "Command Code Provider API with OpenAI Chat Completions and Anthropic Messages, split by model family."
+        }
+      },
+      "links": {
+        "platform": "https://commandcode.ai/provider",
+        "api_keys": "https://commandcode.ai/"
+      },
+      "protocols": [
+        "openai",
+        "anthropic"
+      ],
+      "endpoints": {
+        "openai": {
+          "endpoints": {
+            "chat": "https://api.commandcode.ai/provider/v1/chat/completions"
+          }
+        },
+        "anthropic": {
+          "base": "https://api.commandcode.ai/provider"
+        }
+      },
+      "description": "Command Code Provider API: OpenAI chat/completions for GPT/open-source/Gemini-shaped models; Anthropic Messages for Claude (root appends /v1/messages). Sending a Claude model to /chat/completions (or the reverse) returns 400. Optional ZDR header x-cmd-zdr is not configured by this template. See commandcode.ai/docs/provider.",
+      "source_path": "packages/admin/lib/provider-import-presets.json"
+    },
+    {
+      "catalog_key": "50",
+      "name": "Hugging Face Inference Providers",
+      "vendor_key": "huggingface",
+      "vendor_label": "Hugging Face",
+      "i18n": {
+        "zh": {
+          "name": "Hugging Face Inference Providers",
+          "description": "Hugging Face 推理路由的 OpenAI 兼容对话 API，可按模型指定上游供应商。"
+        },
+        "en": {
+          "name": "Hugging Face Inference Providers",
+          "description": "Hugging Face’s OpenAI-compatible chat router across many inference providers."
+        }
+      },
+      "links": {
+        "platform": "https://huggingface.co/docs/inference-providers",
+        "api_keys": "https://huggingface.co/settings/tokens"
+      },
+      "protocols": [
+        "openai"
+      ],
+      "endpoints": {
+        "openai": {
+          "endpoints": {
+            "chat": "https://router.huggingface.co/v1/chat/completions"
+          }
+        }
+      },
+      "description": "OpenAI-compatible chat-only router (router.huggingface.co/v1). Model IDs often use org/model:provider (or :fastest). Requires an HF token with Inference Providers permission. Not a full OpenAI Images/Audio root.",
+      "source_path": "packages/admin/lib/provider-import-presets.json"
+    },
+    {
+      "catalog_key": "51",
+      "name": "Vercel AI Gateway",
+      "vendor_key": "vercel",
+      "vendor_label": "Vercel",
+      "i18n": {
+        "zh": {
+          "name": "Vercel AI Gateway",
+          "description": "Vercel AI Gateway 聚合网关，支持 OpenAI 兼容协议与 Anthropic Messages。"
+        },
+        "en": {
+          "name": "Vercel AI Gateway",
+          "description": "Vercel AI Gateway with OpenAI-compatible and Anthropic Messages endpoints."
+        }
+      },
+      "links": {
+        "platform": "https://vercel.com/ai-gateway",
+        "api_keys": "https://vercel.com/d?to=%2F%5Bteam%5D%2F%7E%2Fai-gateway%2Fapi-keys"
+      },
+      "protocols": [
+        "openai",
+        "anthropic"
+      ],
+      "endpoints": {
+        "openai": {
+          "base": "https://ai-gateway.vercel.sh/v1"
+        },
+        "anthropic": {
+          "base": "https://ai-gateway.vercel.sh"
+        }
+      },
+      "description": "Vercel AI Gateway: OpenAI-compatible root (/v1, chat + responses) and Anthropic Messages (root appends /v1/messages). Auth is the AI Gateway API key (or Vercel OIDC). Model IDs use provider/model slugs. See vercel.com/docs/ai-gateway.",
+      "source_path": "packages/admin/lib/provider-import-presets.json"
+    },
+    {
+      "catalog_key": "52",
       "name": "ZenMux",
       "vendor_key": "zenmux",
       "vendor_label": "ZenMux",
       "i18n": {
         "zh": {
           "name": "ZenMux",
-          "description": "ZenMux 聚合平台（Pay As You Go 与 Builder 订阅共用同一端点，按 API Key 区分计费）。"
+          "description": "ZenMux 聚合平台（OpenAI / Anthropic / Gemini；Pay As You Go 与 Builder 订阅共用端点，按 API Key 区分计费）。"
         },
         "en": {
           "name": "ZenMux",
-          "description": "ZenMux aggregation API; Pay As You Go and Builder Plan share endpoints and differ by API key only."
+          "description": "ZenMux aggregation API (OpenAI, Anthropic, Gemini); Pay As You Go and Builder Plan share endpoints and differ by API key only."
         }
       },
       "links": {
@@ -1313,7 +1760,8 @@
       },
       "protocols": [
         "openai",
-        "anthropic"
+        "anthropic",
+        "gemini"
       ],
       "endpoints": {
         "openai": {
@@ -1321,13 +1769,17 @@
         },
         "anthropic": {
           "base": "https://zenmux.ai/api/anthropic"
+        },
+        "gemini": {
+          "base": "https://zenmux.ai/api/vertex-ai/v1/publishers/google/models",
+          "auth": "bearer"
         }
       },
-      "description": "ZenMux aggregation API: OpenAI-compatible root (/api/v1) + Anthropic Messages base (/api/anthropic). Pay As You Go and Builder Plan (subscription, sk-ss-v1-* keys) share the same endpoints—billing differs by API key only, so one import template covers both. Vertex/Gemini native base is https://zenmux.ai/api/vertex-ai if you need a separate Gemini template. See docs.zenmux.ai.",
+      "description": "ZenMux aggregation API: OpenAI-compatible root (/api/v1) + Anthropic Messages base (/api/anthropic) + Gemini Vertex-compatible prefix (/api/vertex-ai/v1/publishers/google/models, Bearer). Pay As You Go and Builder Plan share the same endpoints—billing differs by API key only. Use provider_model_name without the google/ slug prefix. See docs.zenmux.ai.",
       "source_path": "packages/admin/lib/provider-import-presets.json"
     },
     {
-      "catalog_key": "40",
+      "catalog_key": "53",
       "name": "SiliconFlow",
       "vendor_key": "siliconflow",
       "vendor_label": "SiliconFlow",
@@ -1357,7 +1809,7 @@
       "source_path": "packages/admin/lib/provider-import-presets.json"
     },
     {
-      "catalog_key": "41",
+      "catalog_key": "54",
       "name": "Ollama (Local)",
       "vendor_key": "ollama",
       "vendor_label": "Ollama",

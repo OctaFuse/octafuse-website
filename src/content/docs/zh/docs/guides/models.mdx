@@ -12,8 +12,8 @@ import { Aside, Steps } from '@astrojs/starlight/components';
 </Aside>
 
 <figure class="of-doc-figure">
-	<img src="/screenshots/admin-models.png" alt="OctaFuse 管理后台模型（Models）页面展示模型目录、厂商筛选、能力字段和分层定价。" loading="lazy" />
-	<figcaption>模型页面维护客户端可见的模型目录，包括模型标识、能力、厂商、路由状态和定价信息。</figcaption>
+	<img src="/screenshots/v2-6-0-model-import.webp" alt="OctaFuse 管理后台从静态模型目录筛选并导入图片模型预设。" loading="lazy" />
+	<figcaption>点击 Import 可按模型类型筛选目录；已在 Gateway 中的同 ID 预设会禁用，避免导入时覆盖现有配置。</figcaption>
 </figure>
 
 ## 在管理台里要做什么
@@ -26,6 +26,10 @@ import { Aside, Steps } from '@astrojs/starlight/components';
 1. **保存后**：务必在 [路由配置](/zh/docs/guides/routing/) 中为该模型添加至少一条状态为 `active` 的路由，否则客户端无法正常路由。
 1. **能力与计费模式**：图片模型需核对 `image_billing_mode`（`token` / `per_image`），语音转写模型需核对 `audio_billing_mode`（`token` / `per_second`）；默认的 `hash_affinity` 路由策略会在协议粒度稳定首选同一供应商。
 </Steps>
+
+<Aside type="note" title="Gemini 3.1 Flash-Lite 模型 ID">
+	内置预设现使用 `gemini-3.1-flash-lite`，不再使用 `gemini-3.1-flash-lite-preview`。该模型目前仍处于预览阶段；静态目录不会覆盖已导入的旧记录，如需切换请删除后重新导入或手动修改模型 ID。
+</Aside>
 
 ## 客户端 `model` 怎么写
 

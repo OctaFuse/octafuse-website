@@ -86,7 +86,7 @@ Before upgrading, read the **Upgrade notes** in that version’s [GitHub Release
 
 ### Prebuilt images (GHCR / private registry)
 
-1. In `docker/deploy/.env.local` (or your env file), bump the **tag** on `GATEWAY_PROXY_IMAGE` / `GATEWAY_ADMIN_IMAGE` / `GATEWAY_MIGRATE_IMAGE` (for example `v2.5.0`; pin semver in production instead of floating on `latest`).
+1. In `docker/deploy/.env.local` (or your env file), bump the **tag** on `GATEWAY_PROXY_IMAGE` / `GATEWAY_ADMIN_IMAGE` / `GATEWAY_MIGRATE_IMAGE` (for example `v2.6.0`; pin semver in production instead of floating on `latest`).
 2. Pull, migrate, then recreate containers:
 
 ```bash

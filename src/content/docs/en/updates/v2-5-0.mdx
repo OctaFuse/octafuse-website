@@ -3,7 +3,7 @@ title: 'OctaFuse 2.5.0: bring the OpenAI Responses API into unified routing'
 description: OctaFuse Gateway 2.5.0 adds an OpenAI Responses-compatible endpoint, rebuilds the Routes and Provider workspaces, and expands the Gemini, GLM, Grok, and DeepSeek model catalog.
 publishDate: 2026-08-15
 updateLabel: VERSION 2.5.0
-featuredUpdate: true
+featuredUpdate: false
 template: splash
 prev: false
 next: false
@@ -64,17 +64,17 @@ As one model gains Chat, Responses, Messages, Images, or Audio surfaces, a flat 
 - **By model** focuses on one public model and shows its route groups, priorities, weights, sticky policy, and failover relationships.
 - **Unrouted models** collects models without an enabled request surface and provides a direct path to add a Surface, route group, or upstream target.
 
-![OpenAI Responses request surface and models that are not yet connected to a route](/screenshots/v2-5-0-responses-overview-unrouted.png)
+![OpenAI Responses request surface and models that are not yet connected to a route](/screenshots/v2-5-0-responses-overview-unrouted.webp)
 
 *The Overview groups the full topology by request surface. Models without an active request surface are collected in the Unrouted models section.*
 
-![Routes workspace showing the default and free route groups for Qwen3.7 Plus](/screenshots/v2-5-0-routes-by-model.png)
+![Routes workspace showing the default and free route groups for Qwen3.7 Plus](/screenshots/v2-5-0-routes-by-model.webp)
 
 *The By model view puts the request surface, route groups, and all upstream targets for one public model into a single topology while preserving status, kind, vendor, and Provider filters.*
 
 The topology is also an entry point for configuration. Open a route to edit its protocol and operation mapping, route group, upstream target, custom parameters, and billing multipliers on one page.
 
-![Route editor showing the client surface, upstream mapping, custom parameters, and billing multipliers](/screenshots/v2-5-0-route-editor.png)
+![Route editor showing the client surface, upstream mapping, custom parameters, and billing multipliers](/screenshots/v2-5-0-route-editor.webp)
 
 *The route editor keeps the client-to-Provider mapping and its operational settings in one place.*
 
@@ -84,7 +84,7 @@ The new workspace reduces navigation among Models, Routes, and Providers, and ma
 
 The Provider list is now a card grid with filters for status and protocol capability. Each card shows whether an API key is configured, how many routes are active, and whether the Provider supports Chat, Responses, Messages, or other protocol surfaces.
 
-![Provider cards showing protocol capabilities, key status, and route counts](/screenshots/v2-5-0-provider-cards.png)
+![Provider cards showing protocol capabilities, key status, and route counts](/screenshots/v2-5-0-provider-cards.webp)
 
 *Providers can be filtered by OpenAI, Anthropic, Gemini, or DashScope capability. Protocol badges make Responses support visible without opening each Provider.*
 

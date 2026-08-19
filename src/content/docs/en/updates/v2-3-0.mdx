@@ -35,7 +35,7 @@ How it works:
 5. A 429, 401 / 403, 5xx, 524, or network failure clears the binding and continues normal failover.
 
 <figure class="of-doc-figure">
-	<img src="/screenshots/v2-3-0-provider-sticky-settings.jpg" alt="Provider sticky settings with the enable control, idle TTL, and an explanation of the routing behavior." loading="lazy" />
+	<img src="/screenshots/v2-3-0-provider-sticky-settings.webp" alt="Provider sticky settings with the enable control, idle TTL, and an explanation of the routing behavior." loading="lazy" />
 	<figcaption>Enable Provider sticky on a Route Pool and set its idle TTL. The dialog explains that the last successful Provider is tried first and other Providers are used after it fails.</figcaption>
 </figure>
 
@@ -59,7 +59,7 @@ The two features work together. When no binding is valid, routing returns to `ha
 Summary works well for a quick scan. When one model has many Providers split across multiple priority tiers, switch to **Topology** to see request surfaces, route groups, priority tiers, and failover order more clearly.
 
 <figure class="of-doc-figure">
-	<img src="/screenshots/v2-3-0-route-topology.jpg" alt="Routes Topology view showing multiple route groups, priority tiers, upstream targets, policies, and sticky status." loading="lazy" />
+	<img src="/screenshots/v2-3-0-route-topology.webp" alt="Routes Topology view showing multiple route groups, priority tiers, upstream targets, policies, and sticky status." loading="lazy" />
 	<figcaption>Topology keeps complex Route Pools readable when they contain many Providers and priority tiers, with strategy and sticky status visible in the same view.</figcaption>
 </figure>
 
@@ -72,7 +72,7 @@ Open the Provider sticky dialog from a Route Group or Route Pool node in **Topol
 - Invalidate the entire Pool with an epoch bump.
 
 <figure class="of-doc-figure">
-	<img src="/screenshots/v2-3-0-provider-sticky-bindings.jpg" alt="Enabled Provider sticky settings showing binding distribution, user binding lookup, and Pool-wide binding invalidation." loading="lazy" />
+	<img src="/screenshots/v2-3-0-provider-sticky-bindings.webp" alt="Enabled Provider sticky settings showing binding distribution, user binding lookup, and Pool-wide binding invalidation." loading="lazy" />
 	<figcaption>After enabling Sticky, operators can compare binding share with route weight, look up individual user bindings, and invalidate all Pool bindings when traffic must be reassigned.</figcaption>
 </figure>
 

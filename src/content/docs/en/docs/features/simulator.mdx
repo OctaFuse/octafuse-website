@@ -13,6 +13,11 @@ This differs from [Playground](/en/docs/features/playground/), which focuses on 
 	The **`sk-…` key lives in the browser** — prefer staging keys or server-side reproduction for production issues.
 </Aside>
 
+<figure class="of-doc-figure">
+	<img src="/screenshots/v2-6-0-simulator-routing-target.webp" alt="OctaFuse Simulator showing matching route groups and client protocols after selecting a Gemini model." loading="lazy" />
+	<figcaption>Select the client-visible model and route group first. Simulator derives the available protocols from matching request surfaces; then enter the Proxy URL and a test key.</figcaption>
+</figure>
+
 ## How to use it
 
 <Steps>
@@ -22,6 +27,8 @@ This differs from [Playground](/en/docs/features/playground/), which focuses on 
 1. Send, then confirm rows in [Request logs](/en/docs/guides/request-logs/) (including `billing_kind` / image counts).
 1. If results differ from Playground: check **user budget**, **route group**, and **key status** (revoked, etc.).
 </Steps>
+
+Simulator derives the request protocol and path from the selected **client request surface**, not from the final Upstream Target protocol. For example, if an OpenAI Audio surface routes through an explicit adapter to DashScope, Simulator still constructs the OpenAI-side client request. This keeps the test aligned with real client behavior.
 
 The page may **remember** your last base URL and options **locally** in the browser for faster iteration — clear when switching machines or shared profiles.
 

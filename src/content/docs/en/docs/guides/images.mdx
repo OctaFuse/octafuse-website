@@ -22,6 +22,22 @@ The gateway exposes OpenAI-compatible **`POST /v1/images/generations`** and **`P
 1. **Validate**: Playground probes one route (no user billing); Simulator hits real Proxy → check [Request logs](/en/docs/guides/request-logs/) for `billing_kind` / image counts and charges.
 </Steps>
 
+<figure class="of-doc-figure">
+	<img src="/screenshots/v2-6-0-model-image-billing.webp" alt="OctaFuse Models filtered to Image, with per-image or token prices shown on each card." loading="lazy" />
+	<figcaption>Filter Models by Image first: `/img` identifies per-image billing and `/M` identifies token billing. Open the model editor to review the complete price profile.</figcaption>
+</figure>
+
+## How success, cancellation, and failure are billed
+
+- `token` uses real `usage` from a successful response; the entry estimate is only a budget preflight.
+- `per_image` charges confirmed output images from a successful response, plus optional reference-image input cost.
+- Client cancellation, Gateway timeout, explicit upstream 4xx / 5xx, network failures, and empty results do not charge, but still produce a zero-cost log for diagnosis.
+- A legacy `image` block without an explicit `image_billing_mode` is no longer billable. A legacy profile with valid `image_*` Token prices still resolves as `token`.
+
+<Aside type="caution" title="Upgrading old image pricing">
+	For built-in image models with old Postgres pricing, run `node scripts/db/migrate-image-billing-modes.mjs --dry-run` before `--apply`. The script automates known built-in model IDs only; review MySQL, D1, and custom models manually.
+</Aside>
+
 ## Model listing
 
 - Default authenticated **`GET /v1/models`** returns LLMs only — **not** pure image-generation models. Pass `kind=image` or `kind=all` when needed.
