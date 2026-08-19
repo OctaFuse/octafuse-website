@@ -10,8 +10,8 @@ import { Aside, Steps } from '@astrojs/starlight/components';
 它**不是**「在管理台里每一次改供应商、改路由菜单点击」的完整配置审计台账；若你需要配置变更追责，请结合变更管理流程或另行接入运维审计。
 
 <figure class="of-doc-figure">
-	<img src="/screenshots/admin-audit-logs.webp" alt="OctaFuse 管理后台审计日志（Audit Logs）页面展示审计事件、操作者、用户邮箱、密钥、预算和变更详情；敏感标识已打码。" loading="lazy" />
-	<figcaption>审计日志用来追踪管理侧用户、预算和密钥生命周期相关动作。截图中的邮箱、密钥与敏感标识已做马赛克处理。</figcaption>
+	<img src="/screenshots/admin-audit-logs.webp" alt="OctaFuse 管理后台审计日志（Audit Logs）页面展示时间范围、事件类型、事件来源、事件原因和操作者身份等组合筛选项。" loading="lazy" />
+	<figcaption>新版筛选区可组合选择事件类型、来源、原因、操作者及身份，再用邮箱、Actor ID 或关联 ID 进一步定位记录。</figcaption>
 </figure>
 
 <Aside type="tip" title="与请求日志的区别">
@@ -22,7 +22,7 @@ import { Aside, Steps } from '@astrojs/starlight/components';
 
 <Steps>
 1. 打开**审计日志**。
-1. 用时间范围、用户邮箱、密钥、事件类型、操作者类型、原因码、来源等条件筛选（以页面为准）。
+1. 先用时间范围，再组合选择事件类型、事件来源、事件原因、操作者及操作者身份；需要精确定位时，再填写 Actor ID、用户邮箱或 Correlation ID。
 1. 展开行查看预算计划说明、用户快照差异、变更详情等（界面会省略与列表重复的字段）。
 1. 若只关心某一用户：也可从 [用户管理](/zh/docs/guides/users/) 进入该用户详情页查看相关片段。
 </Steps>

@@ -10,8 +10,8 @@ Open **User → Audit Logs**. Entries here focus on **what changed for accounts 
 This is **not** a full audit trail of every **provider/route/settings** click in Admin. For configuration change governance, use your change-management process or a separate ops audit trail.
 
 <figure class="of-doc-figure">
-	<img src="/screenshots/admin-audit-logs.webp" alt="OctaFuse Admin Audit Logs page showing audit events, actors, email user key context, budgets, and change details with sensitive identifiers redacted." loading="lazy" />
-	<figcaption>Audit Logs tracks user, budget, and key lifecycle activity in Admin. Emails, keys, and sensitive identifiers are pixelated in this screenshot.</figcaption>
+	<img src="/screenshots/admin-audit-logs.webp" alt="OctaFuse Admin Audit Logs page showing time range, event type, source, reason, actor, and actor-identity filters." loading="lazy" />
+	<figcaption>Combine event type, source, reason, actor, and identity filters, then narrow further with an Actor ID, user email, or correlation ID.</figcaption>
 </figure>
 
 <Aside type="tip" title="Versus request logs">
@@ -22,7 +22,7 @@ This is **not** a full audit trail of every **provider/route/settings** click in
 
 <Steps>
 1. Open **Audit Logs**.
-1. Filter by time window, user email, key, event type, actor type, reason code, source, and other fields shown in the UI.
+1. Start with a time window, then combine event type, source, reason, actor, and actor-identity filters. Use Actor ID, user email, or Correlation ID for an exact lookup.
 1. Expand rows for budget notes, user snapshot deltas, and change details (fields duplicated in the table may be hidden).
 1. For a single user, you can also open [Users](/en/docs/guides/users/) → user detail for related snippets.
 </Steps>
