@@ -7,7 +7,7 @@
     "commit": "5911f2d7ee01459b507fc2a4edfbbb999bb5873c"
   },
   "source_path": "packages/admin/lib/provider-import-presets.json",
-  "count": 55,
+  "count": 56,
   "items": [
     {
       "catalog_key": "0",
@@ -1780,6 +1780,42 @@
     },
     {
       "catalog_key": "53",
+      "name": "SCNet",
+      "vendor_key": "scnet",
+      "vendor_label": "SCNet",
+      "i18n": {
+        "zh": {
+          "name": "超算互联网 SCNet",
+          "description": "国家超算互联网模型 API，支持 OpenAI 与 Anthropic 兼容协议。"
+        },
+        "en": {
+          "name": "SCNet",
+          "description": "National Supercomputing Internet model API with OpenAI- and Anthropic-compatible endpoints."
+        }
+      },
+      "links": {
+        "platform": "https://www.scnet.cn/ui/mall/",
+        "api_keys": "https://www.scnet.cn/ui/llm/apikeys"
+      },
+      "protocols": [
+        "openai",
+        "anthropic"
+      ],
+      "endpoints": {
+        "openai": {
+          "endpoints": {
+            "chat": "https://api.scnet.cn/api/llm/v1/chat/completions"
+          }
+        },
+        "anthropic": {
+          "base": "https://api.scnet.cn/api/llm/anthropic"
+        }
+      },
+      "description": "SCNet (National Supercomputing Internet) OpenAI chat + Anthropic Messages. Pay-as-you-go (sk-), Token Plan (sk-tp-), and Coding Plan (sk-sp-) share these endpoints—do not mix keys. Token Plan keys are intended for interactive AI tools, not backend batch APIs. See scnet.cn OpenAPI docs.",
+      "source_path": "packages/admin/lib/provider-import-presets.json"
+    },
+    {
+      "catalog_key": "54",
       "name": "SiliconFlow",
       "vendor_key": "siliconflow",
       "vendor_label": "SiliconFlow",
@@ -1809,7 +1845,7 @@
       "source_path": "packages/admin/lib/provider-import-presets.json"
     },
     {
-      "catalog_key": "54",
+      "catalog_key": "55",
       "name": "Ollama (Local)",
       "vendor_key": "ollama",
       "vendor_label": "Ollama",
