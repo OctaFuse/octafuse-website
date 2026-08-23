@@ -1,0 +1,120 @@
+---
+title: 'OctaFuse 2.7.0: weekday-aware pricing, per-model user factors, and DashScope multimodal ASR'
+description: OctaFuse Gateway 2.7.0 adds weekday-aware pricing schedules for DeepSeek's new weekend off-peak policy, per-model user charge factors, synchronous DashScope multimodal ASR, and clearer user and request operations.
+publishDate: 2026-08-23
+updateLabel: VERSION 2.7.0
+featuredUpdate: true
+template: splash
+prev: false
+next: false
+lastUpdated: false
+sidebar:
+  hidden: true
+---
+
+OctaFuse Gateway 2.7.0 extends daily pricing schedules with weekday selection, allowing weekday and weekend rates to follow different rules. As DeepSeek changes its peak and off-peak policy, OctaFuse can support the new schedule from the moment it takes effect.
+
+This release also adds per-model user charge factors and a native synchronous DashScope multimodal ASR endpoint, while making Users, Request Logs, Playground, Simulator, and the Provider catalog easier to operate.
+
+In one sentence:
+
+> **Compose pricing across time, model, and user dimensions, with day-one support for DeepSeek's all-weekend off-peak rate.**
+
+## Day-one support for DeepSeek's weekend off-peak rate
+
+Starting at **00:00 Beijing time on Sunday, August 23, 2026**, DeepSeek treats `09:00–12:00` and `14:00–18:00` on weekdays as peak hours. All remaining weekday hours cost half the peak rate, while Saturday and Sunday are billed at the off-peak rate all day.
+
+Version 2.7.0 adds an optional `days` selection to each Daily schedule window, using ISO weekday numbers from `1` for Monday through `7` for Sunday. When the off-peak rate is stored as the model's catalog standard price, the override behavior introduced in 2.6.0 reduces the new DeepSeek policy to three choices:
+
+- Keep the route's default factor at **`1`**.
+- Add `09:00–12:00` and `14:00–18:00` windows with a **`2`** factor.
+- Apply both peak windows to **Monday through Friday**.
+
+All other weekday hours and the entire weekend miss the peak windows and automatically use the off-peak catalog rate at a factor of `1`. There is no need to maintain separate weekend windows.
+
+Metered and Charged schedules remain independent. Adjust Metered when you only need to track DeepSeek's upstream cost, and mirror the schedule under Charged when users should receive the same time-based rate. Set the business timezone to `Asia/Shanghai`. The selected factor is locked when a request enters Gateway, so a long stream does not switch price halfway through.
+
+Windows still use half-open `[start, end)` intervals and may cross midnight. For a cross-midnight window, `days` refers to the start day: a Friday `22:00–06:00` window covers Friday night through 06:00 Saturday. Existing windows without `days` continue to repeat every day, preserving their deployed billing semantics.
+
+## Per-model charge factors for individual users
+
+Route factors describe the price relationship between Providers, Targets, and time windows. Version 2.7.0 adds `charged_cost_factors` at the user level so one user can receive different discounts or markups for individual catalog models.
+
+The final user charge can be read as:
+
+> **Catalog standard price × route Charged factor (including schedule override) × user model factor**
+
+After a DeepSeek route calculates its peak or off-peak Charged cost, for example, an operator can assign `0.8` to a contracted user's selected model, `0` to an internal test user, or leave another user at the implicit `1.0`. The user factor changes only final `charged_cost` and budget accumulation; it does not rewrite the catalog price or the upstream cost recorded in `metered_cost`.
+
+User Details now edits factors by model ID. The Users list summarizes those factors alongside spent versus maximum budget, the next reset, and active versus total keys.
+
+![OctaFuse User Details with Charged cost factors configured per model](/screenshots/v2-7-0-user-charged-cost-factors.webp)
+
+*Select catalog models and assign a factor in User Details. Each factor is applied after the route Charged cost; omitted models are unchanged, while 0 makes that model free for this user.*
+
+The Admin API accepts the same structure:
+
+```json
+{
+  "charged_cost_factors": {
+    "deepseek-v4-pro": 0.8,
+    "deepseek-v4-flash": 0.5
+  }
+}
+```
+
+Unknown model IDs, negative values, and invalid objects are rejected. LLM, Images, and Audio share this rule, and Images or Audio use the same final amount for budget preflight and debit. Agent Tools keep their independent pricing and do not apply a user model factor.
+
+Request Logs now write `pricing_audit` v4, which can include the selected `user_charged_factor`, local business weekday, and schedule window. Operators can therefore trace the complete path from catalog price through route and user factors.
+
+## Native synchronous DashScope multimodal ASR
+
+Version 2.7.0 adds a native synchronous DashScope multimodal ASR endpoint:
+
+```text
+POST /v1/dashscope/services/aigc/multimodal-generation/generation
+```
+
+Gateway selects a route using the `dashscope` protocol and `audio.transcriptions.multimodal` operation, then passes through the native upstream JSON. Audio duration is read from `usage.duration` or `usage.seconds` and billed per second through the existing budget, logging, and audit pipeline.
+
+Playground and Simulator include matching request templates and validation, so operators can test synchronous multimodal ASR alongside the existing file ASR, TTS, and Realtime surfaces.
+
+## Clearer Users, Request Logs, and catalog operations
+
+Admin reduces context switching during billing and routing investigations:
+
+- **Users** shows spent-versus-limit progress, period resets, key status, and per-model factor summaries.
+- **Request Logs** presents inbound protocol, upstream protocol, Provider, and Route Group together, with capability labels derived from model type and operation.
+- **Debug tools** provide a more complete request-body preview and validate synchronous multimodal ASR and Realtime templates.
+- **Provider catalog** adds an SCNet preset with OpenAI Chat and Anthropic Messages support.
+- **Model presets** add `qwen-image-3.0`, `qwen-image-3.0-pro`, `wan2.7-image`, and `wan2.7-image-pro` for Alibaba Cloud Model Studio, all billed per image.
+
+![OctaFuse Request Logs showing inbound and upstream routes, capability tags, usage, and three-ledger costs together](/screenshots/v2-7-0-request-logs-redacted.webp)
+
+*The redesigned table keeps inbound and upstream paths, model, Route Group, Provider, capability tags, usage, Charged and Metered cost, and profit on one row for faster routing and billing checks. User and external-system values are redacted in this screenshot.*
+
+These Alibaba Cloud image presets still use native DashScope APIs. Importing them into the catalog does not automatically expose `/v1/images/generations`; routes must use the upstream protocol the models actually support.
+
+## Upgrade to 2.7.0
+
+This release includes database migration **0026**, which adds `charged_cost_factors` to `users`. D1, Postgres, and MySQL use the same semantics. Users without configured model factors retain exactly the same billing behavior as before the upgrade.
+
+Pull the v2.7.0 Proxy, Admin, and migrate images, run the one-shot migrate job as usual, then roll Proxy and Admin.
+
+Before upgrading, review [GitHub Release v2.7.0](https://github.com/OctaFuse/octafuse-gateway/releases/tag/v2.7.0) and the [full changelog](https://github.com/OctaFuse/octafuse-gateway/blob/v2.7.0/CHANGELOG.md).
+
+After upgrading, verify:
+
+- Migration 0026 completed and per-model factors save correctly in User Details.
+- DeepSeek routes use `Asia/Shanghai`, with the expected weekday peak and all-weekend off-peak matches.
+- `user_charged_factor`, `local_weekday`, and final Charged cost agree in Request Logs.
+- Synchronous DashScope multimodal ASR works through Playground or Simulator, followed by regression checks for Chat, Messages, Gemini, Images, Audio, and Responses.
+
+## Summary
+
+Version 2.7.0 separates pricing into three clear, composable layers: routes express the base cost relationship, weekdays and time windows model dynamic upstream prices, and user model factors carry individual discounts or markups. DeepSeek's new weekend off-peak policy is a direct example of why that composition matters.
+
+- [OctaFuse website](https://octafuse.dev/en/)
+- [GitHub repository](https://github.com/OctaFuse/octafuse-gateway)
+
+If OctaFuse helps your project, please give it a **Star** on GitHub. Your feedback helps us keep improving routing, protocol support, and the self-hosted experience.
