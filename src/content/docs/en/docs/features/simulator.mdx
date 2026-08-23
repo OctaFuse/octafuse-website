@@ -1,11 +1,11 @@
 ---
 title: Simulator
-description: From the browser call your deployed Proxy with base URL and user sk- key to validate the full client path.
+description: From the browser call your deployed Proxy with a user key to validate Chat, Responses, Images, DashScope Audio, and the full client path.
 ---
 
 import { Aside, Steps } from '@astrojs/starlight/components';
 
-Open **Inference → Simulator**. **Simulator** runs **in your browser** against the deployed **Proxy**: enter the **Proxy base URL** and a **user `sk-…` key**, choose Chat, Responses, Images, or another mode plus a model, and send — exercising **auth, routing, budget, and request logs** like a real client.
+Open **Inference → Simulator**. **Simulator** runs **in your browser** against the deployed **Proxy**: enter the **Proxy base URL** and a **user `sk-…` key**, choose Chat, Responses, Images, Audio, or another mode plus a model, and send — exercising **auth, routing, budget, and request logs** like a real client.
 
 This differs from [Playground](/en/docs/features/playground/), which focuses on **Admin-assisted upstream probes** for a single route.
 
@@ -23,12 +23,14 @@ This differs from [Playground](/en/docs/features/playground/), which focuses on 
 <Steps>
 1. Open **Simulator**.
 1. Enter the **Proxy base URL** (same entry point you give apps, including `https://` and port) and the **`sk-…`** key.
-1. Choose Chat, Responses, Images, or another mode, a model id, and an optional **route group** (must match [Routing](/en/docs/guides/routing/)). For image checks, use the Images / generations (or edits) entry — see [Image generation / edit](/en/docs/guides/images/).
+1. Choose Chat, Responses, Images, Audio, or another mode, a model id, and an optional **route group** (must match [Routing](/en/docs/guides/routing/)). For image checks, use the Images / generations (or edits) entry — see [Image generation / edit](/en/docs/guides/images/). For synchronous DashScope multimodal ASR, select its matching client request surface.
 1. Send, then confirm rows in [Request logs](/en/docs/guides/request-logs/) (including `billing_kind` / image counts).
 1. If results differ from Playground: check **user budget**, **route group**, and **key status** (revoked, etc.).
 </Steps>
 
 Simulator derives the request protocol and path from the selected **client request surface**, not from the final Upstream Target protocol. For example, if an OpenAI Audio surface routes through an explicit adapter to DashScope, Simulator still constructs the OpenAI-side client request. This keeps the test aligned with real client behavior.
+
+For native synchronous DashScope multimodal ASR added in 2.7.0, first configure a `dashscope` + `audio.transcriptions.multimodal` request surface. Simulator then constructs `/v1/dashscope/services/aigc/multimodal-generation/generation`; after sending, use [Request logs](/en/docs/guides/request-logs/) to verify upstream routing, audio duration, and final charge.
 
 The page may **remember** your last base URL and options **locally** in the browser for faster iteration — clear when switching machines or shared profiles.
 

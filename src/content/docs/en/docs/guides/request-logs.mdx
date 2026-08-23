@@ -1,15 +1,15 @@
 ---
 title: Request logs
-description: Search inference traffic in Admin by time, user, key, model, and more expand rows for JSON details.
+description: Search inference traffic and reconcile inbound versus upstream routes, capability tags, usage, user charges, supplier cost, and detail JSON.
 ---
 
 import { Aside, Steps } from '@astrojs/starlight/components';
 
-Open **User → Request Logs**. This view lists **real inference calls through the Proxy**: timestamps, keys, users, models, route groups, status, and more — useful for troubleshooting and reconciliation.
+Open **User → Request Logs**. This view lists **real inference calls through the Proxy**: time, user, inbound client surface, actual upstream, model, Route Group, Provider, usage, and cost — useful for troubleshooting and reconciliation.
 
 <figure class="of-doc-figure">
-	<img src="/screenshots/admin-request-logs.webp" alt="OctaFuse Admin Request Logs page showing request status, users, models, routes, tokens, cost, and profit with emails and sensitive identifiers redacted." loading="lazy" />
-	<figcaption>Choose a preset or custom time range, then combine status, model, Provider, protocol, route group, user, and API-key filters. The screenshot uses redacted example account data.</figcaption>
+	<img src="/screenshots/v2-7-0-request-logs-redacted.webp" alt="OctaFuse Request Logs showing status, inbound and upstream routes, capability tags, usage, user charge, supplier cost, and profit with user and external-system values redacted." loading="lazy" />
+	<figcaption>Each row keeps inbound and upstream routing together, with capability tags for LLM, streaming, reasoning, and more. User and external-system values are redacted.</figcaption>
 </figure>
 
 <Aside type="tip" title="Prerequisite">
@@ -21,13 +21,18 @@ Open **User → Request Logs**. This view lists **real inference calls through t
 <Steps>
 1. Open **Request Logs**.
 1. Narrow results with time range, status, model, user email, API key, vendor, route group, protocol, and other filters available on the page.
+1. In the row, compare **Inbound** and **Upstream** paths, model, Route Group, Provider, capability tags, and usage.
 1. Expand a row to inspect billing-audit snippets, request bodies, upstream bodies, and raw usage JSON (copy when provided).
 1. When reading money and timestamps, align with your **system** timezone and billing currency settings in Admin.
 </Steps>
 
 ## Billing display
 
-Expanded panels may include charge-related JSON summaries; for exact formulas or finance reconciliation, follow your internal policy plus upstream docs linked from the [GitHub technical reference](/en/docs/github-reference/).
+`C` in the list is the final user charge (Charged); `M` is supplier cost (Metered). Adjacent factors help identify route schedule and per-model user discounts.
+
+Expanded `pricing_audit` data records catalog rates, route factors, and final totals. New 2.7.0 rows can also include `user_charged_factor`, the business-timezone `local_weekday`, and the matching schedule window, making the catalog → route → user-factor calculation traceable.
+
+For exact formulas or finance reconciliation, follow your internal policy plus the [GitHub technical reference](/en/docs/github-reference/).
 
 ## Observe Provider Sticky
 

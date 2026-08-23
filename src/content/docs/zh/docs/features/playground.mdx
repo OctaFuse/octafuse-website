@@ -1,11 +1,11 @@
 ---
 title: 调试台（Playground）
-description: 在管理后台（Admin）选定一个上游目标（Upstream Target），编辑请求体并直连上游试跑，用于验证配置且不消耗用户密钥额度。
+description: 在管理后台选定一个上游目标，编辑请求体并直连上游试跑，验证 Chat、Responses、图片、百炼音频等配置且不消耗用户预算。
 ---
 
 import { Aside, Steps } from '@astrojs/starlight/components';
 
-在左侧的**推理（Inference）→ 调试台（Playground）**中打开。调试台支持 Chat、Responses、Images 等模式，并提供常用 LLM、推理与工具调用请求样例。它不经过业务用户的 `sk-…` 计费路径，而是针对**一个已配置的上游目标**向对应上游发出试跑请求，帮助你快速确认供应商地址、凭证、上游模型名等配置是否正确。
+在左侧的**推理（Inference）→ 调试台（Playground）**中打开。调试台支持 Chat、Responses、Images、Audio 等模式，并提供常用大语言模型、推理、工具调用和百炼音频请求样例。它不经过业务用户的 `sk-…` 计费路径，而是针对**一个已配置的上游目标**向对应上游发出试跑请求，帮助你快速确认供应商地址、凭证、上游模型名和请求格式是否正确。
 
 试跑**不会**写入请求日志、扣减用户预算，也**不会**经过路由池（Route Pool）的策略、熔断与故障转移。请使用真实的代理服务（Proxy）调用或[模拟器（Simulator）](/zh/docs/features/simulator/)验证完整行为。智能体工具（Agent Tools）请直接调用 `/v1/tools/*`。
 
@@ -23,10 +23,20 @@ import { Aside, Steps } from '@astrojs/starlight/components';
 <Steps>
 1. 打开**调试台（Playground）**。
 1. 在路由下拉框中选择 **一条路由**（界面会用图标区分是否处于启用状态）。
-1. 选择 Chat、Responses、Images 等模式并编辑请求体；可从连接测试、推理参数或工具调用等内置模板起步。图片生成请选 **OpenAI** 协议且挂了 Images 的路由，见 [图片生成 / 编辑](/zh/docs/guides/images/)。
+1. 选择 Chat、Responses、Images、Audio 等模式并编辑请求体；可从连接测试、推理参数、工具调用或百炼音频模板起步。图片生成请选 **OpenAI** 协议且挂了 Images 的路由，见 [图片生成 / 编辑](/zh/docs/guides/images/)。
 1. 发送后查看响应状态、错误信息与正文。流式请求会展示事件摘要、终态和可用的 usage；Gemini 工具调用还会整理函数名与参数，便于发现流式参数不完整等问题。
 1. 项目级 Vertex AI 路由会使用与 Proxy 相同的服务账号解析和 OAuth access token 换取流程，可在这里验证项目 ID 与 IAM 权限。
 </Steps>
+
+## 验证百炼同步多模态语音识别
+
+为路由选择 `dashscope` 协议和 `audio.transcriptions.multimodal` 操作后，可载入同步多模态语音识别模板，检查百炼原生 JSON、音频地址、上游模型名和响应中的有效时长。对应的网关入口为：
+
+```text
+POST /v1/dashscope/services/aigc/multimodal-generation/generation
+```
+
+调试台只验证单个上游目标，不扣减用户预算，也不会生成请求日志。需要确认用户鉴权、路由和按秒计费时，请再使用[模拟器（Simulator）](/zh/docs/features/simulator/)或真实客户端调用。
 
 ## 与模拟器的区别
 

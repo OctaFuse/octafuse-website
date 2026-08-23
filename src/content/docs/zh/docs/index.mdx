@@ -11,7 +11,7 @@ import { Aside, LinkCard, CardGrid } from '@astrojs/starlight/components';
 	<code>users → configure → observe → deploy</code>
 </div>
 
-OctaFuse 是可自托管的 AI 能力网关与运营控制面。文档按工作流组织：先跑起来，再配置供应商、模型、图片生成、智能体工具（Agent Tools）、路由和密钥；需要联调时使用调试台（Playground）、模拟器（Simulator）和日志；需要 API、迁移、架构细节时回到 gateway 仓库的权威技术参考。
+OctaFuse 是可自托管的 AI 能力网关与运营控制面。文档按工作流组织：先跑起来，再配置供应商、模型、图片与音频能力、智能体工具（Agent Tools）、路由和密钥；需要联调时使用调试台（Playground）、模拟器（Simulator）和日志；需要 API、迁移、架构细节时回到 gateway 仓库的权威技术参考。
 
 <div class="of-doc-path-grid">
 	<a class="of-doc-path" href="/zh/docs/quick-start/">
@@ -60,7 +60,7 @@ OctaFuse 是可自托管的 AI 能力网关与运营控制面。文档按工作�
 	<a href="/zh/docs/guides/routing/"><span>3</span><strong>路由（Routes）</strong><small>请求入口、路由池、上游目标与策略</small></a>
 	<a href="/zh/docs/guides/images/"><span>4</span><strong>图片（Images）</strong><small>图片生成与按张 / Token 计价</small></a>
 	<a href="/zh/docs/guides/tools/"><span>5</span><strong>工具（Tools）</strong><small>可扩展智能体工具</small></a>
-	<a href="/zh/docs/guides/users/"><span>6</span><strong>用户（Users）</strong><small>账户、预算、周期</small></a>
+	<a href="/zh/docs/guides/users/"><span>6</span><strong>用户（Users）</strong><small>账户、预算、模型折扣</small></a>
 	<a href="/zh/docs/guides/api-keys/"><span>7</span><strong>API 密钥（API Keys）</strong><small>发放、吊销、调用凭证</small></a>
 </div>
 
@@ -71,8 +71,8 @@ OctaFuse 是可自托管的 AI 能力网关与运营控制面。文档按工作�
 	<LinkCard title="系统集成" description="代理服务、管理后台与密钥的边界" href="/zh/docs/guides/integration/" />
 	<LinkCard title="图片生成 / 编辑" description="图片 Token 与按张计费" href="/zh/docs/guides/images/" />
 	<LinkCard title="智能体工具" description="可扩展工具 API；当前含联网类" href="/zh/docs/guides/tools/" />
-	<LinkCard title="调试台" description="联调 Chat、Responses、Images 等上游能力" href="/zh/docs/features/playground/" />
-	<LinkCard title="模拟器" description="用真实密钥验证 Responses 等完整代理链路" href="/zh/docs/features/simulator/" />
+	<LinkCard title="调试台" description="联调对话、响应、图片与百炼音频等上游能力" href="/zh/docs/features/playground/" />
+	<LinkCard title="模拟器" description="用真实密钥验证响应、音频等完整代理链路" href="/zh/docs/features/simulator/" />
 	<LinkCard title="Cloudflare 部署" description="Worker + 管理后台 + D1（推荐）" href="/zh/docs/deploy/cloudflare/" />
 	<LinkCard title="Docker 部署" description="自托管、Postgres / MySQL、镜像" href="/zh/docs/deploy/docker/" />
 </CardGrid>

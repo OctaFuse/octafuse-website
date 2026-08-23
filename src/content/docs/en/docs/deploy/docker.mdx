@@ -84,9 +84,13 @@ docker build -f Dockerfile.migrate -t octafuse-migrate:local .
 
 Before upgrading, read the **Upgrade notes** in that version’s [GitHub Release](https://github.com/OctaFuse/octafuse-gateway/releases) / Changelog (breaking changes, required migrations). Always prefer **migrate first, then roll Proxy / Admin** (or enable `AUTO_MIGRATE=1` on only one service).
 
+<Aside type="caution" title="Upgrading to v2.7.0">
+	v2.7.0 requires database migration **0026**, which adds per-model user charged-cost factors. Upgrade the Proxy, Admin, and Migrate images to v2.7.0 together, run the migration first, and then start Proxy and Admin. Do not mix image versions.
+</Aside>
+
 ### Prebuilt images (GHCR / private registry)
 
-1. In `docker/deploy/.env.local` (or your env file), bump the **tag** on `GATEWAY_PROXY_IMAGE` / `GATEWAY_ADMIN_IMAGE` / `GATEWAY_MIGRATE_IMAGE` (for example `v2.6.0`; pin semver in production instead of floating on `latest`).
+1. In `docker/deploy/.env.local` (or your env file), bump the **tag** on `GATEWAY_PROXY_IMAGE` / `GATEWAY_ADMIN_IMAGE` / `GATEWAY_MIGRATE_IMAGE` (for example `v2.7.0`; pin semver in production instead of floating on `latest`).
 2. Pull, migrate, then recreate containers:
 
 ```bash

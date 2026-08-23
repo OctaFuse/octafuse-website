@@ -1,35 +1,52 @@
 ---
 title: Users
-description: Manage gateway users, budgets, and external identity links in Admin; open a user for keys and log shortcuts.
+description: Manage gateway users, budgets, external identity links, and per-model user discounts in Admin.
 ---
 
 import { Aside, Steps } from '@astrojs/starlight/components';
 
 Open **User → Users**. A **user** is the account entity in the gateway: it owns API keys, carries **budget and billing period**, and appears across operational views. You can set email, optional external identifiers, and budget-related fields.
 
-The **user detail** page (open a row from the list) typically shows the budget plan, related **API keys**, and shortcuts into **request** and **audit-style** history for that user (layout follows the current UI).
+The **user detail** page shows the budget plan, related **API keys**, external identity, and per-model **Charged cost factors**.
 
 <Aside type="tip" title="Prerequisite">
 	Finish [Quick start](/en/docs/quick-start/) and sign in to Admin.
 </Aside>
 
 <figure class="of-doc-figure">
-	<img src="/screenshots/admin-users.webp" alt="OctaFuse Admin Users page showing user rows, budgets, key count, and metadata with emails redacted." loading="lazy" />
-	<figcaption>Users is where account identity, budget, key count, and external metadata come together. Emails are pixelated in this screenshot.</figcaption>
+	<img src="/screenshots/v2-7-0-user-charged-cost-factors.webp" alt="OctaFuse User Details showing budgets, API keys, external identity, and per-model Charged cost factors with the email redacted." loading="lazy" />
+	<figcaption>User Details keeps budget, keys, external identity, and per-model discounts together. The email is pixelated in this screenshot.</figcaption>
 </figure>
 
 ## What to do in Admin
 
 <Steps>
-1. On **Users**, filter by email, external identity, status, and browse pages.
-1. **Create a user**: fill email, optional external system and user id, budget caps/base, billing period, optional **metadata** (usually JSON for your own labels).
-1. **Review a user**: open the detail view to check budget, keys, and logs.
+1. On **Users**, filter by email, external identity, or status. Each row summarizes spent versus maximum budget, the next reset, active versus total keys, and model factors.
+1. **Create a user**: fill email, optional external system and user id, budget caps/base, billing period, optional **metadata** (usually JSON for your own labels), and per-model factors when needed.
+1. **Review a user**: open the detail view to check budget and keys; under **Charged cost factors**, select catalog models and enter their factors.
 1. **Issue keys**: create keys under [API keys](/en/docs/guides/api-keys/) for this user, or use the external-identity path in the key wizard.
 </Steps>
 
+## Per-model user discounts
+
+The user factor is applied after the route's user charge:
+
+> **Final user charge = catalog standard price × route Charged factor (including schedule override) × user model factor**
+
+| Factor | Typical meaning |
+|--------|-----------------|
+| `1` | Keep the price calculated by the route |
+| `0.8` | 20% discount |
+| `0.5` | 50% discount |
+| `0` | No charge for this model and user |
+
+Models not listed remain unchanged. The factor changes only final user charge and budget usage, not catalog price or supplier cost. It applies to LLM, Images, and Audio, but not independently priced Agent Tools.
+
+Automation can write `charged_cost_factors` through the Admin API as `{ "<model id>": factor }`. Unknown model ids, negative values, and invalid objects are rejected; `null` or an empty object clears existing factors.
+
 ## Portal integration
 
-After signup, your backend can call the admin HTTP API to create users and keys — see [Integration](/en/docs/guides/integration/) and the [GitHub technical reference](/en/docs/github-reference/).
+After signup, your backend can call the Admin API to create users, set model discounts, and issue keys — see [Integration](/en/docs/guides/integration/) and the [GitHub technical reference](/en/docs/github-reference/).
 
 ## Next
 

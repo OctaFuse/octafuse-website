@@ -1,15 +1,15 @@
 ---
 title: 请求日志
-description: 在管理台按时间、用户、密钥、模型等条件查询推理请求记录，展开查看详情 JSON。
+description: 在管理台查询推理请求，核对入站与上游路径、功能标签、用量、用户计费、供应成本和路由详情。
 ---
 
 import { Aside, Steps } from '@astrojs/starlight/components';
 
-在左侧**用户（User）→ 请求日志（Request Logs）**打开请求日志。这里记录的是**经网关代理（Proxy）的真实推理调用**：时间、密钥、用户、模型、路由组、状态等信息，用于排障与用量核对。
+在左侧**用户（User）→ 请求日志（Request Logs）**打开请求日志。这里记录的是**经网关代理（Proxy）的真实推理调用**：时间、用户、客户端入口、实际上游、模型、路由组、供应商、用量和费用等信息，用于排障与对账。
 
 <figure class="of-doc-figure">
-	<img src="/screenshots/admin-request-logs.webp" alt="OctaFuse 管理后台请求日志（Request Logs）页面展示请求状态、用户、模型、路由、Token、费用和利润；邮箱与敏感标识已打码。" loading="lazy" />
-	<figcaption>可用快捷时间范围或自定义起止时间，再按状态、模型、供应商、协议、路由组、用户和 API Key 组合筛选；截图使用的是脱敏示例账号。</figcaption>
+	<img src="/screenshots/v2-7-0-request-logs-redacted.webp" alt="OctaFuse 请求日志展示状态、入站与上游路由、功能标签、用量、用户计费、供应成本和利润；用户及外部系统信息已遮蔽。" loading="lazy" />
+	<figcaption>每一行并列展示客户端入口与实际上游，并通过标签区分大语言模型、流式输出和推理等请求特征。截图中的用户和外部系统信息已遮蔽。</figcaption>
 </figure>
 
 <Aside type="tip" title="前置">
@@ -21,13 +21,18 @@ import { Aside, Steps } from '@astrojs/starlight/components';
 <Steps>
 1. 打开**请求日志**。
 1. 使用时间范围、状态、模型、用户邮箱、API 密钥、供应商、路由组、协议等条件缩小范围（以页面筛选项为准）。
+1. 先在列表中核对客户端入口（Inbound）、实际上游（Upstream）、模型、路由组、供应商、功能标签和用量。
 1. 点击展开某一行，查看计费核对摘要、入口请求体、上游请求体、用量原始 JSON 等（可复制）。
 1. 核对金额与时间时，请与你在 **系统配置** 中设置的业务时区、计费币种保持一致理解。
 </Steps>
 
 ## 与计费展示的关系
 
-展开区域可能包含与扣费相关的多段 JSON 摘要；若需精确公式或与账单对账，请结合主仓库文档或内部财务口径。
+列表中的 `C` 表示最终向用户计算的费用（Charged），`M` 表示供应成本（Metered）；右侧倍率用于快速判断是否命中路由时段或用户级模型折扣。
+
+展开区域中的 `pricing_audit` 会记录目录价、路由倍率和最终金额。2.7.0 的新记录还可以包含 `user_charged_factor`、业务时区中的 `local_weekday` 以及命中的分时时段，便于沿着“目录价—路由价格—用户折扣”核对完整计算过程。
+
+若需精确公式或与账单对账，请结合 [GitHub 技术参考](/zh/docs/github-reference/) 和你自己的财务口径。
 
 ## 观察供应商粘性
 

@@ -1,6 +1,6 @@
 ---
 title: 路由配置
-description: 使用请求入口、路由池与上游目标配置协议操作、路由策略、优先级、权重、计费倍率和故障转移。
+description: 使用请求入口、路由池与上游目标配置协议操作、路由策略、优先级、权重、按星期分时计价和故障转移。
 ---
 
 import { Aside, Steps } from '@astrojs/starlight/components';
@@ -26,16 +26,16 @@ import { Aside, Steps } from '@astrojs/starlight/components';
 1. **路由池（Route Pool）**：让请求入口指向一个故障转移池；可设置路由池的默认策略，也可点击各 `priority` 层的策略（**Policy**）芯片，单独覆盖该层。未设置时继续继承模型或全局策略。
 1. **上游目标（Upstream Target）**：选择供应商（**Provider**），填写上游实际模型名与 `operation`，设置 `priority`（数字越大越先尝试）、`weight` 和启用状态。
 1. **自定义参数（Custom params）**：按需填写供应商扩展参数或路由默认值。它们会与上游请求体深度合并，客户端显式传入的字段优先。
-1. **计费**：在上游目标中设置用户计费（**Charged cost**）和供应成本（**Metered cost**）相对目录标准价的默认倍率；如需对齐供应商的高峰价和闲时价，再配置每日时段（**Daily schedule**）。命中时段后，该行倍率会覆盖默认倍率；时区见 [系统配置](/zh/docs/guides/system-config/)。
+1. **计费**：在上游目标中设置用户计费（**Charged cost**）和供应成本（**Metered cost**）相对目录标准价的默认倍率；如需对齐供应商的高峰价和闲时价，再配置分时时段（**Schedule**），并按需限定星期。命中时段后，该行倍率会覆盖默认倍率；时区见 [系统配置](/zh/docs/guides/system-config/)。
 1. **保存后**：用[调试台（Playground）](/zh/docs/features/playground/)针对单条路由做上游试跑；若要验证“真实密钥 + 网关入口”整条链路，请用[模拟器（Simulator）](/zh/docs/features/simulator/)。
 </Steps>
 
 <figure class="of-doc-figure">
-	<img src="/screenshots/v2-6-0-route-billing-schedule.webp" alt="OctaFuse 路由编辑器集中展示客户端入口、上游映射、默认计费倍率和每日覆盖时段。" loading="lazy" />
-	<figcaption>打开任一上游目标，可在同一页面核对协议映射、目录标准价、Charged / Metered 默认倍率及 Daily schedule 覆盖时段。</figcaption>
+	<img src="/screenshots/v2-7-0-route-weekday-schedule.webp" alt="OctaFuse 路由编辑器集中展示客户端入口、上游映射、默认计费倍率、时段和星期选择。" loading="lazy" />
+	<figcaption>打开任一上游目标，可在同一页面核对协议映射、目录标准价、默认倍率、时间窗口及生效星期。截图中的窗口选择了每天；需要区分工作日和周末时，可使用对应快捷按钮。</figcaption>
 </figure>
 
-## 默认倍率与每日时段
+## 默认倍率、星期与分时时段
 
 2.6.0 起，Admin 新保存的每日时段使用 `schedule.mode: "override"`：
 
@@ -43,8 +43,15 @@ import { Aside, Steps } from '@astrojs/starlight/components';
 - 命中时段时，直接使用该行的 Charged / Metered 倍率，不再与默认倍率相乘。
 - 两侧共用相同的起止时间，但可以分别填写用户计费倍率与供应成本倍率。
 - 为兼容已部署配置，未设置 `schedule.mode` 的旧数据仍沿用“默认倍率 × 时段倍率”的叠乘规则。
+- 2.7.0 起，每个窗口可以选择“每天”“工作日”“周末”，也可以逐日选择；没有限定星期的旧窗口仍然每天生效。
+- 通过管理接口配置时，`days` 使用 ISO 星期编号：`1` 代表周一，`7` 代表周日。
+- 跨午夜窗口的星期归属于开始日。例如，周五 `22:00–06:00` 覆盖周五 22:00 至周六 06:00。
 
 窗口按请求进入 Gateway 的时刻和业务时区判定；长时间流式请求不会在跨越时段边界后切换倍率。
+
+<Aside type="tip" title="DeepSeek 工作日高峰配置">
+	以低谷价作为目录标准价时，可将默认倍率保持为 `1`，再为周一至周五的 `09:00–12:00`、`14:00–18:00` 设置 `2` 倍覆盖。工作日其他时间和周末全天会自动使用低谷价。
+</Aside>
 
 ## 与客户端的关系
 

@@ -84,9 +84,13 @@ docker build -f Dockerfile.migrate -t octafuse-migrate:local .
 
 升级前先阅读该版本的 [GitHub 发布说明（Release）](https://github.com/OctaFuse/octafuse-gateway/releases) / 更改日志（Changelog）中的**升级说明**（是否有破坏性变更、是否必须先迁移）。推荐顺序始终是：**先迁移，再滚动重启代理服务 / 管理后台**（或只在一侧启用 `AUTO_MIGRATE=1`）。
 
+<Aside type="caution" title="升级到 v2.7.0">
+	v2.7.0 必须应用数据库迁移 **0026**，用于增加用户级模型计费倍率。请将 Proxy、Admin 与 Migrate 镜像统一升级到 v2.7.0，先执行迁移，再启动代理服务和管理后台；不要混用不同版本的镜像。
+</Aside>
+
 ### 预构建镜像（GHCR / 私有镜像仓库）
 
-1. 在 `docker/deploy/.env.local`（或你的环境文件）中，把 `GATEWAY_PROXY_IMAGE` / `GATEWAY_ADMIN_IMAGE` / `GATEWAY_MIGRATE_IMAGE` 的**标签（tag）**改成目标版本（例如 `v2.6.0`；生产环境建议固定语义化版本，避免长期使用 `latest`）。
+1. 在 `docker/deploy/.env.local`（或你的环境文件）中，把 `GATEWAY_PROXY_IMAGE` / `GATEWAY_ADMIN_IMAGE` / `GATEWAY_MIGRATE_IMAGE` 的**标签（tag）**改成目标版本（例如 `v2.7.0`；生产环境建议固定语义化版本，避免长期使用 `latest`）。
 2. 拉取并迁移，再重建容器：
 
 ```bash

@@ -1,11 +1,11 @@
 ---
 title: Playground
-description: Pick one Upstream Target in Admin, edit a JSON body, and probe the upstream without consuming user key budget.
+description: Pick one Upstream Target, edit a request, and probe Chat, Responses, Images, DashScope Audio, and more without consuming user budget.
 ---
 
 import { Aside, Steps } from '@astrojs/starlight/components';
 
-Open **Inference → Playground**. Playground supports Chat, Responses, Images, and other modes, with built-in samples for common LLM, reasoning, and tool-call requests. It sends a **probe** for **one selected Upstream Target** straight to its upstream, so you can verify URLs, credentials, and upstream model names **without** using a customer **`sk-…`** on the normal billing path.
+Open **Inference → Playground**. Playground supports Chat, Responses, Images, Audio, and other modes, with built-in samples for common LLM, reasoning, tool-call, and DashScope audio requests. It sends a **probe** for **one selected Upstream Target** straight to its upstream, so you can verify URLs, credentials, upstream model names, and request shape **without** using a customer **`sk-…`** on the normal billing path.
 
 It does **not** write request logs, debit user budgets, or run Route Pool strategy, circuits, and failover. Validate the full behavior with real Proxy calls or [Simulator](/en/docs/features/simulator/). Call Agent Tools directly through `/v1/tools/*`.
 
@@ -23,10 +23,20 @@ It does **not** write request logs, debit user budgets, or run Route Pool strate
 <Steps>
 1. Open **Playground**.
 1. Choose **one route** from the dropdown (icons indicate enabled vs disabled).
-1. Choose Chat, Responses, Images, or another available mode and edit the request body; start from a connectivity, reasoning, or tool-call template when helpful. For image generation, pick an **OpenAI** route with Images configured — see [Image generation / edit](/en/docs/guides/images/).
+1. Choose Chat, Responses, Images, Audio, or another available mode and edit the request body; start from a connectivity, reasoning, tool-call, or DashScope audio template when helpful. For image generation, pick an **OpenAI** route with Images configured — see [Image generation / edit](/en/docs/guides/images/).
 1. Send and inspect status, errors, and body. Streaming requests expose event summaries, terminal state, and available usage; Gemini tool calls also summarize function names and arguments so incomplete streamed arguments are easier to spot.
 1. Project-scoped Vertex AI routes use the same service-account parsing and OAuth access-token exchange as Proxy, making Playground suitable for validating the project ID and IAM access.
 </Steps>
+
+## Validate synchronous DashScope multimodal ASR
+
+For a route using the `dashscope` protocol and `audio.transcriptions.multimodal` operation, load the synchronous multimodal ASR template to check native DashScope JSON, the audio URL, upstream model name, and returned duration. The Gateway client endpoint is:
+
+```text
+POST /v1/dashscope/services/aigc/multimodal-generation/generation
+```
+
+Playground checks only one Upstream Target. It does not debit user budget or create request logs. Use [Simulator](/en/docs/features/simulator/) or a real client call to verify user auth, routing, and per-second billing.
 
 ## Versus Simulator
 
