@@ -3,11 +3,11 @@
   "catalog": "models",
   "source": {
     "repo": "OctaFuse/octafuse-gateway",
-    "ref": "v2.7.0",
-    "commit": "dbc1f4632cadfa8667285570a12ed271f5950b0b"
+    "ref": "v2.8.0",
+    "commit": "cde700fa5f057dea179ee46fb90c4ec90203fbe7"
   },
   "source_path": "packages/admin/lib/model-presets",
-  "count": 104,
+  "count": 107,
   "items": [
     {
       "id": "qwen-image-3.0-pro",
@@ -20,9 +20,6 @@
       "vendor": "aliyun",
       "context_window": null,
       "max_tokens": null,
-      "tags": [
-        "New"
-      ],
       "pricing": {
         "usd": {
           "image_billing_mode": "per_image",
@@ -292,6 +289,56 @@
         ]
       },
       "released": "2026-07-19",
+      "vendor_label": "Alibaba Cloud",
+      "kind": "llm",
+      "source_path": "packages/admin/lib/model-presets/aliyun.json"
+    },
+    {
+      "id": "qwen3.8-flash",
+      "display_name": "Qwen3.8 Flash",
+      "description": "A fast multimodal Qwen3.8 model with a native 1M context window for coding, agents, documents, and visual understanding. Near-flagship quality at a fraction of Qwen3.8 Max cost, with image and video input.",
+      "i18n": {
+        "en": "A fast multimodal Qwen3.8 model with a native 1M context window for coding, agents, documents, and visual understanding. Near-flagship quality at a fraction of Qwen3.8 Max cost, with image and video input.",
+        "zh": "通义千问最新多模态 Flash 模型，兼具理解生成能力与响应速度。原生百万级上下文，适合编程辅助、智能体协作、超长文档与图文/长视频理解，以更低推理成本接近旗舰效果。"
+      },
+      "vendor": "aliyun",
+      "context_window": 1000000,
+      "max_tokens": 128000,
+      "pricing": {
+        "usd": {
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 0.16,
+              "output_price": 0.47,
+              "cache_read_price": 0.016,
+              "cache_write_price": 0.2
+            }
+          ]
+        },
+        "cny": {
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 1,
+              "output_price": 3,
+              "cache_read_price": 0.1,
+              "cache_write_price": 1.25
+            }
+          ]
+        }
+      },
+      "modalities": {
+        "input": [
+          "text",
+          "image",
+          "video"
+        ],
+        "output": [
+          "text"
+        ]
+      },
+      "released": "2026-08-26",
       "vendor_label": "Alibaba Cloud",
       "kind": "llm",
       "source_path": "packages/admin/lib/model-presets/aliyun.json"
@@ -1982,9 +2029,6 @@
       "vendor": "bytedance",
       "context_window": null,
       "max_tokens": null,
-      "tags": [
-        "New"
-      ],
       "pricing": {
         "usd": {
           "image_billing_mode": "per_image",
@@ -2442,9 +2486,6 @@
       "vendor": "deepseek",
       "context_window": 1000000,
       "max_tokens": 384000,
-      "tags": [
-        "New"
-      ],
       "pricing": {
         "usd": {
           "tiers": [
@@ -2589,9 +2630,6 @@
       "vendor": "google",
       "context_window": null,
       "max_tokens": null,
-      "tags": [
-        "New"
-      ],
       "pricing": {
         "usd": {
           "image_billing_mode": "token",
@@ -2649,9 +2687,6 @@
       "vendor": "google",
       "context_window": null,
       "max_tokens": null,
-      "tags": [
-        "New"
-      ],
       "pricing": {
         "usd": {
           "image_billing_mode": "token",
@@ -2709,9 +2744,6 @@
       "vendor": "google",
       "context_window": 1000000,
       "max_tokens": 64000,
-      "tags": [
-        "New"
-      ],
       "pricing": {
         "usd": {
           "tiers": [
@@ -3260,9 +3292,6 @@
       "vendor": "meituan",
       "context_window": 1000000,
       "max_tokens": 128000,
-      "tags": [
-        "New"
-      ],
       "pricing": {
         "usd": {
           "tiers": [
@@ -4474,6 +4503,54 @@
       "source_path": "packages/admin/lib/model-presets/stepfun.json"
     },
     {
+      "id": "hy4-preview",
+      "display_name": "Hy4 preview",
+      "description": "Tencent's next-generation productivity model with significantly enhanced Agent and complex task execution capabilities. Hy4 preview features 770B total parameters with 49B active parameters and is optimized for agentic, coding, and productivity scenarios, with stronger capabilities in understanding, planning, tool use, and sustained execution for complex tasks.",
+      "i18n": {
+        "en": "Tencent's next-generation productivity model with significantly enhanced Agent and complex task execution capabilities. Hy4 preview features 770B total parameters with 49B active parameters and is optimized for agentic, coding, and productivity scenarios, with stronger capabilities in understanding, planning, tool use, and sustained execution for complex tasks.",
+        "zh": "腾讯新一代生产力模型，Agent 与复杂任务执行能力全面升级。Hy4 preview 总参数 770B、激活参数 49B，面向 Agent、Coding 与生产力场景优化，强化复杂任务中的理解、规划、工具调用与持续执行能力。"
+      },
+      "vendor": "tencent",
+      "context_window": 1024000,
+      "max_tokens": 64000,
+      "pricing": {
+        "usd": {
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 0.834,
+              "output_price": 2.501,
+              "cache_read_price": 0.042,
+              "cache_write_price": null
+            }
+          ]
+        },
+        "cny": {
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 6,
+              "output_price": 18,
+              "cache_read_price": 0.3,
+              "cache_write_price": null
+            }
+          ]
+        }
+      },
+      "modalities": {
+        "input": [
+          "text"
+        ],
+        "output": [
+          "text"
+        ]
+      },
+      "released": "2026-08-28",
+      "vendor_label": "Tencent",
+      "kind": "llm",
+      "source_path": "packages/admin/lib/model-presets/tencent.json"
+    },
+    {
       "id": "hy3",
       "display_name": "Hy3",
       "description": "A Tencent mixture-of-experts model for configurable reasoning and production agents. Configurable reasoning effort lets production systems trade latency for depth across agentic workloads.",
@@ -4594,9 +4671,6 @@
       "vendor": "xai",
       "context_window": null,
       "max_tokens": null,
-      "tags": [
-        "New"
-      ],
       "pricing": {
         "usd": {
           "image_billing_mode": "per_image",
@@ -4693,9 +4767,6 @@
       "vendor": "xai",
       "context_window": 500000,
       "max_tokens": 128000,
-      "tags": [
-        "New"
-      ],
       "pricing": {
         "usd": {
           "tiers": [
@@ -5107,9 +5178,6 @@
       "vendor": "zhipu",
       "context_window": null,
       "max_tokens": null,
-      "tags": [
-        "New"
-      ],
       "pricing": {
         "usd": {
           "image_billing_mode": "per_image",
@@ -5344,9 +5412,6 @@
       "vendor": "zhipu",
       "context_window": 1000000,
       "max_tokens": 128000,
-      "tags": [
-        "New"
-      ],
       "pricing": {
         "usd": {
           "tiers": [
@@ -5380,6 +5445,57 @@
         ]
       },
       "released": "2026-08-14",
+      "vendor_label": "Zhipu AI",
+      "kind": "llm",
+      "source_path": "packages/admin/lib/model-presets/zhipu.json"
+    },
+    {
+      "id": "glm-5.3-flash",
+      "display_name": "GLM-5.3-Flash",
+      "description": "A native multimodal GLM Flash model for visual coding, agents, and professional workflows. It outperforms GLM-5.2 at a fraction of the cost, with native image, video, and file understanding.",
+      "i18n": {
+        "en": "A native multimodal GLM Flash model for visual coding, agents, and professional workflows. It outperforms GLM-5.2 at a fraction of the cost, with native image, video, and file understanding.",
+        "zh": "面向视觉编程、Agent 与专业工作流的 GLM 原生多模态 Flash 模型。以远低于 GLM-5.2 的成本提供更强智能，原生支持图片、视频与文件理解。"
+      },
+      "vendor": "zhipu",
+      "context_window": 1000000,
+      "max_tokens": 128000,
+      "pricing": {
+        "usd": {
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 0.15,
+              "output_price": 0.5,
+              "cache_read_price": 0.03,
+              "cache_write_price": null
+            }
+          ]
+        },
+        "cny": {
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 0.8,
+              "output_price": 2.8,
+              "cache_read_price": 0.23,
+              "cache_write_price": null
+            }
+          ]
+        }
+      },
+      "modalities": {
+        "input": [
+          "text",
+          "image",
+          "video",
+          "file"
+        ],
+        "output": [
+          "text"
+        ]
+      },
+      "released": "2026-08-26",
       "vendor_label": "Zhipu AI",
       "kind": "llm",
       "source_path": "packages/admin/lib/model-presets/zhipu.json"
