@@ -93,8 +93,7 @@ const copy = {
 		copied: '已复制',
 		copyModelId: '复制模型 ID',
 		editSource: '提交修改',
-		getApiKey: '获取 API Key',
-		visitPlatform: '访问平台',
+		go: '点击前往',
 		context: '上下文',
 		maxOutput: '最大输出',
 		released: '发布日期',
@@ -160,8 +159,7 @@ const copy = {
 		copied: 'Copied',
 		copyModelId: 'Copy model ID',
 		editSource: 'Submit a fix',
-		getApiKey: 'Get API key',
-		visitPlatform: 'Visit platform',
+		go: 'Click to go',
 		context: 'Context',
 		maxOutput: 'Max output',
 		released: 'Released',
@@ -208,6 +206,7 @@ const vendorVisuals: Record<string, { logo?: string; accent: string; monogram?: 
 	cohere: { logo: cohereLogo, accent: '#39594d' },
 	deepseek: { logo: '/brand/deepseek.svg', accent: '#4d6bfe' },
 	fireworks: { logo: fireworksLogo, accent: '#ff5f56' },
+	flatkey: { accent: '#2563eb' },
 	google: { logo: '/brand/googlegemini.svg', accent: '#4285f4' },
 	groq: { logo: groqLogo, accent: '#f55036' },
 	huggingface: { logo: '/brand/huggingface.svg', accent: '#ffd21e' },
@@ -296,6 +295,28 @@ function flattenEndpoints(item: ProviderItem) {
 		}
 	}
 	return rows;
+}
+
+function httpsHref(value: string | undefined | null): string | null {
+	const trimmed = String(value ?? '').trim();
+	if (!trimmed) return null;
+	try {
+		const url = new URL(trimmed);
+		return url.protocol === 'https:' ? trimmed : null;
+	} catch {
+		return null;
+	}
+}
+
+function resolveProviderOutbound(item: ProviderItem): { href: string; kind: 'referral' | 'api_keys' | 'platform' } | null {
+	const links = item.links as { platform?: string; api_keys?: string; referral?: string } | undefined;
+	const referral = httpsHref(links?.referral);
+	if (referral) return { href: referral, kind: 'referral' };
+	const apiKeys = httpsHref(links?.api_keys);
+	if (apiKeys) return { href: apiKeys, kind: 'api_keys' };
+	const platform = httpsHref(links?.platform);
+	if (platform) return { href: platform, kind: 'platform' };
+	return null;
 }
 
 function compactNumber(value: number | null | undefined) {
@@ -534,8 +555,10 @@ function contributionUrl(item: ProviderItem | ModelItem) {
 						const localized = item.i18n?.[locale];
 						const displayName = localized?.name || item.name;
 						const displayDescription = localized?.description || item.description || t.noDescription;
-						const platformUrl = item.links?.api_keys || item.links?.platform;
-						const platformLabel = item.links?.api_keys ? t.getApiKey : t.visitPlatform;
+						const outbound = resolveProviderOutbound(item);
+						const platformUrl = outbound?.href;
+						const platformRel =
+							outbound?.kind === 'referral' ? 'sponsored noopener noreferrer' : 'noopener noreferrer';
 						const search = [
 							item.name,
 							item.i18n?.zh?.name ?? '',
@@ -607,8 +630,8 @@ function contributionUrl(item: ProviderItem | ModelItem) {
 									<div class="card-action-links">
 										{
 											platformUrl && (
-												<a class="provider-platform-link" href={platformUrl} target="_blank" rel="noreferrer">
-													{platformLabel} <span aria-hidden="true">↗</span>
+												<a class="provider-platform-link" href={platformUrl} target="_blank" rel={platformRel}>
+													{t.go} <span aria-hidden="true">↗</span>
 												</a>
 											)
 										}
