@@ -36,7 +36,7 @@ OctaFuse Gateway 2.10.0 为路由请求体和上游请求头增加独立的强�
 
 上游请求头遵循同样的规则。如果 `HTTP-Referer`、`X-Title` 或某个渠道 Header 必须由运维固定，可以只开启请求头强制覆盖，不影响请求体的合并方式。
 
-例如，部分 OpenCode 兼容上游会校验 `x-opencode-session`。一些客户端无法补充这个 Header，或者传入的值不符合上游要求，都会导致请求被拒绝。通过 OctaFuse，只需在路由中配置正确的 Header 并开启请求头强制覆盖，接入这条路由的客户端无需逐个修改，也无法再覆盖这个固定值。
+例如，最近 OpenCode 会校验 `x-opencode-session`。一些客户端无法补充这个 Header，或者传入的值不符合上游要求，都会导致请求被拒绝。通过 OctaFuse，只需在路由中配置正确的 Header 并开启请求头强制覆盖，接入这条路由的客户端无需逐个修改，也无法再覆盖这个固定值。
 
 ![OctaFuse 路由编辑器为 x-opencode-session 开启请求头强制覆盖](/screenshots/v2-10-0-route-force-override.webp)
 
