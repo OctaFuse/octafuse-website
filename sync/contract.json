@@ -86,6 +86,14 @@
 					}
 				},
 				{
+					"path": "docs/developers/api/error-codes.md",
+					"label": { "zh": "代理服务错误码", "en": "Proxy error codes" },
+					"description": {
+						"zh": "X-OctaFuse-Error-Code 完整清单、HTTP 对照与调用方建议。",
+						"en": "Full X-OctaFuse-Error-Code catalog, HTTP mapping, and client handling notes."
+					}
+				},
+				{
 					"path": "docs/developers/api/user.md",
 					"label": { "zh": "用户侧 API", "en": "User-facing APIs" },
 					"description": {
