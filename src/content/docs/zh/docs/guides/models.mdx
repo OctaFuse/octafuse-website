@@ -39,7 +39,7 @@ import { Aside, Steps } from '@astrojs/starlight/components';
 
 | 接口 | 鉴权 | 典型用途 |
 |------|------|----------|
-| **`GET /v1/models`** | 用户 `sk-…` | 智能体（Agent）与 SDK；默认仅返回 LLM（不含文生图、ASR、TTS）；`kind=image` 为文生图，`kind=audio` 仅 ASR，TTS 需 `kind=all` |
+| **`GET /v1/models`** | 用户 `sk-…` | 智能体（Agent）与 SDK；默认仅返回 LLM（不含文生图、ASR、TTS）；`kind=image` 为文生图，`kind=audio` 为 ASR + TTS |
 | **`GET /catalog/models`** | 无 | 门户公开发现；按 `active` 路由聚合协议与路由组 |
 
 二者不是同一响应形态，请勿混用。图片生成定价见 [图片生成 / 编辑](/zh/docs/guides/images/)。
