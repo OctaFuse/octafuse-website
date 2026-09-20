@@ -1,6 +1,6 @@
 ---
 title: OctaFuse 2.11.0：流式请求保护、用户折扣策略与错误契约升级
-description: OctaFuse Gateway 2.11.0 为流式请求处理优化、用户倍率组合模式、个性化折扣接口和统一错误码调整
+description: OctaFuse Gateway 2.11.0 增强文本流式请求保护与故障转移，并支持用户倍率组合、个性化折扣接口和统一代理错误码。
 publishDate: 2026-09-20
 publish_at: 2026-09-20
 updateLabel: VERSION 2.11.0
@@ -59,16 +59,9 @@ STREAM_FIRST_EVENT_TIMEOUT_MS = 45000
 STREAM_FIRST_EVENT_TIMEOUT_ROUTE_GROUPS = default,free
 ```
 
-命中超时后，当前上游尝试会按 `524` 处理，Gateway 随后继续尝试其他可用路由。
+命中超时后，当前上游尝试会按 `524` 处理，Gateway 随后继续尝试其他可用路由。这项能力独立于默认启用的流式生命周期保护，并且默认关闭；开启后如果没有指定路由组，只作用于 `default`，配置为 `*` 或 `all` 时才会覆盖全部路由组。
 
-这项能力默认关闭。开启后如果没有指定路由组，只作用于 `default`；配置为 `*` 或 `all` 时才会覆盖全部路由组。它适用于四类文本流式入口，不作用于图片、音频、实时语音和 Agent Tools。
-
-这里需要区分两种机制：
-
-- 流式生命周期保护默认启用，负责结束长期无响应的连接和记账流程。
-- 首个 SSE 事件超时默认关闭，负责在首事件迟迟未到时触发故障转移。
-
-如果业务中存在超长静默思考、检索或工具调用，应先评估真实响应时间，再决定是否开启首事件故障转移以及设置多长的等待时间。
+首事件超时适用于上述四类文本流式入口，不作用于图片、音频、实时语音和 Agent Tools。如果业务中存在超长静默思考或检索，应先评估真实响应时间，再决定是否开启以及设置多长的等待时间。
 
 ## 02｜用户折扣更灵活
 
@@ -104,19 +97,11 @@ GET /api/admin/users/:id/display-discounts
 
 接口需要 `users.read` 权限，只返回该用户已经配置倍率且当前存在可用路由的模型，也可以通过 `route_groups` 限定路由组。
 
-推荐的门户接入方式是：
-
-1. 通过 `GET /catalog/models` 获取公共模型目录。
-2. 通过用户专属折扣接口获取需要覆盖的模型。
-3. 在门户展示层将专属折扣叠加到公共目录。
-
-该接口使用管理端身份，不占用用户或 API Key 的 RPM。门户无需持有用户 API Key，也不必为了展示价格去调用面向 Agent 的 `GET /v1/models`。
+门户可先通过 `GET /catalog/models` 获取公共模型目录，再用该接口返回的结果覆盖对应模型的用户专属折扣。该接口使用管理端身份，不占用用户或 API Key 的 RPM；门户无需持有用户 API Key，也不必为了展示价格去调用面向 Agent 的 `GET /v1/models`。
 
 ## 03｜错误判断更明确
 
 仅靠 HTTP 状态码，很难准确判断代理请求失败在哪一层。
-
-同一个 `404` 既可能表示 Gateway 中不存在这个模型，也可能表示模型存在但没有可用路由，还可能是请求已经到达上游、但上游没有找到对应资源。
 
 2.11.0 统一使用响应头标记代理错误类型：
 
@@ -128,19 +113,15 @@ X-OctaFuse-Error-Code: gateway.no_route
 
 几个容易混淆的错误现在可以明确区分：
 
-| 错误码 | HTTP | 含义 |
-|---|---:|---|
-| `gateway.model_not_found` | 404 | 请求的模型 ID 不在 Gateway 模型目录中 |
-| `gateway.no_route` | 404 | 模型存在，但当前协议、操作或路由组没有可用上游 |
-| `upstream.not_found` | 404 | 请求已经到达上游，但上游模型或资源不存在 |
+| 错误码 | HTTP | 含义 | 处理建议 |
+|---|---:|---|---|
+| `gateway.model_not_found` | 404 | 请求的模型 ID 不在 Gateway 模型目录中 | 检查客户端使用的模型 ID |
+| `gateway.no_route` | 404 | 模型存在，但当前协议、操作或路由组没有可用上游 | 检查请求入口、路由组和活跃上游目标 |
+| `upstream.not_found` | 404 | 请求已经到达上游，但上游模型或资源不存在 | 检查路由中的 `provider_model_name` 和供应商配置 |
 
 其中，`gateway.no_route` 在 2.11.0 中由原来的 `502` 调整为 `404`，错误文案统一为 `No available route`。
 
-如果客户端、监控告警或重试规则依赖原来的状态码，需要同步调整。建议以后直接按错误码处理：
-
-- `gateway.model_not_found`：检查客户端使用的模型 ID。
-- `gateway.no_route`：检查请求入口、路由组和活跃上游目标。
-- `upstream.not_found`：检查路由中的 `provider_model_name` 和供应商配置。
+如果客户端、监控告警或重试规则依赖原来的状态码，需要同步调整，并改为优先按错误码处理。
 
 这套错误契约主要覆盖用户侧的 `/v1/*` 和 `/v1beta/*` 代理接口。Admin API 不使用这套响应格式；Agent Tools 的鉴权、额度和限流错误会带统一错误码，但工具自身返回的业务错误目前不一定包含该响应头。
 
@@ -153,7 +134,6 @@ X-OctaFuse-Error-Code: gateway.no_route
 | **新增图片模型** | 新增 `gpt-image-2.5-flare`、`gpt-image-2.5-sunburst` 预设 |
 | **新增文本模型** | 新增 `glm-5.3-flashx` 预设 |
 | **价格更新** | 调整 `claude-sonnet-5`、`gpt-5.6-terra` 和 `gpt-5.6-luna` 的 USD / CNY 目录价格 |
-| **跨部署配置** | 流式超时环境变量已接入 Node、Docker 和 Cloudflare 配置流程 |
 
 模型目录导入不会覆盖数据库中已经存在的同 ID 模型。需要使用新增模型时，应按需导入并配置路由；已有模型如需采用新的目录价格，应先核对实际供应商价格，再由管理员手动更新。
 
@@ -168,36 +148,22 @@ X-OctaFuse-Error-Code: gateway.no_route
 3. 再升级 Admin。
 4. 全部实例升级完成后，再决定是否将用户倍率模式切换为 `min`。
 
-默认的 `multiply` 模式与此前版本一致，因此不主动修改配置时，用户计费方式不会发生变化。
+默认的 `multiply` 模式与此前版本一致，不主动修改配置时，用户计费方式不会发生变化。
 
-三档流式保护在升级后会按默认值生效。对于超长静默思考、工具调用或检索类请求，建议在部署前评估现有响应时间，并按需提高：
-
-```text
-STREAM_FIRST_CHUNK_TIMEOUT_MS
-STREAM_IDLE_TIMEOUT_MS
-USAGE_SAFETY_TIMEOUT_MS
-```
-
-首事件超时故障转移默认关闭，不配置 `STREAM_FIRST_EVENT_TIMEOUT_MS` 就不会改变现有故障转移行为。
+三档流式保护在升级后会按默认值生效。对于超长静默思考或检索类请求，建议在部署前评估响应时间，必要时调整前文三个环境变量。首事件超时故障转移仍默认关闭，不配置 `STREAM_FIRST_EVENT_TIMEOUT_MS` 就不会改变现有行为。
 
 升级后建议重点验证：
 
-1. 长流式请求能够正常完成，用量记录可以正确收口。
-2. 流式输出中断后，上游连接会被取消，请求日志标记为 `incomplete`。
-3. 开启首事件超时后，命中条件的请求能够继续尝试其他路由。
-4. 无可用路由时返回 `404`，并包含 `X-OctaFuse-Error-Code: gateway.no_route`。
-5. `multiply` 与 `min` 两种倍率模式的展示价格和实际扣费保持一致。
-6. 用户专属折扣接口的权限、路由组筛选和返回结果符合预期。
+1. 长流式请求能够正常完成；流式输出中断后，上游连接会被取消，请求日志标记为 `incomplete`。
+2. 如果启用了首事件超时，命中条件的请求能够继续尝试其他路由。
+3. 无可用路由时返回 `404`，并包含 `X-OctaFuse-Error-Code: gateway.no_route`。
+4. 两种倍率模式的展示价格和实际扣费一致，用户专属折扣接口的权限及返回结果符合预期。
 
 升级前可查看 [GitHub Release v2.11.0](https://github.com/OctaFuse/octafuse-gateway/releases/tag/v2.11.0) 和 [完整更新记录](https://github.com/OctaFuse/octafuse-gateway/blob/v2.11.0/CHANGELOG.md)。
 
 ## 小结
 
-2.11.0 重点补齐了那些不容易从管理界面直接看到、但会影响实际运行稳定性的基础能力。
-
-流式请求不再无限等待，首个有效事件迟迟未到时可以选择换路由；用户折扣既可以继续叠加，也可以只采用更低的一档；客户端则可以通过稳定的错误码，判断问题发生在模型、路由还是上游。
-
-这些变化不会改变 OctaFuse 的基本接入方式，但能让长请求、计价运营和故障处理更加可控。
+2.11.0 进一步明确了网关的运行边界：流式请求可以及时收口或切换上游，用户折扣拥有更灵活的组合方式，客户端也能通过统一错误码准确定位问题。这些变化不会改变 OctaFuse 的基本接入方式，但能让长请求、计价运营和故障处理更加可控。
 
 - [OctaFuse 官网](https://octafuse.dev/zh/)
 - [GitHub 仓库](https://github.com/OctaFuse/octafuse-gateway)
