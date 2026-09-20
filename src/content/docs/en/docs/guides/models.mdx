@@ -39,7 +39,7 @@ Use the **base model id**, or **`baseModelId:routeGroup`** (for example `my-mode
 
 | Endpoint | Auth | Typical use |
 |----------|------|-------------|
-| **`GET /v1/models`** | User `sk-…` | Agents / SDKs; LLMs by default (`kind=image` / `kind=audio` / `kind=all` when needed) |
+| **`GET /v1/models`** | User `sk-…` | Agents / SDKs; LLMs by default (excludes image, ASR, and TTS). `kind=image` for image models; `kind=audio` is ASR only; TTS requires `kind=all` |
 | **`GET /catalog/models`** | None | Public portal discovery; protocols and route groups from active routes |
 
 They are not the same response shape — do not mix them. Image pricing: [Image generation / edit](/en/docs/guides/images/).
