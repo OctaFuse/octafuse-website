@@ -1,0 +1,169 @@
+---
+title: OctaFuse 2.15.0：MCP 聚合、向量 Embeddings 与官方目录同步
+description: OctaFuse Gateway 2.15.0 新增 MCP 聚合和按调用计费，支持 OpenAI 与 Gemini 向量请求，并可在模型和供应商页手动对照官方目录。升级需先应用迁移 0030。
+publishDate: 2026-10-15
+publish_at: 2026-10-15
+updateLabel: VERSION 2.15.0
+featuredUpdate: true
+template: splash
+prev: false
+next: false
+lastUpdated: false
+sidebar:
+  hidden: true
+---
+
+OctaFuse Gateway 2.15.0 新增了 MCP 聚合入口：管理员接入多个远程 MCP 服务后，Agent 只需配置一个网关地址和用户 API Key，就能拿到统一的工具目录，工具调用也会计入请求日志和费用。
+
+这次还补上了向量 Embeddings：OpenAI 兼容和 Gemini 原生请求可以走同一套路由、故障转移和记账。模型页与供应商页新增手动检查官方更新的入口，可以逐项决定采用官方值还是保留当前配置。
+
+## 01｜MCP 聚合
+
+MCP（Model Context Protocol）服务各有各的地址和鉴权头，Agent 要逐个配置。2.15.0 把它们收拢到 Proxy 上：
+
+| 入口 | 暴露范围 |
+|---|---|
+| `POST /mcp` | 所有已启用服务的聚合目录 |
+| `POST /mcp/{slug}` | 只暴露某一个服务 |
+
+入口使用无会话的 Streamable HTTP，鉴权沿用用户 API Key。工具名形如 `{slug}__{原名}`，提示词和资源也从同一入口读取。上游地址和鉴权头不会下发给 Agent。
+
+目录来自管理员审核过的快照，而不是每次实时转发上游清单，所以上游新增工具不会直接出现在 Agent 面前。
+
+### 接入、同步和审核
+
+在后台 MCP 服务（MCP Servers）页点击添加，填写远程地址和静态请求头即可接入；也可以粘贴常见客户端的 MCP 配置，自动填入地址和请求头。本地进程、旧版 SSE 和 OAuth 不会被导入。
+
+![MCP 服务列表，展示一个已启用的演示服务、已暴露条目数和每次请求的价格](/screenshots/v2-15-0-mcp-services.webp)
+
+*图中为用于演示的示例服务，价格仅作示意。*
+
+接入后：
+
+- 同步目录会拉取工具、提示词和资源，并对比新增、变更和移除。
+- **新增条目默认停用**，审核后逐条或批量启用，说明变更也需要重新审核。
+- 同步失败的服务会在列表里标红；上游地址和鉴权头默认脱敏显示。
+
+### 按调用计费
+
+只有 `tools/call` 会计费，每次成功调用固定计 1 个请求单元：
+
+- 向用户收取的费用按标准价和用户倍率计算，供应成本按标准价和供应倍率计算；用户倍率为 `0` 时免费，并记录供应成本。
+- 服务可设置默认单价，单个工具可覆盖。
+- 调用前检查余额；上游失败不扣费。
+- 请求日志以 `provider_id=octafuse-mcp` 记录，可按 MCP 调用筛选。
+
+`GET /v1/tools/pricing` 同时增加了已启用 MCP 工具的 `mcp` 段，含计费单元和单价，门户可以直接读取。
+
+### 给 Agent 的配置，不用手写
+
+MCP 服务页的接入指南（Connection guide）填入 Proxy 地址并选择全部服务或单个服务后，可复制 Cursor、VS Code、Claude Code、Codex 的配置和 curl 验证命令。示例只含 `<YOUR_API_KEY>` 占位符。
+
+![MCP 接入指南，展示 Cursor 的 mcp.json 配置示例与使用说明](/screenshots/v2-15-0-mcp-connection-guide.webp)
+
+配好以后，可以用对外目录测试（Test exposed catalog）确认 Agent 实际看到什么：填写 Proxy 地址和用户 API Key，页面会真正请求 `/mcp` 或 `/mcp/{slug}`，支持原始 JSON 和按服务分组两种视图，复制出的 cURL 也使用 Key 占位符。这个测试只查询目录和协议能力，不执行工具。
+
+![对外目录测试，按服务分组展示 tools/list 的返回内容](/screenshots/v2-15-0-mcp-catalog-test.webp)
+
+*Proxy 地址与接入指南共用；图中响应来自示例服务。*
+
+## 02｜向量 Embeddings
+
+2.15.0 新增两类向量入口，都走现有路由池、故障转移、限流和记账：
+
+| 协议 | 入口 |
+|---|---|
+| OpenAI 兼容 | `POST /v1/embeddings` |
+| Gemini 原生 | `POST /v1beta/models/{model}:embedContent`、`:batchEmbedContents` |
+
+请求体原样透传；Gemini 批量请求会改写每个 `requests[].model`，其余内容不变。
+
+向量模型以 `output_modalities` 含 `embedding` 标识，只按输入 token 计费：OpenAI 取 `usage.prompt_tokens`，缺失时回退 `total_tokens`；Gemini 取 `usageMetadata.promptTokenCount`。上游没有返回用量时不计费。
+
+`GET /v1/models` 默认不返回向量模型，需要时用 `kind=embedding`。
+
+后台也同步支持：
+
+- **模型、路由、供应商**：新增 `embedding` 类型，模型表单只保留输入价。
+- **供应商端点**：可覆盖 `embeddings`（OpenAI）和 `models.embed`（Gemini）；OpenAI、Azure OpenAI、ZenMux 的全能力 Base 和 Gemini Base 模板会自动派生向量端点。
+- **目录预设**：新增 `text-embedding-3-small`、`text-embedding-3-large`、`text-embedding-ada-002`、`gemini-embedding-2`（文本输入价），以及阿里云的 `qwen3.7-text-embedding`、`text-embedding-v4`。
+- **调试台（Playground）与路由快速测试**：提供 OpenAI、Gemini 向量请求模板，并展示向量个数、维度和用量。
+
+![调试台中的向量请求：选择 Embedding 类型路由，发送后展示 1 个向量、8 维和用量](/screenshots/v2-15-0-embedding-playground.webp)
+
+*图中上游为本地模拟服务，返回的维度仅作演示；真实维度由所选模型决定。*
+
+供应商导入模板里，官方文档确认提供 OpenAI 兼容 embeddings 的平台已补上 `openai.endpoints.embeddings`，包括火山方舟、阿里云百炼、腾讯混元、百度千帆、智谱 GLM、Google Gemini、Mistral、OpenRouter、SiliconFlow 等；官方不支持或未核实的平台没有写入，需要时在供应商里手动填写端点。
+
+除阿里云外，预设中的人民币价是美元 × 7 的占位换算，不是独立人民币刊例。
+
+## 03｜模型类型与官方目录同步
+
+### ASR 与 TTS 拆开
+
+此前“音频”类型把语音识别和语音合成放在一起。2.15.0 起，模型（Models）、路由（Routes）、调试台和模拟器中的类型（Kind）拆为 **ASR**（语音识别）和 **TTS**（语音合成），新建或编辑模型时直接选择，不再有二级“音频能力”开关。
+
+`GET /v1/models` 的 `kind` 新增 `asr` 和 `tts`，`kind=audio` 保留为两者的兼容别名；旧后台链接 `?kind=audio` 会落到 ASR。保存模型时，如果计费模式和模态互相矛盾（例如 TTS 但输出不含 `audio`），会被拒绝。Admin 与 Proxy 现在共用同一套判定规则，详见 [模型类型](https://github.com/OctaFuse/octafuse-gateway/blob/v2.15.0/docs/developers/reference/model-kinds.md)。
+
+### 手动对照官方目录
+
+静态目录和供应商模板会随版本更新，但已导入的数据不会自动改动。2.15.0 在模型页和供应商页右上角各增加了检查官方更新（Check official updates）按钮。它**只在你点击时检查**，不会自动运行。
+
+有差异时，页面顶部出现提示条，对应的模型或供应商卡片出现“有官方更新”标记。
+
+![模型页的官方更新提示条与类型筛选，提示 18 个模型存在差异](/screenshots/v2-15-0-model-kinds.webp)
+
+在与官方目录同步（Sync with official catalog）面板里，按厂商分组逐项并排对比名称、厂商、上下文窗口、最大输出、介绍、发布日期、输入输出模态和价格。每一项可以选“采用官方”或“保留当前”，支持单个同步或批量同步。
+
+![与官方目录同步面板，按厂商分组并排展示当前值与官方值](/screenshots/v2-15-0-model-official-sync.webp)
+
+同步时有几条边界：
+
+- **价格默认保留**：价格影响计费，默认选“保留当前”，应用前会显示涉及的启用路由数。
+- **不清空字段**：官方目录没有给出的字段不会被清空。
+- **不改其他配置**：标签、元数据、路由及路由价格覆盖不会被修改。
+
+供应商同步的做法一致，对比介绍和各协议端点（新增、变更、仅本地有）。部署占位符（如 Vertex 的 `YOUR_PROJECT_ID`、Azure OpenAI 的 `YOUR_RESOURCE_NAME`）替换成实际值后不再提示更新，采用官方时保留已填写的项目、资源名和区域；API Key、启用状态和供应商名称不会被修改。官方模板改名或下线后遗留的旧类型会单独列出，可迁移到新类型。
+
+## 04｜其他更新
+
+| 场景 | 本次变化 |
+|---|---|
+| **Tools 导航** | 原“配置”改为 REST 服务，MCP 服务紧随其后；调用记录同时包含 REST 与 MCP 调用，可按来源和服务筛选。 |
+| **REST 服务页** | 改为服务列表，可按名称、标识或工具类型搜索，并按类型和状态筛选；每行显示配置状态与计费方式，点击后在弹窗里完成接入、启用、计费设置和测试。计费与 MCP 共用标准价、用户倍率和供应倍率。 |
+| **请求追踪** | 聊天、消息和 Responses 的响应返回 `X-OctaFuse-Request-Id`，与请求日志主键一致，成功和失败都会带上；请求日志可按请求 ID 精确筛选。请求日志另记录消息结构摘要（按角色汇总字段名和内容类型），不记录消息正文。 |
+| **Azure OpenAI 模板** | 官方 Base 改为 OpenAI v1 路径 `https://YOUR_RESOURCE_NAME.openai.azure.com/openai/v1`，Foundry 控制台的 `services.ai.azure.com` 地址视为同一模板。仍使用不带 `/v1` 的旧地址会提示更新。 |
+| **Gemini 4 Argon 预设** | 静态目录新增 `gemini-4-argon`，价格按 2026-12-01 起的 Standard 刊例写入（输入 $4、输出 $20 / 每百万 Token，缓存读取 $0.20），不含 11 月 30 日前的入门价；只支持隐式缓存。人民币价为美元 × 7 的占位换算。 |
+| **仪表盘** | “需要关注”和“近期请求”显示完整年月日和时分秒（按业务时区），跨天记录不再被误认成今天；修复切到 Token 页签时曲线和 Y 轴空白的问题。 |
+| **界面一致性** | 模型、路由、供应商、请求日志、审计日志、用户、调试台与模拟器的筛选区统一控件，筛选行为不变；单价标签改用币种符号加单位（如 `¥/1M`），不影响计费。 |
+
+## 升级到 2.15.0
+
+**这个版本需要执行数据库迁移 0030**，新增 `mcp_servers` 和 `mcp_server_items` 两张表（D1、Postgres、MySQL 脚本语义一致），详见 [0030 迁移说明](https://github.com/OctaFuse/octafuse-gateway/blob/v2.15.0/docs/operators/migrations/0030-mcp-servers.md)。其余变更无需新增迁移或必填配置。
+
+建议按以下顺序操作：
+
+1. 备份数据库。
+2. 使用 v2.15.0 的 migrate 镜像或对应脚本执行 0030。
+3. 再滚动更新同版本的 Proxy 和 Admin。
+
+新 Proxy 在表缺失时不会报错，`GET /v1/tools/pricing` 的 `mcp` 字段返回空数组；需要回退时，可以保留这两张表。
+
+兼容性方面：
+
+- `GET /v1/models?kind=audio` 保留为 `asr` 与 `tts` 的兼容别名。
+- 默认模型列表不包含向量模型，需要时加 `kind=embedding`。
+- 现有 Chat、Responses、Messages 和 Gemini 路由与鉴权方式不变。
+
+升级后，建议做这些检查：
+
+1. 在 MCP 服务页接入上游、同步目录并逐条启用，再用对外目录测试验证 `/mcp`。
+2. 抽查 `POST /v1/embeddings`，并在模型页和供应商页点击“检查官方更新”，确认价格仍是“保留当前”后再决定是否同步。
+3. 冒烟测试既有的主要路由。
+
+完整变更与升级说明见 [GitHub Release v2.15.0](https://github.com/OctaFuse/octafuse-gateway/releases/tag/v2.15.0) 和 [更新记录](https://github.com/OctaFuse/octafuse-gateway/blob/v2.15.0/CHANGELOG.md)。
+
+- [OctaFuse 官网](https://octafuse.dev/zh/)
+- [GitHub 仓库](https://github.com/OctaFuse/octafuse-gateway)
+
+如果 OctaFuse 对你的项目有帮助，欢迎在 GitHub 上点一个 **Star**，也欢迎反馈 MCP 接入、向量请求和官方目录同步中遇到的问题。
