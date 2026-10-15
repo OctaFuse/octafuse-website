@@ -1,7 +1,7 @@
 {
   "source": "OctaFuse/octafuse-gateway",
-  "ref": "v2.8.0",
-  "commit": "cde700fa5f057dea179ee46fb90c4ec90203fbe7",
+  "ref": "v2.15.0",
+  "commit": "4118261c0b900670b47f28224e0fe0a11502c32c",
   "contract": "sync/contract.json",
   "targets": [
     "src/content/docs/zh/docs/github-reference.mdx",
@@ -16,6 +16,7 @@
     "docs/users/features.md",
     "docs/developers/integration.md",
     "docs/developers/api/README.md",
+    "docs/developers/api/error-codes.md",
     "docs/developers/api/user.md",
     "docs/developers/api/admin.md",
     "docs/developers/local-development.md",

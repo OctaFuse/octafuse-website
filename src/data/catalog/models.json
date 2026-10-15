@@ -3,12 +3,106 @@
   "catalog": "models",
   "source": {
     "repo": "OctaFuse/octafuse-gateway",
-    "ref": "v2.8.0",
-    "commit": "cde700fa5f057dea179ee46fb90c4ec90203fbe7"
+    "ref": "v2.15.0",
+    "commit": "4118261c0b900670b47f28224e0fe0a11502c32c"
   },
   "source_path": "packages/admin/lib/model-presets",
-  "count": 107,
+  "count": 148,
   "items": [
+    {
+      "id": "qwen3.7-text-embedding",
+      "display_name": "Qwen3.7 Text Embedding",
+      "description": "Alibaba Cloud Model Studio text embedding model. Billed by input tokens only. Use the OpenAI-compatible POST /v1/embeddings.",
+      "i18n": {
+        "en": "Alibaba Cloud Model Studio text embedding model. Billed by input tokens only. Use the OpenAI-compatible POST /v1/embeddings.",
+        "zh": "阿里云百炼文本向量模型，仅按输入 Token 计费。通过 OpenAI 兼容的 POST /v1/embeddings 调用。"
+      },
+      "vendor": "aliyun",
+      "context_window": null,
+      "max_tokens": null,
+      "pricing": {
+        "usd": {
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 0.075,
+              "output_price": 0,
+              "cache_read_price": null,
+              "cache_write_price": null
+            }
+          ]
+        },
+        "cny": {
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 0.5,
+              "output_price": 0,
+              "cache_read_price": null,
+              "cache_write_price": null
+            }
+          ]
+        }
+      },
+      "modalities": {
+        "input": [
+          "text"
+        ],
+        "output": [
+          "embedding"
+        ]
+      },
+      "vendor_label": "Alibaba Cloud",
+      "kind": "embedding",
+      "source_path": "packages/admin/lib/model-presets/aliyun-embedding.json"
+    },
+    {
+      "id": "text-embedding-v4",
+      "display_name": "Text Embedding V4",
+      "description": "Alibaba Cloud Model Studio text embedding V4 (successor of V3). Billed by input tokens only. Use the OpenAI-compatible POST /v1/embeddings.",
+      "i18n": {
+        "en": "Alibaba Cloud Model Studio text embedding V4 (successor of V3). Billed by input tokens only. Use the OpenAI-compatible POST /v1/embeddings.",
+        "zh": "阿里云百炼文本向量 V4（V3 的替代模型）。仅按输入 Token 计费。通过 OpenAI 兼容的 POST /v1/embeddings 调用。"
+      },
+      "vendor": "aliyun",
+      "context_window": 8192,
+      "max_tokens": null,
+      "pricing": {
+        "usd": {
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 0.07,
+              "output_price": 0,
+              "cache_read_price": null,
+              "cache_write_price": null
+            }
+          ]
+        },
+        "cny": {
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 0.5,
+              "output_price": 0,
+              "cache_read_price": null,
+              "cache_write_price": null
+            }
+          ]
+        }
+      },
+      "modalities": {
+        "input": [
+          "text"
+        ],
+        "output": [
+          "embedding"
+        ]
+      },
+      "vendor_label": "Alibaba Cloud",
+      "kind": "embedding",
+      "source_path": "packages/admin/lib/model-presets/aliyun-embedding.json"
+    },
     {
       "id": "qwen-image-3.0-pro",
       "display_name": "Qwen Image 3.0 Pro",
@@ -24,10 +118,10 @@
         "usd": {
           "image_billing_mode": "per_image",
           "image": {
-            "default": 0.036,
+            "default": 0.04,
             "by_size": {
-              "1k": 0.036,
-              "2k": 0.071
+              "1k": 0.04,
+              "2k": 0.075
             },
             "input": {
               "default": 0.003
@@ -79,7 +173,7 @@
         "usd": {
           "image_billing_mode": "per_image",
           "image": {
-            "default": 0.026,
+            "default": 0.03,
             "input": {
               "default": 0.003
             },
@@ -112,6 +206,47 @@
       "source_path": "packages/admin/lib/model-presets/aliyun-image.json"
     },
     {
+      "id": "qwen-image-2.1-pro",
+      "display_name": "Qwen Image 2.1 Pro",
+      "description": "A unified text-to-image and image editing model with 7B visual generation parameters. Supports up to 10 reference images, transparent RGBA output, local editing, and subject preservation.",
+      "i18n": {
+        "en": "A unified text-to-image and image editing model with 7B visual generation parameters. Supports up to 10 reference images, transparent RGBA output, local editing, and subject preservation.",
+        "zh": "千问图像 2.1 Pro，70 亿参数视觉生成组件，支持最多 10 张参考图、透明 RGBA 输出、局部编辑与主体保留。"
+      },
+      "vendor": "aliyun",
+      "context_window": null,
+      "max_tokens": null,
+      "pricing": {
+        "usd": {
+          "image_billing_mode": "per_image",
+          "image": {
+            "default": 0.04,
+            "uncertain_result_policy": "requested"
+          }
+        },
+        "cny": {
+          "image_billing_mode": "per_image",
+          "image": {
+            "default": 0.25,
+            "uncertain_result_policy": "requested"
+          }
+        }
+      },
+      "modalities": {
+        "input": [
+          "text",
+          "image"
+        ],
+        "output": [
+          "image"
+        ]
+      },
+      "released": "2026-10-02",
+      "vendor_label": "Alibaba Cloud",
+      "kind": "image",
+      "source_path": "packages/admin/lib/model-presets/aliyun-image.json"
+    },
+    {
       "id": "wan2.7-image-pro",
       "display_name": "Wan 2.7 Image Pro",
       "description": "Alibaba Wan 2.7 flagship for text-to-image, sequential sets, multi-reference editing, brand color control, and up to 4K generation.",
@@ -126,7 +261,7 @@
         "usd": {
           "image_billing_mode": "per_image",
           "image": {
-            "default": 0.071,
+            "default": 0.075,
             "uncertain_result_policy": "requested"
           }
         },
@@ -167,7 +302,7 @@
         "usd": {
           "image_billing_mode": "per_image",
           "image": {
-            "default": 0.029,
+            "default": 0.03,
             "uncertain_result_policy": "requested"
           }
         },
@@ -209,10 +344,10 @@
           "tiers": [
             {
               "upto": null,
-              "input_price": 2.5,
-              "output_price": 7.5,
-              "cache_read_price": 0.3125,
-              "cache_write_price": 3.125
+              "input_price": 2,
+              "output_price": 6,
+              "cache_read_price": 0.25,
+              "cache_write_price": 2.5
             }
           ]
         },
@@ -244,6 +379,202 @@
       "source_path": "packages/admin/lib/model-presets/aliyun.json"
     },
     {
+      "id": "qwen3.8-max-prime",
+      "display_name": "Qwen3.8 Max Prime",
+      "description": "A high-throughput variant of Qwen3.8 Max optimized for faster inference. Supports both reasoning and non-reasoning modes with the same 1M context window.",
+      "i18n": {
+        "en": "A high-throughput variant of Qwen3.8 Max optimized for faster inference. Supports both reasoning and non-reasoning modes with the same 1M context window.",
+        "zh": "Qwen3.8 Max 优速版，推理速度更快。支持思考与非思考双模式，同样具备 1M 上下文窗口。"
+      },
+      "vendor": "aliyun",
+      "context_window": 1000000,
+      "max_tokens": 128000,
+      "pricing": {
+        "usd": {
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 4,
+              "output_price": 12,
+              "cache_read_price": null,
+              "cache_write_price": null
+            }
+          ]
+        },
+        "cny": {
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 24,
+              "output_price": 72,
+              "cache_read_price": null,
+              "cache_write_price": null
+            }
+          ]
+        }
+      },
+      "modalities": {
+        "input": [
+          "text",
+          "image",
+          "video"
+        ],
+        "output": [
+          "text"
+        ]
+      },
+      "vendor_label": "Alibaba Cloud",
+      "kind": "llm",
+      "source_path": "packages/admin/lib/model-presets/aliyun.json"
+    },
+    {
+      "id": "qwen3.8-2.4t-a95b",
+      "display_name": "Qwen3.8 2.4T-A95B",
+      "description": "A 2.4T-parameter open-source flagship for complex reasoning, coding, and knowledge work. Supports both reasoning and non-reasoning modes with a 1M context window.",
+      "i18n": {
+        "en": "A 2.4T-parameter open-source flagship for complex reasoning, coding, and knowledge work. Supports both reasoning and non-reasoning modes with a 1M context window.",
+        "zh": "2.4 万亿参数开源旗舰模型，面向复杂推理、编程与知识工作。支持思考与非思考双模式，具备 1M 上下文窗口。"
+      },
+      "vendor": "aliyun",
+      "context_window": 1000000,
+      "max_tokens": 131072,
+      "pricing": {
+        "usd": {
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 2,
+              "output_price": 6,
+              "cache_read_price": 0.25,
+              "cache_write_price": 2.5
+            }
+          ]
+        },
+        "cny": {
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 12,
+              "output_price": 36,
+              "cache_read_price": 1.5,
+              "cache_write_price": 15
+            }
+          ]
+        }
+      },
+      "modalities": {
+        "input": [
+          "text"
+        ],
+        "output": [
+          "text"
+        ]
+      },
+      "released": "2026-08-01",
+      "vendor_label": "Alibaba Cloud",
+      "kind": "llm",
+      "source_path": "packages/admin/lib/model-presets/aliyun.json"
+    },
+    {
+      "id": "qwen3.8-27b",
+      "display_name": "Qwen3.8 27B",
+      "description": "A 27B-parameter multimodal Qwen model for efficient reasoning, coding, and visual understanding. Supports both reasoning and non-reasoning modes with image and video input.",
+      "i18n": {
+        "en": "A 27B-parameter multimodal Qwen model for efficient reasoning, coding, and visual understanding. Supports both reasoning and non-reasoning modes with image and video input.",
+        "zh": "270 亿参数 Qwen 多模态模型，面向高效推理、编程与视觉理解。支持思考与非思考双模式，接受图像与视频输入。"
+      },
+      "vendor": "aliyun",
+      "context_window": 1000000,
+      "max_tokens": 131072,
+      "pricing": {
+        "usd": {
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 0.5,
+              "output_price": 2,
+              "cache_read_price": 0.1,
+              "cache_write_price": 0.625
+            }
+          ]
+        },
+        "cny": {
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 3,
+              "output_price": 12,
+              "cache_read_price": 0.6,
+              "cache_write_price": 3.75
+            }
+          ]
+        }
+      },
+      "modalities": {
+        "input": [
+          "text",
+          "image",
+          "video"
+        ],
+        "output": [
+          "text"
+        ]
+      },
+      "vendor_label": "Alibaba Cloud",
+      "kind": "llm",
+      "source_path": "packages/admin/lib/model-presets/aliyun.json"
+    },
+    {
+      "id": "qwen3.8-omni-flash",
+      "display_name": "Qwen3.8 Omni Flash",
+      "description": "A multimodal Qwen model for text, image, audio, and video understanding. Supports deep thinking with adjustable reasoning intensity for complex tasks.",
+      "i18n": {
+        "en": "A multimodal Qwen model for text, image, audio, and video understanding. Supports deep thinking with adjustable reasoning intensity for complex tasks.",
+        "zh": "Qwen 全模态模型，支持文本、图像、音频与视频理解。默认开启深度思考，可调节思考强度以适应复杂任务。"
+      },
+      "vendor": "aliyun",
+      "context_window": 1000000,
+      "max_tokens": 131072,
+      "pricing": {
+        "usd": {
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 0.13,
+              "output_price": 0.45,
+              "cache_read_price": 0.017,
+              "cache_write_price": null
+            }
+          ]
+        },
+        "cny": {
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 0.8,
+              "output_price": 2.7,
+              "cache_read_price": 0.1,
+              "cache_write_price": null
+            }
+          ]
+        }
+      },
+      "modalities": {
+        "input": [
+          "text",
+          "image",
+          "audio",
+          "video"
+        ],
+        "output": [
+          "text"
+        ]
+      },
+      "vendor_label": "Alibaba Cloud",
+      "kind": "llm",
+      "source_path": "packages/admin/lib/model-presets/aliyun.json"
+    },
+    {
       "id": "qwen3.8-max-preview",
       "display_name": "Qwen3.8 Max Preview",
       "description": "A flagship Qwen preview for complex reasoning, coding, vision, and long-horizon agentic workloads. Preview channel for early access; production traffic should prefer qwen3.8-max.",
@@ -259,10 +590,10 @@
           "tiers": [
             {
               "upto": null,
-              "input_price": 2.5,
-              "output_price": 7.5,
-              "cache_read_price": 0.3125,
-              "cache_write_price": 3.125
+              "input_price": 2,
+              "output_price": 6,
+              "cache_read_price": 0.25,
+              "cache_write_price": 2.5
             }
           ]
         },
@@ -309,10 +640,10 @@
           "tiers": [
             {
               "upto": null,
-              "input_price": 0.16,
+              "input_price": 0.15,
               "output_price": 0.47,
-              "cache_read_price": 0.016,
-              "cache_write_price": 0.2
+              "cache_read_price": 0.01875,
+              "cache_write_price": 0.234375
             }
           ]
         },
@@ -320,8 +651,8 @@
           "tiers": [
             {
               "upto": null,
-              "input_price": 1,
-              "output_price": 3,
+              "input_price": 0.8,
+              "output_price": 2.7,
               "cache_read_price": 0.1,
               "cache_write_price": 1.25
             }
@@ -472,24 +803,24 @@
           "tiers": [
             {
               "upto": 32000,
-              "input_price": 0.04,
-              "output_price": 0.16,
-              "cache_read_price": 0.008,
-              "cache_write_price": 0.05
+              "input_price": 0.03,
+              "output_price": 0.13,
+              "cache_read_price": 0.006,
+              "cache_write_price": 0.0375
             },
             {
               "upto": 256000,
-              "input_price": 0.12,
-              "output_price": 0.48,
-              "cache_read_price": 0.024,
-              "cache_write_price": 0.15
+              "input_price": 0.1,
+              "output_price": 0.4,
+              "cache_read_price": 0.02,
+              "cache_write_price": 0.125
             },
             {
               "upto": null,
-              "input_price": 0.24,
-              "output_price": 0.96,
-              "cache_read_price": 0.048,
-              "cache_write_price": 0.3
+              "input_price": 0.2,
+              "output_price": 0.8,
+              "cache_read_price": 0.04,
+              "cache_write_price": 0.25
             }
           ]
         },
@@ -575,10 +906,10 @@
             },
             {
               "upto": null,
-              "input_price": 4,
-              "output_price": 24,
-              "cache_read_price": 0.4,
-              "cache_write_price": 5
+              "input_price": 8,
+              "output_price": 48,
+              "cache_read_price": 0.8,
+              "cache_write_price": 10
             }
           ]
         }
@@ -633,17 +964,17 @@
           "tiers": [
             {
               "upto": 128000,
-              "input_price": 3,
-              "output_price": 18,
-              "cache_read_price": 0.3,
-              "cache_write_price": 3
+              "input_price": 9,
+              "output_price": 54,
+              "cache_read_price": 0.9,
+              "cache_write_price": 11.25
             },
             {
               "upto": null,
-              "input_price": 6,
-              "output_price": 36,
-              "cache_read_price": 0.6,
-              "cache_write_price": 6
+              "input_price": 15,
+              "output_price": 90,
+              "cache_read_price": 1.5,
+              "cache_write_price": 18.75
             }
           ]
         }
@@ -695,17 +1026,17 @@
           "tiers": [
             {
               "upto": 256000,
-              "input_price": 0.5,
-              "output_price": 1.5,
-              "cache_read_price": 0.05,
-              "cache_write_price": null
+              "input_price": 1.2,
+              "output_price": 7.2,
+              "cache_read_price": 0.12,
+              "cache_write_price": 1.5
             },
             {
               "upto": null,
-              "input_price": 2,
-              "output_price": 8,
-              "cache_read_price": 0.2,
-              "cache_write_price": null
+              "input_price": 4.8,
+              "output_price": 28.8,
+              "cache_read_price": 0.48,
+              "cache_write_price": 6
             }
           ]
         }
@@ -758,6 +1089,13 @@
         },
         "cny": {
           "tiers": [
+            {
+              "upto": 128000,
+              "input_price": 0.8,
+              "output_price": 4.8,
+              "cache_read_price": 0.08,
+              "cache_write_price": 1
+            },
             {
               "upto": 256000,
               "input_price": 2,
@@ -817,10 +1155,24 @@
         "cny": {
           "tiers": [
             {
+              "upto": 128000,
+              "input_price": 0.2,
+              "output_price": 2,
+              "cache_read_price": 0.02,
+              "cache_write_price": null
+            },
+            {
+              "upto": 256000,
+              "input_price": 0.8,
+              "output_price": 8,
+              "cache_read_price": 0.08,
+              "cache_write_price": null
+            },
+            {
               "upto": null,
-              "input_price": 0.7,
-              "output_price": 2.8,
-              "cache_read_price": 0.07,
+              "input_price": 1.2,
+              "output_price": 12,
+              "cache_read_price": 0.12,
               "cache_write_price": null
             }
           ]
@@ -859,21 +1211,21 @@
             {
               "upto": 32000,
               "input_price": 0.2,
-              "output_price": 2,
+              "output_price": 1.6,
               "cache_read_price": null,
               "cache_write_price": null
             },
             {
               "upto": 128000,
               "input_price": 0.3,
-              "output_price": 3,
+              "output_price": 2.4,
               "cache_read_price": null,
               "cache_write_price": null
             },
             {
               "upto": null,
               "input_price": 0.6,
-              "output_price": 6,
+              "output_price": 4.8,
               "cache_read_price": null,
               "cache_write_price": null
             }
@@ -937,7 +1289,7 @@
             {
               "upto": null,
               "input_price": 1.4,
-              "output_price": 8,
+              "output_price": 8.3,
               "cache_read_price": null,
               "cache_write_price": null
             }
@@ -988,8 +1340,8 @@
           "tiers": [
             {
               "upto": null,
-              "input_price": 0.44,
-              "output_price": 2.66,
+              "input_price": 0.4,
+              "output_price": 2.2,
               "cache_read_price": null,
               "cache_write_price": null
             }
@@ -1037,7 +1389,7 @@
         "usd": {
           "audio_billing_mode": "per_second",
           "audio": {
-            "price_per_second": 0.000047142857,
+            "price_per_second": 0.00009,
             "minimum_seconds": 1
           }
         },
@@ -1058,7 +1410,7 @@
         ]
       },
       "vendor_label": "Alibaba Cloud",
-      "kind": "llm",
+      "kind": "asr",
       "source_path": "packages/admin/lib/model-presets/aliyun.json"
     },
     {
@@ -1074,7 +1426,7 @@
         "usd": {
           "audio_billing_mode": "per_second",
           "audio": {
-            "price_per_second": 0.000031428571,
+            "price_per_second": 0.000035,
             "minimum_seconds": 1
           }
         },
@@ -1095,7 +1447,7 @@
         ]
       },
       "vendor_label": "Alibaba Cloud",
-      "kind": "llm",
+      "kind": "asr",
       "source_path": "packages/admin/lib/model-presets/aliyun.json"
     },
     {
@@ -1111,7 +1463,7 @@
         "usd": {
           "audio_billing_mode": "per_second",
           "audio": {
-            "price_per_second": 0.000031428571,
+            "price_per_second": 0.000035,
             "minimum_seconds": 1
           }
         },
@@ -1132,7 +1484,7 @@
         ]
       },
       "vendor_label": "Alibaba Cloud",
-      "kind": "llm",
+      "kind": "asr",
       "source_path": "packages/admin/lib/model-presets/aliyun.json"
     },
     {
@@ -1148,7 +1500,7 @@
         "usd": {
           "audio_billing_mode": "per_second",
           "audio": {
-            "price_per_second": 0.000047142857,
+            "price_per_second": 0.00009,
             "minimum_seconds": 1
           }
         },
@@ -1169,7 +1521,7 @@
         ]
       },
       "vendor_label": "Alibaba Cloud",
-      "kind": "llm",
+      "kind": "asr",
       "source_path": "packages/admin/lib/model-presets/aliyun.json"
     },
     {
@@ -1185,7 +1537,7 @@
         "usd": {
           "audio_billing_mode": "per_second",
           "audio": {
-            "price_per_second": 0.000031428571,
+            "price_per_second": 0.000035,
             "minimum_seconds": 1
           }
         },
@@ -1206,7 +1558,7 @@
         ]
       },
       "vendor_label": "Alibaba Cloud",
-      "kind": "llm",
+      "kind": "asr",
       "source_path": "packages/admin/lib/model-presets/aliyun.json"
     },
     {
@@ -1222,7 +1574,7 @@
         "usd": {
           "audio_billing_mode": "per_second",
           "audio": {
-            "price_per_second": 0.000031428571,
+            "price_per_second": 0.000035,
             "minimum_seconds": 1
           }
         },
@@ -1243,7 +1595,7 @@
         ]
       },
       "vendor_label": "Alibaba Cloud",
-      "kind": "llm",
+      "kind": "asr",
       "source_path": "packages/admin/lib/model-presets/aliyun.json"
     },
     {
@@ -1259,7 +1611,7 @@
         "usd": {
           "audio_billing_mode": "per_second",
           "audio": {
-            "price_per_second": 0.000047142857,
+            "price_per_second": 0.00009,
             "minimum_seconds": 1
           }
         },
@@ -1280,7 +1632,7 @@
         ]
       },
       "vendor_label": "Alibaba Cloud",
-      "kind": "llm",
+      "kind": "asr",
       "source_path": "packages/admin/lib/model-presets/aliyun.json"
     },
     {
@@ -1296,7 +1648,7 @@
         "usd": {
           "audio_billing_mode": "per_second",
           "audio": {
-            "price_per_second": 0.000031428571,
+            "price_per_second": 0.000035,
             "minimum_seconds": 1
           }
         },
@@ -1317,7 +1669,7 @@
         ]
       },
       "vendor_label": "Alibaba Cloud",
-      "kind": "llm",
+      "kind": "asr",
       "source_path": "packages/admin/lib/model-presets/aliyun.json"
     },
     {
@@ -1354,7 +1706,7 @@
         ]
       },
       "vendor_label": "Alibaba Cloud",
-      "kind": "llm",
+      "kind": "tts",
       "source_path": "packages/admin/lib/model-presets/aliyun.json"
     },
     {
@@ -1370,7 +1722,7 @@
         "usd": {
           "audio_billing_mode": "per_character",
           "audio": {
-            "price_per_character": 0.0000142857143,
+            "price_per_character": 0.000015,
             "minimum_characters": 0
           }
         },
@@ -1391,7 +1743,7 @@
         ]
       },
       "vendor_label": "Alibaba Cloud",
-      "kind": "llm",
+      "kind": "tts",
       "source_path": "packages/admin/lib/model-presets/aliyun.json"
     },
     {
@@ -1428,7 +1780,7 @@
         ]
       },
       "vendor_label": "Alibaba Cloud",
-      "kind": "llm",
+      "kind": "tts",
       "source_path": "packages/admin/lib/model-presets/aliyun.json"
     },
     {
@@ -1465,7 +1817,7 @@
         ]
       },
       "vendor_label": "Alibaba Cloud",
-      "kind": "llm",
+      "kind": "tts",
       "source_path": "packages/admin/lib/model-presets/aliyun.json"
     },
     {
@@ -1481,7 +1833,7 @@
         "usd": {
           "audio_billing_mode": "per_character",
           "audio": {
-            "price_per_character": 0.0000142857143,
+            "price_per_character": 0.000013,
             "minimum_characters": 0
           }
         },
@@ -1502,7 +1854,7 @@
         ]
       },
       "vendor_label": "Alibaba Cloud",
-      "kind": "llm",
+      "kind": "tts",
       "source_path": "packages/admin/lib/model-presets/aliyun.json"
     },
     {
@@ -1518,7 +1870,7 @@
         "usd": {
           "audio_billing_mode": "per_character",
           "audio": {
-            "price_per_character": 0.0000285714286,
+            "price_per_character": 0.000026,
             "minimum_characters": 0
           }
         },
@@ -1539,7 +1891,7 @@
         ]
       },
       "vendor_label": "Alibaba Cloud",
-      "kind": "llm",
+      "kind": "tts",
       "source_path": "packages/admin/lib/model-presets/aliyun.json"
     },
     {
@@ -1577,7 +1929,7 @@
       },
       "released": "2026-02-27",
       "vendor_label": "Alibaba Cloud",
-      "kind": "llm",
+      "kind": "tts",
       "source_path": "packages/admin/lib/model-presets/aliyun.json"
     },
     {
@@ -1615,8 +1967,221 @@
       },
       "released": "2026-02-27",
       "vendor_label": "Alibaba Cloud",
-      "kind": "llm",
+      "kind": "tts",
       "source_path": "packages/admin/lib/model-presets/aliyun.json"
+    },
+    {
+      "id": "claude-sonnet-5-5",
+      "display_name": "Claude Sonnet 5.5",
+      "description": "Anthropic's faster Sonnet for coding, agents, and professional work. Adaptive thinking is on by default and cannot be fully disabled; the default effort is high, and between_tools turns off up-front thinking at high effort or below. Forced tool_choice values any and tool return an error, as do non-default temperature, top_p, and top_k.",
+      "i18n": {
+        "en": "Anthropic's faster Sonnet for coding, agents, and professional work. Adaptive thinking is on by default and cannot be fully disabled; the default effort is high, and between_tools turns off up-front thinking at high effort or below. Forced tool_choice values any and tool return an error, as do non-default temperature, top_p, and top_k.",
+        "zh": "更快的 Sonnet，面向编程、Agent 与专业工作。自适应思考默认开启且不能完全关闭，默认 effort 为 high；between_tools 可在 high 及以下关闭前置思考。tool_choice 的 any 与 tool，以及非默认的 temperature、top_p、top_k 都会返回错误。"
+      },
+      "vendor": "anthropic",
+      "context_window": 1000000,
+      "max_tokens": 128000,
+      "pricing": {
+        "usd": {
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 2,
+              "output_price": 10,
+              "cache_read_price": 0.1,
+              "cache_write_price": 2.5
+            }
+          ]
+        },
+        "cny": {
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 14,
+              "output_price": 70,
+              "cache_read_price": 0.7,
+              "cache_write_price": 17.5
+            }
+          ]
+        }
+      },
+      "modalities": {
+        "input": [
+          "text",
+          "image",
+          "file"
+        ],
+        "output": [
+          "text"
+        ]
+      },
+      "released": "2026-09-28",
+      "vendor_label": "Anthropic",
+      "kind": "llm",
+      "source_path": "packages/admin/lib/model-presets/anthropic.json"
+    },
+    {
+      "id": "claude-haiku-5-5",
+      "display_name": "Claude Haiku 5.5",
+      "description": "Anthropic's fastest Claude 5 model for latency-sensitive tasks. Adaptive thinking is on by default with medium effort and supports low through max; thinking can be disabled at high effort or below. Prompts over 100K tokens are billed at a higher tier. Manual budget_tokens returns 400, as do non-default temperature, top_p, and top_k.",
+      "i18n": {
+        "en": "Anthropic's fastest Claude 5 model for latency-sensitive tasks. Adaptive thinking is on by default with medium effort and supports low through max; thinking can be disabled at high effort or below. Prompts over 100K tokens are billed at a higher tier. Manual budget_tokens returns 400, as do non-default temperature, top_p, and top_k.",
+        "zh": "Anthropic 最快的 Claude 5 模型，适合延迟敏感任务。自适应思考默认开启，effort 默认 medium，支持 low 到 max；high 及以下可关闭思考。超过 100K tokens 的提示按更高层级计费。手动设置 budget_tokens 会返回 400，非默认的 temperature、top_p、top_k 也会返回错误。"
+      },
+      "vendor": "anthropic",
+      "context_window": 1000000,
+      "max_tokens": 128000,
+      "pricing": {
+        "usd": {
+          "tiers": [
+            {
+              "upto": 100000,
+              "input_price": 0.1,
+              "output_price": 0.5,
+              "cache_read_price": 0.01,
+              "cache_write_price": 0.125
+            },
+            {
+              "upto": null,
+              "input_price": 0.5,
+              "output_price": 2.5,
+              "cache_read_price": 0.05,
+              "cache_write_price": 0.625
+            }
+          ]
+        },
+        "cny": {
+          "tiers": [
+            {
+              "upto": 100000,
+              "input_price": 0.7,
+              "output_price": 3.5,
+              "cache_read_price": 0.07,
+              "cache_write_price": 0.875
+            },
+            {
+              "upto": null,
+              "input_price": 3.5,
+              "output_price": 17.5,
+              "cache_read_price": 0.35,
+              "cache_write_price": 4.375
+            }
+          ]
+        }
+      },
+      "modalities": {
+        "input": [
+          "text",
+          "image"
+        ],
+        "output": [
+          "text"
+        ]
+      },
+      "released": "2026-10-07",
+      "vendor_label": "Anthropic",
+      "kind": "llm",
+      "source_path": "packages/admin/lib/model-presets/anthropic.json"
+    },
+    {
+      "id": "claude-opus-5-5",
+      "display_name": "Claude Opus 5.5",
+      "description": "Anthropic's model for long-running agentic coding and knowledge work. Adaptive thinking is always on and cannot be disabled; the default effort is medium. Forced tool_choice values any and tool return an error.",
+      "i18n": {
+        "en": "Anthropic's model for long-running agentic coding and knowledge work. Adaptive thinking is always on and cannot be disabled; the default effort is medium. Forced tool_choice values any and tool return an error.",
+        "zh": "面向长时间 Agent 编程与知识工作的 Anthropic 模型。自适应思考始终开启且不能关闭，默认 effort 为 medium。tool_choice 的 any 与 tool 会返回错误，应使用 auto 或 none。"
+      },
+      "vendor": "anthropic",
+      "context_window": 1000000,
+      "max_tokens": 128000,
+      "pricing": {
+        "usd": {
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 4,
+              "output_price": 20,
+              "cache_read_price": 0.2,
+              "cache_write_price": 5
+            }
+          ]
+        },
+        "cny": {
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 28,
+              "output_price": 140,
+              "cache_read_price": 1.4,
+              "cache_write_price": 35
+            }
+          ]
+        }
+      },
+      "modalities": {
+        "input": [
+          "text",
+          "image",
+          "file"
+        ],
+        "output": [
+          "text"
+        ]
+      },
+      "released": "2026-09-22",
+      "vendor_label": "Anthropic",
+      "kind": "llm",
+      "source_path": "packages/admin/lib/model-presets/anthropic.json"
+    },
+    {
+      "id": "claude-fable-5-1",
+      "display_name": "Claude Fable 5.1",
+      "description": "Anthropic's successor to Claude Fable 5 for long-running agentic coding, multistep research, and document work. Adaptive thinking is always on; input and output prices match Fable 5, with cheaper prompt-cache reads.",
+      "i18n": {
+        "en": "Anthropic's successor to Claude Fable 5 for long-running agentic coding, multistep research, and document work. Adaptive thinking is always on; input and output prices match Fable 5, with cheaper prompt-cache reads.",
+        "zh": "Claude Fable 5 的后继模型，面向长时间 Agent 编程、多步研究与文档工作。自适应思考始终开启；输入输出单价与 Fable 5 相同，提示缓存读取更便宜。"
+      },
+      "vendor": "anthropic",
+      "context_window": 1000000,
+      "max_tokens": 128000,
+      "pricing": {
+        "usd": {
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 10,
+              "output_price": 50,
+              "cache_read_price": 0.25,
+              "cache_write_price": 12.5
+            }
+          ]
+        },
+        "cny": {
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 70,
+              "output_price": 350,
+              "cache_read_price": 1.75,
+              "cache_write_price": 87.5
+            }
+          ]
+        }
+      },
+      "modalities": {
+        "input": [
+          "text",
+          "image",
+          "file"
+        ],
+        "output": [
+          "text"
+        ]
+      },
+      "released": "2026-09-01",
+      "vendor_label": "Anthropic",
+      "kind": "llm",
+      "source_path": "packages/admin/lib/model-presets/anthropic.json"
     },
     {
       "id": "claude-fable-5",
@@ -1684,10 +2249,10 @@
           "tiers": [
             {
               "upto": null,
-              "input_price": 3,
-              "output_price": 15,
-              "cache_read_price": 0.3,
-              "cache_write_price": 3.75
+              "input_price": 2,
+              "output_price": 10,
+              "cache_read_price": 0.2,
+              "cache_write_price": 2.5
             }
           ]
         },
@@ -1695,10 +2260,10 @@
           "tiers": [
             {
               "upto": null,
-              "input_price": 21,
-              "output_price": 105,
-              "cache_read_price": 2.1,
-              "cache_write_price": 26.25
+              "input_price": 14,
+              "output_price": 70,
+              "cache_read_price": 1.4,
+              "cache_write_price": 17.5
             }
           ]
         }
@@ -2019,6 +2584,51 @@
       "source_path": "packages/admin/lib/model-presets/anthropic.json"
     },
     {
+      "id": "doubao-seedream-5-0-flash",
+      "display_name": "Doubao Seedream 5.0 Flash",
+      "description": "A fast, cost-efficient Seedream model for high-volume image generation, editing, transparent backgrounds, and layer decomposition.",
+      "i18n": {
+        "en": "A fast, cost-efficient Seedream model for high-volume image generation, editing, transparent backgrounds, and layer decomposition.",
+        "zh": "面向高频生图场景的 Seedream 极速模型，支持文生图、图生图、透明背景编辑与图层拆分。"
+      },
+      "vendor": "bytedance",
+      "context_window": null,
+      "max_tokens": null,
+      "suggested_provider_model_name": {
+        "volcengine-ark": "doubao-seedream-5-0-flash-260915",
+        "byteplus": "dola-seedream-5-0-flash-260915"
+      },
+      "pricing": {
+        "usd": {
+          "image_billing_mode": "per_image",
+          "image": {
+            "default": 0.018,
+            "uncertain_result_policy": "requested"
+          }
+        },
+        "cny": {
+          "image_billing_mode": "per_image",
+          "image": {
+            "default": 0.12,
+            "uncertain_result_policy": "requested"
+          }
+        }
+      },
+      "modalities": {
+        "input": [
+          "text",
+          "image"
+        ],
+        "output": [
+          "image"
+        ]
+      },
+      "released": "2026-09-15",
+      "vendor_label": "ByteDance",
+      "kind": "image",
+      "source_path": "packages/admin/lib/model-presets/bytedance-image.json"
+    },
+    {
       "id": "doubao-seedream-5-0-pro",
       "display_name": "Doubao Seedream 5.0 Pro",
       "description": "A premium Seedream model for high-fidelity image generation and professional visual creation.",
@@ -2033,19 +2643,11 @@
         "usd": {
           "image_billing_mode": "per_image",
           "image": {
-            "default": 0.045,
+            "default": 0.09,
             "by_size": {
-              "2k": 0.045,
-              "3k": 0.09,
-              "4k": 0.09
-            },
-            "by_quality_size": {
-              "flat:2k": 0.045,
-              "flat:3k": 0.09,
-              "flat:4k": 0.09,
-              "auto:2k": 0.045,
-              "auto:3k": 0.09,
-              "auto:4k": 0.09
+              "1k": 0.045,
+              "1.5k": 0.045,
+              "2k": 0.09
             },
             "input": {
               "default": 0.003
@@ -2056,19 +2658,11 @@
         "cny": {
           "image_billing_mode": "per_image",
           "image": {
-            "default": 0.3,
+            "default": 0.6,
             "by_size": {
-              "2k": 0.3,
-              "3k": 0.6,
-              "4k": 0.6
-            },
-            "by_quality_size": {
-              "flat:2k": 0.3,
-              "flat:3k": 0.6,
-              "flat:4k": 0.6,
-              "auto:2k": 0.3,
-              "auto:3k": 0.6,
-              "auto:4k": 0.6
+              "1k": 0.3,
+              "1.5k": 0.3,
+              "2k": 0.6
             },
             "input": {
               "default": 0.02
@@ -2165,6 +2759,13 @@
         "cny": {
           "tiers": [
             {
+              "upto": 32000,
+              "input_price": 0.2,
+              "output_price": 2,
+              "cache_read_price": 0.04,
+              "cache_write_price": 0.017
+            },
+            {
               "upto": 128000,
               "input_price": 0.4,
               "output_price": 4,
@@ -2227,6 +2828,13 @@
         },
         "cny": {
           "tiers": [
+            {
+              "upto": 32000,
+              "input_price": 0.6,
+              "output_price": 3.6,
+              "cache_read_price": 0.12,
+              "cache_write_price": 0.017
+            },
             {
               "upto": 128000,
               "input_price": 0.9,
@@ -2292,6 +2900,13 @@
         },
         "cny": {
           "tiers": [
+            {
+              "upto": 32000,
+              "input_price": 3.2,
+              "output_price": 16,
+              "cache_read_price": 0.64,
+              "cache_write_price": 0.017
+            },
             {
               "upto": 128000,
               "input_price": 4.8,
@@ -2476,6 +3091,106 @@
       "source_path": "packages/admin/lib/model-presets/bytedance.json"
     },
     {
+      "id": "deepseek-v4.1-flash",
+      "display_name": "DeepSeek V4.1 Flash",
+      "description": "The official DeepSeek V4.1 Flash model for fast long-context reasoning, coding, and agents. In internal and external evaluations, it comprehensively surpasses V4 Pro in performance, cost, speed, and total time.",
+      "i18n": {
+        "en": "The official DeepSeek V4.1 Flash model for fast long-context reasoning, coding, and agents. In internal and external evaluations, it comprehensively surpasses V4 Pro in performance, cost, speed, and total time.",
+        "zh": "DeepSeek V4.1 Flash 正式版，面向高速长上下文推理、编程与 Agent。经内部、外部多方测试，在性能、费用、速度、总用时等各项指标上已全面超越 V4 Pro。"
+      },
+      "vendor": "deepseek",
+      "context_window": 1000000,
+      "max_tokens": 384000,
+      "pricing": {
+        "usd": {
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 0.15,
+              "output_price": 0.6,
+              "cache_read_price": 0.003,
+              "cache_write_price": null
+            }
+          ],
+          "schedule": [
+            {
+              "start": "09:00",
+              "end": "12:00",
+              "factor": 2,
+              "days": [
+                1,
+                2,
+                3,
+                4,
+                5
+              ]
+            },
+            {
+              "start": "14:00",
+              "end": "18:00",
+              "factor": 2,
+              "days": [
+                1,
+                2,
+                3,
+                4,
+                5
+              ]
+            }
+          ]
+        },
+        "cny": {
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 1,
+              "output_price": 4,
+              "cache_read_price": 0.02,
+              "cache_write_price": null
+            }
+          ],
+          "schedule": [
+            {
+              "start": "09:00",
+              "end": "12:00",
+              "factor": 2,
+              "days": [
+                1,
+                2,
+                3,
+                4,
+                5
+              ]
+            },
+            {
+              "start": "14:00",
+              "end": "18:00",
+              "factor": 2,
+              "days": [
+                1,
+                2,
+                3,
+                4,
+                5
+              ]
+            }
+          ]
+        }
+      },
+      "modalities": {
+        "input": [
+          "text"
+        ],
+        "output": [
+          "text"
+        ]
+      },
+      "released": "2026-09-10",
+      "vendor_label": "DeepSeek",
+      "kind": "llm",
+      "source_path": "packages/admin/lib/model-presets/deepseek.json"
+    },
+    {
       "id": "deepseek-v4-pro",
       "display_name": "DeepSeek V4 Pro",
       "description": "The official DeepSeek V4 Pro flagship for advanced reasoning, coding, and sustained agent workloads. The 0813 production checkpoint keeps 1M context and dual thinking modes under the same API name.",
@@ -2496,6 +3211,32 @@
               "cache_read_price": 0.022,
               "cache_write_price": null
             }
+          ],
+          "schedule": [
+            {
+              "start": "09:00",
+              "end": "12:00",
+              "factor": 2,
+              "days": [
+                1,
+                2,
+                3,
+                4,
+                5
+              ]
+            },
+            {
+              "start": "14:00",
+              "end": "18:00",
+              "factor": 2,
+              "days": [
+                1,
+                2,
+                3,
+                4,
+                5
+              ]
+            }
           ]
         },
         "cny": {
@@ -2506,6 +3247,32 @@
               "output_price": 13.5,
               "cache_read_price": 0.15,
               "cache_write_price": null
+            }
+          ],
+          "schedule": [
+            {
+              "start": "09:00",
+              "end": "12:00",
+              "factor": 2,
+              "days": [
+                1,
+                2,
+                3,
+                4,
+                5
+              ]
+            },
+            {
+              "start": "14:00",
+              "end": "18:00",
+              "factor": 2,
+              "days": [
+                1,
+                2,
+                3,
+                4,
+                5
+              ]
             }
           ]
         }
@@ -2539,10 +3306,36 @@
           "tiers": [
             {
               "upto": null,
-              "input_price": 0.22,
-              "output_price": 0.66,
-              "cache_read_price": 0.007,
+              "input_price": 0.15,
+              "output_price": 0.6,
+              "cache_read_price": 0.003,
               "cache_write_price": null
+            }
+          ],
+          "schedule": [
+            {
+              "start": "09:00",
+              "end": "12:00",
+              "factor": 2,
+              "days": [
+                1,
+                2,
+                3,
+                4,
+                5
+              ]
+            },
+            {
+              "start": "14:00",
+              "end": "18:00",
+              "factor": 2,
+              "days": [
+                1,
+                2,
+                3,
+                4,
+                5
+              ]
             }
           ]
         },
@@ -2550,10 +3343,36 @@
           "tiers": [
             {
               "upto": null,
-              "input_price": 1.5,
-              "output_price": 4.5,
-              "cache_read_price": 0.05,
+              "input_price": 1,
+              "output_price": 4,
+              "cache_read_price": 0.02,
               "cache_write_price": null
+            }
+          ],
+          "schedule": [
+            {
+              "start": "09:00",
+              "end": "12:00",
+              "factor": 2,
+              "days": [
+                1,
+                2,
+                3,
+                4,
+                5
+              ]
+            },
+            {
+              "start": "14:00",
+              "end": "18:00",
+              "factor": 2,
+              "days": [
+                1,
+                2,
+                3,
+                4,
+                5
+              ]
             }
           ]
         }
@@ -2618,6 +3437,110 @@
       "vendor_label": "DeepSeek",
       "kind": "llm",
       "source_path": "packages/admin/lib/model-presets/deepseek.json"
+    },
+    {
+      "id": "gemini-embedding-2",
+      "display_name": "Gemini Embedding 2",
+      "description": "Google's multimodal embedding model that maps text, images, video, audio, and PDFs into one embedding space. The catalog uses the Standard text-input price; image, audio, and video inputs have separate list prices and are not modeled here. Use :embedContent or :batchEmbedContents.",
+      "i18n": {
+        "en": "Google's multimodal embedding model that maps text, images, video, audio, and PDFs into one embedding space. The catalog uses the Standard text-input price; image, audio, and video inputs have separate list prices and are not modeled here. Use :embedContent or :batchEmbedContents.",
+        "zh": "Google 首个多模态向量模型，将文本、图像、视频、音频与 PDF 映射到统一向量空间。目录价为 Standard 文本输入价；图像、音频、视频输入另有刊例价，此处未单列。通过 :embedContent 或 :batchEmbedContents 调用。"
+      },
+      "vendor": "google",
+      "context_window": null,
+      "max_tokens": null,
+      "pricing": {
+        "usd": {
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 0.2,
+              "output_price": 0,
+              "cache_read_price": null,
+              "cache_write_price": null
+            }
+          ]
+        },
+        "cny": {
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 1.4,
+              "output_price": 0,
+              "cache_read_price": null,
+              "cache_write_price": null
+            }
+          ]
+        }
+      },
+      "modalities": {
+        "input": [
+          "text"
+        ],
+        "output": [
+          "embedding"
+        ]
+      },
+      "vendor_label": "Google",
+      "kind": "embedding",
+      "source_path": "packages/admin/lib/model-presets/google-embedding.json"
+    },
+    {
+      "id": "gemini-nano-banana-2.1",
+      "display_name": "Gemini Nano Banana 2.1",
+      "description": "An update to Nano Banana 2, built for high-efficiency image generation and conversational editing with improved visual quality, multi-turn character consistency, accurate text rendering, and search-grounded generation across 1K, 2K, and 4K resolutions.",
+      "i18n": {
+        "en": "An update to Nano Banana 2, built for high-efficiency image generation and conversational editing with improved visual quality, multi-turn character consistency, accurate text rendering, and search-grounded generation across 1K, 2K, and 4K resolutions.",
+        "zh": "Nano Banana 2 的升级版本，专为高效图片生成与对话式编辑打造，提升了视觉质量、多轮角色一致性、精准文字渲染，并支持 1K、2K、4K 分辨率的搜索增强生成。"
+      },
+      "vendor": "google",
+      "context_window": null,
+      "max_tokens": null,
+      "pricing": {
+        "usd": {
+          "image_billing_mode": "token",
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 1.5,
+              "output_price": 7.5,
+              "cache_read_price": null,
+              "cache_write_price": null,
+              "image_input_price": 1.5,
+              "image_input_cache_price": null,
+              "image_output_price": 30
+            }
+          ]
+        },
+        "cny": {
+          "image_billing_mode": "token",
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 10.5,
+              "output_price": 52.5,
+              "cache_read_price": null,
+              "cache_write_price": null,
+              "image_input_price": 10.5,
+              "image_input_cache_price": null,
+              "image_output_price": 210
+            }
+          ]
+        }
+      },
+      "modalities": {
+        "input": [
+          "text",
+          "image"
+        ],
+        "output": [
+          "image"
+        ]
+      },
+      "released": "2026-10-06",
+      "vendor_label": "Google",
+      "kind": "image",
+      "source_path": "packages/admin/lib/model-presets/google-image.json"
     },
     {
       "id": "gemini-3.1-flash-image",
@@ -2732,6 +3655,110 @@
       "vendor_label": "Google",
       "kind": "image",
       "source_path": "packages/admin/lib/model-presets/google-image.json"
+    },
+    {
+      "id": "gemini-4-argon",
+      "display_name": "Gemini 4 Argon",
+      "description": "Google's flagship Gemini reasoning model for complex software engineering, scientific problem solving, and multi-step agents. Input and output share a 1,048,576-token window; synchronous output defaults to 65,536 tokens, and long decode can reach 1,048,576.",
+      "i18n": {
+        "en": "Google's flagship Gemini reasoning model for complex software engineering, scientific problem solving, and multi-step agents. Input and output share a 1,048,576-token window; synchronous output defaults to 65,536 tokens, and long decode can reach 1,048,576.",
+        "zh": "面向复杂软件工程、科学问题求解与多步 Agent 的旗舰 Gemini 推理模型。输入与输出共用 1,048,576 Token 窗口；同步输出默认 65,536 Token，长解码最高 1,048,576 Token。"
+      },
+      "vendor": "google",
+      "context_window": 1048576,
+      "max_tokens": 1048576,
+      "pricing": {
+        "usd": {
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 4,
+              "output_price": 20,
+              "cache_read_price": 0.2,
+              "cache_write_price": null
+            }
+          ]
+        },
+        "cny": {
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 28,
+              "output_price": 140,
+              "cache_read_price": 1.4,
+              "cache_write_price": null
+            }
+          ]
+        }
+      },
+      "modalities": {
+        "input": [
+          "text",
+          "image",
+          "audio",
+          "video",
+          "file"
+        ],
+        "output": [
+          "text"
+        ]
+      },
+      "released": "2026-10-13",
+      "vendor_label": "Google",
+      "kind": "llm",
+      "source_path": "packages/admin/lib/model-presets/google.json"
+    },
+    {
+      "id": "gemini-3.8-flash",
+      "display_name": "Gemini 3.8 Flash",
+      "description": "Our most intelligent Flash model, engineered for long-horizon software engineering, autonomous agents, and complex enterprise workflows. It improves software engineering, agentic tasks, and multi-step reasoning over Gemini 3.7 Flash.",
+      "i18n": {
+        "en": "Our most intelligent Flash model, engineered for long-horizon software engineering, autonomous agents, and complex enterprise workflows. It improves software engineering, agentic tasks, and multi-step reasoning over Gemini 3.7 Flash.",
+        "zh": "面向长周期软件工程、自主 Agent 与复杂企业工作流的最强 Gemini Flash 模型。相较 Gemini 3.7 Flash，提升软件工程、Agent 任务与多步推理能力。"
+      },
+      "vendor": "google",
+      "context_window": 1000000,
+      "max_tokens": 64000,
+      "pricing": {
+        "usd": {
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 1.5,
+              "output_price": 7.5,
+              "cache_read_price": 0.15,
+              "cache_write_price": 0.08333
+            }
+          ]
+        },
+        "cny": {
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 10.5,
+              "output_price": 52.5,
+              "cache_read_price": 1.05,
+              "cache_write_price": 0.58331
+            }
+          ]
+        }
+      },
+      "modalities": {
+        "input": [
+          "text",
+          "image",
+          "audio",
+          "video",
+          "file"
+        ],
+        "output": [
+          "text"
+        ]
+      },
+      "released": "2026-09-02",
+      "vendor_label": "Google",
+      "kind": "llm",
+      "source_path": "packages/admin/lib/model-presets/google.json"
     },
     {
       "id": "gemini-3.7-flash",
@@ -3426,6 +4453,53 @@
       "source_path": "packages/admin/lib/model-presets/minimax.json"
     },
     {
+      "id": "minimax-m2.7-highspeed",
+      "display_name": "MiniMax M2.7 Highspeed",
+      "description": "A high-speed variant of MiniMax M2.7 for faster inference at the same capability level. Optimized for latency-sensitive productivity and agent workflows.",
+      "i18n": {
+        "en": "A high-speed variant of MiniMax M2.7 for faster inference at the same capability level. Optimized for latency-sensitive productivity and agent workflows.",
+        "zh": "MiniMax M2.7 高速版，相同能力下推理速度更快。针对延迟敏感的生产力任务与 Agent 工作流优化。"
+      },
+      "vendor": "minimax",
+      "context_window": 204800,
+      "max_tokens": 128000,
+      "pricing": {
+        "usd": {
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 0.6,
+              "output_price": 2.4,
+              "cache_read_price": 0.06,
+              "cache_write_price": 0.375
+            }
+          ]
+        },
+        "cny": {
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 4.2,
+              "output_price": 16.8,
+              "cache_read_price": 0.42,
+              "cache_write_price": 2.625
+            }
+          ]
+        }
+      },
+      "modalities": {
+        "input": [
+          "text"
+        ],
+        "output": [
+          "text"
+        ]
+      },
+      "vendor_label": "MiniMax",
+      "kind": "llm",
+      "source_path": "packages/admin/lib/model-presets/minimax.json"
+    },
+    {
       "id": "minimax-m3",
       "display_name": "MiniMax M3",
       "description": "A long-context multimodal MiniMax model for coding, knowledge work, and agents. The multimodal foundation is designed for long-horizon agents, coding, and knowledge work over extended context.",
@@ -3487,6 +4561,193 @@
       "released": "2026-06-01",
       "vendor_label": "MiniMax",
       "kind": "llm",
+      "source_path": "packages/admin/lib/model-presets/minimax.json"
+    },
+    {
+      "id": "minimax-asr-1.0",
+      "display_name": "MiniMax ASR 1.0",
+      "description": "MiniMax file speech recognition (asr-1.0) via POST /v1/speech_to_text. Set the route provider model name to asr-1.0 and the adapter to minimax-asr-file. Billed per second of upstream duration, with no minimum.",
+      "i18n": {
+        "en": "MiniMax file speech recognition (asr-1.0) via POST /v1/speech_to_text. Set the route provider model name to asr-1.0 and the adapter to minimax-asr-file. Billed per second of upstream duration, with no minimum.",
+        "zh": "MiniMax 文件语音识别（asr-1.0），走 POST /v1/speech_to_text。路由的供应商模型名填 asr-1.0，适配器选 MiniMax 文件转写。按上游时长按秒计费，没有最低时长。"
+      },
+      "vendor": "minimax",
+      "pricing": {
+        "usd": {
+          "audio_billing_mode": "per_second",
+          "audio": {
+            "price_per_second": 0.000105556,
+            "minimum_seconds": 0
+          }
+        },
+        "cny": {
+          "audio_billing_mode": "per_second",
+          "audio": {
+            "price_per_second": 0.000694444,
+            "minimum_seconds": 0
+          }
+        }
+      },
+      "modalities": {
+        "input": [
+          "audio"
+        ],
+        "output": [
+          "text"
+        ]
+      },
+      "vendor_label": "MiniMax",
+      "kind": "asr",
+      "source_path": "packages/admin/lib/model-presets/minimax.json"
+    },
+    {
+      "id": "minimax-speech-2.8-hd",
+      "display_name": "MiniMax Speech 2.8 HD",
+      "description": "MiniMax sync speech synthesis (speech-2.8-hd) via POST /v1/t2a_v2. Set the route provider model name to speech-2.8-hd. Use minimax-tts for OpenAI /v1/audio/speech, or MiniMax audio.speech passthrough for the native endpoint. Billed per upstream usage_characters.",
+      "i18n": {
+        "en": "MiniMax sync speech synthesis (speech-2.8-hd) via POST /v1/t2a_v2. Set the route provider model name to speech-2.8-hd. Use minimax-tts for OpenAI /v1/audio/speech, or MiniMax audio.speech passthrough for the native endpoint. Billed per upstream usage_characters.",
+        "zh": "MiniMax 同步语音合成（speech-2.8-hd），走 POST /v1/t2a_v2。供应商模型名填 speech-2.8-hd。OpenAI /v1/audio/speech 用适配器 minimax-tts，原生端点用 audio.speech 透传。按上游 usage_characters 计费。"
+      },
+      "vendor": "minimax",
+      "pricing": {
+        "usd": {
+          "audio_billing_mode": "per_character",
+          "audio": {
+            "price_per_character": 0.0001,
+            "minimum_characters": 0
+          }
+        },
+        "cny": {
+          "audio_billing_mode": "per_character",
+          "audio": {
+            "price_per_character": 0.00035,
+            "minimum_characters": 0
+          }
+        }
+      },
+      "modalities": {
+        "input": [
+          "text"
+        ],
+        "output": [
+          "audio"
+        ]
+      },
+      "vendor_label": "MiniMax",
+      "kind": "tts",
+      "source_path": "packages/admin/lib/model-presets/minimax.json"
+    },
+    {
+      "id": "minimax-speech-2.8-turbo",
+      "display_name": "MiniMax Speech 2.8 Turbo",
+      "description": "MiniMax low-latency sync speech synthesis (speech-2.8-turbo) via POST /v1/t2a_v2. Set the route provider model name to speech-2.8-turbo. Use minimax-tts for OpenAI /v1/audio/speech, or MiniMax audio.speech passthrough for the native endpoint. Billed per upstream usage_characters.",
+      "i18n": {
+        "en": "MiniMax low-latency sync speech synthesis (speech-2.8-turbo) via POST /v1/t2a_v2. Set the route provider model name to speech-2.8-turbo. Use minimax-tts for OpenAI /v1/audio/speech, or MiniMax audio.speech passthrough for the native endpoint. Billed per upstream usage_characters.",
+        "zh": "MiniMax 低延迟同步语音合成（speech-2.8-turbo），走 POST /v1/t2a_v2。供应商模型名填 speech-2.8-turbo。OpenAI /v1/audio/speech 用适配器 minimax-tts，原生端点用 audio.speech 透传。按上游 usage_characters 计费。"
+      },
+      "vendor": "minimax",
+      "pricing": {
+        "usd": {
+          "audio_billing_mode": "per_character",
+          "audio": {
+            "price_per_character": 0.00006,
+            "minimum_characters": 0
+          }
+        },
+        "cny": {
+          "audio_billing_mode": "per_character",
+          "audio": {
+            "price_per_character": 0.0002,
+            "minimum_characters": 0
+          }
+        }
+      },
+      "modalities": {
+        "input": [
+          "text"
+        ],
+        "output": [
+          "audio"
+        ]
+      },
+      "vendor_label": "MiniMax",
+      "kind": "tts",
+      "source_path": "packages/admin/lib/model-presets/minimax.json"
+    },
+    {
+      "id": "minimax-image-01",
+      "display_name": "MiniMax Image 01",
+      "description": "MiniMax text-to-image and subject-reference image generation (image-01) via POST /v1/image_generation. Set the route provider model name to image-01. Use minimax-image for OpenAI /v1/images/generations, or MiniMax images.generations passthrough for the native endpoint. Billed per successful image.",
+      "i18n": {
+        "en": "MiniMax text-to-image and subject-reference image generation (image-01) via POST /v1/image_generation. Set the route provider model name to image-01. Use minimax-image for OpenAI /v1/images/generations, or MiniMax images.generations passthrough for the native endpoint. Billed per successful image.",
+        "zh": "MiniMax 文生图与主体参考图生图（image-01），走 POST /v1/image_generation。供应商模型名填 image-01。OpenAI /v1/images/generations 用适配器 minimax-image，原生端点用 images.generations 透传。按成功张数计费。"
+      },
+      "vendor": "minimax",
+      "pricing": {
+        "usd": {
+          "image_billing_mode": "per_image",
+          "image": {
+            "default": 0.0035,
+            "uncertain_result_policy": "zero"
+          }
+        },
+        "cny": {
+          "image_billing_mode": "per_image",
+          "image": {
+            "default": 0.025,
+            "uncertain_result_policy": "zero"
+          }
+        }
+      },
+      "modalities": {
+        "input": [
+          "text",
+          "image"
+        ],
+        "output": [
+          "image"
+        ]
+      },
+      "vendor_label": "MiniMax",
+      "kind": "image",
+      "source_path": "packages/admin/lib/model-presets/minimax.json"
+    },
+    {
+      "id": "minimax-image-01-live",
+      "display_name": "MiniMax Image 01 Live",
+      "description": "MiniMax image-01-live generation via POST /v1/image_generation, including the live style. Set the route provider model name to image-01-live. Use minimax-image for OpenAI /v1/images/generations, or MiniMax images.generations passthrough for the native endpoint. Billed per successful image.",
+      "i18n": {
+        "en": "MiniMax image-01-live generation via POST /v1/image_generation, including the live style. Set the route provider model name to image-01-live. Use minimax-image for OpenAI /v1/images/generations, or MiniMax images.generations passthrough for the native endpoint. Billed per successful image.",
+        "zh": "MiniMax image-01-live 生图，走 POST /v1/image_generation，支持 live 风格。供应商模型名填 image-01-live。OpenAI /v1/images/generations 用适配器 minimax-image，原生端点用 images.generations 透传。按成功张数计费。"
+      },
+      "vendor": "minimax",
+      "pricing": {
+        "usd": {
+          "image_billing_mode": "per_image",
+          "image": {
+            "default": 0.0035,
+            "uncertain_result_policy": "zero"
+          }
+        },
+        "cny": {
+          "image_billing_mode": "per_image",
+          "image": {
+            "default": 0.025,
+            "uncertain_result_policy": "zero"
+          }
+        }
+      },
+      "modalities": {
+        "input": [
+          "text",
+          "image"
+        ],
+        "output": [
+          "image"
+        ]
+      },
+      "vendor_label": "MiniMax",
+      "kind": "image",
       "source_path": "packages/admin/lib/model-presets/minimax.json"
     },
     {
@@ -3640,6 +4901,55 @@
       "source_path": "packages/admin/lib/model-presets/moonshot.json"
     },
     {
+      "id": "kimi-k2.7-code-highspeed",
+      "display_name": "Kimi K2.7 Code Highspeed",
+      "description": "A high-speed variant of Kimi K2.7 Code for faster inference on coding tasks. Optimized for latency-sensitive coding workflows and agent applications.",
+      "i18n": {
+        "en": "A high-speed variant of Kimi K2.7 Code for faster inference on coding tasks. Optimized for latency-sensitive coding workflows and agent applications.",
+        "zh": "Kimi K2.7 Code 高速版，面向编程任务的更快推理。针对延迟敏感的编程工作流与 Agent 应用优化。"
+      },
+      "vendor": "moonshot",
+      "context_window": 262144,
+      "max_tokens": 256000,
+      "pricing": {
+        "usd": {
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 1.9,
+              "output_price": 8,
+              "cache_read_price": 0.38,
+              "cache_write_price": null
+            }
+          ]
+        },
+        "cny": {
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 13,
+              "output_price": 54,
+              "cache_read_price": 2.6,
+              "cache_write_price": null
+            }
+          ]
+        }
+      },
+      "modalities": {
+        "input": [
+          "text",
+          "image",
+          "video"
+        ],
+        "output": [
+          "text"
+        ]
+      },
+      "vendor_label": "Moonshot AI",
+      "kind": "llm",
+      "source_path": "packages/admin/lib/model-presets/moonshot.json"
+    },
+    {
       "id": "kimi-k3",
       "display_name": "Kimi K3",
       "description": "An open-weight multimodal Kimi model for complex coding, reasoning, and agentic work. The open-weight multimodal reasoning model is positioned for complex coding, knowledge work, and long-running agents.",
@@ -3726,7 +5036,7 @@
       },
       "released": "2022-09-01",
       "vendor_label": "OpenAI",
-      "kind": "llm",
+      "kind": "asr",
       "source_path": "packages/admin/lib/model-presets/openai-audio.json"
     },
     {
@@ -3773,7 +5083,7 @@
       },
       "released": "2025-03-20",
       "vendor_label": "OpenAI",
-      "kind": "llm",
+      "kind": "asr",
       "source_path": "packages/admin/lib/model-presets/openai-audio.json"
     },
     {
@@ -3820,7 +5130,7 @@
       },
       "released": "2025-03-20",
       "vendor_label": "OpenAI",
-      "kind": "llm",
+      "kind": "asr",
       "source_path": "packages/admin/lib/model-presets/openai-audio.json"
     },
     {
@@ -3867,8 +5177,263 @@
       },
       "released": "2025-10-18",
       "vendor_label": "OpenAI",
-      "kind": "llm",
+      "kind": "asr",
       "source_path": "packages/admin/lib/model-presets/openai-audio.json"
+    },
+    {
+      "id": "text-embedding-3-small",
+      "display_name": "Text Embedding 3 Small",
+      "description": "OpenAI's small, efficient text embedding model (1536 dimensions by default; supports the dimensions parameter). Billed by input tokens via POST /v1/embeddings.",
+      "i18n": {
+        "en": "OpenAI's small, efficient text embedding model (1536 dimensions by default; supports the dimensions parameter). Billed by input tokens via POST /v1/embeddings.",
+        "zh": "OpenAI 高性价比文本向量模型（默认 1536 维，支持 dimensions 参数）。通过 POST /v1/embeddings 调用，仅按输入 Token 计费。"
+      },
+      "vendor": "openai",
+      "context_window": 8192,
+      "max_tokens": null,
+      "pricing": {
+        "usd": {
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 0.02,
+              "output_price": 0,
+              "cache_read_price": null,
+              "cache_write_price": null
+            }
+          ]
+        },
+        "cny": {
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 0.14,
+              "output_price": 0,
+              "cache_read_price": null,
+              "cache_write_price": null
+            }
+          ]
+        }
+      },
+      "modalities": {
+        "input": [
+          "text"
+        ],
+        "output": [
+          "embedding"
+        ]
+      },
+      "vendor_label": "OpenAI",
+      "kind": "embedding",
+      "source_path": "packages/admin/lib/model-presets/openai-embedding.json"
+    },
+    {
+      "id": "text-embedding-3-large",
+      "display_name": "Text Embedding 3 Large",
+      "description": "OpenAI's most capable text embedding model (3072 dimensions by default; supports the dimensions parameter). Billed by input tokens via POST /v1/embeddings.",
+      "i18n": {
+        "en": "OpenAI's most capable text embedding model (3072 dimensions by default; supports the dimensions parameter). Billed by input tokens via POST /v1/embeddings.",
+        "zh": "OpenAI 效果最强的文本向量模型（默认 3072 维，支持 dimensions 参数）。通过 POST /v1/embeddings 调用，仅按输入 Token 计费。"
+      },
+      "vendor": "openai",
+      "context_window": 8192,
+      "max_tokens": null,
+      "pricing": {
+        "usd": {
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 0.13,
+              "output_price": 0,
+              "cache_read_price": null,
+              "cache_write_price": null
+            }
+          ]
+        },
+        "cny": {
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 0.91,
+              "output_price": 0,
+              "cache_read_price": null,
+              "cache_write_price": null
+            }
+          ]
+        }
+      },
+      "modalities": {
+        "input": [
+          "text"
+        ],
+        "output": [
+          "embedding"
+        ]
+      },
+      "vendor_label": "OpenAI",
+      "kind": "embedding",
+      "source_path": "packages/admin/lib/model-presets/openai-embedding.json"
+    },
+    {
+      "id": "text-embedding-ada-002",
+      "display_name": "Text Embedding Ada 002",
+      "description": "OpenAI's legacy text embedding model (1536 dimensions). Billed by input tokens via POST /v1/embeddings.",
+      "i18n": {
+        "en": "OpenAI's legacy text embedding model (1536 dimensions). Billed by input tokens via POST /v1/embeddings.",
+        "zh": "OpenAI 上一代文本向量模型（1536 维）。通过 POST /v1/embeddings 调用，仅按输入 Token 计费。"
+      },
+      "vendor": "openai",
+      "context_window": 8192,
+      "max_tokens": null,
+      "pricing": {
+        "usd": {
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 0.1,
+              "output_price": 0,
+              "cache_read_price": null,
+              "cache_write_price": null
+            }
+          ]
+        },
+        "cny": {
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 0.7,
+              "output_price": 0,
+              "cache_read_price": null,
+              "cache_write_price": null
+            }
+          ]
+        }
+      },
+      "modalities": {
+        "input": [
+          "text"
+        ],
+        "output": [
+          "embedding"
+        ]
+      },
+      "vendor_label": "OpenAI",
+      "kind": "embedding",
+      "source_path": "packages/admin/lib/model-presets/openai-embedding.json"
+    },
+    {
+      "id": "gpt-image-2.5-flare",
+      "display_name": "GPT Image 2.5 Flare",
+      "description": "OpenAI's fastest model for high-quality, everyday image generation. It accepts text and image inputs and produces image outputs. Quality supports low, medium, high, xhigh, max, and auto. Use the Images API or the Responses API image generation tool.",
+      "i18n": {
+        "en": "OpenAI's fastest model for high-quality, everyday image generation. It accepts text and image inputs and produces image outputs. Quality supports low, medium, high, xhigh, max, and auto. Use the Images API or the Responses API image generation tool.",
+        "zh": "OpenAI 面向日常高质量出图的最快模型。接受文本与图片输入，输出图片。quality 支持 low、medium、high、xhigh、max 和 auto。可通过 Images API 或 Responses API 的 image generation 工具调用。"
+      },
+      "vendor": "openai",
+      "context_window": null,
+      "max_tokens": null,
+      "pricing": {
+        "usd": {
+          "image_billing_mode": "token",
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 5,
+              "output_price": 0,
+              "cache_read_price": 1.25,
+              "cache_write_price": null,
+              "image_input_price": 8,
+              "image_input_cache_price": 2,
+              "image_output_price": 30
+            }
+          ]
+        },
+        "cny": {
+          "image_billing_mode": "token",
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 35,
+              "output_price": 0,
+              "cache_read_price": 8.75,
+              "cache_write_price": null,
+              "image_input_price": 56,
+              "image_input_cache_price": 14,
+              "image_output_price": 210
+            }
+          ]
+        }
+      },
+      "modalities": {
+        "input": [
+          "text",
+          "image"
+        ],
+        "output": [
+          "image"
+        ]
+      },
+      "released": "2026-09-08",
+      "vendor_label": "OpenAI",
+      "kind": "image",
+      "source_path": "packages/admin/lib/model-presets/openai-image.json"
+    },
+    {
+      "id": "gpt-image-2.5-sunburst",
+      "display_name": "GPT Image 2.5 Sunburst",
+      "description": "OpenAI's GPT Image 2.5 Sunburst generates and edits images from text and image inputs. Use it for workflows where editing precision matters most. Quality supports low, medium, high, xhigh, max, and auto. Use the Images API or the Responses API image generation tool.",
+      "i18n": {
+        "en": "OpenAI's GPT Image 2.5 Sunburst generates and edits images from text and image inputs. Use it for workflows where editing precision matters most. Quality supports low, medium, high, xhigh, max, and auto. Use the Images API or the Responses API image generation tool.",
+        "zh": "OpenAI 面向精细编辑的图片生成与编辑模型。接受文本与图片输入，输出图片，适合对编辑精度要求更高的工作流。quality 支持 low、medium、high、xhigh、max 和 auto。可通过 Images API 或 Responses API 的 image generation 工具调用。"
+      },
+      "vendor": "openai",
+      "context_window": null,
+      "max_tokens": null,
+      "pricing": {
+        "usd": {
+          "image_billing_mode": "token",
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 5,
+              "output_price": 0,
+              "cache_read_price": 1.25,
+              "cache_write_price": null,
+              "image_input_price": 8,
+              "image_input_cache_price": 2,
+              "image_output_price": 30
+            }
+          ]
+        },
+        "cny": {
+          "image_billing_mode": "token",
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 35,
+              "output_price": 0,
+              "cache_read_price": 8.75,
+              "cache_write_price": null,
+              "image_input_price": 56,
+              "image_input_cache_price": 14,
+              "image_output_price": 210
+            }
+          ]
+        }
+      },
+      "modalities": {
+        "input": [
+          "text",
+          "image"
+        ],
+        "output": [
+          "image"
+        ]
+      },
+      "released": "2026-09-08",
+      "vendor_label": "OpenAI",
+      "kind": "image",
+      "source_path": "packages/admin/lib/model-presets/openai-image.json"
     },
     {
       "id": "gpt-image-2",
@@ -3926,6 +5491,258 @@
       "vendor_label": "OpenAI",
       "kind": "image",
       "source_path": "packages/admin/lib/model-presets/openai-image.json"
+    },
+    {
+      "id": "gpt-6-astra",
+      "display_name": "GPT-6 Astra",
+      "description": "OpenAI's most capable model for demanding end-to-end work: reasoning, coding, computer use, research, and document creation. reasoning.effort supports low, medium, high, xhigh, and max (none is not supported). Tool calling should use the Responses API; Chat Completions remains available for text-only requests.",
+      "i18n": {
+        "en": "OpenAI's most capable model for demanding end-to-end work: reasoning, coding, computer use, research, and document creation. reasoning.effort supports low, medium, high, xhigh, and max (none is not supported). Tool calling should use the Responses API; Chat Completions remains available for text-only requests.",
+        "zh": "OpenAI 面向高难度端到端工作的旗舰模型，适合推理、编程、计算机使用、研究与文档创作。reasoning.effort 支持 low、medium、high、xhigh 和 max，不支持 none。带工具调用请走 Responses API；纯文本仍可用 Chat Completions。"
+      },
+      "vendor": "openai",
+      "context_window": 1050000,
+      "max_tokens": 128000,
+      "pricing": {
+        "usd": {
+          "tiers": [
+            {
+              "upto": 272000,
+              "input_price": 10,
+              "output_price": 50,
+              "cache_read_price": 1,
+              "cache_write_price": 12.5
+            },
+            {
+              "upto": null,
+              "input_price": 20,
+              "output_price": 75,
+              "cache_read_price": 2,
+              "cache_write_price": 25
+            }
+          ]
+        },
+        "cny": {
+          "tiers": [
+            {
+              "upto": 272000,
+              "input_price": 70,
+              "output_price": 350,
+              "cache_read_price": 7,
+              "cache_write_price": 87.5
+            },
+            {
+              "upto": null,
+              "input_price": 140,
+              "output_price": 525,
+              "cache_read_price": 14,
+              "cache_write_price": 175
+            }
+          ]
+        }
+      },
+      "modalities": {
+        "input": [
+          "text",
+          "image"
+        ],
+        "output": [
+          "text"
+        ]
+      },
+      "released": "2026-09-04",
+      "vendor_label": "OpenAI",
+      "kind": "llm",
+      "source_path": "packages/admin/lib/model-presets/openai.json"
+    },
+    {
+      "id": "gpt-6-sol",
+      "display_name": "GPT-6 Sol",
+      "description": "A GPT-6 model for complex coding and agentic workflows. reasoning.effort supports none, low, medium (default), high, xhigh, and max. Built-in tools and function calling should use the Responses API; Chat Completions supports function calling only when reasoning_effort is none.",
+      "i18n": {
+        "en": "A GPT-6 model for complex coding and agentic workflows. reasoning.effort supports none, low, medium (default), high, xhigh, and max. Built-in tools and function calling should use the Responses API; Chat Completions supports function calling only when reasoning_effort is none.",
+        "zh": "面向复杂编程与 Agent 工作流的 GPT-6 模型。reasoning.effort 支持 none、low、medium（默认）、high、xhigh 和 max。内置工具与函数调用应走 Responses API；Chat Completions 仅在 reasoning_effort 为 none 时支持函数调用。"
+      },
+      "vendor": "openai",
+      "context_window": 1050000,
+      "max_tokens": 128000,
+      "pricing": {
+        "usd": {
+          "tiers": [
+            {
+              "upto": 272000,
+              "input_price": 2,
+              "output_price": 10,
+              "cache_read_price": 0.2,
+              "cache_write_price": 2.5
+            },
+            {
+              "upto": null,
+              "input_price": 4,
+              "output_price": 15,
+              "cache_read_price": 0.4,
+              "cache_write_price": 5
+            }
+          ]
+        },
+        "cny": {
+          "tiers": [
+            {
+              "upto": 272000,
+              "input_price": 14,
+              "output_price": 70,
+              "cache_read_price": 1.4,
+              "cache_write_price": 17.5
+            },
+            {
+              "upto": null,
+              "input_price": 28,
+              "output_price": 105,
+              "cache_read_price": 2.8,
+              "cache_write_price": 35
+            }
+          ]
+        }
+      },
+      "modalities": {
+        "input": [
+          "text",
+          "image"
+        ],
+        "output": [
+          "text"
+        ]
+      },
+      "released": "2026-09-22",
+      "vendor_label": "OpenAI",
+      "kind": "llm",
+      "source_path": "packages/admin/lib/model-presets/openai.json"
+    },
+    {
+      "id": "gpt-6.1-sol",
+      "display_name": "GPT-6.1 Sol",
+      "description": "An upgrade to GPT-6 Sol with near-Astra performance for complex coding, computer use, and professional work. reasoning.effort supports low, medium (default), high, xhigh, and max (none and minimal are not supported). Tool calling requires the Responses API; Chat Completions supports requests without tools.",
+      "i18n": {
+        "en": "An upgrade to GPT-6 Sol with near-Astra performance for complex coding, computer use, and professional work. reasoning.effort supports low, medium (default), high, xhigh, and max (none and minimal are not supported). Tool calling requires the Responses API; Chat Completions supports requests without tools.",
+        "zh": "GPT-6 Sol 的升级型号，在复杂编程、计算机使用与专业工作上接近 Astra。reasoning.effort 支持 low、medium（默认）、high、xhigh 和 max，不支持 none 与 minimal。带工具调用必须走 Responses API；Chat Completions 仅支持不带工具的请求。"
+      },
+      "vendor": "openai",
+      "context_window": 1050000,
+      "max_tokens": 128000,
+      "pricing": {
+        "usd": {
+          "tiers": [
+            {
+              "upto": 272000,
+              "input_price": 2,
+              "output_price": 10,
+              "cache_read_price": 0.1,
+              "cache_write_price": 2.5
+            },
+            {
+              "upto": null,
+              "input_price": 4,
+              "output_price": 15,
+              "cache_read_price": 0.2,
+              "cache_write_price": 5
+            }
+          ]
+        },
+        "cny": {
+          "tiers": [
+            {
+              "upto": 272000,
+              "input_price": 14,
+              "output_price": 70,
+              "cache_read_price": 0.7,
+              "cache_write_price": 17.5
+            },
+            {
+              "upto": null,
+              "input_price": 28,
+              "output_price": 105,
+              "cache_read_price": 1.4,
+              "cache_write_price": 35
+            }
+          ]
+        }
+      },
+      "modalities": {
+        "input": [
+          "text",
+          "image"
+        ],
+        "output": [
+          "text"
+        ]
+      },
+      "released": "2026-09-29",
+      "vendor_label": "OpenAI",
+      "kind": "llm",
+      "source_path": "packages/admin/lib/model-presets/openai.json"
+    },
+    {
+      "id": "gpt-6-luna",
+      "display_name": "GPT-6 Luna",
+      "description": "OpenAI's most efficient GPT-6 model for focused, high-volume tasks. reasoning.effort supports none, low, medium (default), high, xhigh, and max. Built-in tools and function calling should use the Responses API; Chat Completions supports function calling only when reasoning_effort is none.",
+      "i18n": {
+        "en": "OpenAI's most efficient GPT-6 model for focused, high-volume tasks. reasoning.effort supports none, low, medium (default), high, xhigh, and max. Built-in tools and function calling should use the Responses API; Chat Completions supports function calling only when reasoning_effort is none.",
+        "zh": "面向聚焦、高并发任务的高效 GPT-6 模型。reasoning.effort 支持 none、low、medium（默认）、high、xhigh 和 max。内置工具与函数调用应走 Responses API；Chat Completions 仅在 reasoning_effort 为 none 时支持函数调用。"
+      },
+      "vendor": "openai",
+      "context_window": 1050000,
+      "max_tokens": 128000,
+      "pricing": {
+        "usd": {
+          "tiers": [
+            {
+              "upto": 272000,
+              "input_price": 0.1,
+              "output_price": 0.5,
+              "cache_read_price": 0.01,
+              "cache_write_price": 0.125
+            },
+            {
+              "upto": null,
+              "input_price": 0.2,
+              "output_price": 0.75,
+              "cache_read_price": 0.02,
+              "cache_write_price": 0.25
+            }
+          ]
+        },
+        "cny": {
+          "tiers": [
+            {
+              "upto": 272000,
+              "input_price": 0.7,
+              "output_price": 3.5,
+              "cache_read_price": 0.07,
+              "cache_write_price": 0.875
+            },
+            {
+              "upto": null,
+              "input_price": 1.4,
+              "output_price": 5.25,
+              "cache_read_price": 0.14,
+              "cache_write_price": 1.75
+            }
+          ]
+        }
+      },
+      "modalities": {
+        "input": [
+          "text",
+          "image"
+        ],
+        "output": [
+          "text"
+        ]
+      },
+      "released": "2026-09-22",
+      "vendor_label": "OpenAI",
+      "kind": "llm",
+      "source_path": "packages/admin/lib/model-presets/openai.json"
     },
     {
       "id": "gpt-5.2",
@@ -4342,17 +6159,17 @@
           "tiers": [
             {
               "upto": 272000,
-              "input_price": 2.5,
-              "output_price": 15,
-              "cache_read_price": 0.25,
-              "cache_write_price": 3.125
+              "input_price": 2,
+              "output_price": 12,
+              "cache_read_price": 0.2,
+              "cache_write_price": 2.5
             },
             {
               "upto": null,
-              "input_price": 5,
-              "output_price": 22.5,
-              "cache_read_price": 0.5,
-              "cache_write_price": 6.25
+              "input_price": 4,
+              "output_price": 18,
+              "cache_read_price": 0.4,
+              "cache_write_price": 5
             }
           ]
         },
@@ -4360,17 +6177,17 @@
           "tiers": [
             {
               "upto": 272000,
-              "input_price": 17.5,
-              "output_price": 105,
-              "cache_read_price": 1.75,
-              "cache_write_price": 21.875
+              "input_price": 14,
+              "output_price": 84,
+              "cache_read_price": 1.4,
+              "cache_write_price": 17.5
             },
             {
               "upto": null,
-              "input_price": 35,
-              "output_price": 157.5,
-              "cache_read_price": 3.5,
-              "cache_write_price": 43.75
+              "input_price": 28,
+              "output_price": 126,
+              "cache_read_price": 2.8,
+              "cache_write_price": 35
             }
           ]
         }
@@ -4405,17 +6222,17 @@
           "tiers": [
             {
               "upto": 272000,
-              "input_price": 1,
-              "output_price": 6,
-              "cache_read_price": 0.1,
-              "cache_write_price": 1.25
+              "input_price": 0.2,
+              "output_price": 1.2,
+              "cache_read_price": 0.02,
+              "cache_write_price": 0.25
             },
             {
               "upto": null,
-              "input_price": 2,
-              "output_price": 9,
-              "cache_read_price": 0.2,
-              "cache_write_price": 2.5
+              "input_price": 0.4,
+              "output_price": 1.8,
+              "cache_read_price": 0.04,
+              "cache_write_price": 0.5
             }
           ]
         },
@@ -4423,17 +6240,17 @@
           "tiers": [
             {
               "upto": 272000,
-              "input_price": 7,
-              "output_price": 42,
-              "cache_read_price": 0.7,
-              "cache_write_price": 8.75
+              "input_price": 1.4,
+              "output_price": 8.4,
+              "cache_read_price": 0.14,
+              "cache_write_price": 1.75
             },
             {
               "upto": null,
-              "input_price": 14,
-              "output_price": 63,
-              "cache_read_price": 1.4,
-              "cache_write_price": 17.5
+              "input_price": 2.8,
+              "output_price": 12.6,
+              "cache_read_price": 0.28,
+              "cache_write_price": 3.5
             }
           ]
         }
@@ -4676,6 +6493,26 @@
           "image_billing_mode": "per_image",
           "image": {
             "default": 0.04,
+            "by_quality": {
+              "low": 0.04,
+              "medium": 0.06
+            },
+            "by_size": {
+              "1k": 0.04,
+              "1.5k": 0.05,
+              "2k": 0.06
+            },
+            "by_quality_size": {
+              "low:1k": 0.04,
+              "low:1.5k": 0.05,
+              "low:2k": 0.06,
+              "medium:1k": 0.06,
+              "medium:1.5k": 0.07,
+              "medium:2k": 0.08
+            },
+            "input": {
+              "default": 0.01
+            },
             "uncertain_result_policy": "requested"
           }
         },
@@ -4683,6 +6520,26 @@
           "image_billing_mode": "per_image",
           "image": {
             "default": 0.28,
+            "by_quality": {
+              "low": 0.28,
+              "medium": 0.42
+            },
+            "by_size": {
+              "1k": 0.28,
+              "1.5k": 0.35,
+              "2k": 0.42
+            },
+            "by_quality_size": {
+              "low:1k": 0.28,
+              "low:1.5k": 0.35,
+              "low:2k": 0.42,
+              "medium:1k": 0.42,
+              "medium:1.5k": 0.49,
+              "medium:2k": 0.56
+            },
+            "input": {
+              "default": 0.07
+            },
             "uncertain_result_policy": "requested"
           }
         }
@@ -4704,10 +6561,10 @@
     {
       "id": "grok-imagine-image-quality",
       "display_name": "Grok Imagine Image Quality",
-      "description": "A high-fidelity xAI model for fast image generation, editing, and reference-guided creation.",
+      "description": "A high-fidelity xAI model for fast image generation, editing, and reference-guided creation. Retires on 2026-11-02; requests are then served by Grok Imagine Image 2.0 at low quality.",
       "i18n": {
-        "en": "A high-fidelity xAI model for fast image generation, editing, and reference-guided creation.",
-        "zh": "面向快速图片生成、编辑与参考图创作的 xAI 高保真模型。"
+        "en": "A high-fidelity xAI model for fast image generation, editing, and reference-guided creation. Retires on 2026-11-02; requests are then served by Grok Imagine Image 2.0 at low quality.",
+        "zh": "面向快速图片生成、编辑与参考图创作的 xAI 高保真模型。2026-11-02 退役，之后由 Grok Imagine Image 2.0 以 low 质量出图。"
       },
       "vendor": "xai",
       "context_window": null,
@@ -4755,6 +6612,202 @@
       "vendor_label": "xAI (Grok)",
       "kind": "image",
       "source_path": "packages/admin/lib/model-presets/xai-image.json"
+    },
+    {
+      "id": "grok-build-0.1",
+      "display_name": "Grok Build 0.1",
+      "description": "An xAI coding-specialty model for agentic software development. Supports reasoning at configurable effort levels. Optimized for sustained coding trajectories and tool-driven workflows.",
+      "i18n": {
+        "en": "An xAI coding-specialty model for agentic software development. Supports reasoning at configurable effort levels. Optimized for sustained coding trajectories and tool-driven workflows.",
+        "zh": "面向 Agent 软件开发的 xAI 编程专用模型。支持可配置推理强度。针对持续编程轨迹与工具驱动工作流优化。"
+      },
+      "vendor": "xai",
+      "context_window": 256000,
+      "max_tokens": 128000,
+      "pricing": {
+        "usd": {
+          "tiers": [
+            {
+              "upto": 200000,
+              "input_price": 1,
+              "output_price": 2,
+              "cache_read_price": 0.2,
+              "cache_write_price": null
+            },
+            {
+              "upto": null,
+              "input_price": 2,
+              "output_price": 4,
+              "cache_read_price": 0.4,
+              "cache_write_price": null
+            }
+          ]
+        }
+      },
+      "modalities": {
+        "input": [
+          "text",
+          "image"
+        ],
+        "output": [
+          "text"
+        ]
+      },
+      "vendor_label": "xAI (Grok)",
+      "kind": "llm",
+      "source_path": "packages/admin/lib/model-presets/xai.json"
+    },
+    {
+      "id": "grok-4.20-0309-reasoning",
+      "display_name": "Grok 4.20 Reasoning",
+      "description": "A 1M-context xAI reasoning model for complex coding, agents, and knowledge work. Supports reasoning at configurable effort levels. Batch API available at 20% off standard pricing.",
+      "i18n": {
+        "en": "A 1M-context xAI reasoning model for complex coding, agents, and knowledge work. Supports reasoning at configurable effort levels. Batch API available at 20% off standard pricing.",
+        "zh": "1M 上下文 xAI 推理模型，面向复杂编程、Agent 与知识工作。支持可配置推理强度。Batch API 享标准价八折。"
+      },
+      "vendor": "xai",
+      "context_window": 1000000,
+      "max_tokens": 128000,
+      "pricing": {
+        "usd": {
+          "tiers": [
+            {
+              "upto": 200000,
+              "input_price": 1.25,
+              "output_price": 2.5,
+              "cache_read_price": 0.2,
+              "cache_write_price": null
+            },
+            {
+              "upto": null,
+              "input_price": 2.5,
+              "output_price": 5,
+              "cache_read_price": 0.4,
+              "cache_write_price": null
+            }
+          ]
+        }
+      },
+      "modalities": {
+        "input": [
+          "text",
+          "image"
+        ],
+        "output": [
+          "text"
+        ]
+      },
+      "released": "2026-03-09",
+      "vendor_label": "xAI (Grok)",
+      "kind": "llm",
+      "source_path": "packages/admin/lib/model-presets/xai.json"
+    },
+    {
+      "id": "grok-4.20-0309-non-reasoning",
+      "display_name": "Grok 4.20 Non-Reasoning",
+      "description": "A 1M-context xAI model for coding, agents, and knowledge work without extended reasoning. Same pricing as the reasoning variant. Batch API available at 20% off standard pricing.",
+      "i18n": {
+        "en": "A 1M-context xAI model for coding, agents, and knowledge work without extended reasoning. Same pricing as the reasoning variant. Batch API available at 20% off standard pricing.",
+        "zh": "1M 上下文 xAI 模型，面向编程、Agent 与知识工作，无扩展推理。定价与推理变体相同。Batch API 享标准价八折。"
+      },
+      "vendor": "xai",
+      "context_window": 1000000,
+      "max_tokens": 128000,
+      "pricing": {
+        "usd": {
+          "tiers": [
+            {
+              "upto": 200000,
+              "input_price": 1.25,
+              "output_price": 2.5,
+              "cache_read_price": 0.2,
+              "cache_write_price": null
+            },
+            {
+              "upto": null,
+              "input_price": 2.5,
+              "output_price": 5,
+              "cache_read_price": 0.4,
+              "cache_write_price": null
+            }
+          ]
+        }
+      },
+      "modalities": {
+        "input": [
+          "text",
+          "image"
+        ],
+        "output": [
+          "text"
+        ]
+      },
+      "vendor_label": "xAI (Grok)",
+      "kind": "llm",
+      "source_path": "packages/admin/lib/model-presets/xai.json"
+    },
+    {
+      "id": "grok-4.7",
+      "display_name": "Grok 4.7",
+      "description": "SpaceXAI's frontier model for coding, agentic tasks, and knowledge work. Reasoning effort supports low, medium, high (default), and xhigh. The Responses API always returns encrypted reasoning content, which later turns must send back unchanged.",
+      "i18n": {
+        "en": "SpaceXAI's frontier model for coding, agentic tasks, and knowledge work. Reasoning effort supports low, medium, high (default), and xhigh. The Responses API always returns encrypted reasoning content, which later turns must send back unchanged.",
+        "zh": "面向编程、Agent 与知识工作的前沿 Grok 模型。reasoning effort 支持 low、medium、high（默认）和 xhigh。Responses API 总会返回加密 reasoning，后续轮次须原样带回。"
+      },
+      "vendor": "xai",
+      "context_window": 500000,
+      "max_tokens": 128000,
+      "pricing": {
+        "usd": {
+          "tiers": [
+            {
+              "upto": 200000,
+              "input_price": 2,
+              "output_price": 6,
+              "cache_read_price": 0.5,
+              "cache_write_price": null
+            },
+            {
+              "upto": null,
+              "input_price": 4,
+              "output_price": 12,
+              "cache_read_price": 1,
+              "cache_write_price": null
+            }
+          ]
+        },
+        "cny": {
+          "tiers": [
+            {
+              "upto": 200000,
+              "input_price": 14,
+              "output_price": 42,
+              "cache_read_price": 3.5,
+              "cache_write_price": null
+            },
+            {
+              "upto": null,
+              "input_price": 28,
+              "output_price": 84,
+              "cache_read_price": 7,
+              "cache_write_price": null
+            }
+          ]
+        }
+      },
+      "modalities": {
+        "input": [
+          "text",
+          "image"
+        ],
+        "output": [
+          "text"
+        ]
+      },
+      "released": "2026-09-21",
+      "vendor_label": "xAI (Grok)",
+      "kind": "llm",
+      "source_path": "packages/admin/lib/model-presets/xai.json"
     },
     {
       "id": "grok-4.6",
@@ -5168,6 +7221,159 @@
       "source_path": "packages/admin/lib/model-presets/xiaomi.json"
     },
     {
+      "id": "mimo-v2.6-pro",
+      "display_name": "MiMo V2.6 Pro",
+      "description": "Xiaomi's flagship omni-modal MiMo model for professional, long-horizon, and complex workflows, including scientific research and cybersecurity.",
+      "i18n": {
+        "en": "Xiaomi's flagship omni-modal MiMo model for professional, long-horizon, and complex workflows, including scientific research and cybersecurity.",
+        "zh": "面向专业、长程与复杂工作流的小米 MiMo 全模态旗舰模型，兼顾科学研究与网络安全。"
+      },
+      "vendor": "xiaomi",
+      "context_window": 1050000,
+      "max_tokens": 128000,
+      "pricing": {
+        "usd": {
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 0.435,
+              "output_price": 0.87,
+              "cache_read_price": 0.0036,
+              "cache_write_price": null
+            }
+          ]
+        },
+        "cny": {
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 3,
+              "output_price": 6,
+              "cache_read_price": 0.025,
+              "cache_write_price": null
+            }
+          ]
+        }
+      },
+      "modalities": {
+        "input": [
+          "text",
+          "image",
+          "audio",
+          "video"
+        ],
+        "output": [
+          "text"
+        ]
+      },
+      "released": "2026-09-22",
+      "vendor_label": "Xiaomi Mimo",
+      "kind": "llm",
+      "source_path": "packages/admin/lib/model-presets/xiaomi.json"
+    },
+    {
+      "id": "mimo-v2.6-flash",
+      "display_name": "MiMo V2.6 Flash",
+      "description": "A cost-efficient omni-modal MiMo model for high-frequency professional work and large-scale tasks.",
+      "i18n": {
+        "en": "A cost-efficient omni-modal MiMo model for high-frequency professional work and large-scale tasks.",
+        "zh": "面向高频办公与规模化任务的小米 MiMo 全模态高性价比模型。"
+      },
+      "vendor": "xiaomi",
+      "context_window": 1050000,
+      "max_tokens": 128000,
+      "pricing": {
+        "usd": {
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 0.14,
+              "output_price": 0.28,
+              "cache_read_price": 0.0028,
+              "cache_write_price": null
+            }
+          ]
+        },
+        "cny": {
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 1,
+              "output_price": 2,
+              "cache_read_price": 0.02,
+              "cache_write_price": null
+            }
+          ]
+        }
+      },
+      "modalities": {
+        "input": [
+          "text",
+          "image",
+          "audio",
+          "video"
+        ],
+        "output": [
+          "text"
+        ]
+      },
+      "released": "2026-09-22",
+      "vendor_label": "Xiaomi Mimo",
+      "kind": "llm",
+      "source_path": "packages/admin/lib/model-presets/xiaomi.json"
+    },
+    {
+      "id": "mimo-v2.6-pro-ultraspeed",
+      "display_name": "MiMo V2.6 Pro UltraSpeed",
+      "description": "The high-speed serving mode of MiMo V2.6 Pro. It keeps flagship quality and offers up to 20× output speed for latency-sensitive workloads.",
+      "i18n": {
+        "en": "The high-speed serving mode of MiMo V2.6 Pro. It keeps flagship quality and offers up to 20× output speed for latency-sensitive workloads.",
+        "zh": "保留 MiMo V2.6 Pro 旗舰能力的超高速服务模式，输出速度最高约 20 倍，面向强实时与时延敏感场景。"
+      },
+      "vendor": "xiaomi",
+      "context_window": 1050000,
+      "max_tokens": 128000,
+      "pricing": {
+        "usd": {
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 4.35,
+              "output_price": 8.7,
+              "cache_read_price": 0.036,
+              "cache_write_price": null
+            }
+          ]
+        },
+        "cny": {
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 30,
+              "output_price": 60,
+              "cache_read_price": 0.25,
+              "cache_write_price": null
+            }
+          ]
+        }
+      },
+      "modalities": {
+        "input": [
+          "text",
+          "image",
+          "audio",
+          "video"
+        ],
+        "output": [
+          "text"
+        ]
+      },
+      "released": "2026-09-22",
+      "vendor_label": "Xiaomi Mimo",
+      "kind": "llm",
+      "source_path": "packages/admin/lib/model-presets/xiaomi.json"
+    },
+    {
       "id": "glm-image",
       "display_name": "GLM Image",
       "description": "A Zhipu image model for text-guided generation and general visual creation.",
@@ -5496,6 +7702,57 @@
         ]
       },
       "released": "2026-08-26",
+      "vendor_label": "Zhipu AI",
+      "kind": "llm",
+      "source_path": "packages/admin/lib/model-presets/zhipu.json"
+    },
+    {
+      "id": "glm-5.3-flashx",
+      "display_name": "GLM-5.3-FlashX",
+      "description": "A high-throughput GLM-5.3-Flash serving SKU at up to 200 tokens/s. It keeps native image, video, and file understanding with the same 1M context window.",
+      "i18n": {
+        "en": "A high-throughput GLM-5.3-Flash serving SKU at up to 200 tokens/s. It keeps native image, video, and file understanding with the same 1M context window.",
+        "zh": "更高吞吐的 GLM-5.3-Flash 服务规格，推理速度达 200 tokens/s。沿用原生图片、视频与文件理解，以及同样的 1M 上下文。"
+      },
+      "vendor": "zhipu",
+      "context_window": 1000000,
+      "max_tokens": 128000,
+      "pricing": {
+        "usd": {
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 0.37,
+              "output_price": 1.25,
+              "cache_read_price": 0.075,
+              "cache_write_price": null
+            }
+          ]
+        },
+        "cny": {
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 2,
+              "output_price": 7,
+              "cache_read_price": 0.57,
+              "cache_write_price": null
+            }
+          ]
+        }
+      },
+      "modalities": {
+        "input": [
+          "text",
+          "image",
+          "video",
+          "file"
+        ],
+        "output": [
+          "text"
+        ]
+      },
+      "released": "2026-09-18",
       "vendor_label": "Zhipu AI",
       "kind": "llm",
       "source_path": "packages/admin/lib/model-presets/zhipu.json"

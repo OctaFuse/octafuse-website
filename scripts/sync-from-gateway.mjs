@@ -194,7 +194,7 @@ function renderCatalogOutputs(data, gatewayPath, source) {
 			description: row.description ?? row.i18n?.en ?? null,
 			i18n: row.i18n ?? null,
 			vendor_label: vendorLabels.get(row.vendor) ?? row.vendor ?? 'Other',
-			kind: row.modalities?.output?.includes('image') ? 'image' : 'llm',
+			kind: resolveModelKind(row),
 			source_path: `${data.catalog.modelPresetsDir}/${file}`,
 		})),
 	);
@@ -225,6 +225,42 @@ function renderCatalogOutputs(data, gatewayPath, source) {
 	];
 }
 
+/**
+ * Mirrors `resolveModelKind` in octafuse-gateway `packages/core/src/db/model-kind.ts`:
+ * embedding > image > valid audio billing > modality signature > llm.
+ */
+function resolveModelKind(row) {
+	const input = Array.isArray(row.modalities?.input) ? row.modalities.input : null;
+	const output = Array.isArray(row.modalities?.output) ? row.modalities.output : null;
+	if (output?.includes('embedding')) return 'embedding';
+	if (output?.includes('image')) return 'image';
+
+	for (const profile of Object.values(row.pricing ?? {})) {
+		switch (profile?.audio_billing_mode) {
+			case 'per_second':
+				if (profile.audio != null) return 'asr';
+				break;
+			case 'token':
+				if (Array.isArray(profile.tiers) && profile.tiers.length > 0) return 'asr';
+				break;
+			case 'per_character':
+				if (profile.audio?.price_per_character != null) return 'tts';
+				break;
+			default:
+				break;
+		}
+	}
+
+	if (output != null) {
+		const onlyOutput = (modality) => output.length === 1 && output[0] === modality;
+		if (onlyOutput('audio') && (input == null || input.every((m) => m === 'text'))) return 'tts';
+		if (onlyOutput('text') && input != null && input.includes('audio') && input.every((m) => m === 'audio' || m === 'text')) {
+			return 'asr';
+		}
+	}
+	return 'llm';
+}
+
 function readJson(path) {
 	return JSON.parse(readFileSync(path, 'utf8'));
 }
@@ -252,12 +288,20 @@ function renderPage(locale, data, meta) {
 }
 
 function renderCards(locale, data, meta) {
-	const items = [
-		data.sections[0].items[1],
-		data.sections[1].items[2],
-		data.sections[1].items[3],
-		data.sections[3].items[2],
+	const featuredPaths = [
+		'docs/users/quickstart.md',
+		'docs/developers/api/user.md',
+		'docs/developers/api/admin.md',
+		'docs/operators/deployment/docker.md',
 	];
+	const allItems = data.sections.flatMap((section) => section.items);
+	const items = featuredPaths.map((path) => {
+		const item = allItems.find((entry) => entry.path === path);
+		if (!item) {
+			throw new Error(`Featured card path is missing from sync contract: ${path}`);
+		}
+		return item;
+	});
 	const cards = items
 		.map((item) => {
 			return `\t<LinkCard title="${escapeAttribute(item.label[locale])}" description="${escapeAttribute(item.description[locale])}" href="${meta.blobBase}/${item.path}" />`;

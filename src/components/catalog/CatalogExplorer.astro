@@ -39,11 +39,17 @@ type CatalogPriceTier = {
 };
 type CatalogPriceProfile = {
 	image_billing_mode?: 'per_image' | 'token';
+	audio_billing_mode?: 'per_second' | 'per_character' | 'token';
 	image?: {
 		default?: number | null;
 	};
+	audio?: {
+		price_per_second?: number | null;
+		price_per_character?: number | null;
+	};
 	tiers?: CatalogPriceTier[];
 };
+type CatalogModelKind = 'llm' | 'image' | 'asr' | 'tts' | 'embedding';
 
 interface Props {
 	kind: CatalogKind;
@@ -79,6 +85,9 @@ const copy = {
 		vendors: '厂商',
 		llm: 'LLM',
 		image: '图片',
+		asr: 'ASR',
+		tts: 'TTS',
+		embedding: '向量',
 		newest: '最新发布',
 		name: '名称 A–Z',
 		vendor: '按厂商',
@@ -106,6 +115,11 @@ const copy = {
 		standardTier: '标准',
 		billing: '计费方式',
 		perImageMode: '按张计费',
+		perSecondMode: '按秒计费',
+		perCharacterMode: '按字符计费',
+		perSecond: '每秒',
+		perCharacter: '每字符',
+		noCurrencyPrice: '该币种暂无目录价',
 		tokenMode: 'Token 计费',
 		textInput: '文本输入',
 		textOutput: '文本输出',
@@ -145,6 +159,9 @@ const copy = {
 		vendors: 'Vendors',
 		llm: 'LLM',
 		image: 'Image',
+		asr: 'ASR',
+		tts: 'TTS',
+		embedding: 'Embedding',
 		newest: 'Newest release',
 		name: 'Name A–Z',
 		vendor: 'By vendor',
@@ -172,6 +189,11 @@ const copy = {
 		standardTier: 'Standard',
 		billing: 'Billing',
 		perImageMode: 'Per image',
+		perSecondMode: 'Per second',
+		perCharacterMode: 'Per character',
+		perSecond: 'per second',
+		perCharacter: 'per character',
+		noCurrencyPrice: 'No catalog price in this currency',
 		tokenMode: 'Token based',
 		textInput: 'Text input',
 		textOutput: 'Text output',
@@ -239,6 +261,16 @@ const modelKindCounts = {
 	all: modelItems.length,
 	llm: modelItems.filter((item) => item.kind === 'llm').length,
 	image: modelItems.filter((item) => item.kind === 'image').length,
+	asr: modelItems.filter((item) => item.kind === 'asr').length,
+	tts: modelItems.filter((item) => item.kind === 'tts').length,
+	embedding: modelItems.filter((item) => item.kind === 'embedding').length,
+};
+const kindLabels: Record<CatalogModelKind, string> = {
+	llm: t.llm,
+	image: t.image,
+	asr: t.asr,
+	tts: t.tts,
+	embedding: t.embedding,
 };
 const modelVendors = Array.from(new Map(modelItems.map((item) => [item.vendor, item.vendor_label])).entries())
 	.map(([key, label]) => ({
@@ -342,13 +374,58 @@ function tierLabel(tiers: CatalogPriceTier[], index: number) {
 	return t.standardTier;
 }
 
+function preciseMoney(value: number, currency: 'usd' | 'cny') {
+	const symbol = currency === 'usd' ? '$' : '¥';
+	return `${symbol}${new Intl.NumberFormat(locale === 'zh' ? 'zh-CN' : 'en-US', {
+		maximumFractionDigits: 8,
+	}).format(value)}`;
+}
+
 function pricingDetails(item: ModelItem, currency: 'usd' | 'cny') {
-	const profile = item.pricing[currency] as CatalogPriceProfile;
+	const profile = (item.pricing as Partial<Record<'usd' | 'cny', CatalogPriceProfile>>)[currency];
+	if (!profile) {
+		return {
+			mode: 'unavailable',
+			modeLabel: t.tokenMode,
+			unit: '',
+			unavailable: true,
+			tiers: [],
+		};
+	}
+	if (profile.audio_billing_mode === 'per_second' && profile.audio?.price_per_second != null) {
+		return {
+			mode: 'per-audio',
+			modeLabel: t.perSecondMode,
+			unit: '',
+			unavailable: false,
+			tiers: [
+				{
+					label: t.standardTier,
+					metrics: [{ key: 'per-image', label: t.perSecond, value: preciseMoney(profile.audio.price_per_second, currency) }],
+				},
+			],
+		};
+	}
+	if (profile.audio_billing_mode === 'per_character' && profile.audio?.price_per_character != null) {
+		return {
+			mode: 'per-audio',
+			modeLabel: t.perCharacterMode,
+			unit: '',
+			unavailable: false,
+			tiers: [
+				{
+					label: t.standardTier,
+					metrics: [{ key: 'per-image', label: t.perCharacter, value: preciseMoney(profile.audio.price_per_character, currency) }],
+				},
+			],
+		};
+	}
 	if (profile.image_billing_mode === 'per_image' && profile.image?.default != null) {
 		return {
 			mode: 'per-image',
 			modeLabel: t.perImageMode,
 			unit: '',
+			unavailable: false,
 			tiers: [
 				{
 					label: t.standardTier,
@@ -359,7 +436,7 @@ function pricingDetails(item: ModelItem, currency: 'usd' | 'cny') {
 	}
 
 	const tiers = profile.tiers ?? [];
-	const metricDefinitions =
+	const allMetricDefinitions =
 		item.kind === 'image'
 			? [
 					{ key: 'input_price', className: 'text-input', label: t.textInput },
@@ -377,10 +454,17 @@ function pricingDetails(item: ModelItem, currency: 'usd' | 'cny') {
 					{ key: 'cache_write_price', className: 'cache-write', label: t.cacheWrite },
 				];
 
+	// Embedding models are billed on input tokens only; hide the always-zero output price.
+	const metricDefinitions =
+		item.kind === 'embedding'
+			? allMetricDefinitions.filter((metric) => metric.key === 'input_price')
+			: allMetricDefinitions;
+
 	return {
 		mode: item.kind === 'image' ? 'image-token' : 'llm',
 		modeLabel: t.tokenMode,
 		unit: t.perMillion,
+		unavailable: false,
 		tiers: tiers.map((tier, index) => ({
 			label: tierLabel(tiers, index),
 			metrics: metricDefinitions.flatMap((metric) => {
@@ -467,6 +551,18 @@ function contributionUrl(item: ProviderItem | ModelItem) {
 							<button type="button" data-catalog-filter="image" aria-pressed="false">
 								<span>{t.image}</span>
 								<em>{modelKindCounts.image}</em>
+							</button>
+							<button type="button" data-catalog-filter="asr" aria-pressed="false">
+								<span>{t.asr}</span>
+								<em>{modelKindCounts.asr}</em>
+							</button>
+							<button type="button" data-catalog-filter="tts" aria-pressed="false">
+								<span>{t.tts}</span>
+								<em>{modelKindCounts.tts}</em>
+							</button>
+							<button type="button" data-catalog-filter="embedding" aria-pressed="false">
+								<span>{t.embedding}</span>
+								<em>{modelKindCounts.embedding}</em>
 							</button>
 						</div>
 					</section>
@@ -686,7 +782,7 @@ function contributionUrl(item: ProviderItem | ModelItem) {
 										<div class="card-identity">
 											<div class="model-vendor-row">
 												<p>{item.vendor_label}</p>
-												<span class:list={['model-kind', item.kind]}>{item.kind === 'image' ? t.image : t.llm}</span>
+												<span class:list={['model-kind', item.kind]}>{kindLabels[item.kind as CatalogModelKind] ?? t.llm}</span>
 												{(item.tags ?? []).map((tag) => <span class="signal-tag">{tag}</span>)}
 											</div>
 											<div class="model-title-row">
@@ -842,6 +938,7 @@ function contributionUrl(item: ProviderItem | ModelItem) {
 										{
 											priceProfiles.map(({ currency, details }) => (
 												<div class="price-profile" data-currency-price={currency} hidden={currency === 'cny'}>
+													{details.unavailable && <p class="price-unavailable">{t.noCurrencyPrice}</p>}
 													{details.tiers.map((tier) => (
 														<div class="price-tier">
 															<span class="price-tier-label">{tier.label}</span>
@@ -1739,6 +1836,20 @@ function contributionUrl(item: ProviderItem | ModelItem) {
 		color: var(--catalog-cyan);
 	}
 
+	.model-kind.asr,
+	.model-kind.tts,
+	.model-kind.embedding {
+		border-color: color-mix(in srgb, var(--of-accent-alt) 36%, transparent);
+		color: var(--of-text-secondary);
+	}
+
+	.price-unavailable {
+		margin: 0;
+		padding: 0.6rem 0;
+		color: var(--of-text-muted);
+		font-size: 0.78rem;
+	}
+
 	.card-description {
 		display: -webkit-box;
 		min-height: 2.8rem;
@@ -2292,6 +2403,7 @@ function contributionUrl(item: ProviderItem | ModelItem) {
 	}
 
 	.model-pricing-panel.image-token,
+	.model-pricing-panel.per-audio,
 	.model-pricing-panel.per-image {
 		--pricing-accent: var(--of-accent-alt);
 	}
