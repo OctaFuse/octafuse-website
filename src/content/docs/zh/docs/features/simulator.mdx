@@ -30,7 +30,7 @@ import { Aside, Steps } from '@astrojs/starlight/components';
 
 Simulator 按你选择的**客户端请求入口**决定请求协议和路径，而不是按最终上游目标的协议发送。例如客户端从 OpenAI Audio 入口进入、路由再通过显式适配器转到 DashScope 时，Simulator 仍会构造 OpenAI 侧请求。这可以更准确地复现真实客户端行为。
 
-对于 2.7.0 新增的百炼原生同步多模态语音识别，请先为模型配置 `dashscope` + `audio.transcriptions.multimodal` 请求入口；模拟器会据此构造 `/v1/dashscope/services/aigc/multimodal-generation/generation` 请求。发送后可到[请求日志](/zh/docs/guides/request-logs/)核对上游路由、音频时长和最终费用。
+对于 2.7.0 新增的百炼原生同步多模态语音识别，请先为模型配置 `dashscope` + `audio.transcriptions.multimodal` 请求入口；模拟器会据此构造 `/dashscope/api/v1/services/aigc/multimodal-generation/generation` 请求。发送后可到[请求日志](/zh/docs/guides/request-logs/)核对上游路由、音频时长和最终费用。
 
 页面可能会 **在本机浏览器** 记住你上次填写的地址、协议等，便于反复调试；更换环境或共用电脑时注意清理。
 

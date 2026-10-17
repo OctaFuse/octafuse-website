@@ -33,7 +33,7 @@ It does **not** write request logs, debit user budgets, or run Route Pool strate
 For a route using the `dashscope` protocol and `audio.transcriptions.multimodal` operation, load the synchronous multimodal ASR template to check native DashScope JSON, the audio URL, upstream model name, and returned duration. The Gateway client endpoint is:
 
 ```text
-POST /v1/dashscope/services/aigc/multimodal-generation/generation
+POST /dashscope/api/v1/services/aigc/multimodal-generation/generation
 ```
 
 Playground checks only one Upstream Target. It does not debit user budget or create request logs. Use [Simulator](/en/docs/features/simulator/) or a real client call to verify user auth, routing, and per-second billing.
