@@ -1,0 +1,156 @@
+---
+title: OctaFuse 2.16.0：ElevenLabs 语音、厂商原生路径与后台列表
+description: OctaFuse Gateway 2.16.0 接入 ElevenLabs 文件与实时语音，DashScope、MiniMax、火山方舟的原生路径对齐官方 SDK，管理后台默认改为列表。升级需先应用迁移 0031。
+publishDate: 2026-10-19
+publish_at: 2026-10-19
+updateLabel: VERSION 2.16.0
+featuredUpdate: true
+template: splash
+prev: false
+next: false
+lastUpdated: false
+sidebar:
+  hidden: true
+---
+
+OctaFuse Gateway 2.16.0 可以接入 ElevenLabs 的语音合成和语音转写。文件接口和实时 WebSocket 都走现有的路由、故障转移和记账。把官方 SDK 的地址改成网关域名加 `/elevenlabs` 即可。
+
+DashScope、MiniMax、火山方舟的原生地址改为 `/{厂商}` 加官方路径，旧路径仍作为过渡别名保留。管理后台的供应商、模型和路由默认改为列表。模型介绍改由静态目录提供，库里原来的介绍列改为运营备注。
+
+## 01｜ElevenLabs 语音
+
+2.16.0 新增上游协议 `elevenlabs`，同时提供原生透传和 OpenAI 兼容两种接法。
+
+| 用途 | 入口 |
+|---|---|
+| 文本转语音 | `POST /elevenlabs/v1/text-to-speech/{voice_id}`，含 `/stream`、`/with-timestamps`、`/stream/with-timestamps` |
+| 语音转写 | `POST /elevenlabs/v1/speech-to-text` |
+| OpenAI 兼容 | `POST /v1/audio/speech`、`POST /v1/audio/transcriptions`，由适配器 `elevenlabs-tts`、`elevenlabs-asr-file` 转换 |
+
+原生路径与官方 SDK 一致。`/elevenlabs/*` 额外接受 `xi-api-key`。ElevenLabs 特有字段通过 `extra_body` 传入。
+
+计费和错误：
+
+- 语音合成按字符计费。有响应头 `x-character-count` 时用这个数值，否则按输入长度计算。
+- 语音转写按秒计费。
+- 上游 `quota_exceeded` 会变成 402，`too_many_concurrent_requests` 和 `system_busy` 会变成 429。这两类情况都会切换到下一个供应商。
+
+OpenAI 兼容入口覆盖常用格式。合成支持 `mp3`、`opus`、`pcm`、`wav`（24 kHz）和 SSE，`aac`、`flac` 和 `instructions` 返回 400。转写支持 `json`、`text`、`verbose_json`、`diarized_json`、`srt` 和 `vtt`，不支持 `webhook=true`。
+
+这一版不含音色管理、配音、音效和音乐。已经保存的供应商不会自动补上 ElevenLabs 地址，需要填写 Base URL，或分别填写合成与转写的完整地址。
+
+静态目录新增 `elevenlabs-v4`、`elevenlabs-v4-turbo`、`elevenlabs-v3`、`elevenlabs-v3-conversational`、`elevenlabs-multilingual-v2`、`elevenlabs-flash-v2.5`、`elevenlabs-flash-v2`、`elevenlabs-turbo-v2.5`（官方已弃用，建议改用 Flash v2.5）、`elevenlabs-scribe-v2` 和 `elevenlabs-scribe-v2-medical`。导入后，路由上的供应商模型名使用官方名称，例如 `eleven_v4`、`scribe_v2`。美元价采用官方刊例，人民币价按美元 ×7 换算，作为占位价。
+
+![供应商端点配置中选中 ElevenLabs，能力模式为全能力，Base URL 为官方地址](/screenshots/v2-16-0-elevenlabs-endpoints.webp)
+
+*选择 ElevenLabs 后，用全能力模式填写 Base URL。*
+
+### 实时 WebSocket
+
+另外两条入口保持 ElevenLabs 原生帧，不含 `multi-stream-input`：
+
+| 用途 | 入口 |
+|---|---|
+| 单路流式合成 | `GET /elevenlabs/v1/text-to-speech/{voice_id}/stream-input?model_id=` |
+| Scribe 实时转写 | `GET /elevenlabs/v1/speech-to-text/realtime?model_id=` |
+
+模型写在 query 的 `model_id` 里。WebSocket 握手之前，网关就会完成鉴权、模型类型、余额检查和选路；文本转语音还会核对路径里的 `voice_id`。鉴权接受 `xi-api-key` 和 `Authorization: Bearer`，浏览器可以使用子协议 `octafuse-api-key.<key>`。客户端凭据不会转给上游。
+
+用量由网关估算，需要和 ElevenLabs 控制台对账。合成按客户端发出的文本字符计算，实时转写按客户端音频字节折算秒数，`usage_source` 为 `estimated`。余额只在会话开始前检查，会话中途不截断。上游拒绝握手时，额度用尽返回 402，并发限制返回 429，并可以换到下一条路由。
+
+目录新增 `elevenlabs-scribe-v2-realtime`，供应商模型名为 `scribe_v2_realtime`，价格为每小时 $0.39。调试台由管理后台转发，不计费；模拟器直连 Proxy，走鉴权与计费。实时转写默认使用浏览器麦克风，也可以换成按实时速度回放的音频文件。
+
+使用 Node 部署时，如果握手响应和上游第一帧在同一个包里到达，第一帧会先缓冲再交给客户端。缺少 Key、模型或路由不存在、余额不足时，客户端会立刻收到关闭原因。
+
+![调试台中的 ElevenLabs Scribe v2 Realtime，上游为官方实时转写 WebSocket](/screenshots/v2-16-0-playground-realtime.webp)
+
+*调试台直连这一条实时转写路由。这里的测试不计费。*
+
+### 查询额度
+
+供应商类型为 ElevenLabs 时，可以用同一把 Key 查询官方 `GET /v1/user/subscription`。结果按 credits 显示已用、上限和重置时间。订阅状态为 `free_disabled` 时显示已用尽。端点主机与 `api.elevenlabs.io` 属于同一注册域时，查询发往已保存的端点主机。
+
+## 02｜厂商原生路径
+
+DashScope、MiniMax、火山方舟的原生透传改为厂商名前缀加官方路径。把官方 SDK 的 base 换成网关域名加 `/{厂商名}` 即可。
+
+| 厂商 | 新路径 |
+|---|---|
+| DashScope HTTP | `/dashscope/api/v1/services/...`、`/dashscope/api/v1/tasks/{taskId}` |
+| DashScope WebSocket | run-task 协议 `/dashscope/api-ws/v1/inference`；Qwen 实时会话 `/dashscope/api-ws/v1/realtime?model=` |
+| MiniMax | `/minimax/v1/speech_to_text`、`/minimax/v1/t2a_v2`、`/minimax/v1/image_generation` |
+| 火山方舟 | `/volcengine/api/v3/images/generations` |
+
+DashScope 的实时地址不再使用 `operation`。`inference` 入口的模型写在第一帧 `run-task` 里，网关读到这一帧后再选路由。失败时返回 DashScope 的 `task-failed` 事件。鉴权也接受小写的 `bearer`。
+
+这些旧路径仍然可用，作为过渡别名保留：`/v1/dashscope/*`、`/v1/minimax/*`、`/v1/volcengine/*`，以及 `/v1/dashscope/realtime?model=&operation=`。这次只调整了地址，协议和计费不变。
+
+同一版本里还有两处调用行为的变化：
+
+- **402 会切换供应商。** 上游余额或额度用尽时，网关会像处理 401、403 一样换到下一个供应商，把出错的供应商熔断 5 分钟并触发告警。MiniMax 的 `1008` 和 ElevenLabs 的 `quota_exceeded` 也走这条路径。最后一个候选仍然返回 402。
+- **流空闲超时会返回错误。** 上游流超过空闲时间或首包时间后，网关向下游写入一条错误事件，`code` 为 `stream_idle_timeout`。阈值、记账和请求日志不变。客户端已经断开时，不再补写这一帧。
+
+## 03｜管理后台
+
+供应商、模型和路由默认使用列表（List），可以切回卡片（Cards），并分别记住上一次的选择。筛选条件在切换后保留。同一个路由组里的上游较多时，列表把供应商、状态、权重、粘性、参数、时段和倍率排成列，便于逐行对照。
+
+![DeepSeek V4.1 Flash 的路由列表，default 组内多条上游的状态、时段和实际倍率按列对齐](/screenshots/v2-16-0-route-list.webp)
+
+*default 路由组里有四条上游，旁边还有 free。状态、时段和实际倍率都在同一行。*
+
+供应商和模型的编辑弹窗可以直接查看关联路由，支持搜索，也可以单条或批量删除。关联路由全部移除之后，才能删除对应的模型或供应商。仍有路由时，删除会被拒绝。
+
+密钥和端点：
+
+- 编辑供应商时，密钥默认显示首尾字符。把密钥清空后保存，会移除这把密钥。只修改其他字段时，密钥保持不变。
+- 端点分为全能力（All capabilities）和部分能力（Selected capabilities）。全能力只填 Base URL。部分能力先勾选需要的能力，再逐行填写完整地址。两种模式各自保留已填写的内容。
+
+路由上的「可用」（Available）表示这条路由和对应供应商都已启用，反映的是当前配置。倍率显示（Multipliers）默认为实际倍率（Effective），也可以切到原始倍率（Configured），分别查看供应商、计费和成本三个倍率。切换只改变页面展示。
+
+模型页可以按现役、退役筛选。退役日期来自静态目录里的可选字段 `retired`，不写入数据库，也不影响路由和计费。目录里没有这个日期的自建模型视为现役。导入弹窗默认只列出现役模型。
+
+界面语言为日语或韩语时，侧边栏、模型目录介绍和供应商模板名称会使用对应语言。导入时，名称按当前界面语言写入。已经导入的供应商和模型不会被改写。
+
+![模型列表筛选为现役，带有未来退役日期的小米 MiMo 模型标为即将退役](/screenshots/v2-16-0-model-lifecycle.webp)
+
+*还没到退役日期的模型留在现役里，并标上「即将退役」。到了退役日期，才会出现在退役筛选中。*
+
+### 目录与模板
+
+| 新增内容 | 说明 |
+|---|---|
+| **Open Design** | 导入模板的主机为 `https://amr-link.open-design.ai/v1`。Chat 与 Responses 写成完整地址，不包含图像、音频和向量端点。密钥在 Cloud 控制台创建，形如 `sk-amr-`，与应用共用 Design Plan 额度。 |
+| **金山云星流** | 国内 `https://kspmas.ksyun.com`，国际 `https://global-kspmas.ksyun.com/v1`。两边都提供 OpenAI Chat、Responses 与 Anthropic Messages，密钥不要混用。 |
+| **MiniMax M3.1 Flash Preview** | 目录 id 为 `minimax-m3.1-flash-preview`，上游模型名 `MiniMax-M3.1-Flash-Preview`。官方尚未公布按量刊例，价格暂按 MiniMax M3 标准刊例预填。目前只接受 M Plan 或 MiniMax Code 的订阅 Key。 |
+| **豆包 Seed** | 新增 `doubao-seed-2-1-pro-260915`、`doubao-seed-2-1-lite-260915`（仅人民币刊例）、`doubao-seed-2-0-lite-260428`、`doubao-seed-2-0-mini-260428`。`doubao-seed-evolving` 的上下文改为 100 万 token。 |
+
+Command Code 的导入模板补上了 `POST /provider/v1/responses`。供应商卡片可以用同一把 Key 查询 `GET /alpha/billing/credits`，显示剩余美元以及套餐上的 5 小时、每周窗口。
+
+Grok Build 0.1、Grok 4.20 Reasoning 和 Grok 4.20 Non-Reasoning 补上了人民币价格，按美元 ×7 换算，作为占位价。目录条目缺少当前计费币种的价格时，导入弹窗里不能勾选。
+
+## 升级到 2.16.0
+
+**这个版本需要执行数据库迁移 0031。** `models.description` 和 `providers.description` 改名为 `note`，已有内容保留，作为运营手写备注。D1、Postgres、MySQL 的脚本语义一致，详见 [0031 迁移说明](https://github.com/OctaFuse/octafuse-gateway/blob/v2.16.0/docs/operators/migrations/0031-catalog-notes.md)。
+
+建议按以下顺序操作：
+
+1. 备份数据库。
+2. 使用 v2.16.0 的 migrate 镜像或对应脚本执行 0031。
+3. 再滚动更新同版本的 Proxy 和 Admin。
+
+如果先更新应用、再改列名，读写 `note` 会失败。回退应用之前，需要把这两列改回 `description`。
+
+兼容性方面：
+
+- `GET /v1/models` 与 `GET /catalog/models` 的响应里不再包含 `description`，备注也不会出现。目录介绍只在管理后台按界面语言展示。
+- 厂商旧路径仍可作为过渡别名使用。新的接入请使用 `/{厂商}` 加官方路径。
+- 流被空闲超时打断时，下游会收到 `stream_idle_timeout` 错误事件。
+- 在供应商表单里把密钥清空并保存，会删除这把密钥。
+- 已经导入的供应商和模型不会被新模板覆盖。ElevenLabs、Open Design 和金山云星流需要手工导入，或自己填写端点。
+
+完整变更与升级说明见 [GitHub Release v2.16.0](https://github.com/OctaFuse/octafuse-gateway/releases/tag/v2.16.0) 和 [更新记录](https://github.com/OctaFuse/octafuse-gateway/blob/v2.16.0/CHANGELOG.md)。
+
+- [OctaFuse 官网](https://octafuse.dev/zh/)
+- [GitHub 仓库](https://github.com/OctaFuse/octafuse-gateway)
+
+如果 OctaFuse 对你的项目有帮助，欢迎在 GitHub 上点一个 **Star**，也欢迎反馈 ElevenLabs 接入、厂商原生路径和后台列表里遇到的问题。
