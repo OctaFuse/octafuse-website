@@ -1,6 +1,6 @@
 ---
-title: OctaFuse 2.16.0：ElevenLabs 语音、厂商原生路径与后台列表
-description: OctaFuse Gateway 2.16.0 接入 ElevenLabs 文件与实时语音，DashScope、MiniMax、火山方舟的原生路径对齐官方 SDK，管理后台默认改为列表。升级需先应用迁移 0031。
+title: OctaFuse 2.16.0：新增 ElevenLabs 的支持、厂商原生端点重构、后台管理优化
+description: OctaFuse Gateway 2.16.0 新增 ElevenLabs 的语音合成与转写，重构 DashScope、MiniMax、火山方舟的原生端点，并优化后台的供应商、模型和路由管理。升级需先应用迁移 0031。
 publishDate: 2026-10-19
 publish_at: 2026-10-19
 updateLabel: VERSION 2.16.0
@@ -13,11 +13,11 @@ sidebar:
   hidden: true
 ---
 
-OctaFuse Gateway 2.16.0 可以接入 ElevenLabs 的语音合成和语音转写。文件接口和实时 WebSocket 都走现有的路由、故障转移和记账。把官方 SDK 的地址改成网关域名加 `/elevenlabs` 即可。
+OctaFuse Gateway 2.16.0 新增对 ElevenLabs 的支持，覆盖语音合成和语音转写。文件接口和实时 WebSocket 都走现有的路由、故障转移和记账。把官方 SDK 的地址改成网关域名加 `/elevenlabs` 即可。
 
-DashScope、MiniMax、火山方舟的原生地址改为 `/{厂商}` 加官方路径，旧路径仍作为过渡别名保留。管理后台的供应商、模型和路由默认改为列表。模型介绍改由静态目录提供，库里原来的介绍列改为运营备注。
+DashScope、MiniMax、火山方舟的原生端点改为 `/{厂商}` 加官方路径，旧地址仍作为过渡别名保留。后台的供应商、模型和路由默认改为列表，关联路由、密钥、端点模式和现役筛选也一起调整。模型介绍改由静态目录提供，库里原来的介绍列改为运营备注。
 
-## 01｜ElevenLabs 语音
+## 01｜ElevenLabs
 
 2.16.0 新增上游协议 `elevenlabs`，同时提供原生透传和 OpenAI 兼容两种接法。
 
@@ -70,9 +70,9 @@ OpenAI 兼容入口覆盖常用格式。合成支持 `mp3`、`opus`、`pcm`、`w
 
 供应商类型为 ElevenLabs 时，可以用同一把 Key 查询官方 `GET /v1/user/subscription`。结果按 credits 显示已用、上限和重置时间。订阅状态为 `free_disabled` 时显示已用尽。端点主机与 `api.elevenlabs.io` 属于同一注册域时，查询发往已保存的端点主机。
 
-## 02｜厂商原生路径
+## 02｜厂商原生端点
 
-DashScope、MiniMax、火山方舟的原生透传改为厂商名前缀加官方路径。把官方 SDK 的 base 换成网关域名加 `/{厂商名}` 即可。
+DashScope、MiniMax、火山方舟的原生端点改为厂商名前缀加官方路径。把官方 SDK 的 base 换成网关域名加 `/{厂商名}` 即可。这次重构的是接入地址，协议和计费不变。
 
 | 厂商 | 新路径 |
 |---|---|
@@ -83,16 +83,16 @@ DashScope、MiniMax、火山方舟的原生透传改为厂商名前缀加官方�
 
 DashScope 的实时地址不再使用 `operation`。`inference` 入口的模型写在第一帧 `run-task` 里，网关读到这一帧后再选路由。失败时返回 DashScope 的 `task-failed` 事件。鉴权也接受小写的 `bearer`。
 
-这些旧路径仍然可用，作为过渡别名保留：`/v1/dashscope/*`、`/v1/minimax/*`、`/v1/volcengine/*`，以及 `/v1/dashscope/realtime?model=&operation=`。这次只调整了地址，协议和计费不变。
+这些旧路径仍然可用，作为过渡别名保留：`/v1/dashscope/*`、`/v1/minimax/*`、`/v1/volcengine/*`，以及 `/v1/dashscope/realtime?model=&operation=`。
 
 同一版本里还有两处调用行为的变化：
 
 - **402 会切换供应商。** 上游余额或额度用尽时，网关会像处理 401、403 一样换到下一个供应商，把出错的供应商熔断 5 分钟并触发告警。MiniMax 的 `1008` 和 ElevenLabs 的 `quota_exceeded` 也走这条路径。最后一个候选仍然返回 402。
 - **流空闲超时会返回错误。** 上游流超过空闲时间或首包时间后，网关向下游写入一条错误事件，`code` 为 `stream_idle_timeout`。阈值、记账和请求日志不变。客户端已经断开时，不再补写这一帧。
 
-## 03｜管理后台
+## 03｜后台管理
 
-供应商、模型和路由默认使用列表（List），可以切回卡片（Cards），并分别记住上一次的选择。筛选条件在切换后保留。同一个路由组里的上游较多时，列表把供应商、状态、权重、粘性、参数、时段和倍率排成列，便于逐行对照。
+供应商、模型和路由的管理做了几处调整。三者默认使用列表（List），可以切回卡片（Cards），并分别记住上一次的选择。筛选条件在切换后保留。同一个路由组里的上游较多时，列表把供应商、状态、权重、粘性、参数、时段和倍率排成列，便于逐行对照。
 
 ![DeepSeek V4.1 Flash 的路由列表，default 组内多条上游的状态、时段和实际倍率按列对齐](/screenshots/v2-16-0-route-list.webp)
 
@@ -153,4 +153,4 @@ Grok Build 0.1、Grok 4.20 Reasoning 和 Grok 4.20 Non-Reasoning 补上了人民
 - [OctaFuse 官网](https://octafuse.dev/zh/)
 - [GitHub 仓库](https://github.com/OctaFuse/octafuse-gateway)
 
-如果 OctaFuse 对你的项目有帮助，欢迎在 GitHub 上点一个 **Star**，也欢迎反馈 ElevenLabs 接入、厂商原生路径和后台列表里遇到的问题。
+如果 OctaFuse 对你的项目有帮助，欢迎在 GitHub 上点一个 **Star**，也欢迎反馈 ElevenLabs 接入、厂商原生端点和后台管理里遇到的问题。
