@@ -3,11 +3,11 @@
   "catalog": "providers",
   "source": {
     "repo": "OctaFuse/octafuse-gateway",
-    "ref": "v2.16.0",
-    "commit": "56b00a1cb38b5d22b21c2b6545a8f32777f1e614"
+    "ref": "v2.17.0",
+    "commit": "2d2b8fed5653620b97928dc0ff992eeed6371357"
   },
   "source_path": "packages/admin/lib/provider-import-presets.json",
-  "count": 63,
+  "count": 64,
   "items": [
     {
       "catalog_key": "0",
@@ -2764,6 +2764,54 @@
         }
       },
       "description": "Open Design Cloud model plane at https://amr-link.open-design.ai/v1. Bearer keys look like sk-amr-…. OpenAI chat and responses stay on openai.endpoints (no openai.base, so images, audio, and embeddings are not derived). Anthropic Messages is POST /v1/messages, so the Anthropic base is the host root. Public client wiring uses chat/completions for most models, Responses for claude-haiku-5.5 and deepseek-v4-pro, and Anthropic Messages for glm-5.3-flash. API usage shares Design Plan credits with the app. Keys: https://open-design.ai/cloud/api-keys.",
+      "source_path": "packages/admin/lib/provider-import-presets.json"
+    },
+    {
+      "catalog_key": "63",
+      "name": "Wangsu AI Gateway",
+      "vendor_key": "wangsu",
+      "vendor_label": "Wangsu",
+      "i18n": {
+        "zh": {
+          "name": "网宿 AI 网关",
+          "description": "网宿新版统一网关。OpenAI、Anthropic、Gemini 都挂在 https://api.edgecloudapp.com/v2/llm 下。令牌在「令牌管理」创建，值为 sk- 开头，Gemini 使用 Bearer。"
+        },
+        "en": {
+          "name": "Wangsu AI Gateway",
+          "description": "Wangsu’s unified gateway. OpenAI, Anthropic, and Gemini all sit under https://api.edgecloudapp.com/v2/llm. Create an sk- token in Token Management; Gemini uses Bearer."
+        },
+        "ja": {
+          "name": "Wangsu AI Gateway",
+          "description": "Wangsu の統一ゲートウェイ。OpenAI、Anthropic、Gemini はいずれも https://api.edgecloudapp.com/v2/llm 配下です。トークンは「令牌管理」で作成し、値は sk- で始まります。Gemini は Bearer です。"
+        },
+        "ko": {
+          "name": "Wangsu AI Gateway",
+          "description": "Wangsu 통합 게이트웨이. OpenAI, Anthropic, Gemini는 모두 https://api.edgecloudapp.com/v2/llm 아래입니다. 토큰은 토큰 관리에서 만들며 sk-로 시작합니다. Gemini는 Bearer입니다."
+        }
+      },
+      "links": {
+        "platform": "https://www.wangsu.com/document/ai/aigateway-quick-start1"
+      },
+      "protocols": [
+        "openai",
+        "anthropic",
+        "gemini"
+      ],
+      "endpoints": {
+        "openai": {
+          "base": "https://api.edgecloudapp.com/v2/llm/openai"
+        },
+        "anthropic": {
+          "endpoints": {
+            "messages": "https://api.edgecloudapp.com/v2/llm/anthropic/messages"
+          }
+        },
+        "gemini": {
+          "base": "https://api.edgecloudapp.com/v2/llm/gemini/v1beta/models",
+          "auth": "bearer"
+        }
+      },
+      "description": "New unified Wangsu gateway (https://www.wangsu.com/document/ai/migration-guide). OpenAI base https://api.edgecloudapp.com/v2/llm/openai derives chat, responses, images, audio, and embeddings. Anthropic Messages is the full URL https://api.edgecloudapp.com/v2/llm/anthropic/messages (the path has no /v1). Gemini base includes /v1beta/models and uses Bearer, matching the sk- token from 令牌管理. v1 URLs on aigateway.edgecloudapp.com are scheduled to stop on 2026-12-31.",
       "source_path": "packages/admin/lib/provider-import-presets.json"
     }
   ]
