@@ -1,0 +1,106 @@
+---
+title: OctaFuse 2.17.0：新增维护模式、请求日志汇总、DashScope 语音路由拆分
+description: OctaFuse Gateway 2.17.0 可以在维护窗口拒绝新的推理请求，并按供应商、模型和用户汇总请求日志。DashScope 语音路由按系列拆开。升级需先应用迁移 0032 和 0033。
+publishDate: 2026-10-26
+publish_at: 2026-10-26
+updateLabel: VERSION 2.17.0
+featuredUpdate: true
+template: splash
+prev: false
+next: false
+lastUpdated: false
+sidebar:
+  hidden: true
+---
+
+OctaFuse Gateway 2.17.0 增加了维护模式。维护期间，新的推理请求会收到 503，健康检查和模型列表仍可用。请求日志可以按供应商、模型、用户等维度汇总，不必再把明细一页页拉完。
+
+DashScope 的语音合成和异步转写按系列使用不同的转换适配器。目录补上 Kimi K3.1 Pro、Qwen-Audio 3.1 和网宿导入模板。已经导入的模型和供应商不会被新目录覆盖。
+
+## 01｜维护模式
+
+后台入口是 **系统 → 维护模式**。开启后，聊天、消息、Responses、图像、音频、向量、工具、`/mcp`、Gemini、厂商原生路径和实时 WebSocket 都会返回 503。响应带 `Retry-After`、`X-OctaFuse-Error-Code: gateway.maintenance` 和 `X-OctaFuse-Maintenance: 1`。错误体随入口协议给出，OpenAI、Anthropic、Gemini 的 SDK 可以按各自的形状解析。
+
+拒绝发生在鉴权之前，所以不会写请求日志、不会扣费，也不占用 RPM。提示文案可以分别填写中文和英文，用 `{minutes}` 表示剩余分钟，并按请求的 `Accept-Language` 选择。留空则使用内置文案。
+
+![维护模式页面，当前为正常服务，预计时长 15 分钟，同时拒绝后台写操作已勾选](/screenshots/v2-17-0-maintenance.webp)
+
+*维护尚未开启。预计时长选的是 15 分钟，「同时拒绝后台写操作」保持勾选。*
+
+这些接口在维护期间保持可用：
+
+| 接口 | 行为 |
+|---|---|
+| `GET /health` | 仍返回 200，并附上 `maintenance: true`。负载均衡不会把节点判为下线 |
+| `GET /v1/models`、`GET /v1/me`、`GET /v1/tools/pricing`、`GET /catalog/*` | 照常读取 |
+
+已经开始的流式请求不会被掐断，结束后仍按原规则记账。各 Proxy 进程把维护配置缓存 5 秒，读配置失败时继续正常服务。状态存在 `system_config.MAINTENANCE_MODE`，没有单独的数据库迁移。
+
+可选同时拒绝后台写操作，默认开启。维护开关、集成密钥和调试台不受这个限制。权限是 `maintenance.read` 和 `maintenance.write`，不包含在 `config.*` 里。维护期间，所有后台页面顶部会显示红色横幅。
+
+![仪表盘顶部的红色横幅：维护模式已开启，推理请求会被拒绝并返回 503](/screenshots/v2-17-0-maintenance-banner.webp)
+
+*开启之后，后台每一页顶部都会出现这条红色提示。*
+
+## 02｜请求日志与后台
+
+新增 `GET /api/admin/request-logs/summary`。可以按 `provider`、`model`、`user`、`provider_key`、`route_group`、`status` 任意组合汇总请求条数、Token 和金额，包括成功、失败、未完成和取消。时间区间是半开的毫秒区间。没有筛选条件时，区间不得超过 31 天。`include_labels=1` 会附上用户邮箱、模型名、供应商名和密钥标签。
+
+这个路径依赖迁移 0033 的索引。还在跑旧版本的网关会返回 404，调用方应回退到分页明细。
+
+后台展示也做了几处调整：
+
+- 供应商质量，以及按模型对比供应商，在平均延迟旁增加有效首 Token（TTFT）。有推理时标 R，否则标 C。悬停可以看正文、推理、有效值和覆盖率。没有样本时显示 —。
+- 展开用户后的模型明细增加缓存命中率、首 Token 和平均上游，并去掉平均计费/请求。计费总额仍保留。
+- 计费规则里，每个文本模型时段都可以展开本时段价格，包括「全部时段」和未命中窗口时的「其他时段」。
+- 路由列表按可用宽度在表格、左右分栏和紧凑纵向布局之间切换。供应商表格最宽 1280px。「入口路径」可以在完整和省略之间切换，并记住选择。
+
+![按模型排列的路由列表，入口路径为省略，倍率显示为原始倍率](/screenshots/v2-17-0-route-list.webp)
+
+*按模型查看路由。入口路径选的是省略，倍率显示是原始倍率。*
+
+向量和其它非流式 JSON 响应在重新封装时，会去掉上游的 `Content-Encoding`、`Content-Length`、`Transfer-Encoding` 和 `Connection`。上游用 gzip 返回的向量结果，以及调试台里的「Failed to fetch」，都会按已解压的正文处理。
+
+## 03｜语音路由与目录
+
+DashScope 语音转换路由按系列拆开。CosyVoice 仍使用 `dashscope-tts-speech`。供应商模型名以 `qwen-audio-` 开头的语音合成，改为 `dashscope-tts-qwen-audio`。异步文件转写拆成 Qwen3、Qwen-Audio、Fun-ASR、Paraformer 四个适配器。透传仍是 `passthrough`。
+
+对不上这些模型名的 `dashscope-asr-file-async` 会留在库里。它们要改成新适配器之后才能继续用。迁移 0032 只改写对得上的行。
+
+Qwen-Audio 3.1 新增五个预设：`qwen-audio-3.1-asr-flash`、`qwen-audio-3.1-asr-flash-filetrans`、`qwen-audio-3.1-asr-flash-streaming`、`qwen-audio-3.1-asr-flash-message` 和 `qwen-audio-3.1-tts-flash`。中国区和国际区都按官方 input/output token 计费，不再沿用 3.0 的按秒或按字符价。同步识别、文件转写、inference 实时识别和 SpeechSynthesizer 会读取上游 token 用量。`qwen-audio-3.1-realtime-plus` 和 `qwen-audio-3.1-tts-next` 仍未接入。已导入的 3.0 模型不会被覆盖。
+
+| 目录变化 | 说明 |
+|---|---|
+| **Kimi K3.1 Pro** | `kimi-k3.1-pro` 与 `kimi-k3.1-pro-highspeed`，发布日 2026-10-23，上下文和最大输出为 1M。Pro 美元 $2 / $10，人民币 ¥13 / ¥68。高速版美元 $4 / $20，人民币 ¥26 / ¥136。高速版的缓存命中价与 Pro 相同。导入后需要自己挂路由。 |
+| **Kimi K3** | 补上默认 5 分钟缓存写入价：美元 $3/M，人民币 ¥20/M。 |
+| **Kimi K2.5** | 标为 2026-08-31 退役，只影响展示和筛选。价格、模态、路由和计费不变。 |
+| **MiniMax M3** | 目录改为官网标准现价（永久五折后）。输入不超过 512K 时，美元 $0.30 / $1.20，中国区 ¥2.10 / ¥8.40；超过 512K 时整档加倍。 |
+| **MiniMax M3.1 Flash** | `minimax-m3.1-flash` 替换预览条目。美元 $0.15 / $0.60 / 缓存读取 $0.015，中国区 ¥1 / ¥4 / 缓存读取 ¥0.1，单位都是每百万 token。上下文 1M。思考不能关闭。已导入的预览行不会被覆盖，需要另导入，并把路由上的上游模型名改为 `MiniMax-M3.1-Flash`。 |
+| **Qwen Image 2.1 Turbo** | 按张计费。美元 $0.016/张，人民币 ¥0.1/张。 |
+| **网宿** | OpenAI Base 为 `https://api.edgecloudapp.com/v2/llm/openai`，Anthropic Messages 为 `https://api.edgecloudapp.com/v2/llm/anthropic/messages`，Gemini Base 为 `https://api.edgecloudapp.com/v2/llm/gemini/v1beta/models`。鉴权使用令牌管理里 `sk-` 开头的新令牌。 |
+
+## 升级到 2.17.0
+
+**这个版本需要执行数据库迁移 0032 和 0033。** 0032 改写能对上系列的 DashScope 语音转换路由。0033 只在请求日志上增加 `(provider_id, created_at)` 索引。D1、Postgres、MySQL 的脚本语义一致，详见 [0032 迁移说明](https://github.com/OctaFuse/octafuse-gateway/blob/v2.17.0/docs/operators/migrations/0032-dashscope-audio-adapters.md) 和 [0033 迁移说明](https://github.com/OctaFuse/octafuse-gateway/blob/v2.17.0/docs/operators/migrations/0033-request-log-provider-index.md)。
+
+建议按以下顺序操作：
+
+1. 备份数据库。
+2. 使用 v2.17.0 的 migrate 镜像，或按编号先执行 0032，再执行 0033。
+3. 再滚动更新同版本的 Proxy 和 Admin。
+
+0032 之后，旧进程不认识新的适配器名，不要让新旧进程同时接这些语音路由的流量。0033 不改列，新旧版本都能读写。Postgres 上的大表可以在低峰先手工执行同名的 `CREATE INDEX CONCURRENTLY`，正式迁移会跳过已存在的索引。这条语句不能放在事务里。
+
+兼容性方面：
+
+- 维护模式默认关闭。开启后，公开推理接口返回 503。
+- 对不上系列的 DashScope 异步转写仍留在 `dashscope-asr-file-async`，直到改成新适配器。
+- 已经导入的模型价格、Kimi K2.5 路由和 MiniMax M3.1 预览行不会被新目录覆盖。新模型和网宿模板需要手工导入，或自己修改路由上的上游模型名。
+- 向量和部分 JSON 响应不再带上游的压缩头和长度头。
+
+完整变更与升级说明见 [GitHub Release v2.17.0](https://github.com/OctaFuse/octafuse-gateway/releases/tag/v2.17.0) 和 [更新记录](https://github.com/OctaFuse/octafuse-gateway/blob/v2.17.0/CHANGELOG.md)。
+
+- [OctaFuse 官网](https://octafuse.dev/zh/)
+- [GitHub 仓库](https://github.com/OctaFuse/octafuse-gateway)
+
+如果 OctaFuse 对你的项目有帮助，欢迎在 GitHub 上点一个 **Star**，也欢迎反馈维护模式、请求日志汇总和 DashScope 语音路由里遇到的问题。
