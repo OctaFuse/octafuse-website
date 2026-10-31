@@ -99,6 +99,8 @@ Catalog 的权威数据仍在 Gateway 仓库：
 
 官网生成的 `src/data/catalog/*.json` 只用于展示与公开下载。新增 Provider 或修正 Model 数据时，请在 Gateway 仓库修改并提交 PR，再运行同步。
 
+Agent 指令见 [AGENTS.md](AGENTS.md)。
+
 ## 相关仓库
 
 - 网关源码与权威文档：[OctaFuse/octafuse-gateway](https://github.com/OctaFuse/octafuse-gateway)
