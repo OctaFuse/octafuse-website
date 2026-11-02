@@ -3,11 +3,11 @@
   "catalog": "providers",
   "source": {
     "repo": "OctaFuse/octafuse-gateway",
-    "ref": "v2.17.0",
-    "commit": "2d2b8fed5653620b97928dc0ff992eeed6371357"
+    "ref": "v2.18.0",
+    "commit": "1c649fc59dbf7191294306b9c3e5928d723e477e"
   },
   "source_path": "packages/admin/lib/provider-import-presets.json",
-  "count": 64,
+  "count": 68,
   "items": [
     {
       "catalog_key": "0",
@@ -708,6 +708,209 @@
     },
     {
       "catalog_key": "15",
+      "name": "Baidu Cloud Model Service (Guangzhou)",
+      "vendor_key": "baidu",
+      "vendor_label": "Baidu",
+      "i18n": {
+        "zh": {
+          "name": "百度云模型服务（广州）",
+          "description": "百度云模型服务 V2 广州端点。支持 OpenAI Chat / Responses 与 Anthropic Messages。请使用广州地域 Key，不要与千帆或海外三地混用。不含生图和音频。该地域的通义千问只有 Chat / Responses。"
+        },
+        "en": {
+          "name": "Baidu Cloud Model Service (Guangzhou)",
+          "description": "Guangzhou endpoint for OpenAI Chat/Responses and Anthropic Messages. Use a Guangzhou key, separate from Qianfan and the overseas regions. No image or audio. Qwen here is Chat and Responses only."
+        },
+        "ja": {
+          "name": "バイドゥクラウド モデルサービス（広州）",
+          "description": "バイドゥクラウド モデルサービス V2 の広州エンドポイント。OpenAI Chat / Responses と Anthropic Messages に対応しています。広州の API キーを使い、Qianfan や海外 3 リージョンと混在させないでください。画像と音声は含みません。このリージョンの Qwen は Chat / Responses のみです。"
+        },
+        "ko": {
+          "name": "바이두 클라우드 모델 서비스 (광저우)",
+          "description": "바이두 클라우드 모델 서비스 V2 광저우 엔드포인트. OpenAI Chat / Responses와 Anthropic Messages를 지원합니다. 광저우 API 키를 사용하고 Qianfan 및 해외 3개 리전과 섞지 마세요. 이미지와 음성은 없습니다. 이 리전의 Qwen은 Chat / Responses만 제공합니다."
+        }
+      },
+      "links": {
+        "platform": "https://console.bce.baidu.com/vod-gz/"
+      },
+      "protocols": [
+        "openai",
+        "anthropic"
+      ],
+      "endpoints": {
+        "openai": {
+          "endpoints": {
+            "chat": "https://vod.gz.baidubce.com/v1/chat/completions",
+            "responses": "https://vod.gz.baidubce.com/v1/responses"
+          }
+        },
+        "anthropic": {
+          "base": "https://vod.gz.baidubce.com"
+        }
+      },
+      "description": "Baidu Cloud Model Service V2 Guangzhou host vod.gz.baidubce.com. OpenAI Chat and Responses, plus Anthropic Messages at /v1/messages. Guangzhou API keys only; do not mix with Qianfan or the Singapore, California, or Frankfurt keys. No openai.base, so image and audio are not derived. Qwen on this host is Chat and Responses only.",
+      "source_path": "packages/admin/lib/provider-import-presets.json"
+    },
+    {
+      "catalog_key": "16",
+      "name": "Baidu Cloud Model Service (Singapore)",
+      "vendor_key": "baidu",
+      "vendor_label": "Baidu",
+      "i18n": {
+        "zh": {
+          "name": "百度云模型服务（新加坡）",
+          "description": "百度云模型服务 V2 新加坡端点。支持 OpenAI Chat / Responses、图片生成与编辑、Anthropic Messages，以及 Bearer 鉴权的 Gemini 文本和生图。不含向量和音频。Key 按地域隔离。人民币账户在国内控制台切换到该地域创建，美元账户使用国际站。"
+        },
+        "en": {
+          "name": "Baidu Cloud Model Service (Singapore)",
+          "description": "Singapore endpoint for OpenAI Chat/Responses, image generation and edits, Anthropic Messages, and Bearer-authenticated Gemini text and image generation. No embeddings or audio. Keys are region-scoped."
+        },
+        "ja": {
+          "name": "バイドゥクラウド モデルサービス（シンガポール）",
+          "description": "バイドゥクラウド モデルサービス V2 のシンガポールエンドポイント。OpenAI Chat / Responses、画像生成と編集、Anthropic Messages、Bearer 認証の Gemini テキストと画像生成に対応しています。埋め込みと音声は含みません。API キーはリージョンごとに分かれます。"
+        },
+        "ko": {
+          "name": "바이두 클라우드 모델 서비스 (싱가포르)",
+          "description": "바이두 클라우드 모델 서비스 V2 싱가포르 엔드포인트. OpenAI Chat / Responses, 이미지 생성과 편집, Anthropic Messages, Bearer 인증 Gemini 텍스트와 이미지 생성을 지원합니다. 임베딩과 음성은 없습니다. API 키는 리전별로 구분됩니다."
+        }
+      },
+      "links": {
+        "platform": "https://console.bce.baidu.com/vod-overseas"
+      },
+      "protocols": [
+        "openai",
+        "anthropic",
+        "gemini"
+      ],
+      "endpoints": {
+        "openai": {
+          "endpoints": {
+            "chat": "https://eos-sg.aigc.exp.bcevod.com/v1/chat/completions",
+            "responses": "https://eos-sg.aigc.exp.bcevod.com/v1/responses",
+            "images.generations": "https://eos-sg.aigc.exp.bcevod.com/v1/images/generations",
+            "images.edits": "https://eos-sg.aigc.exp.bcevod.com/v1/images/edits"
+          }
+        },
+        "anthropic": {
+          "base": "https://eos-sg.aigc.exp.bcevod.com"
+        },
+        "gemini": {
+          "auth": "bearer",
+          "endpoints": {
+            "models.generate": "https://eos-sg.aigc.exp.bcevod.com/v1beta/models/{model}:{action}"
+          }
+        }
+      },
+      "description": "Baidu Cloud Model Service V2 Singapore host eos-sg.aigc.exp.bcevod.com. OpenAI Chat, Responses, image generations, and image edits; Anthropic Messages at /v1/messages; Gemini generateContent at /v1beta/models/{model}:{action} with Bearer auth. No gemini.base, so embeddings are not derived. No audio. Region keys are not interchangeable. RMB accounts create the key on the domestic console region tab; USD accounts use the international console.",
+      "source_path": "packages/admin/lib/provider-import-presets.json"
+    },
+    {
+      "catalog_key": "17",
+      "name": "Baidu Cloud Model Service (California)",
+      "vendor_key": "baidu",
+      "vendor_label": "Baidu",
+      "i18n": {
+        "zh": {
+          "name": "百度云模型服务（加利福尼亚）",
+          "description": "百度云模型服务 V2 加利福尼亚端点，对话和生图路径与新加坡相同。支持 OpenAI Chat / Responses、图片生成与编辑、Anthropic Messages，以及 Bearer 鉴权的 Gemini。不含向量和音频。不要复用新加坡或法兰克福的 Key。"
+        },
+        "en": {
+          "name": "Baidu Cloud Model Service (California)",
+          "description": "California endpoint with the same chat and image paths as Singapore. No embeddings or audio. Do not reuse a Singapore or Frankfurt key."
+        },
+        "ja": {
+          "name": "バイドゥクラウド モデルサービス（カリフォルニア）",
+          "description": "バイドゥクラウド モデルサービス V2 のカリフォルニアエンドポイント。対話と画像のパスはシンガポールと同じです。埋め込みと音声は含みません。シンガポールやフランクフルトの API キーは再利用できません。"
+        },
+        "ko": {
+          "name": "바이두 클라우드 모델 서비스 (캘리포니아)",
+          "description": "바이두 클라우드 모델 서비스 V2 캘리포니아 엔드포인트. 대화와 이미지 경로는 싱가포르와 같습니다. 임베딩과 음성은 없습니다. 싱가포르나 프랑크푸르트 API 키를 재사용할 수 없습니다."
+        }
+      },
+      "links": {
+        "platform": "https://console.bce.baidu.com/vod-overseas"
+      },
+      "protocols": [
+        "openai",
+        "anthropic",
+        "gemini"
+      ],
+      "endpoints": {
+        "openai": {
+          "endpoints": {
+            "chat": "https://eos-ca.aigc.exp.bcevod.com/v1/chat/completions",
+            "responses": "https://eos-ca.aigc.exp.bcevod.com/v1/responses",
+            "images.generations": "https://eos-ca.aigc.exp.bcevod.com/v1/images/generations",
+            "images.edits": "https://eos-ca.aigc.exp.bcevod.com/v1/images/edits"
+          }
+        },
+        "anthropic": {
+          "base": "https://eos-ca.aigc.exp.bcevod.com"
+        },
+        "gemini": {
+          "auth": "bearer",
+          "endpoints": {
+            "models.generate": "https://eos-ca.aigc.exp.bcevod.com/v1beta/models/{model}:{action}"
+          }
+        }
+      },
+      "description": "Baidu Cloud Model Service V2 California host eos-ca.aigc.exp.bcevod.com. Same LLM and image paths as Singapore. OpenAI Chat, Responses, image generations, and image edits; Anthropic Messages; Gemini generateContent with Bearer auth. No embeddings or audio. Do not reuse a Singapore or Frankfurt key.",
+      "source_path": "packages/admin/lib/provider-import-presets.json"
+    },
+    {
+      "catalog_key": "18",
+      "name": "Baidu Cloud Model Service (Frankfurt)",
+      "vendor_key": "baidu",
+      "vendor_label": "Baidu",
+      "i18n": {
+        "zh": {
+          "name": "百度云模型服务（法兰克福）",
+          "description": "百度云模型服务 V2 法兰克福端点，对话和生图路径与新加坡相同。支持 OpenAI Chat / Responses、图片生成与编辑、Anthropic Messages，以及 Bearer 鉴权的 Gemini。不含向量和音频。不要复用新加坡或加利福尼亚的 Key。"
+        },
+        "en": {
+          "name": "Baidu Cloud Model Service (Frankfurt)",
+          "description": "Frankfurt endpoint with the same chat and image paths as Singapore. No embeddings or audio. Do not reuse a Singapore or California key."
+        },
+        "ja": {
+          "name": "バイドゥクラウド モデルサービス（フランクフルト）",
+          "description": "バイドゥクラウド モデルサービス V2 のフランクフルトエンドポイント。対話と画像のパスはシンガポールと同じです。埋め込みと音声は含みません。シンガポールやカリフォルニアの API キーは再利用できません。"
+        },
+        "ko": {
+          "name": "바이두 클라우드 모델 서비스 (프랑크푸르트)",
+          "description": "바이두 클라우드 모델 서비스 V2 프랑크푸르트 엔드포인트. 대화와 이미지 경로는 싱가포르와 같습니다. 임베딩과 음성은 없습니다. 싱가포르나 캘리포니아 API 키를 재사용할 수 없습니다."
+        }
+      },
+      "links": {
+        "platform": "https://console.bce.baidu.com/vod-overseas"
+      },
+      "protocols": [
+        "openai",
+        "anthropic",
+        "gemini"
+      ],
+      "endpoints": {
+        "openai": {
+          "endpoints": {
+            "chat": "https://eos-de.aigc.exp.bcevod.com/v1/chat/completions",
+            "responses": "https://eos-de.aigc.exp.bcevod.com/v1/responses",
+            "images.generations": "https://eos-de.aigc.exp.bcevod.com/v1/images/generations",
+            "images.edits": "https://eos-de.aigc.exp.bcevod.com/v1/images/edits"
+          }
+        },
+        "anthropic": {
+          "base": "https://eos-de.aigc.exp.bcevod.com"
+        },
+        "gemini": {
+          "auth": "bearer",
+          "endpoints": {
+            "models.generate": "https://eos-de.aigc.exp.bcevod.com/v1beta/models/{model}:{action}"
+          }
+        }
+      },
+      "description": "Baidu Cloud Model Service V2 Frankfurt host eos-de.aigc.exp.bcevod.com. Same LLM and image paths as Singapore. OpenAI Chat, Responses, image generations, and image edits; Anthropic Messages; Gemini generateContent with Bearer auth. No embeddings or audio. Do not reuse a Singapore or California key.",
+      "source_path": "packages/admin/lib/provider-import-presets.json"
+    },
+    {
+      "catalog_key": "19",
       "name": "Zhipu GLM",
       "vendor_key": "zhipu",
       "vendor_label": "Zhipu AI",
@@ -754,7 +957,7 @@
       "source_path": "packages/admin/lib/provider-import-presets.json"
     },
     {
-      "catalog_key": "16",
+      "catalog_key": "20",
       "name": "Zhipu GLM (Coding Plan)",
       "vendor_key": "zhipu",
       "vendor_label": "Zhipu AI",
@@ -799,7 +1002,7 @@
       "source_path": "packages/admin/lib/provider-import-presets.json"
     },
     {
-      "catalog_key": "17",
+      "catalog_key": "21",
       "name": "Z.AI GLM (International)",
       "vendor_key": "zhipu",
       "vendor_label": "Zhipu AI",
@@ -839,7 +1042,7 @@
       "source_path": "packages/admin/lib/provider-import-presets.json"
     },
     {
-      "catalog_key": "18",
+      "catalog_key": "22",
       "name": "Z.AI GLM (Coding Plan)",
       "vendor_key": "zhipu",
       "vendor_label": "Zhipu AI",
@@ -882,7 +1085,7 @@
       "source_path": "packages/admin/lib/provider-import-presets.json"
     },
     {
-      "catalog_key": "19",
+      "catalog_key": "23",
       "name": "Meituan LongCat",
       "vendor_key": "meituan",
       "vendor_label": "Meituan LongCat",
@@ -926,7 +1129,7 @@
       "source_path": "packages/admin/lib/provider-import-presets.json"
     },
     {
-      "catalog_key": "20",
+      "catalog_key": "24",
       "name": "Moonshot AI",
       "vendor_key": "moonshot",
       "vendor_label": "Moonshot AI",
@@ -971,7 +1174,7 @@
       "source_path": "packages/admin/lib/provider-import-presets.json"
     },
     {
-      "catalog_key": "21",
+      "catalog_key": "25",
       "name": "Kimi Code (Coding API)",
       "vendor_key": "moonshot",
       "vendor_label": "Moonshot AI",
@@ -1014,7 +1217,7 @@
       "source_path": "packages/admin/lib/provider-import-presets.json"
     },
     {
-      "catalog_key": "22",
+      "catalog_key": "26",
       "name": "MiniMax",
       "vendor_key": "minimax",
       "vendor_label": "MiniMax",
@@ -1061,7 +1264,7 @@
       "source_path": "packages/admin/lib/provider-import-presets.json"
     },
     {
-      "catalog_key": "23",
+      "catalog_key": "27",
       "name": "MiniMax (International)",
       "vendor_key": "minimax",
       "vendor_label": "MiniMax",
@@ -1108,7 +1311,7 @@
       "source_path": "packages/admin/lib/provider-import-presets.json"
     },
     {
-      "catalog_key": "24",
+      "catalog_key": "28",
       "name": "ElevenLabs",
       "vendor_key": "elevenlabs",
       "vendor_label": "ElevenLabs",
@@ -1144,7 +1347,7 @@
       "source_path": "packages/admin/lib/provider-import-presets.json"
     },
     {
-      "catalog_key": "25",
+      "catalog_key": "29",
       "name": "OpenAI",
       "vendor_key": "openai",
       "vendor_label": "OpenAI",
@@ -1182,7 +1385,7 @@
       "source_path": "packages/admin/lib/provider-import-presets.json"
     },
     {
-      "catalog_key": "26",
+      "catalog_key": "30",
       "name": "Anthropic",
       "vendor_key": "anthropic",
       "vendor_label": "Anthropic",
@@ -1220,7 +1423,7 @@
       "source_path": "packages/admin/lib/provider-import-presets.json"
     },
     {
-      "catalog_key": "27",
+      "catalog_key": "31",
       "name": "Meta Model API",
       "vendor_key": "meta",
       "vendor_label": "Meta (Llama)",
@@ -1264,7 +1467,7 @@
       "source_path": "packages/admin/lib/provider-import-presets.json"
     },
     {
-      "catalog_key": "28",
+      "catalog_key": "32",
       "name": "Google Gemini (Generative Language API)",
       "vendor_key": "google",
       "vendor_label": "Google",
@@ -1310,7 +1513,7 @@
       "source_path": "packages/admin/lib/provider-import-presets.json"
     },
     {
-      "catalog_key": "29",
+      "catalog_key": "33",
       "name": "Google Vertex AI (Express Mode · API Key)",
       "vendor_key": "google",
       "vendor_label": "Google",
@@ -1347,7 +1550,7 @@
       "source_path": "packages/admin/lib/provider-import-presets.json"
     },
     {
-      "catalog_key": "30",
+      "catalog_key": "34",
       "name": "Google Vertex AI",
       "vendor_key": "google",
       "vendor_label": "Google",
@@ -1391,7 +1594,7 @@
       "source_path": "packages/admin/lib/provider-import-presets.json"
     },
     {
-      "catalog_key": "31",
+      "catalog_key": "35",
       "name": "Mistral AI",
       "vendor_key": "mistral",
       "vendor_label": "Mistral AI",
@@ -1432,7 +1635,7 @@
       "source_path": "packages/admin/lib/provider-import-presets.json"
     },
     {
-      "catalog_key": "32",
+      "catalog_key": "36",
       "name": "Groq (OpenAI Compatible)",
       "vendor_key": "groq",
       "vendor_label": "Groq",
@@ -1472,7 +1675,7 @@
       "source_path": "packages/admin/lib/provider-import-presets.json"
     },
     {
-      "catalog_key": "33",
+      "catalog_key": "37",
       "name": "Cerebras",
       "vendor_key": "cerebras",
       "vendor_label": "Cerebras",
@@ -1512,7 +1715,7 @@
       "source_path": "packages/admin/lib/provider-import-presets.json"
     },
     {
-      "catalog_key": "34",
+      "catalog_key": "38",
       "name": "SambaNova Cloud",
       "vendor_key": "sambanova",
       "vendor_label": "SambaNova",
@@ -1558,7 +1761,7 @@
       "source_path": "packages/admin/lib/provider-import-presets.json"
     },
     {
-      "catalog_key": "35",
+      "catalog_key": "39",
       "name": "xAI (Grok)",
       "vendor_key": "xai",
       "vendor_label": "xAI (Grok)",
@@ -1599,7 +1802,7 @@
       "source_path": "packages/admin/lib/provider-import-presets.json"
     },
     {
-      "catalog_key": "36",
+      "catalog_key": "40",
       "name": "Together AI",
       "vendor_key": "together",
       "vendor_label": "Together AI",
@@ -1642,7 +1845,7 @@
       "source_path": "packages/admin/lib/provider-import-presets.json"
     },
     {
-      "catalog_key": "37",
+      "catalog_key": "41",
       "name": "Fireworks AI",
       "vendor_key": "fireworks",
       "vendor_label": "Fireworks AI",
@@ -1682,7 +1885,7 @@
       "source_path": "packages/admin/lib/provider-import-presets.json"
     },
     {
-      "catalog_key": "38",
+      "catalog_key": "42",
       "name": "DeepInfra",
       "vendor_key": "deepinfra",
       "vendor_label": "DeepInfra",
@@ -1723,7 +1926,7 @@
       "source_path": "packages/admin/lib/provider-import-presets.json"
     },
     {
-      "catalog_key": "39",
+      "catalog_key": "43",
       "name": "Novita AI",
       "vendor_key": "novita",
       "vendor_label": "Novita AI",
@@ -1764,7 +1967,7 @@
       "source_path": "packages/admin/lib/provider-import-presets.json"
     },
     {
-      "catalog_key": "40",
+      "catalog_key": "44",
       "name": "Perplexity",
       "vendor_key": "perplexity",
       "vendor_label": "Perplexity",
@@ -1803,7 +2006,7 @@
       "source_path": "packages/admin/lib/provider-import-presets.json"
     },
     {
-      "catalog_key": "41",
+      "catalog_key": "45",
       "name": "Cohere (OpenAI Compatibility)",
       "vendor_key": "cohere",
       "vendor_label": "Cohere",
@@ -1843,7 +2046,7 @@
       "source_path": "packages/admin/lib/provider-import-presets.json"
     },
     {
-      "catalog_key": "42",
+      "catalog_key": "46",
       "name": "NVIDIA NIM (integrate.api)",
       "vendor_key": "nvidia",
       "vendor_label": "NVIDIA",
@@ -1883,7 +2086,7 @@
       "source_path": "packages/admin/lib/provider-import-presets.json"
     },
     {
-      "catalog_key": "43",
+      "catalog_key": "47",
       "name": "Azure OpenAI",
       "vendor_key": "azure",
       "vendor_label": "Microsoft Azure",
@@ -1920,7 +2123,7 @@
       "source_path": "packages/admin/lib/provider-import-presets.json"
     },
     {
-      "catalog_key": "44",
+      "catalog_key": "48",
       "name": "StepFun",
       "vendor_key": "stepfun",
       "vendor_label": "StepFun",
@@ -1964,7 +2167,7 @@
       "source_path": "packages/admin/lib/provider-import-presets.json"
     },
     {
-      "catalog_key": "45",
+      "catalog_key": "49",
       "name": "Baichuan AI",
       "vendor_key": "baichuan",
       "vendor_label": "Baichuan AI",
@@ -2003,7 +2206,7 @@
       "source_path": "packages/admin/lib/provider-import-presets.json"
     },
     {
-      "catalog_key": "46",
+      "catalog_key": "50",
       "name": "Xiaomi MiMo",
       "vendor_key": "xiaomi",
       "vendor_label": "Xiaomi Mimo",
@@ -2047,7 +2250,7 @@
       "source_path": "packages/admin/lib/provider-import-presets.json"
     },
     {
-      "catalog_key": "47",
+      "catalog_key": "51",
       "name": "Xiaomi MiMo (Token Plan)",
       "vendor_key": "xiaomi",
       "vendor_label": "Xiaomi Mimo",
@@ -2091,7 +2294,7 @@
       "source_path": "packages/admin/lib/provider-import-presets.json"
     },
     {
-      "catalog_key": "48",
+      "catalog_key": "52",
       "name": "Qiniu AI",
       "vendor_key": "qiniu",
       "vendor_label": "Qiniu",
@@ -2141,7 +2344,7 @@
       "source_path": "packages/admin/lib/provider-import-presets.json"
     },
     {
-      "catalog_key": "49",
+      "catalog_key": "53",
       "name": "OpenRouter",
       "vendor_key": "openrouter",
       "vendor_label": "OpenRouter",
@@ -2184,7 +2387,7 @@
       "source_path": "packages/admin/lib/provider-import-presets.json"
     },
     {
-      "catalog_key": "50",
+      "catalog_key": "54",
       "name": "OpenCode Zen",
       "vendor_key": "opencode",
       "vendor_label": "OpenCode Zen",
@@ -2232,7 +2435,7 @@
       "source_path": "packages/admin/lib/provider-import-presets.json"
     },
     {
-      "catalog_key": "51",
+      "catalog_key": "55",
       "name": "OpenCode Go",
       "vendor_key": "opencode",
       "vendor_label": "OpenCode Zen",
@@ -2276,7 +2479,7 @@
       "source_path": "packages/admin/lib/provider-import-presets.json"
     },
     {
-      "catalog_key": "52",
+      "catalog_key": "56",
       "name": "Command Code",
       "vendor_key": "commandcode",
       "vendor_label": "Command Code",
@@ -2321,7 +2524,7 @@
       "source_path": "packages/admin/lib/provider-import-presets.json"
     },
     {
-      "catalog_key": "53",
+      "catalog_key": "57",
       "name": "Hugging Face Inference Providers",
       "vendor_key": "huggingface",
       "vendor_label": "Hugging Face",
@@ -2361,7 +2564,7 @@
       "source_path": "packages/admin/lib/provider-import-presets.json"
     },
     {
-      "catalog_key": "54",
+      "catalog_key": "58",
       "name": "Vercel AI Gateway",
       "vendor_key": "vercel",
       "vendor_label": "Vercel",
@@ -2407,7 +2610,7 @@
       "source_path": "packages/admin/lib/provider-import-presets.json"
     },
     {
-      "catalog_key": "55",
+      "catalog_key": "59",
       "name": "ZenMux",
       "vendor_key": "zenmux",
       "vendor_label": "ZenMux",
@@ -2455,7 +2658,7 @@
       "source_path": "packages/admin/lib/provider-import-presets.json"
     },
     {
-      "catalog_key": "56",
+      "catalog_key": "60",
       "name": "SCNet",
       "vendor_key": "scnet",
       "vendor_label": "SCNet",
@@ -2499,7 +2702,7 @@
       "source_path": "packages/admin/lib/provider-import-presets.json"
     },
     {
-      "catalog_key": "57",
+      "catalog_key": "61",
       "name": "SiliconFlow",
       "vendor_key": "siliconflow",
       "vendor_label": "SiliconFlow",
@@ -2548,7 +2751,7 @@
       "source_path": "packages/admin/lib/provider-import-presets.json"
     },
     {
-      "catalog_key": "58",
+      "catalog_key": "62",
       "name": "SiliconFlow (International)",
       "vendor_key": "siliconflow",
       "vendor_label": "SiliconFlow",
@@ -2592,7 +2795,7 @@
       "source_path": "packages/admin/lib/provider-import-presets.json"
     },
     {
-      "catalog_key": "59",
+      "catalog_key": "63",
       "name": "Ollama (Local)",
       "vendor_key": "ollama",
       "vendor_label": "Ollama",
@@ -2632,7 +2835,7 @@
       "source_path": "packages/admin/lib/provider-import-presets.json"
     },
     {
-      "catalog_key": "60",
+      "catalog_key": "64",
       "name": "Kingsoft StarFlow",
       "vendor_key": "kingsoft",
       "vendor_label": "Kingsoft Cloud",
@@ -2677,7 +2880,7 @@
       "source_path": "packages/admin/lib/provider-import-presets.json"
     },
     {
-      "catalog_key": "61",
+      "catalog_key": "65",
       "name": "Kingsoft StarFlow (International)",
       "vendor_key": "kingsoft",
       "vendor_label": "Kingsoft Cloud",
@@ -2722,7 +2925,7 @@
       "source_path": "packages/admin/lib/provider-import-presets.json"
     },
     {
-      "catalog_key": "62",
+      "catalog_key": "66",
       "name": "Open Design",
       "vendor_key": "opendesign",
       "vendor_label": "Open Design",
@@ -2767,7 +2970,7 @@
       "source_path": "packages/admin/lib/provider-import-presets.json"
     },
     {
-      "catalog_key": "63",
+      "catalog_key": "67",
       "name": "Wangsu AI Gateway",
       "vendor_key": "wangsu",
       "vendor_label": "Wangsu",
