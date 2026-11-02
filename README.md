@@ -4,6 +4,12 @@ OctaFuse 官网与文档站（[Astro](https://astro.build) + [Starlight](https:/
 
 **生产站点（canonical）**：[`https://octafuse.dev`](https://octafuse.dev) — 由根目录 `astro.config.mjs` 的 `site` 字段声明，用于 sitemap / 绝对 URL；Cloudflare Pages 自定义域名需与此一致。
 
+## 品牌资源
+
+- `public/logo.svg` 用于页头、首页与页脚，与 Gateway 的 `packages/admin/public/brand/octafuse-symbol.svg` 保持一致。
+- `public/favicon.svg` 与多尺寸 `public/favicon.ico` 用于浏览器标签页，`public/apple-touch-icon.png` 用于 Apple 主屏图标。
+- 中英文首页共用品牌标记；深浅主题的蓝青强调色统一在 `src/styles/custom.css` 中维护。
+
 ## 本地开发
 
 ```bash

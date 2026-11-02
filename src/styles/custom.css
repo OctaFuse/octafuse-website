@@ -115,7 +115,7 @@
 	--of-bg-base: hsl(225 38% 4%);
 	--of-bg-elevated: hsl(218 30% 7%);
 	--of-bg-mesh-1: hsl(184 100% 58% / 0.09);
-	--of-bg-mesh-2: hsl(142 92% 56% / 0.06);
+	--of-bg-mesh-2: hsl(217 91% 60% / 0.06);
 	--of-bg-gradient-end: hsl(238 32% 5%);
 
 	--of-text-primary: hsl(190 35% 96%);
@@ -125,8 +125,8 @@
 
 	--of-accent: hsl(184 100% 55%);
 	--of-accent-soft: hsl(185 92% 22% / 0.66);
-	--of-accent-strong: hsl(164 100% 70%);
-	--of-accent-hover: hsl(142 92% 62%);
+	--of-accent-strong: hsl(187 92% 69%);
+	--of-accent-hover: hsl(213 97% 77%);
 	--of-accent-alt: hsl(284 95% 72%);
 	--of-signal-warn: hsl(42 100% 64%);
 	--of-signal-hot: hsl(330 100% 70%);
@@ -143,14 +143,14 @@
 	--of-surface-table-stripe: hsl(184 42% 13% / 0.24);
 
 	--of-link-underline: hsl(184 100% 55% / 0.36);
-	--of-link-underline-hover: hsl(142 92% 62% / 0.52);
+	--of-link-underline-hover: hsl(213 97% 77% / 0.52);
 	--of-header-line: hsl(184 100% 55% / 0.2);
 	--of-header-shadow-inset: hsl(184 100% 75% / 0.1);
 
 	--of-hero-glow: hsl(184 100% 56% / 0.28);
 	--of-hero-title-from: hsl(190 38% 98%);
 	--of-hero-title-via: hsl(184 100% 68%);
-	--of-hero-title-to: hsl(142 92% 66%);
+	--of-hero-title-to: hsl(213 94% 68%);
 
 	--of-card-border: hsl(190 58% 40% / 0.3);
 	--of-card-border-hover: hsl(184 100% 55% / 0.5);
@@ -158,7 +158,7 @@
 	--of-card-icon-border: hsl(184 100% 55% / 0.3);
 
 	--of-link-card-bg: hsl(221 30% 8% / 0.74);
-	--of-link-card-border-hover: hsl(142 92% 62% / 0.36);
+	--of-link-card-border-hover: hsl(213 97% 77% / 0.36);
 
 	--of-backdrop: hsla(225, 42%, 4%, 0.76);
 }
@@ -168,7 +168,7 @@
 	--of-bg-base: hsl(205 42% 95%);
 	--of-bg-elevated: hsl(0 0% 100%);
 	--of-bg-mesh-1: hsl(190 100% 36% / 0.14);
-	--of-bg-mesh-2: hsl(148 80% 38% / 0.1);
+	--of-bg-mesh-2: hsl(217 91% 60% / 0.1);
 	--of-bg-gradient-end: hsl(216 40% 91%);
 
 	--of-text-primary: hsl(218 42% 10%);
@@ -176,10 +176,10 @@
 	--of-text-muted: hsl(214 16% 40%);
 	--of-text-invert: hsl(0 0% 100%);
 
-	--of-accent: hsl(190 100% 30%);
-	--of-accent-soft: hsl(189 90% 88%);
-	--of-accent-strong: hsl(188 100% 23%);
-	--of-accent-hover: hsl(148 80% 29%);
+	--of-accent: hsl(224 76% 48%);
+	--of-accent-soft: hsl(214 95% 93%);
+	--of-accent-strong: hsl(226 71% 40%);
+	--of-accent-hover: hsl(201 96% 32%);
 	--of-accent-alt: hsl(263 76% 52%);
 	--of-signal-warn: hsl(38 100% 46%);
 	--of-signal-hot: hsl(330 86% 50%);
@@ -196,14 +196,14 @@
 	--of-surface-table-stripe: hsl(190 70% 92% / 0.62);
 
 	--of-link-underline: hsl(190 96% 32% / 0.32);
-	--of-link-underline-hover: hsl(142 76% 30% / 0.45);
+	--of-link-underline-hover: hsl(224 76% 48% / 0.45);
 	--of-header-line: hsl(207 20% 82% / 0.75);
 	--of-header-shadow-inset: hsl(0 0% 0% / 0.05);
 
 	--of-hero-glow: hsl(190 100% 32% / 0.18);
 	--of-hero-title-from: hsl(218 42% 9%);
 	--of-hero-title-via: hsl(190 100% 27%);
-	--of-hero-title-to: hsl(148 80% 27%);
+	--of-hero-title-to: hsl(224 76% 48%);
 
 	--of-card-border: hsl(202 34% 74% / 0.92);
 	--of-card-border-hover: hsl(190 80% 36% / 0.5);
@@ -261,7 +261,7 @@
 .site-title img {
 	width: 2.1rem;
 	height: 2.1rem;
-	filter: drop-shadow(0 0 0.55rem hsl(184 100% 44% / 0.18));
+	flex-shrink: 0;
 }
 
 :root[data-theme='light'],
@@ -570,7 +570,7 @@ main pre {
 	display: block;
 	width: clamp(4.8rem, 12vw, 7.2rem);
 	height: auto;
-	filter: drop-shadow(0 0 1.4rem var(--of-hero-glow)) drop-shadow(0 0 2.6rem hsl(142 92% 62% / 0.12));
+	filter: drop-shadow(0 0.5rem 1.5rem hsl(217 91% 60% / 0.16));
 }
 
 .of-model-float-cloud {
@@ -1237,16 +1237,16 @@ html[data-theme='light'] .hero .actions .sl-link-button.secondary:hover {
 }
 
 html[data-theme='light'] .hero .actions .sl-link-button.primary {
-	border-color: hsl(190 100% 24%);
-	background: linear-gradient(135deg, hsl(190 100% 27%), hsl(166 76% 31%));
+	border-color: var(--of-accent-strong);
+	background: linear-gradient(135deg, var(--of-accent), var(--of-accent-hover));
 	color: white;
 	box-shadow:
-		0 0 0 1px hsl(190 100% 22% / 0.16),
-		0 10px 26px hsl(190 72% 27% / 0.2);
+		0 0 0 1px hsl(224 76% 48% / 0.16),
+		0 10px 26px hsl(217 91% 45% / 0.2);
 }
 
 html[data-theme='light'] .hero .actions .sl-link-button.primary:hover {
-	background: linear-gradient(135deg, hsl(190 100% 23%), hsl(166 80% 27%));
+	background: linear-gradient(135deg, var(--of-accent-strong), var(--of-accent));
 }
 
 /* Cards */

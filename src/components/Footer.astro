@@ -85,7 +85,7 @@ const groups = isEnglish
 	<div class="footer-panel">
 		<div class="footer-brand">
 			<a class="footer-logo" href={`${localePrefix}/`} aria-label="OctaFuse home">
-				<img src="/favicon.svg" width="34" height="34" alt="" />
+				<img src="/logo.svg" width="34" height="34" alt="" />
 				<strong>OctaFuse</strong>
 			</a>
 			<p>
@@ -170,7 +170,8 @@ const groups = isEnglish
 		}
 
 		.footer-logo img {
-			filter: drop-shadow(0 0 0.65rem var(--of-hero-glow));
+			object-fit: contain;
+			flex-shrink: 0;
 		}
 
 		.footer-brand p {

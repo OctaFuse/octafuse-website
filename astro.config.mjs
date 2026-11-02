@@ -16,9 +16,12 @@ export default defineConfig({
 			defaultLocale: 'zh',
 			logo: {
 				src: './public/logo.svg',
-				alt: 'OctaFuse',
+				alt: '',
 			},
+			favicon: '/favicon.svg?v=octagon-v1',
 			head: [
+				{ tag: 'link', attrs: { rel: 'icon', href: '/favicon.ico', type: 'image/x-icon', sizes: '16x16 32x32 48x48' } },
+				{ tag: 'link', attrs: { rel: 'apple-touch-icon', href: '/apple-touch-icon.png', sizes: '180x180' } },
 				{
 					tag: 'link',
 					attrs: {
