@@ -1,0 +1,103 @@
+---
+title: 'OctaFuse 2.17.0: maintenance mode, request-log summaries, and split DashScope speech routes'
+description: OctaFuse Gateway 2.17.0 can reject new inference during a maintenance window and summarize request logs by provider, model, and user. DashScope speech routes are split by series. Upgrade requires migrations 0032 and 0033.
+publishDate: 2026-10-26
+updateLabel: VERSION 2.17.0
+featuredUpdate: false
+template: splash
+prev: false
+next: false
+lastUpdated: false
+sidebar:
+  hidden: true
+---
+
+OctaFuse Gateway 2.17.0 adds a maintenance mode. While it is on, new inference requests receive 503. Health checks and the model list stay available. Request logs can be summarized by provider, model, user, and other dimensions, so you do not have to page through every row.
+
+DashScope speech and async transcription use a different adapter per series. The catalog adds Kimi K3.1 Pro, Qwen-Audio 3.1, and a Wangsu import template. Models and providers you already imported are not overwritten.
+
+## Pause inference without taking the node down
+
+Open **System → Maintenance**. While it is on, chat, messages, Responses, images, audio, embeddings, tools, `/mcp`, Gemini, vendor-native paths, and realtime WebSocket return 503. The response includes `Retry-After`, `X-OctaFuse-Error-Code: gateway.maintenance`, and `X-OctaFuse-Maintenance: 1`. The error body follows the entrance protocol, so OpenAI, Anthropic, and Gemini SDKs can parse their own shape.
+
+The rejection happens before authentication, so there is no request log, no charge, and no RPM spend. You can write the notice in Chinese and in English. `{minutes}` is the remaining time, chosen from `Accept-Language`. Leave both blank to use the built-in text.
+
+![Maintenance page still in normal service, 15 minutes planned, Admin writes also blocked](/screenshots/v2-17-0-maintenance.webp)
+
+*Maintenance is off. The planned duration is 15 minutes, and blocking Admin writes stays checked.*
+
+These calls keep working:
+
+| Call | Behavior |
+|---|---|
+| `GET /health` | Still 200, with `maintenance: true`. A load balancer does not mark the node down |
+| `GET /v1/models`, `GET /v1/me`, `GET /v1/tools/pricing`, `GET /catalog/*` | Read as usual |
+
+A stream that already started is not cut off, and it is billed under the existing rules when it ends. Each Proxy caches the maintenance flag for 5 seconds. If the config cannot be read, the gateway keeps serving. The flag is `system_config.MAINTENANCE_MODE`. There is no migration for it.
+
+Blocking Admin writes is optional and on by default. The maintenance switch itself, integration keys, and Playground are exempt. Permissions are `maintenance.read` and `maintenance.write`. They are not part of `config.*`. Every Admin page shows a red banner while maintenance is on.
+
+![Red dashboard banner: maintenance is on and inference returns 503](/screenshots/v2-17-0-maintenance-banner.webp)
+
+*After you turn it on, the red notice sits at the top of every Admin page.*
+
+## Summarize request logs
+
+`GET /api/admin/request-logs/summary` groups request count, tokens, and amount by any combination of `provider`, `model`, `user`, `provider_key`, `route_group`, and `status`, including success, failure, incomplete, and cancelled. The time range is a half-open millisecond interval. With no other filter, the range cannot exceed 31 days. `include_labels=1` adds the user email, model name, provider name, and key label.
+
+The path needs the index from migration 0033. A gateway that is still on the old release returns 404, and the caller should fall back to paged rows.
+
+Admin also shows:
+
+- Provider quality, and provider comparison by model, add a usable time to first token next to average latency. **R** means reasoning was present, **C** means it was not. Hover for the answer, the reasoning, the usable value, and coverage. No sample is —.
+- Model rows under a user add cache hit rate, time to first token, and average upstream time, and drop average charge per request. The charge total stays.
+- Each text-model window in the price rules can expand to that window's price, including "all hours" and "other hours" when no window matches.
+- The route list switches among a table, side-by-side panes, and a compact stack as the width allows. The provider table is at most 1280px wide. **Entrance path** can be full or shortened, and that choice is remembered.
+
+![Routes grouped by model, entrance path shortened, multipliers showing configured values](/screenshots/v2-17-0-route-list.webp)
+
+*Routes by model. The entrance path is shortened, and multipliers show the configured values.*
+
+When the gateway repackages an embedding or another non-streaming JSON response, it drops upstream `Content-Encoding`, `Content-Length`, `Transfer-Encoding`, and `Connection`. A gzip embedding body, and Playground "Failed to fetch" on that body, is handled as the decompressed payload.
+
+## DashScope speech routes and the catalog
+
+DashScope speech conversion is split by series. CosyVoice stays on `dashscope-tts-speech`. Speech models whose provider name starts with `qwen-audio-` move to `dashscope-tts-qwen-audio`. Async file transcription splits into Qwen3, Qwen-Audio, Fun-ASR, and Paraformer adapters. Passthrough stays `passthrough`.
+
+Rows still on `dashscope-asr-file-async` that do not match those names stay in the database. They work again after you switch them to the new adapter. Migration 0032 rewrites only the rows it can match.
+
+Qwen-Audio 3.1 adds `qwen-audio-3.1-asr-flash`, `qwen-audio-3.1-asr-flash-filetrans`, `qwen-audio-3.1-asr-flash-streaming`, `qwen-audio-3.1-asr-flash-message`, and `qwen-audio-3.1-tts-flash`. China and international prices follow the official input and output token list, not the 3.0 per-second or per-character prices. Sync recognition, file transcription, inference realtime recognition, and SpeechSynthesizer read upstream token usage. `qwen-audio-3.1-realtime-plus` and `qwen-audio-3.1-tts-next` are not connected yet. Imported 3.0 models are not overwritten.
+
+| Catalog change | Notes |
+|---|---|
+| **Kimi K3.1 Pro** | `kimi-k3.1-pro` and `kimi-k3.1-pro-highspeed`, released 2026-10-23, 1M context and max output. Pro is $2 / $10 and ¥13 / ¥68. Highspeed is $4 / $20 and ¥26 / ¥136. Highspeed cache-hit price matches Pro. Attach a route after import. |
+| **Kimi K3** | Default 5-minute cache write: $3/M and ¥20/M. |
+| **Kimi K2.5** | Marked retired on 2026-08-31. Display and filters change. Price, modalities, routes, and billing do not. |
+| **MiniMax M3** | Catalog moves to the current site price after the standing half-off. Up to 512K input: $0.30 / $1.20 and, in China, ¥2.10 / ¥8.40. Above 512K the whole tier doubles. |
+| **MiniMax M3.1 Flash** | `minimax-m3.1-flash` replaces the preview row. $0.15 / $0.60, cache read $0.015. China ¥1 / ¥4, cache read ¥0.1. Per million tokens. Context 1M. Thinking cannot be turned off. An imported preview row is not overwritten. Import this id and set the upstream model to `MiniMax-M3.1-Flash`. |
+| **Qwen Image 2.1 Turbo** | Per image: $0.016 or ¥0.1. |
+| **Wangsu** | OpenAI base `https://api.edgecloudapp.com/v2/llm/openai`, Anthropic Messages `https://api.edgecloudapp.com/v2/llm/anthropic/messages`, Gemini base `https://api.edgecloudapp.com/v2/llm/gemini/v1beta/models`. Auth uses a new token from token management, starting with `sk-`. |
+
+## Upgrade to 2.17.0
+
+**Apply migrations 0032 and 0033.** 0032 rewrites DashScope speech routes it can match to a series. 0033 only adds a `(provider_id, created_at)` index on request logs. D1, Postgres, and MySQL match. See the [0032 notes](https://github.com/OctaFuse/octafuse-gateway/blob/v2.17.0/docs/operators/migrations/0032-dashscope-audio-adapters.md) and the [0033 notes](https://github.com/OctaFuse/octafuse-gateway/blob/v2.17.0/docs/operators/migrations/0033-request-log-provider-index.md).
+
+1. Back up the database.
+2. Run the v2.17.0 migrate image, or apply 0032 and then 0033 by number.
+3. Roll Proxy and Admin to the same version.
+
+After 0032, an old process does not recognize the new adapter names. Do not let old and new processes share traffic for those speech routes. 0033 does not change columns, so old and new versions can both read and write. On a large Postgres table you can create the same index with `CREATE INDEX CONCURRENTLY` during a quiet period. The formal migration skips an index that already exists. That statement cannot run inside a transaction.
+
+Compatibility:
+
+- Maintenance is off by default. When it is on, public inference returns 503.
+- Unmatched DashScope async transcription stays on `dashscope-asr-file-async` until you change the adapter.
+- Imported prices, Kimi K2.5 routes, and MiniMax M3.1 preview rows are not overwritten. Import new models and the Wangsu template yourself, or edit the upstream model name on the route.
+- Embedding and some JSON responses no longer carry the upstream compression and length headers.
+
+See [GitHub Release v2.17.0](https://github.com/OctaFuse/octafuse-gateway/releases/tag/v2.17.0) and the [changelog](https://github.com/OctaFuse/octafuse-gateway/blob/v2.17.0/CHANGELOG.md).
+
+- [OctaFuse website](https://octafuse.dev/en/)
+- [GitHub repository](https://github.com/OctaFuse/octafuse-gateway)
+
+If OctaFuse helps your project, please give it a **Star** on GitHub. Your feedback helps us keep improving routing, protocol support, and the self-hosted experience.

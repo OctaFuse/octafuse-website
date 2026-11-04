@@ -1,0 +1,145 @@
+---
+title: 'OctaFuse 2.11.0: stream guards, user discount modes, and stable error codes'
+description: OctaFuse Gateway 2.11.0 protects long text streams, can fail over when the first event never arrives, combines user discounts in two ways, and marks proxy failures with a stable error code.
+publishDate: 2026-09-20
+updateLabel: VERSION 2.11.0
+featuredUpdate: false
+template: splash
+prev: false
+next: false
+lastUpdated: false
+sidebar:
+  hidden: true
+---
+
+A stream that is still thinking can look the same as a stream that is stuck. Time out too early and a slow model is cut off. Never time out and a dead connection holds the worker.
+
+OctaFuse Gateway 2.11.0 splits text-stream protection into three stages and adds an optional failover when the first event never arrives. User model factors can be combined in two ways, and proxy failures carry a stable error code.
+
+In one sentence:
+
+> **Long streams have a clear wait and a way to move on, user discounts are easier to operate, and clients can tell failures apart.**
+
+## Protect a text stream in three stages
+
+| Stage | Default | What it does |
+|---|---:|---|
+| Wait for the first non-empty chunk | 2 minutes | Leaves room for a long context or a silent thinking phase |
+| Idle gap after output has started | 30 seconds | Limits the wait between upstream chunks once text is flowing |
+| Usage safety cap | 10 minutes | Makes sure a usage record can finish |
+
+Set them on the Proxy, in milliseconds:
+
+```bash
+STREAM_FIRST_CHUNK_TIMEOUT_MS=180000
+STREAM_IDLE_TIMEOUT_MS=45000
+USAGE_SAFETY_TIMEOUT_MS=900000
+```
+
+An empty value or a value that is not a positive integer falls back to the default. Node, Docker, and Cloudflare all read these variables.
+
+The guards cover Chat Completions, OpenAI Responses, Anthropic Messages, and Gemini `streamGenerateContent`.
+
+If the upstream goes quiet for longer than the idle limit after output has started, the gateway cancels that upstream connection and marks the request log `incomplete`. A timeout is not automatically free. If valid usage was already received, the request can still be billed for that usage.
+
+The 10-minute cap is not the longest time a client may stream. It closes the background usage record. It does not stop the client from receiving events.
+
+### Fail over when the first event never arrives
+
+You can also abandon an upstream that already returned `2xx` but never produced a useful SSE event, then try the next route. This is off unless you set it in `system_config`:
+
+```text
+STREAM_FIRST_EVENT_TIMEOUT_MS = 45000
+STREAM_FIRST_EVENT_TIMEOUT_ROUTE_GROUPS = default,free
+```
+
+A hit is treated as `524`, and the gateway continues with the next candidate. With no route groups named, only `default` is included. `*` or `all` covers every route group.
+
+This applies to the four text stream endpoints above. It does not apply to images, audio, realtime speech, or Agent Tools. If your models think or search in silence for a long time, measure that delay before you turn the timeout on.
+
+## Combine a user discount in two ways
+
+A user can already have a factor on a model. 2.11.0 chooses how that factor combines with the route's charged factor.
+
+| Mode | Math | When to use it |
+|---|---|---|
+| `multiply` | route factor × user factor | Stack the user discount on the route price |
+| `min` | the smaller of the two | Do not stack; take the lower offer |
+
+If the route charged factor is `0.8` and the user factor is `0.5`:
+
+- `multiply` bills at `0.4`.
+- `min` bills at `0.5`.
+
+The default remains `multiply`, so existing prices stay the same until an admin switches the mode to `min`.
+
+The setting changes what the user pays for LLM, image, and audio requests. It does not change catalog list prices, provider cost, or Agent Tools. A model with no user factor keeps the route price in either mode.
+
+Proxy caches the setting for about 30 seconds. `pricing_audit` records the user factor, the mode, and the final factor for that request.
+
+### Show a signed-in user their own price
+
+`GET /catalog/models` is the public list price. A portal that should show a signed-in discount can read:
+
+```text
+GET /api/admin/users/:id/display-discounts
+```
+
+The call needs `users.read`. It returns models that have a user factor and a usable route, and it accepts `route_groups`. It uses an admin credential, so it does not spend the user's RPM. The portal does not need the user's API key, and it does not have to call `GET /v1/models` just to render a price.
+
+## Read the error code, not only the status
+
+2.11.0 marks proxy failures with a response header:
+
+```text
+X-OctaFuse-Error-Code: gateway.no_route
+```
+
+Branch on that header, then use the HTTP status. The message is for people and logs.
+
+| Code | HTTP | Meaning | What to check |
+|---|---:|---|---|
+| `gateway.model_not_found` | 404 | The model id is not in the gateway catalog | The id the client sent |
+| `gateway.no_route` | 404 | The model exists, but this protocol, operation, or route group has no upstream | The endpoint, route group, and active targets |
+| `upstream.not_found` | 404 | The request reached an upstream that does not have the model or resource | `provider_model_name` and the provider setup |
+
+`gateway.no_route` moves from `502` to `404`, with the message `No available route`. Clients, alerts, or retries that keyed off the old status need to follow the error code.
+
+This contract covers user-facing `/v1/*` and `/v1beta/*`. The Admin API does not use it. Agent Tool auth, quota, and rate-limit errors carry the header; a tool's own business error may not.
+
+## Other changes
+
+| Area | What changed |
+|---|---|
+| **Image presets** | `gpt-image-2.5-flare` and `gpt-image-2.5-sunburst` |
+| **Text preset** | `glm-5.3-flashx` |
+| **Price updates** | Catalog USD and CNY prices for `claude-sonnet-5`, `gpt-5.6-terra`, and `gpt-5.6-luna` |
+
+Importing the catalog does not overwrite an existing model id. Import new models and attach a route. Update an existing price by hand after you check the provider.
+
+## Upgrade to 2.11.0
+
+There is no new database migration. Upgrade Proxy and Admin on a database that already has the current migrations.
+
+So that old and new Proxy processes do not bill user factors differently:
+
+1. Upgrade every Proxy to 2.11.0.
+2. Wait until old Proxy processes are out of traffic.
+3. Upgrade Admin.
+4. Switch the user-factor mode to `min` only after every instance is on 2.11.0.
+
+Leaving the mode on `multiply` keeps the previous bill. The three stream guards take effect at their defaults as soon as the new Proxy is serving. The first-event failover stays off until `STREAM_FIRST_EVENT_TIMEOUT_MS` is set.
+
+After the upgrade, check that:
+
+1. A long stream can finish. If output stalls, the upstream connection is cancelled and the log is `incomplete`.
+2. With first-event failover on, a silent upstream moves to the next route.
+3. No available route returns `404` and `X-OctaFuse-Error-Code: gateway.no_route`.
+4. Displayed prices and charges match the selected mode, and the display-discount endpoint returns what that user should see.
+
+Before upgrading, review [GitHub Release v2.11.0](https://github.com/OctaFuse/octafuse-gateway/releases/tag/v2.11.0) and the [full changelog](https://github.com/OctaFuse/octafuse-gateway/blob/v2.11.0/CHANGELOG.md).
+
+- [OctaFuse website](https://octafuse.dev/en/)
+- [GitHub repository](https://github.com/OctaFuse/octafuse-gateway)
+
+If OctaFuse helps your project, please give it a **Star** on GitHub. Your feedback helps us keep improving routing, protocol support, and the self-hosted experience.

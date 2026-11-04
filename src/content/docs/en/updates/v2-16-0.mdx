@@ -1,0 +1,153 @@
+---
+title: 'OctaFuse 2.16.0: ElevenLabs, native vendor paths, and list-based Admin'
+description: OctaFuse Gateway 2.16.0 adds ElevenLabs speech and transcription, moves DashScope, MiniMax, and Volcengine native calls onto vendor-prefixed paths, and switches provider, model, and route Admin to lists. Upgrade requires migration 0031.
+publishDate: 2026-10-19
+updateLabel: VERSION 2.16.0
+featuredUpdate: false
+template: splash
+prev: false
+next: false
+lastUpdated: false
+sidebar:
+  hidden: true
+---
+
+OctaFuse Gateway 2.16.0 adds ElevenLabs speech synthesis and transcription. File calls and realtime WebSocket calls use the same routing, failover, and billing as the rest of the gateway. Point the official SDK at your gateway host plus `/elevenlabs`.
+
+DashScope, MiniMax, and Volcengine native paths become `/{vendor}` plus the official path. The old addresses remain as aliases. Providers, models, and routes default to a list, with linked routes, keys, endpoint mode, and an active-or-retired filter. Catalog copy now comes from the static catalog. The old description column is an operator note.
+
+## ElevenLabs
+
+The new upstream protocol is `elevenlabs`, with native passthrough and an OpenAI-compatible adapter.
+
+| Use | Entrance |
+|---|---|
+| Text to speech | `POST /elevenlabs/v1/text-to-speech/{voice_id}`, including `/stream`, `/with-timestamps`, and `/stream/with-timestamps` |
+| Transcription | `POST /elevenlabs/v1/speech-to-text` |
+| OpenAI-compatible | `POST /v1/audio/speech` and `POST /v1/audio/transcriptions`, through `elevenlabs-tts` and `elevenlabs-asr-file` |
+
+Native paths match the official SDK. `/elevenlabs/*` also accepts `xi-api-key`. ElevenLabs-specific fields go in `extra_body`.
+
+Billing and errors:
+
+- Speech bills by characters. The gateway uses `x-character-count` when that header is present, otherwise the input length.
+- Transcription bills by seconds.
+- Upstream `quota_exceeded` becomes 402. `too_many_concurrent_requests` and `system_busy` become 429. Both cases move to the next provider.
+
+The OpenAI-compatible entrance covers the common formats. Speech accepts `mp3`, `opus`, `pcm`, `wav` at 24 kHz, and SSE. `aac`, `flac`, and `instructions` return 400. Transcription accepts `json`, `text`, `verbose_json`, `diarized_json`, `srt`, and `vtt`. `webhook=true` is not supported.
+
+This release does not include voice management, dubbing, sound effects, or music. A provider you already saved does not gain an ElevenLabs address on its own. Fill the base URL, or the full speech and transcription URLs.
+
+Presets add `elevenlabs-v4`, `elevenlabs-v4-turbo`, `elevenlabs-v3`, `elevenlabs-v3-conversational`, `elevenlabs-multilingual-v2`, `elevenlabs-flash-v2.5`, `elevenlabs-flash-v2`, `elevenlabs-turbo-v2.5` (deprecated upstream; prefer Flash v2.5), `elevenlabs-scribe-v2`, and `elevenlabs-scribe-v2-medical`. On the route, the provider model name is the official name, such as `eleven_v4` or `scribe_v2`. USD prices follow the official list. CNY prices are USD × 7 placeholders.
+
+![ElevenLabs selected in provider endpoints, full capability, official base URL](/screenshots/v2-16-0-elevenlabs-endpoints.webp)
+
+*After you select ElevenLabs, use full capability and fill the base URL.*
+
+### Realtime WebSocket
+
+Two more entrances keep ElevenLabs frames. They do not include `multi-stream-input`:
+
+| Use | Entrance |
+|---|---|
+| One speech stream | `GET /elevenlabs/v1/text-to-speech/{voice_id}/stream-input?model_id=` |
+| Scribe realtime transcription | `GET /elevenlabs/v1/speech-to-text/realtime?model_id=` |
+
+The model is the `model_id` query parameter. Before the WebSocket handshake, the gateway authenticates, checks the model kind and balance, and picks a route. Speech also checks `voice_id` in the path. Auth accepts `xi-api-key` and `Authorization: Bearer`. A browser can use the subprotocol `octafuse-api-key.<key>`. The client credential is not forwarded upstream.
+
+Usage is estimated and should be reconciled with the ElevenLabs console. Speech counts characters the client sent. Realtime transcription converts client audio bytes to seconds. `usage_source` is `estimated`. Balance is checked only before the session. A session is not cut off mid-call. If the upstream refuses the handshake, an exhausted quota returns 402 and a concurrency limit returns 429, and the gateway can try the next route.
+
+The catalog adds `elevenlabs-scribe-v2-realtime`, provider model `scribe_v2_realtime`, at $0.39 per hour. Playground is proxied by Admin and is not billed. Simulator talks to the Proxy and is authenticated and billed. Realtime transcription defaults to the browser microphone, or you can play an audio file at realtime speed.
+
+On Node, if the handshake response and the first upstream frame arrive in one packet, that frame is buffered and then delivered. A missing key, a missing model or route, or an insufficient balance closes the socket with a reason immediately.
+
+![Playground on ElevenLabs Scribe v2 Realtime, upstream official realtime WebSocket](/screenshots/v2-16-0-playground-realtime.webp)
+
+*Playground is attached to this one realtime route. This test is not billed.*
+
+### Read the subscription
+
+With the provider type set to ElevenLabs, the same key can query official `GET /v1/user/subscription`. The card shows credits used, the cap, and the reset time. Status `free_disabled` is shown as exhausted. If the saved endpoint host is in the same registrable domain as `api.elevenlabs.io`, the query goes to that host.
+
+## Vendor-native paths
+
+DashScope, MiniMax, and Volcengine native entrances are now the vendor prefix plus the official path. Point an official SDK base at your gateway host plus `/{vendor}`. The address changed. The protocol and the billing did not.
+
+| Vendor | New path |
+|---|---|
+| DashScope HTTP | `/dashscope/api/v1/services/...` and `/dashscope/api/v1/tasks/{taskId}` |
+| DashScope WebSocket | run-task at `/dashscope/api-ws/v1/inference`; Qwen realtime at `/dashscope/api-ws/v1/realtime?model=` |
+| MiniMax | `/minimax/v1/speech_to_text`, `/minimax/v1/t2a_v2`, and `/minimax/v1/image_generation` |
+| Volcengine | `/volcengine/api/v3/images/generations` |
+
+The DashScope realtime URL no longer uses `operation`. On `inference`, the model is in the first `run-task` frame, and the gateway picks a route after it reads that frame. Failure returns a DashScope `task-failed` event. Lowercase `bearer` is accepted.
+
+These old paths still work as aliases: `/v1/dashscope/*`, `/v1/minimax/*`, `/v1/volcengine/*`, and `/v1/dashscope/realtime?model=&operation=`.
+
+Two call behaviors change in the same release:
+
+- **402 moves to the next provider.** An exhausted upstream balance is handled like 401 and 403: try the next provider, fuse the failed one for 5 minutes, and raise an alert. MiniMax `1008` and ElevenLabs `quota_exceeded` take this path. The last candidate still returns 402.
+- **An idle stream writes an error.** After the idle or first-byte limit, the gateway writes an error event downstream with `code` `stream_idle_timeout`. Thresholds, billing, and the request log stay the same. If the client has already disconnected, that frame is not written.
+
+## Admin lists
+
+Providers, models, and routes default to **List**. You can switch back to **Cards**, and each page remembers the choice. Filters survive the switch. When a route group has many upstreams, the list lines up provider, status, weight, sticky, parameters, schedule, and factors.
+
+![DeepSeek V4.1 Flash routes in a list, status, schedule, and effective factors in columns](/screenshots/v2-16-0-route-list.webp)
+
+*Four upstreams in `default`, with `free` beside them. Status, schedule, and the effective factor are on the same row.*
+
+Provider and model dialogs can search linked routes and delete one or many. Remove every linked route before you delete the model or provider. A delete is refused while a route remains.
+
+Keys and endpoints:
+
+- While you edit a provider, the key shows its first and last characters. Clearing the key and saving removes it. Editing other fields leaves the key in place.
+- Endpoints are **All capabilities** or **Selected capabilities**. All capabilities takes a base URL. Selected capabilities asks you to tick what you need and fill each full URL. Each mode keeps what you already typed.
+
+**Available** on a route means that route and its provider are both enabled. **Multipliers** defaults to the effective factor and can switch to the configured provider, charged, and cost factors. The switch changes the page only.
+
+Models can filter to active or retired. The retired date is the optional catalog field `retired`. It is not stored, and it does not change routing or billing. A model you created, with no catalog date, counts as active. The import dialog lists active models by default.
+
+In Japanese or Korean, the sidebar, catalog descriptions, and provider template names use that language. Import writes the name in the current UI language. Providers and models already imported are not rewritten.
+
+![Active model list, with a future-dated Xiaomi MiMo model marked retiring soon](/screenshots/v2-16-0-model-lifecycle.webp)
+
+*A model whose retired date is still ahead stays in Active and is marked retiring soon. It moves to the retired filter on that date.*
+
+### Catalog and templates
+
+| Addition | Notes |
+|---|---|
+| **Open Design** | Import host `https://amr-link.open-design.ai/v1`. Chat and Responses are full URLs. No image, audio, or embedding endpoints. Keys from the Cloud console look like `sk-amr-` and share the Design Plan allowance with the app. |
+| **Kingsoft Xingliu** | China `https://kspmas.ksyun.com`, international `https://global-kspmas.ksyun.com/v1`. Both offer OpenAI Chat, Responses, and Anthropic Messages. Do not mix the keys. |
+| **MiniMax M3.1 Flash Preview** | Catalog id `minimax-m3.1-flash-preview`, upstream `MiniMax-M3.1-Flash-Preview`. No pay-as-you-go list was published, so the price is prefilled from MiniMax M3. It accepts an M Plan or MiniMax Code subscription key. |
+| **Doubao Seed** | `doubao-seed-2-1-pro-260915`, `doubao-seed-2-1-lite-260915` (CNY list only), `doubao-seed-2-0-lite-260428`, and `doubao-seed-2-0-mini-260428`. `doubao-seed-evolving` context is 1 million tokens. |
+
+The Command Code template adds `POST /provider/v1/responses`. The provider card can query `GET /alpha/billing/credits` with the same key and show remaining USD plus the 5-hour and weekly plan windows.
+
+Grok Build 0.1, Grok 4.20 Reasoning, and Grok 4.20 Non-Reasoning gain CNY placeholders at USD × 7. A catalog row with no price in the current billing currency cannot be selected in the import dialog.
+
+## Upgrade to 2.16.0
+
+**Apply migration 0031.** `models.description` and `providers.description` are renamed to `note`. Existing text is kept as an operator note. D1, Postgres, and MySQL match. See the [0031 notes](https://github.com/OctaFuse/octafuse-gateway/blob/v2.16.0/docs/operators/migrations/0031-catalog-notes.md).
+
+1. Back up the database.
+2. Run the v2.16.0 migrate image, or the matching script, and apply 0031.
+3. Roll Proxy and Admin to the same version.
+
+If you update the application before the columns are renamed, reads and writes of `note` fail. Before you roll the application back, rename the columns to `description` again.
+
+Compatibility:
+
+- `GET /v1/models` and `GET /catalog/models` no longer include `description`, and the operator note is not in that response. Catalog copy is shown in Admin in the UI language.
+- Old vendor paths remain aliases. New integrations should use `/{vendor}` plus the official path.
+- An idle timeout writes a `stream_idle_timeout` error event downstream.
+- Clearing a key in the provider form and saving deletes that key.
+- Imported providers and models are not overwritten. Import ElevenLabs, Open Design, and Kingsoft Xingliu yourself, or fill the endpoints.
+
+See [GitHub Release v2.16.0](https://github.com/OctaFuse/octafuse-gateway/releases/tag/v2.16.0) and the [changelog](https://github.com/OctaFuse/octafuse-gateway/blob/v2.16.0/CHANGELOG.md).
+
+- [OctaFuse website](https://octafuse.dev/en/)
+- [GitHub repository](https://github.com/OctaFuse/octafuse-gateway)
+
+If OctaFuse helps your project, please give it a **Star** on GitHub. Your feedback helps us keep improving routing, protocol support, and the self-hosted experience.

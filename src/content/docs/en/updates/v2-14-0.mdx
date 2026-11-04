@@ -1,0 +1,143 @@
+---
+title: 'OctaFuse 2.14.0: more image and speech routes, discounts by route group, and safer Admin saves'
+description: OctaFuse Gateway 2.14.0 routes OpenAI image and speech clients to MiniMax, Seedream, and Gemini, sets a user discount per route group, and saves only the Admin fields you changed.
+publishDate: 2026-10-09
+updateLabel: VERSION 2.14.0
+featuredUpdate: false
+template: splash
+prev: false
+next: false
+lastUpdated: false
+sidebar:
+  hidden: true
+---
+
+OctaFuse Gateway 2.14.0 lets an OpenAI-compatible client call MiniMax, Seedream, and Gemini image or speech models through a conversion route, including vendor fields that are not in the OpenAI schema.
+
+The same release prices a user differently in each route group, previews the combined factor, saves Admin cards one at a time, and stops a profile edit from writing an old spend total back over newer usage.
+
+## Call image and speech models from an OpenAI client
+
+When the client speaks OpenAI and the upstream expects something else, the gateway converts the request and the response. 2.14.0 adds or extends:
+
+| Upstream | What you can configure | How the client calls it |
+|---|---|---|
+| **MiniMax** | File transcription, speech, and image generation | OpenAI transcription, speech, or images, or the MiniMax native path |
+| **Seedream** | A shared image adapter for Volcengine Ark and BytePlus | OpenAI images, or the new native image path |
+| **Gemini image models** | Native image handling, plus an OpenAI image conversion | OpenAI images, or the Gemini native path. Upstream can be the Gemini API or Vertex AI |
+| **Model Studio** | Native speech, async file transcription and task lookup, multimodal split, and Qwen-TTS-Realtime passthrough | Native routes for those capabilities. Existing OpenAI conversion routes still work |
+
+Configure the provider endpoint, import the model, then create the route. The editor filters adapters by provider protocol and model name. The call guide lists the client path, field mapping, billing, limits, and an SDK example.
+
+![Gemini image adapter guide with the OpenAI client path, field mapping, and limits](/screenshots/v2-14-0-adapter-guide.webp)
+
+Limits differ by adapter:
+
+- **Gemini:** the OpenAI image conversion accepts a reference image and maps size, but only one image, no stream, and `b64_json`. It does not serve `/v1/images/edits`. Use the native path for streaming or a raw Gemini response.
+- **Seedream:** the OpenAI conversion returns non-streaming JSON. The native path supports JSON and SSE. Models that support a set can use `n`. 5.0 Pro and Flash accept only `1`.
+- **MiniMax:** file transcription is not streamed, and a file is limited to 25MB. Synchronous speech supports a normal response and SSE.
+
+MiniMax transcription bills by duration. MiniMax speech bills by the character usage the upstream returns. MiniMax and Seedream images bill per successful image. Gemini image requests bill text, image, and other usage separately. A Gemini image call with no usable image, a client cancel, or a gateway timeout does not charge the gateway user. A MiniMax business error is a failure even when the HTTP status is success.
+
+### Pass vendor fields through
+
+Aspect ratio, resolution, and voice emotion are often outside the OpenAI fields. OpenAI image generation, image edit, speech, and transcription requests can carry extra fields, merged into the upstream body in the vendor's shape.
+
+A MiniMax speech route can set emotion, pitch, and language with `extra_body`:
+
+```python
+client.audio.speech.create(
+    model="minimax-speech-2.8-hd",
+    input="Hello from OctaFuse.",
+    voice="male-qn-qingse",
+    extra_body={
+        "voice_setting": {"emotion": "happy", "pitch": 2},
+        "language_boost": "Chinese",
+    },
+)
+```
+
+`model` is the gateway model id. `voice` is the MiniMax voice id. Extra fields must match that vendor. If the pool mixes protocols, every candidate has to accept them.
+
+Extra fields are limited to 32KB. They cannot overwrite the model name or the fields the adapter uses for billing and response parsing. Route defaults and force override still apply. Model Studio speech `input.*` parameters still belong in the route body.
+
+Playground and Simulator can call the new native paths, edit a Gemini image request, preview an image, and play audio from a non-streaming MiniMax response. Image samples pick the lowest resolution tier the model supports.
+
+![MiniMax Speech 2.8 Turbo native speech test with a non-streaming response and audio playback](/screenshots/v2-14-0-minimax-audio-result.webp)
+
+*With `stream: false`, the returned audio can be played or downloaded.*
+
+Playground checks the selected upstream. It does not charge a gateway user, but the provider may still bill the call. Use Simulator or a real client for auth, routing, and the gateway charge.
+
+## Price one user differently in each route group
+
+A shared model can cost less in a campaign group than in the default group. User factors used to be per model only. 2.14.0 can set them per route group under **Quota and billing**:
+
+| Scope | User factor |
+|---|---|
+| `default` group | `0.8` |
+| `campaign` group | `0.5` |
+| Every other group (`*`) | `0.9` |
+
+`campaign` uses `0.5`, `default` uses `0.8`, and other groups use `0.9`. If nothing matches and there is no `*`, the route price is unchanged.
+
+The user factor still combines with the route factor. It is not the final discount by itself. A route factor of `0.6` and a user factor of `0.5` bill at `0.3` in multiply mode and `0.5` in min mode. Only the user charge changes. Provider cost does not.
+
+Group factors apply to text, image, and audio charges, and to the discount shown on the model list. An existing numeric factor still applies to every group.
+
+![DeepSeek V4.1 Flash with a default user factor of 1 and a default-group override of 0.4](/screenshots/v2-14-0-user-group-factors.webp)
+
+*The fallback factor is ×1. The `default` group is ×0.4.*
+
+After you save, the user's model list shows catalog, route, and combined factors for the groups that user can see.
+
+![User model list for DeepSeek V4.1 Flash in the default and free groups](/screenshots/v2-14-0-user-model-preview.webp)
+
+*The catalog factor is ×2. `default` and `free` each show the route factor and the combined factor.*
+
+The preview reads saved configuration. It does not call a model and does not spend RPM. It starts with text models in `default` and `free`, and returns at most 40 rows. A portal can read the same result from `GET /api/admin/users/:id/models`.
+
+## Save only what you changed
+
+A user can keep calling the gateway while you edit their profile. Saving the whole form used to write the spend total from when the page loaded, which could erase newer usage. 2.14.0 submits only the fields you changed, so an email, rate limit, or factor edit leaves the latest usage alone.
+
+User details are Overview, Quota and billing, Models, and Activity. Changing the reset period or time no longer clears spend for the current period. Clear spend only by editing that field itself. Leaving a page with unsaved edits asks you to confirm.
+
+Gateway settings save per card. A business-timezone edit does not submit drafts sitting on other cards. A card marks unsaved edits and can discard them on its own.
+
+![User factor mode card with unsaved changes, discard, and save](/screenshots/v2-14-0-config-unsaved.webp)
+
+## Other changes
+
+| Area | What changed |
+|---|---|
+| **Provider presets** | Pay-as-you-go Qwen AI Platform and MiniMax international, an updated Qwen Token Plan address, and Responses, Anthropic, image, and audio endpoints where the platform supports them. The LongCat Chat address is corrected. |
+| **Endpoints** | Templates that support only part of OpenAI now list those endpoints instead of deriving unsupported ones from a base URL. Model Studio notes explain base versus plan-specific endpoints. |
+| **New presets** | Claude Haiku 5.5, Gemini Nano Banana 2.1, MiniMax ASR 1.0, Speech 2.8 HD and Turbo, and Image 01 and 01 Live. |
+| **Prices** | Claude Sonnet 5.5 cache read, Seedream 5.0 Pro resolution tiers, and Grok Imagine Image 2.0 billing. An OpenAI image call with no `size` can use the extension field `resolution` to pick a tier. |
+| **Multimodal logs** | Extra fields and restored protected fields are recorded. Data URL contents are redacted. |
+| **Provider cards** | A card with no key, or one still to be confirmed, no longer shows a dead "open" link. Import and edit dialogs can still open the platform. |
+
+Import does not overwrite an existing model id or an existing provider endpoint. Apply a new address or a corrected price by hand after you check the upstream.
+
+## Upgrade to 2.14.0
+
+Moving from 2.13.0 adds no schema migration and no required setting. Back up, then update Proxy, Admin, and the migrate image together. Older databases still need the missing migrations, in order. Upgrade every Proxy before you enable a new protocol or a group factor.
+
+Check these configurations:
+
+1. **New multimodal routes.** MiniMax image and audio need `minimax.base`. The Seedream adapter needs `volcengine.base`. Gemini image conversion needs a working Gemini endpoint. Existing OpenAI passthrough Seedream routes can stay. New protocols do not add video or music.
+2. **Model Studio image size.** `dashscope-image-qwen` and `dashscope-image-wan` no longer rewrite `1024x1024` to `1024*1024`. They pass the value through. Clients or route defaults that relied on the rewrite need `1K`, `2K`, or `width*height` as that model expects.
+3. **Imported endpoints and prices.** Nothing already imported is rewritten. If a provider base URL still implies an endpoint the platform does not offer, switch that provider to explicit endpoints. Anthropic and Google CNY presets are USD × 7 placeholders, not a separate CNY list price.
+4. **External factor readers.** Numeric factors stay compatible. After you use group factors, anything that reads `charged_cost_factors` must accept an object. Pricing audits can include `user_charged_factor_route_group`.
+
+You do not need to run `scripts/db/migrate-image-billing-modes.mjs` for this upgrade. If you do run it, it changes billing and prices on several named models. Back up and read `--dry-run` first. It does not update the Sonnet cache price.
+
+After the upgrade, test a conversion route and a native route, check image or speech usage and the charge, then check a group discount, the `*` fallback, and a card save. Native MiniMax transcription still buffers the whole file and does not stream SSE. If duration cannot be read, billing estimates from the file.
+
+See [GitHub Release v2.14.0](https://github.com/OctaFuse/octafuse-gateway/releases/tag/v2.14.0) and the [changelog](https://github.com/OctaFuse/octafuse-gateway/blob/v2.14.0/CHANGELOG.md).
+
+- [OctaFuse website](https://octafuse.dev/en/)
+- [GitHub repository](https://github.com/OctaFuse/octafuse-gateway)
+
+If OctaFuse helps your project, please give it a **Star** on GitHub. Your feedback helps us keep improving routing, protocol support, and the self-hosted experience.

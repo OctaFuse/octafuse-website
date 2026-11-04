@@ -1,0 +1,109 @@
+---
+title: 'OctaFuse 2.13.0: provider discounts, route tests before save, and clearer usage'
+description: OctaFuse Gateway 2.13.0 schedules provider discounts, tests an unsaved route in the editor, and splits usage into cost, performance, and reliability views.
+publishDate: 2026-10-06
+updateLabel: VERSION 2.13.0
+featuredUpdate: false
+template: splash
+prev: false
+next: false
+lastUpdated: false
+sidebar:
+  hidden: true
+---
+
+A provider sale should not force you to rewrite every user price, and a route change should not have to be saved before you know whether the upstream accepts it. When the bill or the latency jumps, you also need the model or provider that caused it.
+
+OctaFuse Gateway 2.13.0 separates provider discounts from what users pay and what the route costs, tests the current editor state before you save, and splits usage into views you can actually scan.
+
+## Keep a provider discount on its own clock
+
+A public upstream promotion, the price you charge users, and the discount you actually receive are three different numbers. 2.13.0 stores them separately on the route:
+
+| Setting | What it does |
+|---|---|
+| **Provider factor** | The upstream's public discount. It applies to both the user charge and the provider cost. Default `1` |
+| **Charged factor** | What this route bills the user |
+| **Cost factor** | The supply discount you record for this route |
+
+On the Gemini 3.8 Flash example, the provider factor is `0.5`, the charged factor is `1`, and the cost factor is `0.68`. If catalog usage for the call is $100 and there is no extra user factor:
+
+- User charge: `100 × 0.5 × 1 = 50`.
+- Provider cost: `100 × 0.5 × 0.68 = 34`.
+- The standard amount stays `100`. It is not multiplied by the provider factor.
+
+A provider factor can have a start and an end. Weekday and night windows can each have their own. A window that has not started, or that has ended, counts as `1`, so you do not have to put the old price back by hand. The schedule stays on the route for later review.
+
+The editor previews unit price, the final factor, and margin for each window. The route list shows the current window. That preview does not include a per-user factor. User discounts still multiply or take the smaller value, as before.
+
+![Gemini 3.8 Flash pricing with three factors and a provider-factor end time](/screenshots/v2-13-0-provider-pricing.webp)
+
+*Combined charged and cost factors in the figure are `0.5` and `0.34`. The provider factor ends at 2026-12-30 23:59 (Asia/Shanghai). This is a configuration example, not an official promotion.*
+
+The rule covers text, image, and audio models. It does not cover Agent Tools. The catalog and the per-user discount endpoint also return the provider factor that is in effect, so a portal can refresh the price it shows. The request still picks an upstream with the existing route policy.
+
+## Test a route before you save it
+
+The usual check is whether the provider model name, custom headers, and body are accepted. You can now send that test from the route editor with the values currently on screen. Pick a sample, edit the body, and read the upstream request and response. If you change the form after a successful test, the page marks that result as stale.
+
+The editor groups model mapping, request settings, pricing, and the quick test. A new route lists only enabled providers. Editing or copying a route keeps a disabled provider that is already bound, and shows that it is disabled.
+
+![Quick test inside the Gemini 3.8 Flash route editor](/screenshots/v2-13-0-route-quick-test.webp)
+
+*The test sits in the same window as the route. The figure has not sent a request yet, so the result is empty. The request URL is covered.*
+
+A quick test checks whether this configuration can call the selected upstream. It does not save a draft, charge a gateway user, write a request log, or fail over. It can still cost money at the provider. It is not a billing test. Use Simulator, or a real client, when you need auth, balance, full routing, and the actual charge. Realtime WebSocket tests still need a saved route.
+
+Playground and Simulator text sessions use the same request editor and response layout: samples, streaming, JSON, the answer, thinking, tool calls, and the raw payload. Long output scrolls inside the result. Tool-call details are for inspection. The gateway does not run the tool.
+
+## Read usage without one wide table
+
+Model, provider, and user usage now have Overview, Cost and usage, and Performance and quality. Search for a target. On provider usage, filter by provider type, then check request count, success rate, user charges, provider cost, and the billing gap. CSV export follows the current filter. A failed query can be retried, and an older result does not overwrite a newer time range.
+
+User usage can also show the current budget. That is the account's budget and wallet now, not the balance at the end of the selected history. The gap between user charges and provider cost is the recorded billing difference. It does not subtract infrastructure or tax.
+
+![Model usage in the cost and usage view](/screenshots/v2-13-0-model-usage.webp)
+
+*Cost and usage, with no search yet. Standard amount, user charge, provider cost, and tokens are on each model. Search updates the totals, the list, and the CSV.*
+
+A few metrics are easier to read:
+
+- **Overall success rate** is weighted by request count. It is not the average of the row rates.
+- **Failover share** counts a request once if it failed over at least once.
+- **Stream speed** uses successful samples with a valid stream duration. No sample is `—`, not zero.
+
+After a provider is deleted, historical usage keeps the account name and marks it deleted, or shows the id when the name is gone. Reliability's recent errors and the jump into logs use the time range you already selected.
+
+Today, this week, this month, and dashboard trends use the business timezone. So do quota reset entry, provider quota check and reset times, and the last-used time on an integration key.
+
+## Other changes
+
+| Area | What changed |
+|---|---|
+| **Copy a model** | The editor can copy price, modalities, tags, notes, metadata, and time windows. The new id ends in `-copy` until you change it. Routes are not copied. |
+| **Provider cards** | Protocol and capability marks are tighter. Open the card itself to edit. |
+| **Stats** | Requests with no provider stay out of provider stats. Cache hit rate is `—` when there are no input tokens. |
+| **New presets** | GPT-6.1 Sol, Claude Sonnet 5.5, Grok Build 0.1, Grok 4.20 Reasoning and Non-Reasoning, MiniMax M2.7 Highspeed, Kimi K2.7 Code Highspeed, Qwen3.8 Max Prime, 2.4T-A95B, 27B, Omni Flash, Seedream 5.0 Flash, and Qwen Image 2.1 Pro. |
+| **Price fixes** | USD presets for Qwen Image 3.0 / Pro and Wan 2.7 Image / Pro, plus the up-to-32K input tier on Doubao Seed 2.0 Mini, Lite, and Pro CNY presets. |
+| **Older clients** | A temporary Anthropic path alias for older SoloEnt Agent builds. General clients should keep using `POST /v1/messages`. |
+
+Import new presets and attach routes. Import does not overwrite an existing model id. Apply a corrected price by hand after you check the provider.
+
+## Upgrade to 2.13.0
+
+Moving from 2.12.0 does not add a migration or a required setting. Back up, then update Proxy, Admin, and the migrate image together. From an older release, apply the missing migrations in order first.
+
+Before you turn a provider factor on, upgrade every Proxy to 2.13.0, wait until old processes are out of traffic, then upgrade Admin. An unset provider factor counts as `1`.
+
+If you previously stored `price_override.provider_factor` through the API or by editing JSON, check it before the upgrade. Older releases used that field as the cost factor only when `metered_factor` was missing. 2.13.0 treats it as its own provider factor, so it changes both the user charge and the provider cost. If you only meant to record a cost discount, put that discount in `metered_factor` and set `provider_factor` to `1` or remove it. Do this even when `metered_factor` is already present.
+
+Systems that parse pricing audits need to accept `pricing_audit.v = 6` and the provider factor, and still read older rows. Historical logs are not rewritten. Analytics adds failover share and successful stream samples. `failover_rate` and `tokens_per_second` keep their previous meaning.
+
+After the upgrade, check a discount that has not started, one that is active, and one that has ended. Test one unsaved route and one full client call. Then check analytics filters, export, and the range called Today. On D1 and MySQL, trend buckets use the timezone offset at the end of the query, so a range that crosses a daylight-saving change can shift a bucket. PostgreSQL converts with the timezone rules.
+
+See [GitHub Release v2.13.0](https://github.com/OctaFuse/octafuse-gateway/releases/tag/v2.13.0) and the [changelog](https://github.com/OctaFuse/octafuse-gateway/blob/v2.13.0/CHANGELOG.md).
+
+- [OctaFuse website](https://octafuse.dev/en/)
+- [GitHub repository](https://github.com/OctaFuse/octafuse-gateway)
+
+If OctaFuse helps your project, please give it a **Star** on GitHub. Your feedback helps us keep improving routing, protocol support, and the self-hosted experience.

@@ -1,0 +1,158 @@
+---
+title: 'OctaFuse 2.15.0: aggregated MCP, embeddings, and a manual official-catalog check'
+description: OctaFuse Gateway 2.15.0 exposes remote MCP servers through one gateway address, routes OpenAI and Gemini embeddings, and lets you compare imported models and providers with the official catalog before applying changes. Upgrade requires migration 0030.
+publishDate: 2026-10-15
+updateLabel: VERSION 2.15.0
+featuredUpdate: false
+template: splash
+prev: false
+next: false
+lastUpdated: false
+sidebar:
+  hidden: true
+---
+
+OctaFuse Gateway 2.15.0 gives Agents one MCP address. After you connect remote MCP servers, an Agent uses the gateway URL and a user API key, sees one tool catalog, and each tool call is logged and billed.
+
+The same release routes OpenAI-compatible and native Gemini embedding requests through the existing pools, failover, and billing. Models and Providers can check the official catalog when you ask, and you choose official values or keep what you already saved.
+
+## One MCP address for many servers
+
+Each remote MCP server has its own URL and auth header. 2.15.0 gathers them on the Proxy:
+
+| Entrance | What the Agent sees |
+|---|---|
+| `POST /mcp` | The catalog of every enabled server |
+| `POST /mcp/{slug}` | One server |
+
+The entrance is stateless Streamable HTTP and uses the user API key. Tool names look like `{slug}__{original}`. Prompts and resources come from the same entrance. The upstream URL and auth header are not given to the Agent.
+
+The catalog is a snapshot you reviewed. A new upstream tool does not appear in front of the Agent until you sync and enable it.
+
+### Connect, sync, then enable
+
+On **MCP Servers**, add a remote URL and static headers, or paste a common client MCP config to fill them in. Local processes, legacy SSE, and OAuth are not imported.
+
+![MCP server list with one enabled demo server, exposed item count, and a price per request](/screenshots/v2-15-0-mcp-services.webp)
+
+*The server in the figure is a demo. The price is an example.*
+
+After it is connected:
+
+- Sync pulls tools, prompts, and resources, and shows what was added, changed, or removed.
+- **New items start disabled.** Enable them one by one or in a batch. A changed description needs another review.
+- A failed sync is marked on the list. The upstream URL and auth header are redacted by default.
+
+### Bill a successful tool call
+
+Only `tools/call` is billed, and a successful call is one request unit:
+
+- The user pays the standard price times the user factor. Provider cost is the standard price times the supply factor. A user factor of `0` is free and still records provider cost.
+- A server can set a default unit price. A single tool can override it.
+- Balance is checked before the call. An upstream failure is not charged.
+- The request log uses `provider_id=octafuse-mcp` and can be filtered to MCP calls.
+
+`GET /v1/tools/pricing` adds an `mcp` section for enabled tools, with the billing unit and price.
+
+### Copy a client config
+
+**Connection guide** takes the Proxy address and either all servers or one server, then copies config for Cursor, VS Code, Claude Code, and Codex, plus a curl check. Samples use the placeholder `<YOUR_API_KEY>`.
+
+![MCP connection guide with a Cursor mcp.json sample](/screenshots/v2-15-0-mcp-connection-guide.webp)
+
+**Test exposed catalog** calls `/mcp` or `/mcp/{slug}` with a Proxy address and a user API key. You can read raw JSON or a view grouped by server. The copied cURL uses a key placeholder. The test lists the catalog and protocol capabilities. It does not run a tool.
+
+![Exposed catalog test, grouped by server](/screenshots/v2-15-0-mcp-catalog-test.webp)
+
+*The Proxy address is shared with the connection guide. The response in the figure is from the sample server.*
+
+## Embeddings
+
+Two embedding entrances use the existing route pools, failover, rate limits, and billing:
+
+| Protocol | Entrance |
+|---|---|
+| OpenAI-compatible | `POST /v1/embeddings` |
+| Gemini native | `POST /v1beta/models/{model}:embedContent` and `:batchEmbedContents` |
+
+The body is passed through. A Gemini batch rewrites each `requests[].model` and leaves the rest.
+
+An embedding model has `embedding` in `output_modalities` and is billed on input tokens only. OpenAI uses `usage.prompt_tokens`, then `total_tokens`. Gemini uses `usageMetadata.promptTokenCount`. No usage from the upstream means no charge.
+
+`GET /v1/models` omits embedding models unless you pass `kind=embedding`.
+
+Admin follows the same split:
+
+- Models, routes, and providers gain an `embedding` kind. The model form keeps an input price only.
+- A provider can override `embeddings` for OpenAI and `models.embed` for Gemini. Full-capability OpenAI, Azure OpenAI, ZenMux, and Gemini base templates derive the embedding endpoint.
+- Presets add `text-embedding-3-small`, `text-embedding-3-large`, `text-embedding-ada-002`, `gemini-embedding-2`, and Alibaba Cloud `qwen3.7-text-embedding` and `text-embedding-v4`.
+- Playground and the route quick test include OpenAI and Gemini embedding samples and show count, dimensions, and usage.
+
+![Playground embedding request showing one vector, 8 dimensions, and usage](/screenshots/v2-15-0-embedding-playground.webp)
+
+*The upstream in the figure is a local mock. Real dimensions come from the model you select.*
+
+Provider templates add `openai.endpoints.embeddings` where the vendor documents an OpenAI-compatible embeddings API, including Volcengine Ark, Alibaba Cloud Model Studio, Tencent Hunyuan, Baidu Qianfan, Zhipu GLM, Google Gemini, Mistral, OpenRouter, and SiliconFlow. Platforms that do not offer it, or that were not confirmed, are left blank so you can fill the endpoint yourself.
+
+Except for Alibaba Cloud, CNY preset prices are USD × 7 placeholders, not a separate CNY list.
+
+## Split speech, then compare with the official catalog
+
+Audio used to mean both recognition and synthesis. Models, Routes, Playground, and Simulator now use **ASR** and **TTS**. There is no second "audio capability" switch.
+
+`GET /v1/models` adds `kind=asr` and `kind=tts`. `kind=audio` remains an alias for both. An old Admin link `?kind=audio` lands on ASR. Saving a model is rejected when the billing mode and modalities disagree, for example TTS with no `audio` output. Admin and Proxy share that rule. See [model kinds](https://github.com/OctaFuse/octafuse-gateway/blob/v2.15.0/docs/developers/reference/model-kinds.md).
+
+Imported rows are not rewritten when the static catalog changes. **Check official updates** on Models and on Providers runs only when you click it.
+
+A difference raises a banner and an "official update" mark on the card.
+
+![Model page banner and kind filters, with 18 models that differ from the catalog](/screenshots/v2-15-0-model-kinds.webp)
+
+**Sync with official catalog** groups models by vendor and compares name, vendor, context window, max output, description, release date, modalities, and price. Each field can take the official value or keep the current one. You can sync one model or a batch.
+
+![Official catalog sync, current value beside the official value](/screenshots/v2-15-0-model-official-sync.webp)
+
+A few boundaries stay in place:
+
+- **Price stays unless you choose otherwise.** Price changes billing, so the default is keep current. Applying a price shows how many enabled routes are involved.
+- **Empty official fields do not clear yours.**
+- **Tags, metadata, routes, and route price overrides are left alone.**
+
+Provider sync compares the description and each protocol endpoint: added, changed, or only local. After you replace a deployment placeholder such as Vertex `YOUR_PROJECT_ID` or Azure OpenAI `YOUR_RESOURCE_NAME`, that row stops offering an update. Taking the official template keeps the project, resource name, and region you already filled in. The API key, enabled state, and provider name are not changed. A type the official template renamed or removed is listed so you can move it.
+
+## Other changes
+
+| Area | What changed |
+|---|---|
+| **Tools navigation** | Configuration is now REST services, with MCP servers next to it. Call history includes both and can filter by source and service. |
+| **REST services** | A searchable list with type and status filters. Each row shows setup and billing. Connect, enable, price, and test in the dialog. Billing shares the standard price, user factor, and supply factor with MCP. |
+| **Request id** | Chat, Messages, and Responses return `X-OctaFuse-Request-Id`, the same id as the request log, on success and on failure. Logs can filter by that id. Logs also store a structure summary of message roles, field names, and content types, not the message body. |
+| **Azure OpenAI** | The official base is `https://YOUR_RESOURCE_NAME.openai.azure.com/openai/v1`. A Foundry `services.ai.azure.com` address is the same template. An old base without `/v1` is offered as an update. |
+| **Gemini 4 Argon** | Preset `gemini-4-argon` uses the Standard list from 2026-12-01: input $4, output $20 per million tokens, cache read $0.20. The introductory price before 30 November is not included. Implicit cache only. CNY is USD × 7. |
+| **Dashboard** | Needs attention and recent requests show the full date and time in the business timezone. The Token chart no longer goes blank when you open that tab. |
+| **Filters** | Model, route, provider, request log, audit log, user, Playground, and Simulator filters share one control style. Behavior is unchanged. Unit labels use a currency symbol, such as `¥/1M`. Billing is unchanged. |
+
+## Upgrade to 2.15.0
+
+**Apply migration 0030.** It creates `mcp_servers` and `mcp_server_items` on D1, Postgres, and MySQL. See the [0030 notes](https://github.com/OctaFuse/octafuse-gateway/blob/v2.15.0/docs/operators/migrations/0030-mcp-servers.md). Nothing else in this release needs a new migration or a required setting.
+
+1. Back up the database.
+2. Run the v2.15.0 migrate image, or the matching script, and apply 0030.
+3. Roll Proxy and Admin to the same version.
+
+If the tables are missing, the new Proxy does not fail the request. `GET /v1/tools/pricing` returns an empty `mcp` array. You can keep the tables if you roll the application back.
+
+Compatibility:
+
+- `GET /v1/models?kind=audio` remains an alias for `asr` and `tts`.
+- The default model list omits embedding models. Pass `kind=embedding` when you need them.
+- Existing Chat, Responses, Messages, and Gemini routes and credentials stay the same.
+
+After the upgrade, connect an MCP server, sync, enable items, and test `/mcp`. Spot-check `POST /v1/embeddings`. Open Check official updates and leave prices on keep-current until you decide. Then smoke-test the routes you rely on.
+
+See [GitHub Release v2.15.0](https://github.com/OctaFuse/octafuse-gateway/releases/tag/v2.15.0) and the [changelog](https://github.com/OctaFuse/octafuse-gateway/blob/v2.15.0/CHANGELOG.md).
+
+- [OctaFuse website](https://octafuse.dev/en/)
+- [GitHub repository](https://github.com/OctaFuse/octafuse-gateway)
+
+If OctaFuse helps your project, please give it a **Star** on GitHub. Your feedback helps us keep improving routing, protocol support, and the self-hosted experience.

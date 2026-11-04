@@ -1,0 +1,128 @@
+---
+title: 'OctaFuse 2.10.0: lock route parameters, show model endpoints, and audit wallet changes'
+description: OctaFuse Gateway 2.10.0 can force a route's headers or body over the client, lists the endpoints a model actually accepts, and records permanent-balance changes with richer audit filters.
+publishDate: 2026-09-10
+updateLabel: VERSION 2.10.0
+featuredUpdate: false
+template: splash
+prev: false
+next: false
+lastUpdated: false
+sidebar:
+  hidden: true
+---
+
+Models and providers do not all accept the same request. Some fields can stay with the client. Others have to stay fixed, or the upstream call fails.
+
+OctaFuse Gateway 2.10.0 adds a force-override switch for route headers and for the route body, lists the inbound endpoints on each model, and makes permanent-balance changes easier to trace.
+
+In one sentence:
+
+> **The gateway can lock the fields that must not change, clients can see which endpoint to call, and wallet edits leave an audit trail.**
+
+## Force a route value over the client
+
+2.9.0 split custom headers from JSON body defaults. 2.10.0 adds **Force override** on each side. By default the client still wins when both send the same name. Turn the switch on when the route value must win.
+
+If the route sets `max_tokens` to `4096` and the client sends `8192`:
+
+- Force override off: the upstream request uses `8192`.
+- Body force override on: the upstream request uses `4096`.
+
+Headers follow the same rule. If `HTTP-Referer`, `X-Title`, or a channel header has to stay under operator control, turn on header override only. The body merge is unchanged.
+
+OpenCode, for example, checks `x-opencode-session`. Some clients cannot send it, or send a value the upstream rejects. Put the correct header on the route and turn on header force override. Every client on that route gets the fixed value, and none of them can replace it.
+
+![Route editor forcing the x-opencode-session header](/screenshots/v2-10-0-route-force-override.webp)
+
+The Admin API stores this in one envelope:
+
+```json
+{
+  "headers": {
+    "HTTP-Referer": "https://example.com",
+    "X-Title": "My App"
+  },
+  "body": {
+    "max_tokens": 4096,
+    "temperature": 0.7
+  },
+  "force_override": {
+    "headers": true,
+    "body": true
+  }
+}
+```
+
+Write only the side you want to force. A missing switch stays off. The switches change priority for names that appear on both sides. Fields that exist only on the client, or only on the route, are kept. `messages` and the rest of the request are not replaced wholesale.
+
+Authentication and transport headers stay with the gateway: `Authorization`, `X-API-Key`, `X-Goog-API-Key`, `Host`, `Content-Type`, `Content-Length`, `Cookie`, and connection-management headers. Client headers that are not configured on the route are not forwarded.
+
+Older flat `custom_params` still run, with both overrides off. Saving the route in the new Admin rewrites them into the envelope.
+
+## See which endpoint a model accepts
+
+One model can be open on Chat Completions, Responses, Anthropic Messages, and Gemini `generateContent` at the same time. `GET /v1/models` used to return only the model id.
+
+2.10.0 adds `model_info.inbound` with the endpoints that are actually available:
+
+```json
+{
+  "id": "example-model",
+  "model_info": {
+    "inbound": [
+      { "protocol": "openai", "operation": "responses" },
+      { "protocol": "openai", "operation": "chat" },
+      { "protocol": "anthropic", "operation": "messages" }
+    ]
+  }
+}
+```
+
+`inbound` comes from active routes in the route groups this user can see. It names the client protocol and operation, not the upstream protocol, and the order is not a recommendation. In this release the field covers text LLM endpoints only, not image or audio. A wildcard route expands to the default text operation when that protocol has no exact route.
+
+## Trace permanent-balance edits
+
+A direct edit of the permanent balance is recorded as `admin_patch_wallet`, with the balance before and after: granted amount, amount spent, and current balance. If the same save also changes the recurring quota, that save stays on the recurring-quota reason so the two kinds of edit stay separate.
+
+Grants and direct edits now appear together in the user audit log. Event type, source, reason, actor, and actor source can be multi-selected, so a wallet investigation can keep the related create, credit, and admin-edit rows in one filter.
+
+![Audit log filtered to wallet changes with several conditions selected](/screenshots/v2-10-0-audit-log-filters.webp)
+
+## Other changes
+
+| Area | What changed |
+|---|---|
+| **Responses streams** | If an upstream SSE event has no top-level `sequence_number`, the gateway fills an increasing number for that connection. Numbers the upstream already sent are left alone. |
+| **New presets** | `claude-fable-5-1`, `gpt-6-astra`, and `deepseek-v4.1-flash`. |
+| **DeepSeek prices** | `deepseek-v4-flash` input, output, and cache-read prices follow the updated catalog, and the weekday peak window stays. |
+
+Importing the catalog does not overwrite a model id that is already in the database. Import new models when you need them. Update `deepseek-v4-flash` by hand after you check the provider's price.
+
+## Upgrade to 2.10.0
+
+There is no new database migration. If 2.9.0 migration **0028** is already applied, upgrade Proxy and Admin. From an older release, apply the missing migrations first.
+
+Admin 2.10.0 saves route custom parameters as the new envelope. Roll out in this order:
+
+1. Upgrade every Proxy to 2.10.0.
+2. Wait until old Proxy processes are out of traffic.
+3. Upgrade Admin and review the important routes.
+4. Turn on header or body force override only where you need it.
+
+A 2.10.0 Proxy can read the old flat shape. An older Proxy cannot read the envelope a 2.10.0 Admin saves. Do not save routes from the new Admin until every Proxy has been upgraded.
+
+After the upgrade, check that:
+
+1. With force override off, the client's header or body value still wins.
+2. Turning on only one side changes priority only on that side.
+3. `GET /v1/models` returns `model_info.inbound` for the endpoints you actually opened.
+4. Responses stream events have a usable top-level `sequence_number`.
+5. A permanent-balance edit creates an audit row you can find with the new filters.
+
+Before upgrading, review [GitHub Release v2.10.0](https://github.com/OctaFuse/octafuse-gateway/releases/tag/v2.10.0) and the [full changelog](https://github.com/OctaFuse/octafuse-gateway/blob/v2.10.0/CHANGELOG.md).
+
+- [OctaFuse website](https://octafuse.dev/en/)
+- [GitHub repository](https://github.com/OctaFuse/octafuse-gateway)
+
+If OctaFuse helps your project, please give it a **Star** on GitHub. Your feedback helps us keep improving routing, protocol support, and the self-hosted experience.
