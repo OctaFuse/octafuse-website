@@ -1,0 +1,37 @@
+---
+title: "Connect clients"
+description: "Configure an SDK, IDE or CLI with the Proxy URL, user key, gateway model ID and matching protocol."
+gatewayRef: v2.18.0
+---
+
+Complete a [first request](/en/docs/quick-start/) before configuring other clients. Use a **user API key**, separate from provider credentials and Admin integration keys.
+
+## Choose the client protocol
+
+| Client | Address or interface | Requirements |
+|---|---|---|
+| OpenAI-compatible SDK, IDE or CLI | Base URL: `http://localhost:8787/v1` | User key, gateway model ID and an active Chat or Responses surface |
+| Anthropic-compatible client | Request URL: `http://localhost:8787/v1/messages` | A Messages surface; configure the SDK base according to its URL joining rules |
+| Native Gemini client | `http://localhost:8787/v1beta/models/model-id:generateContent` | A Gemini surface and native request body |
+| MCP client | `http://localhost:8787/mcp` or `/mcp/server-slug` | An enabled MCP server and a user key or [OAuth](/en/docs/guides/oauth/) |
+
+Replace local addresses with your deployed Proxy URL. Some clients append `/v1` themselves; inspect the final path to avoid repeating it.
+
+## Models and route groups
+
+Clients use the gateway's model ID. The route maps it to the upstream model name. Specify a group as `model-id:route-group`, for example `your-model:free`. Available protocols depend on the group's active surfaces.
+
+Authenticated `GET /v1/models` returns LLMs by default. Use `kind=image`, `kind=asr`, `kind=tts` or `kind=embedding` for other types; `kind=all` includes all types. The compatible `kind=audio` filter includes ASR and TTS.
+
+## Test Responses
+
+```bash
+curl -sS http://localhost:8787/v1/responses \
+  -H 'Authorization: Bearer sk-your-api-key' \
+  -H 'Content-Type: application/json' \
+  -d '{"model":"your-route-model","input":"Hello"}'
+```
+
+A working Chat route does not automatically provide Responses, Messages or Gemini. Check the [request surfaces](/en/docs/guides/routing/), then inspect [request logs](/en/docs/guides/request-logs/).
+
+See [client examples](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/users/connect-clients.md) for additional requests and fields.

@@ -1,115 +1,34 @@
 ---
-title: Cloudflare Workers deployment
-description: Recommended path—one CLI deploys Proxy + Admin + shared D1 to your Cloudflare account; individuals and light traffic can usually stay in the free tier.
+title: "Cloudflare deployment"
+description: "Use the bootstrap flow for Proxy, Admin and shared D1, then verify the client operations you need."
+gatewayRef: v2.18.0
 ---
 
-import { Aside } from '@astrojs/starlight/components';
+In this deployment Proxy and Admin each run as a Worker and share D1. Cloudflare is one supported option; resource limits and charges depend on the plan and actual usage.
 
-**Proxy** and **Admin** are separate **Workers** sharing one **D1** database (binding **`DB`**). This is OctaFuse’s **default production path**—individuals and light traffic can usually deploy and run within the Workers / D1 free tier.
+## Bootstrap
 
-<Aside type="tip" title="Fastest path for external users">
-	From the repo root, `npm run bootstrap:cloudflare` creates/reuses D1, migrates, deploys both Workers, and sets the Admin Secret. Full write-up: [gateway Cloudflare quickstart](https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/operators/deployment/cloudflare-quickstart.md).
-</Aside>
-
-<Aside type="note" title="Canonical details">
-	This page is the operator-facing short path. Workers Builds, multi-instance ops, error **10181**, and full notes live in [GitHub technical reference](/en/docs/github-reference/) → **Cloudflare deployment**.
-</Aside>
-
-## One-command bootstrap (recommended)
+Prepare a Cloudflare account, Node.js and npm. In the target Gateway release checkout run:
 
 ```bash
-git clone https://github.com/OctaFuse/octafuse-gateway.git
-cd octafuse-gateway
 npm install
 npx wrangler login
 npm run bootstrap:cloudflare
 ```
 
-The script will: create or reuse D1 → remote migrate → deploy Proxy / Admin → put `ADMIN_PASSWORD` → print downstream `GATEWAY_*` hints.
+Follow the prompts to create or select resources and set Admin credentials. Record the resulting Proxy and Admin URLs. Use the [Cloudflare quick deployment reference](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/operators/deployment/cloudflare-quickstart.md) for exact resource settings and troubleshooting.
 
-Try locally without deploying: [Quick start · local](/en/docs/quick-start/).
+## Configure and verify
 
-## How to upgrade
+1. Sign in to Admin, configure providers, models and routes, then create a test user and key.
+2. Test a normal model request followed by the image, audio, embedding or MCP operations your application needs.
+3. For realtime capabilities, verify native WebSocket connection and returned events.
+4. Inspect request flows and account changes rather than relying on `/health` alone.
 
-For an already-deployed instance, work from the **octafuse-gateway** repo root. Back up important config first, and read the **Upgrade notes** in that version’s [Release](https://github.com/OctaFuse/octafuse-gateway/releases) / Changelog.
+## Upgrades and migrations
 
-```bash
-git pull --ff-only
-npm ci
-```
+Pin the target version and read [Upgrades](/en/docs/deploy/upgrades/). Back up D1, apply all pending release migrations, then deploy matching Proxy and Admin versions. Follow an existing Workers Builds or Git integration flow rather than accidentally deploying duplicate resources.
 
-When new D1 migrations land (prefer **migrate first, then deploy Workers that depend on the new schema**):
+Store credentials as platform secrets or protected deployment values. Use the [deployment overview](/en/docs/deploy/overview/) and database cutover reference before changing to Postgres or MySQL.
 
-```bash
-npm run deploy:cloudflare -- <instance> --migrate
-```
-
-When there are no schema changes:
-
-```bash
-npm run deploy:cloudflare -- <instance>
-```
-
-Or update one side only:
-
-```bash
-npm run deploy:cloudflare -- <instance> --proxy-only
-npm run deploy:cloudflare -- <instance> --admin-only
-```
-
-`<instance>` maps to `cloudflare-worker/<instance>.env` (for example `production`). **Redeploying Workers does not run D1 migrations.** Workers Builds (Connect to Git) also skip migrations—use `--migrate` or `db:migrate:remote` when new SQL lands.
-
-Full troubleshooting: [gateway Cloudflare quickstart · Upgrades](https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/operators/deployment/cloudflare-quickstart.md#12-后续升级).
-
-## Configuration model (deeper)
-
-| Layer | Role |
-|-------|------|
-| `packages/*/wrangler.base.jsonc` | Committed templates (no production `database_id`) |
-| `packages/proxy/wrangler.jsonc`, etc. | **Generated** (gitignored) by `gen:wrangler` |
-| [`cloudflare-worker/example.env`](https://github.com/OctaFuse/octafuse-gateway/blob/main/cloudflare-worker/example.env) | **Dev demo** canonical config (committed) |
-| `cloudflare-worker/<instance>.env` | **Production/private** (gitignored); or Dashboard **Build variables** only |
-
-`gen-wrangler` reads **environment variables** (`process.env`) only.
-
-## Other paths
-
-| Path | When |
-|------|------|
-| **Local dev** | Laptop + local D1 ([Quick start](/en/docs/quick-start/)) |
-| **Dev demo** | Public test `test-api.octafuse.dev` (`example.env` + CLI) |
-| **Workers Builds** | Connect to Git auto-deploy (D1 migrations still manual) |
-
-### Returning to local after remote deploys
-
-After `deploy:*` or `db:migrate:remote`, generated `wrangler.jsonc` may include the remote `D1_DATABASE_ID`. Before local development, run `npm run gen:wrangler` from a shell without `D1_DATABASE_ID` exported, then restart `dev:proxy` / `dev:admin`.
-
-### Workers Builds commands (optional)
-
-**Leave Root directory empty** (monorepo root). `npm ci` → `postinstall` → `gen:wrangler`.
-
-| Worker | Build command | Deploy command |
-|--------|---------------|----------------|
-| **Proxy** | `npm ci && npm run gen:wrangler` | `npm run deploy -w @octafuse/proxy` |
-| **Admin** | `npm ci && npm run gen:wrangler && npm run build:cf -w @octafuse/admin` | `cd packages/admin && npx opennextjs-cloudflare deploy` |
-
-<Aside type="caution" title="D1 migrations are not in CI">
-	Git pipelines **do not** run D1 migrations. Use `deploy:cloudflare -- <instance> --migrate` or `db:migrate:remote` first.
-</Aside>
-
-## Secrets and downstream
-
-- **`ADMIN_PASSWORD`**: set by bootstrap; or `npx wrangler secret put ADMIN_PASSWORD --name <ADMIN_WORKER_NAME>`.
-- Downstream: `GATEWAY_URL` (Proxy), `GATEWAY_MASTER_URL` (Admin), and a named Admin API Key created under **System Integration → Integration Keys** (the environment variable can remain `GATEWAY_MASTER_KEY`).
-
-## vs Docker
-
-- **Default / edge / no server to babysit** → this page (Cloudflare).  
-- **Data residency, VPC, BYO Postgres/MySQL** → [Docker](/en/docs/deploy/docker/).
-
-## See also
-
-- [Quick start](/en/docs/quick-start/)  
-- [Docker](/en/docs/deploy/docker/)  
-- [Integration](/en/docs/guides/integration/)  
-- [GitHub technical reference](/en/docs/github-reference/)  
+See the [Cloudflare operations reference](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/operators/deployment/cloudflare.md) for build and configuration details.

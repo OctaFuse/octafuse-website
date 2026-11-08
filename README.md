@@ -110,3 +110,16 @@ Agent 指令见 [AGENTS.md](AGENTS.md)。
 ## 相关仓库
 
 - 网关源码与权威文档：[OctaFuse/octafuse-gateway](https://github.com/OctaFuse/octafuse-gateway)
+
+
+## 内容维护与验收
+
+长期指南以 `gatewayRef` 标记核验过的正式版本；官网目录与技术参考由 `sync/manifest.json` 标记来源。发布新版本时，同时检查首页能力、受影响任务指南、中英文内容和截图，不能只增加更新文章。
+
+- 技术行为、字段与迁移先更新 Gateway 文档；官网保留任务摘要和对应版本的参考入口。
+- 更新 `sync/contract.json` 的正式版 ref。同步脚本会从该 ref 的独立快照读取，既不切换开发工作区，也不读取未提交文件。
+- 执行 `npm run sync:gateway`，检查目录数量、协议和参考变更；再执行 `npm run sync:gateway:check` 确认无漂移。
+- 执行 `npm run build && npm run check:site`。检查器逐页验证语言配对、唯一标题、站内链接、锚点、静态资源、目录协议与四个 JSON 地址的一致性。
+- 启动 `npm run dev`，逐页确认内容与截图，并在桌面和手机宽度检查导航、表格、代码块与目录筛选。
+
+公共目录 API `/api/catalog/models`、`/api/catalog/providers` 与 `/catalog/models.json`、`/catalog/providers.json` 在构建时生成同一份静态数据，不依赖运行时限流绑定。跨域与缓存头由 `public/_headers` 提供；客户端应缓存公开快照，数据来源以响应的 `source` 为准。

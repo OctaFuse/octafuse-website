@@ -1,58 +1,41 @@
 ---
-title: 图片生成 / 编辑
-description: 配置 OpenAI 兼容图片生成 / 编辑：模型目录价（Token / `per_image`）、OpenAI 协议路由，以及调试台 / 模拟器验收。
+title: "图片生成与编辑"
+description: "为 OpenAI Images 或厂商原生入口选择适配器，区分客户端协议、实际上游与计费方式。"
+gatewayRef: v2.18.0
 ---
 
-import { Aside, Steps } from '@astrojs/starlight/components';
+先确定客户端使用哪种入口，再选择兼容的上游适配器。**OpenAI Images 是客户端协议，不要求实际上游也使用 OpenAI 协议。**
 
-网关对外提供 OpenAI 兼容的 **`POST /v1/images/generations`** 与 **`POST /v1/images/edits`**（multipart）。鉴权与聊天请求相同（用户 `sk-…`）；模型须挂载**已启用的 OpenAI 协议路由**，并在目录中配置图片计价。
+## 选择接入路径
 
-<Aside type="tip" title="前置">
-	请先完成[供应商（Providers）](/zh/docs/guides/providers/)（含图片生成端点）与[模型（Models）](/zh/docs/guides/models/)配置。字段级契约见 [GitHub 技术参考 · image-models](https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/developers/reference/image-models.md)。
-</Aside>
+| 路径 | 配置方式 | 需要注意 |
+|---|---|---|
+| OpenAI 兼容生成 / 编辑 | 配置对应 OpenAI 请求入口和兼容端点 | 生成与 multipart 编辑分别检查 |
+| OpenAI 入口 → 厂商图片接口 | 选择 DashScope、MiniMax、火山方舟 / BytePlus 或 Gemini 图片适配器 | 仅支持适配器声明的操作与参数；生成不等于支持 edits |
+| 厂商原生入口 | 使用已实现的原生协议与透传适配器 | 请求、响应和流式能力按该协议处理 |
 
-## 在管理台里要做什么
+## 完成配置
 
-<Steps>
-1. **供应商**：为 OpenAI 或兼容上游配置密钥；`endpoints.openai.base` 可派生 `…/images/generations`，也可填写完整的 `images.generations` URL。Seedream 等不支持 OpenAI 编辑接口形态的上游**不要**填写 `base`（避免派生出无效的编辑接口地址）。
-1. **模型**：导入或手动创建图片生成预设（`output` 含 `image`）。确认 `image_billing_mode`：
-	- **`token`**：按上游 `usage` 中的图片 / 文本 Token 分项计价（如 GPT Image）。
-	- **`per_image`**：按张目录价（如 Seedream），可选参考图输入单价。
-1. **路由（Routes）**：为该模型添加 **OpenAI** 协议且状态为**启用**的路由。
-1. **验收**：在调试台（Playground）通过单条路由试生成图片（不计入用户账单）；再使用模拟器（Simulator）发起真实的网关代理请求，并在[请求日志（Request Logs）](/zh/docs/guides/request-logs/)中核对 `billing_kind`、图片数量与扣费。
-</Steps>
+1. 在供应商中配置实际需要的原生或兼容端点及凭证；部分支持的能力应填写独立端点，避免从 Base 派生不存在的接口。
+2. 导入图片模型，核对输出模态与 `image_billing_mode`。`token` 按实际用量，`per_image` 按成功张数及所配档位计费。
+3. 在路由中选择协议适配器，检查客户端入口、上游操作、模型名和参数映射。
+4. 先在调试台试跑单条上游，再用模拟器验证真实调用与记账。
 
-<figure class="of-doc-figure">
-	<img src="/screenshots/v2-6-0-model-image-billing.webp" alt="OctaFuse 模型页面按 Image 类型筛选，并在卡片上显示按张或按 Token 价格。" loading="lazy" />
-	<figcaption>先在 Models 页面选择 Image：`/img` 表示按张计费，`/M` 表示按 Token 计费；再进入模型编辑页核对完整价目。</figcaption>
-</figure>
+![路由适配器说明与调用限制](/screenshots/v2-14-0-adapter-guide.webp)
 
-## 成功、取消与失败如何计费
-
-- `token` 模式以成功响应中的真实 `usage` 为最终计费依据；入口的 Token 估算只用于预算预检。
-- `per_image` 模式按成功响应中确认返回的图片张数计费，可选叠加参考图输入费用。
-- 客户端取消、Gateway 超时、明确的上游 4xx / 5xx、网络错误与空结果均不扣费，但仍会留下零费用日志供排查。
-- 仅包含旧版 `image` 块但没有显式 `image_billing_mode` 的配置不再计费；包含有效 `image_*` Token 单价的旧配置仍按 `token` 模式处理。
-
-<Aside type="caution" title="升级旧图片价目">
-	Postgres 中使用内置图片模型旧价目的部署，可先运行 `node scripts/db/migrate-image-billing-modes.mjs --dry-run`，确认后再运行 `--apply`。脚本只自动处理已知的内置模型 ID；MySQL、D1 与自定义模型需要人工核对。
-</Aside>
-
-## 与模型列表的关系
-
-- 默认 **`GET /v1/models`**（需要用户密钥）只返回大语言模型（LLM），**不含**纯图片生成模型；可传 `kind=image` / `kind=all`。
-- 门户的模型发现功能使用公开的 **`GET /catalog/models`**（无需密钥），与 `/v1/models` 分工不同。
-
-## 客户端最小示例
+## 最小客户端请求
 
 ```bash
-curl -sS "$GATEWAY_URL/v1/images/generations" \
-  -H "Authorization: Bearer sk-your-api-key" \
-  -H "Content-Type: application/json" \
-  -d '{"model":"gpt-image-2","prompt":"a watercolor fox","size":"1024x1024"}'
+curl -sS http://localhost:8787/v1/images/generations \
+  -H 'Authorization: Bearer sk-your-api-key' \
+  -H 'Content-Type: application/json' \
+  -d '{"model":"your-image-model","prompt":"a watercolor lighthouse","n":1}'
 ```
 
-## 下一步
+图片模型列表使用 `GET /v1/models?kind=image`。图片编辑使用 `/v1/images/edits`，仅在所选上游与适配器支持时可用；有些生成入口使用 JSON 参考图完成图生图，与 multipart 编辑不同。
 
-- [智能体工具（Agent Tools）](/zh/docs/guides/tools/)
-- [路由配置](/zh/docs/guides/routing/) · [模拟器](/zh/docs/features/simulator/)
+## 计费与结果检查
+
+成功后核对返回图片、张数、用量和当次价格快照。客户端取消、网关超时、明确的上游错误或空结果不扣用户额度；不要将“按图片输出”误解为所有模型均按张计费。
+
+模型参数、尺寸档位、原生路径和不扣费边界见 [图片技术参考](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/developers/reference/image-models.md) 与 [厂商覆盖矩阵](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/developers/reference/native-provider-coverage.md)。

@@ -1,7 +1,7 @@
 {
 	"source": {
 		"repo": "OctaFuse/octafuse-gateway",
-		"defaultRef": "main"
+		"defaultRef": "v2.18.0"
 	},
 	"pages": {
 		"zh": {
@@ -29,11 +29,17 @@
 	"sections": [
 		{
 			"id": "start",
-			"title": { "zh": "读者入口", "en": "Reader entry points" },
+			"title": {
+				"zh": "读者入口",
+				"en": "Reader entry points"
+			},
 			"items": [
 				{
 					"path": "docs/README.md",
-					"label": { "zh": "文档总入口", "en": "Documentation index" },
+					"label": {
+						"zh": "文档总入口",
+						"en": "Documentation index"
+					},
 					"description": {
 						"zh": "按使用者、开发者、运维者和维护者组织的入口。",
 						"en": "Entry points organized by users, developers, operators, and maintainers."
@@ -41,7 +47,10 @@
 				},
 				{
 					"path": "docs/users/quickstart.md",
-					"label": { "zh": "快速开始", "en": "Quickstart" },
+					"label": {
+						"zh": "快速开始",
+						"en": "Quickstart"
+					},
 					"description": {
 						"zh": "Docker 与 Cloudflare 本地 D1 的最小启动路径。",
 						"en": "Minimal Docker and Cloudflare local D1 startup paths."
@@ -49,7 +58,10 @@
 				},
 				{
 					"path": "docs/users/configuration.md",
-					"label": { "zh": "Admin 配置指南", "en": "Admin configuration" },
+					"label": {
+						"zh": "Admin 配置指南",
+						"en": "Admin configuration"
+					},
 					"description": {
 						"zh": "部署后配置 Provider、模型路由、Agent Tools、用户和 API Key。",
 						"en": "Configure Providers, model routing, Agent Tools, users, and API keys after deployment."
@@ -57,21 +69,41 @@
 				},
 				{
 					"path": "docs/users/features.md",
-					"label": { "zh": "功能地图", "en": "Feature map" },
+					"label": {
+						"zh": "功能地图",
+						"en": "Feature map"
+					},
 					"description": {
 						"zh": "协议、Agent Tools、路由策略、计费、管理能力与部署方式总览。",
 						"en": "Overview of protocols, Agent Tools, route strategies, billing, administration, and deployment."
+					}
+				},
+				{
+					"path": "docs/users/connect-clients.md",
+					"label": {
+						"zh": "客户端接入",
+						"en": "Connect clients"
+					},
+					"description": {
+						"zh": "SDK、客户端和多模态调用的最小示例。",
+						"en": "Minimal SDK, client and multimodal requests."
 					}
 				}
 			]
 		},
 		{
 			"id": "developers",
-			"title": { "zh": "开发者与集成", "en": "Developers and integration" },
+			"title": {
+				"zh": "开发者与集成",
+				"en": "Developers and integration"
+			},
 			"items": [
 				{
 					"path": "docs/developers/integration.md",
-					"label": { "zh": "系统集成指南", "en": "System integration" },
+					"label": {
+						"zh": "系统集成指南",
+						"en": "System integration"
+					},
 					"description": {
 						"zh": "门户、后台或 SaaS 接入 Gateway 的边界、Key 类型和常见流程。",
 						"en": "Boundaries, key types, and common flows for portals, backends, or SaaS integrations."
@@ -79,7 +111,10 @@
 				},
 				{
 					"path": "docs/developers/api/README.md",
-					"label": { "zh": "API 总览", "en": "API overview" },
+					"label": {
+						"zh": "API 总览",
+						"en": "API overview"
+					},
 					"description": {
 						"zh": "Proxy / Admin 的 Base URL、认证方式和错误形态。",
 						"en": "Proxy/Admin base URLs, authentication, and error shapes."
@@ -87,7 +122,10 @@
 				},
 				{
 					"path": "docs/developers/api/error-codes.md",
-					"label": { "zh": "代理服务错误码", "en": "Proxy error codes" },
+					"label": {
+						"zh": "代理服务错误码",
+						"en": "Proxy error codes"
+					},
 					"description": {
 						"zh": "X-OctaFuse-Error-Code 完整清单、HTTP 对照与调用方建议。",
 						"en": "Full X-OctaFuse-Error-Code catalog, HTTP mapping, and client handling notes."
@@ -95,7 +133,10 @@
 				},
 				{
 					"path": "docs/developers/api/user.md",
-					"label": { "zh": "用户侧 API", "en": "User-facing APIs" },
+					"label": {
+						"zh": "用户侧 API",
+						"en": "User-facing APIs"
+					},
 					"description": {
 						"zh": "OpenAI / Anthropic / Gemini、Images、Audio、Agent Tools、模型列表与预算状态。",
 						"en": "OpenAI / Anthropic / Gemini, Images, Audio, Agent Tools, model lists, and budget state."
@@ -103,7 +144,10 @@
 				},
 				{
 					"path": "docs/developers/api/admin.md",
-					"label": { "zh": "Admin HTTP API", "en": "Admin HTTP API" },
+					"label": {
+						"zh": "Admin HTTP API",
+						"en": "Admin HTTP API"
+					},
 					"description": {
 						"zh": "Provider、模型、路由、Tools、用户、密钥、计费配置、日志与分析接口。",
 						"en": "APIs for Providers, models, routing, Tools, users, keys, billing config, logs, and analytics."
@@ -111,7 +155,10 @@
 				},
 				{
 					"path": "docs/developers/local-development.md",
-					"label": { "zh": "本地开发与测试", "en": "Local development and testing" },
+					"label": {
+						"zh": "本地开发与测试",
+						"en": "Local development and testing"
+					},
 					"description": {
 						"zh": "D1、Node + Postgres、Node + MySQL、Docker 和冒烟脚本组合。",
 						"en": "D1, Node + Postgres, Node + MySQL, Docker, and smoke test combinations."
@@ -121,11 +168,17 @@
 		},
 		{
 			"id": "architecture",
-			"title": { "zh": "架构与行为语义", "en": "Architecture and behavior semantics" },
+			"title": {
+				"zh": "架构与行为语义",
+				"en": "Architecture and behavior semantics"
+			},
 			"items": [
 				{
 					"path": "docs/developers/architecture/runtime-data.md",
-					"label": { "zh": "运行时与数据存储架构", "en": "Runtime and data storage" },
+					"label": {
+						"zh": "运行时与数据存储架构",
+						"en": "Runtime and data storage"
+					},
 					"description": {
 						"zh": "Cloudflare / Node 与 D1 / Postgres / MySQL 的组合矩阵。",
 						"en": "Cloudflare / Node and D1 / Postgres / MySQL combination matrix."
@@ -133,7 +186,10 @@
 				},
 				{
 					"path": "docs/developers/architecture/route-topology.md",
-					"label": { "zh": "Route 拓扑", "en": "Route topology" },
+					"label": {
+						"zh": "Route 拓扑",
+						"en": "Route topology"
+					},
 					"description": {
 						"zh": "Request Surface → Route Pool → Upstream Target 的关系、operation、Provider Sticky 与故障转移边界。",
 						"en": "Request Surface → Route Pool → Upstream Target relationships, operations, Provider Sticky, and failover boundaries."
@@ -141,7 +197,10 @@
 				},
 				{
 					"path": "docs/developers/reference/route-strategies.md",
-					"label": { "zh": "路由策略", "en": "Route strategies" },
+					"label": {
+						"zh": "路由策略",
+						"en": "Route strategies"
+					},
 					"description": {
 						"zh": "hash_affinity、weighted_random、weight_priority、weighted_round_robin 的算法、按层覆盖与 Provider Sticky。",
 						"en": "Algorithms, tier overrides, precedence, and Provider Sticky for hash_affinity, weighted_random, weight_priority, and weighted_round_robin."
@@ -149,7 +208,10 @@
 				},
 				{
 					"path": "docs/developers/architecture/proxy-request-lifecycle.md",
-					"label": { "zh": "Proxy 请求生命周期", "en": "Proxy request lifecycle" },
+					"label": {
+						"zh": "Proxy 请求生命周期",
+						"en": "Proxy request lifecycle"
+					},
 					"description": {
 						"zh": "鉴权、Surface / Pool / Target 解析、四策略、Provider Sticky、熔断、failover 和异步记账。",
 						"en": "Auth, Surface / Pool / Target resolution, four strategies, Provider Sticky, circuits, failover, and async billing."
@@ -157,7 +219,10 @@
 				},
 				{
 					"path": "docs/developers/architecture/user-keys-data-model.md",
-					"label": { "zh": "用户与 API Key 数据模型", "en": "Users and API key data model" },
+					"label": {
+						"zh": "用户与 API Key 数据模型",
+						"en": "Users and API key data model"
+					},
 					"description": {
 						"zh": "User、API Key、预算、请求日志和审计日志的关系与约束。",
 						"en": "Relationships and constraints for users, API keys, budgets, request logs, and audit logs."
@@ -165,7 +230,10 @@
 				},
 				{
 					"path": "docs/developers/reference/streaming-billing.md",
-					"label": { "zh": "流式计费与取消", "en": "Streaming billing and cancellation" },
+					"label": {
+						"zh": "流式计费与取消",
+						"en": "Streaming billing and cancellation"
+					},
 					"description": {
 						"zh": "流式 Chat、客户端取消、usage 解析和扣费状态。",
 						"en": "Streaming chat, client cancellation, usage parsing, and charge state."
@@ -173,7 +241,10 @@
 				},
 				{
 					"path": "docs/developers/reference/image-models.md",
-					"label": { "zh": "文生图模型", "en": "Image models" },
+					"label": {
+						"zh": "文生图模型",
+						"en": "Image models"
+					},
 					"description": {
 						"zh": "图片模型端点、参数、Token / 按张计费、异常不扣费与运营验收。",
 						"en": "Image endpoints, parameters, Token / per-image billing, no-charge failures, and ops acceptance."
@@ -181,21 +252,85 @@
 				},
 				{
 					"path": "docs/developers/reference/time-and-timezone.md",
-					"label": { "zh": "时间与时区", "en": "Time and timezone" },
+					"label": {
+						"zh": "时间与时区",
+						"en": "Time and timezone"
+					},
 					"description": {
 						"zh": "UTC 存储、API 输出、Admin 显示和业务日界。",
 						"en": "UTC storage, API output, Admin display, and business day boundaries."
+					}
+				},
+				{
+					"path": "docs/developers/architecture/mcp-gateway.md",
+					"label": {
+						"zh": "MCP 聚合与 OAuth",
+						"en": "MCP aggregation and OAuth"
+					},
+					"description": {
+						"zh": "远程目录、审核、工具计费、访问令牌与授权服务器边界。",
+						"en": "Remote catalogs, review, tool pricing, access tokens and authorization boundaries."
+					}
+				},
+				{
+					"path": "docs/developers/architecture/adapters-and-drivers.md",
+					"label": {
+						"zh": "适配器与驱动",
+						"en": "Adapters and drivers"
+					},
+					"description": {
+						"zh": "客户端入口、原生上游、透传与显式协议转换。",
+						"en": "Client surfaces, native upstreams, passthrough and explicit conversions."
+					}
+				},
+				{
+					"path": "docs/developers/reference/native-provider-coverage.md",
+					"label": {
+						"zh": "厂商原生能力覆盖",
+						"en": "Native provider coverage"
+					},
+					"description": {
+						"zh": "按厂商列出已实现能力与已知限制。",
+						"en": "Implemented operations and known provider-specific limitations."
+					}
+				},
+				{
+					"path": "docs/developers/reference/model-kinds.md",
+					"label": {
+						"zh": "模型类型",
+						"en": "Model kinds"
+					},
+					"description": {
+						"zh": "LLM、图片、ASR、TTS 与向量的判定规则。",
+						"en": "Classification of LLM, image, ASR, TTS and embedding models."
+					}
+				},
+				{
+					"path": "docs/developers/reference/user-audit-logs.md",
+					"label": {
+						"zh": "用户额度审计",
+						"en": "User quota audit"
+					},
+					"description": {
+						"zh": "周期与永久额度、加额流水与用户密钥事件。",
+						"en": "Budget and wallet changes, credit records and user/key events."
 					}
 				}
 			]
 		},
 		{
 			"id": "operators",
-			"title": { "zh": "部署与运维", "en": "Deployment and operations" },
+			"title": {
+				"zh": "部署与运维",
+				"en": "Deployment and operations"
+			},
 			"items": [
 				{
 					"path": "docs/operators/deployment/README.md",
-					"label": { "zh": "部署模式索引", "en": "Deployment patterns" },
+					"label": {
+						"zh": "部署模式索引",
+						"en": "Deployment patterns"
+					},
 					"description": {
 						"zh": "Cloudflare、Hybrid、Full self-hosted、MySQL 和 Zeabur 模式总览。",
 						"en": "Overview of Cloudflare, Hybrid, full self-hosted, MySQL, and Zeabur modes."
@@ -203,7 +338,10 @@
 				},
 				{
 					"path": "docs/operators/deployment/cloudflare.md",
-					"label": { "zh": "Cloudflare 部署", "en": "Cloudflare deployment" },
+					"label": {
+						"zh": "Cloudflare 部署",
+						"en": "Cloudflare deployment"
+					},
 					"description": {
 						"zh": "Worker、Admin、D1、Build variables、Workers Builds 和迁移顺序。",
 						"en": "Worker, Admin, D1, Build variables, Workers Builds, and migration order."
@@ -211,7 +349,10 @@
 				},
 				{
 					"path": "docs/operators/deployment/docker.md",
-					"label": { "zh": "Docker / 自托管", "en": "Docker / self-hosted" },
+					"label": {
+						"zh": "Docker / 自托管",
+						"en": "Docker / self-hosted"
+					},
 					"description": {
 						"zh": "Docker 镜像、Compose、GHCR、Postgres / MySQL 和 Zeabur 注意事项。",
 						"en": "Docker images, Compose, GHCR, Postgres / MySQL, and Zeabur notes."
@@ -219,7 +360,10 @@
 				},
 				{
 					"path": "docs/operators/migrations/gemini-models-generate-cutover.md",
-					"label": { "zh": "Gemini models.generate 迁移", "en": "Gemini models.generate migration" },
+					"label": {
+						"zh": "Gemini models.generate 迁移",
+						"en": "Gemini models.generate migration"
+					},
 					"description": {
 						"zh": "迁移 0017：合并流式与非流式 Surface、处理冲突 Pool，并校验 Gemini 出站 action。",
 						"en": "Migration 0017: merge streaming and non-streaming Surfaces, handle conflicting Pools, and verify Gemini wire actions."
@@ -227,7 +371,10 @@
 				},
 				{
 					"path": "docs/operators/migrations/route-pool-tier-strategies-cutover.md",
-					"label": { "zh": "按 priority 层路由策略迁移", "en": "Priority-tier route strategy migration" },
+					"label": {
+						"zh": "按 priority 层路由策略迁移",
+						"en": "Priority-tier route strategy migration"
+					},
 					"description": {
 						"zh": "迁移 0018：新增 Route Pool tier_strategies、发布顺序与验收步骤。",
 						"en": "Migration 0018: add Route Pool tier_strategies with deployment order and acceptance checks."
@@ -235,7 +382,10 @@
 				},
 				{
 					"path": "docs/operators/migrations/route-strategy-canonical-ids-cutover.md",
-					"label": { "zh": "Canonical 路由策略 ID 迁移", "en": "Canonical route strategy ID migration" },
+					"label": {
+						"zh": "Canonical 路由策略 ID 迁移",
+						"en": "Canonical route strategy ID migration"
+					},
 					"description": {
 						"zh": "迁移 0019：2.2.0 历史策略 ID 硬切换与持久化配置校验。",
 						"en": "Migration 0019: the historical 2.2.0 strategy-ID cutover and persisted-policy validation."
@@ -243,7 +393,10 @@
 				},
 				{
 					"path": "docs/operators/migrations/route-pool-sticky-routing-cutover.md",
-					"label": { "zh": "Provider Sticky 迁移", "en": "Provider Sticky migration" },
+					"label": {
+						"zh": "Provider Sticky 迁移",
+						"en": "Provider Sticky migration"
+					},
 					"description": {
 						"zh": "迁移 0020：新增 Route Pool Sticky 配置与共享绑定表；包含 v2.3.0 部署顺序和运维语义。",
 						"en": "Migration 0020: add Route Pool Sticky configuration and shared bindings, with v2.3.0 deployment order and operations."
@@ -251,7 +404,10 @@
 				},
 				{
 					"path": "docs/operators/migrations/route-strategy-display-ids-cutover.md",
-					"label": { "zh": "路由策略展示 ID 迁移", "en": "Route strategy display-ID migration" },
+					"label": {
+						"zh": "路由策略展示 ID 迁移",
+						"en": "Route strategy display-ID migration"
+					},
 					"description": {
 						"zh": "迁移 0021：cache_affinity / fixed_order 硬切换为 hash_affinity / weight_priority，无旧 ID 别名。",
 						"en": "Migration 0021: hard-cut cache_affinity / fixed_order to hash_affinity / weight_priority with no old-ID aliases."
@@ -259,7 +415,10 @@
 				},
 				{
 					"path": "docs/operators/migrations/d1-postgres-cutover.md",
-					"label": { "zh": "D1 ↔ Postgres 切换", "en": "D1 ↔ Postgres cutover" },
+					"label": {
+						"zh": "D1 ↔ Postgres 切换",
+						"en": "D1 ↔ Postgres cutover"
+					},
 					"description": {
 						"zh": "ETL、对账、灰度、切换和回滚要点。",
 						"en": "ETL, reconciliation, canary, cutover, and rollback notes."
@@ -267,21 +426,129 @@
 				},
 				{
 					"path": "cloudflare-worker/README.md",
-					"label": { "zh": "Cloudflare 命令速查", "en": "Cloudflare command cheatsheet" },
+					"label": {
+						"zh": "Cloudflare 命令速查",
+						"en": "Cloudflare command cheatsheet"
+					},
 					"description": {
 						"zh": "Cloudflare 本地、dev 演示和生产 Git 自动部署命令清单。",
 						"en": "Commands for Cloudflare local dev, dev demo, and production Git deploy."
+					}
+				},
+				{
+					"path": "docs/operators/maintenance-mode.md",
+					"label": {
+						"zh": "维护模式",
+						"en": "Maintenance mode"
+					},
+					"description": {
+						"zh": "维护窗口中的推理拒绝、只读例外与管理写入冻结。",
+						"en": "Inference rejection, read-only exceptions and Admin write freezing."
+					}
+				},
+				{
+					"path": "docs/operators/migrations/0027-user-wallet-credit.md",
+					"label": {
+						"zh": "双额度迁移",
+						"en": "Dual-quota migration"
+					},
+					"description": {
+						"zh": "周期额度、永久额度与加额接口切换。",
+						"en": "Periodic budgets, permanent credit and the credit API cutover."
+					}
+				},
+				{
+					"path": "docs/operators/migrations/0028-key-rate-limit-and-ingress.md",
+					"label": {
+						"zh": "限流与入口迁移",
+						"en": "Rate-limit and ingress migration"
+					},
+					"description": {
+						"zh": "用户与密钥 RPM 及入口记录。",
+						"en": "User/key RPM settings and ingress records."
+					}
+				},
+				{
+					"path": "docs/operators/migrations/0030-mcp-servers.md",
+					"label": {
+						"zh": "0030：MCP 服务",
+						"en": "0030: MCP servers"
+					},
+					"description": {
+						"zh": "迁移要求、兼容边界与发布顺序。",
+						"en": "Migration requirements, compatibility and deployment order."
+					}
+				},
+				{
+					"path": "docs/operators/migrations/0031-catalog-notes.md",
+					"label": {
+						"zh": "0031：目录与备注",
+						"en": "0031: Catalog and notes"
+					},
+					"description": {
+						"zh": "迁移要求、兼容边界与发布顺序。",
+						"en": "Migration requirements, compatibility and deployment order."
+					}
+				},
+				{
+					"path": "docs/operators/migrations/0032-dashscope-audio-adapters.md",
+					"label": {
+						"zh": "0032：DashScope 音频适配器",
+						"en": "0032: DashScope audio adapters"
+					},
+					"description": {
+						"zh": "迁移要求、兼容边界与发布顺序。",
+						"en": "Migration requirements, compatibility and deployment order."
+					}
+				},
+				{
+					"path": "docs/operators/migrations/0033-request-log-provider-index.md",
+					"label": {
+						"zh": "0033：请求日志索引",
+						"en": "0033: Request-log index"
+					},
+					"description": {
+						"zh": "迁移要求、兼容边界与发布顺序。",
+						"en": "Migration requirements, compatibility and deployment order."
+					}
+				},
+				{
+					"path": "docs/operators/migrations/0034-sticky-binding-affinity-key.md",
+					"label": {
+						"zh": "0034：粘性绑定明细",
+						"en": "0034: Sticky binding details"
+					},
+					"description": {
+						"zh": "迁移要求、兼容边界与发布顺序。",
+						"en": "Migration requirements, compatibility and deployment order."
+					}
+				},
+				{
+					"path": "docs/operators/migrations/0035-oauth-access-tokens.md",
+					"label": {
+						"zh": "0035：OAuth 访问令牌",
+						"en": "0035: OAuth access tokens"
+					},
+					"description": {
+						"zh": "迁移要求、兼容边界与发布顺序。",
+						"en": "Migration requirements, compatibility and deployment order."
 					}
 				}
 			]
 		},
 		{
 			"id": "maintainers",
-			"title": { "zh": "维护者与规范", "en": "Maintainers and conventions" },
+			"title": {
+				"zh": "维护者与规范",
+				"en": "Maintainers and conventions"
+			},
 			"items": [
 				{
 					"path": "docs/maintainers/release-versioning.md",
-					"label": { "zh": "版本治理与发版", "en": "Release and versioning" },
+					"label": {
+						"zh": "版本治理与发版",
+						"en": "Release and versioning"
+					},
 					"description": {
 						"zh": "Changesets、Version PR、tag、GitHub Release 和 GHCR 镜像。",
 						"en": "Changesets, Version PRs, tags, GitHub Releases, and GHCR images."
@@ -289,7 +556,10 @@
 				},
 				{
 					"path": "docs/CONVENTIONS.md",
-					"label": { "zh": "文档边界与敏感信息规范", "en": "Documentation boundaries and secret hygiene" },
+					"label": {
+						"zh": "文档边界与敏感信息规范",
+						"en": "Documentation boundaries and secret hygiene"
+					},
 					"description": {
 						"zh": "仓内文档分层、官网边界、占位符和禁止值。",
 						"en": "Repository docs layers, website boundaries, placeholders, and forbidden values."
@@ -297,7 +567,10 @@
 				},
 				{
 					"path": "examples/quick-curl.md",
-					"label": { "zh": "curl 最小示例", "en": "Minimal curl examples" },
+					"label": {
+						"zh": "curl 最小示例",
+						"en": "Minimal curl examples"
+					},
 					"description": {
 						"zh": "健康检查、用户推理、Agent Tool 与 Admin 鉴权探针的最小 curl。",
 						"en": "Minimal curl commands for health, user inference, an Agent Tool, and an Admin auth probe."

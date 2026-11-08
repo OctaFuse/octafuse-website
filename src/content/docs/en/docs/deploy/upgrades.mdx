@@ -1,0 +1,35 @@
+---
+title: "Upgrades and migrations"
+description: "Plan backups, maintenance, pending database migrations and matching service rollouts, then verify real requests."
+gatewayRef: v2.18.0
+---
+
+Record the current and target versions and review compatibility changes. When skipping releases, apply every pending migration, not just the final release's new SQL.
+
+## General order
+
+1. Back up the database and confirm a recovery path.
+2. Plan [maintenance mode](/en/docs/deploy/maintenance/) according to migration requirements and wait for in-flight work.
+3. Apply pending migrations for the selected database in numeric order.
+4. Roll matching Proxy, Admin and migration-tool versions.
+5. Verify health, sign-in, real calls, logs and quota changes before ending maintenance.
+
+A particular release may require a stricter cutover. This summary is not a substitute for its production migration instructions.
+
+## Upgrade to 2.18.0
+
+From 2.17.0 apply **0034** and **0035** first. They support sticky binding user details and separate OAuth access tokens with request-log attribution. Apply schema changes even when OAuth will not yet be enabled.
+
+- [0034: sticky bindings](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/operators/migrations/0034-sticky-binding-affinity-key.md)
+- [0035: OAuth access tokens](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/operators/migrations/0035-oauth-access-tokens.md)
+
+Earlier upgrades also involve dual quota pools, model configuration and MCP. See the [migration index](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/operators/README.md) for all transitions.
+
+## After deployment
+
+- Verify existing protocols, model IDs, route groups and user keys.
+- Configure new features deliberately; catalog updates should not overwrite deployed prices or provider credentials.
+- Check accounting, quotas, failover and tool calls.
+- Review maintenance status after a database cutover, which may also copy the maintenance setting.
+
+Historical notes keep their original version semantics. Use [Updates](/en/updates/) for release changes and this guide to organize the upgrade.

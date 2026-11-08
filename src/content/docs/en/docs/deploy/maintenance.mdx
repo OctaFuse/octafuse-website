@@ -1,0 +1,29 @@
+---
+title: "Maintenance mode"
+description: "Reject new inference work during a maintenance window, keep health checks and optionally freeze Admin writes."
+gatewayRef: v2.18.0
+---
+
+Use **System → Maintenance** to set a window and message for a migration or cutover. Enabling maintenance does not run database migrations for you.
+
+## Behavior
+
+| Target | Behavior |
+|---|---|
+| New model, tool, MCP and realtime requests | 503 with maintenance and retry headers; rejected before authentication, without request logs, charges or RPM consumption |
+| Health and read-only model, quota and catalog interfaces | Remain available; `/health` returns 200 with maintenance state |
+| Existing streams | Continue and settle normally |
+| Admin writes | Optional freeze, enabled by default, with necessary exceptions such as maintenance controls |
+
+![Maintenance configuration](/screenshots/v2-17-0-maintenance.webp)
+
+## Run a window
+
+1. Set expected duration and localized messages; decide whether to freeze Admin writes.
+2. Enable and verify the banner and new-request response. Per-process caches introduce a short propagation delay.
+3. Wait for in-flight work before applying the migration or cutover instructions.
+4. Disable maintenance on the environment actually receiving traffic, then make a real test call.
+
+Configuration read failures allow traffic. Maintenance mode does not replace enforced database or network isolation. Database cutovers may copy maintenance state, so check it explicitly after switching.
+
+See the [maintenance reference](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/operators/maintenance-mode.md) for exceptions, permissions and runtime details.

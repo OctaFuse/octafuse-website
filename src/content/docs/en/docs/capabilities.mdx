@@ -1,0 +1,38 @@
+---
+title: "Capabilities and limits"
+description: "Supported protocols, multimodal APIs and MCP in Gateway 2.18.0, with explicit configuration and runtime boundaries."
+gatewayRef: v2.18.0
+---
+
+These guides describe **Gateway v2.18.0**. A catalog preset is a starting point. Actual availability depends on the model, provider endpoints, adapter and active request surface.
+
+## Supported capabilities
+
+| Capability | Client interface | Configuration and limits |
+|---|---|---|
+| Chat and reasoning | OpenAI Chat / Responses, Anthropic Messages, Gemini content generation | Configure each protocol surface; arbitrary cross-protocol chat conversion is not provided |
+| Image generation and editing | OpenAI Images or supported provider-native interfaces | Generation and editing are separate; not every image adapter supports multipart edits |
+| Speech recognition and synthesis | OpenAI Audio and supported DashScope, MiniMax and ElevenLabs interfaces | Synchronous, asynchronous and WebSocket support depends on the adapter and model |
+| Embeddings | OpenAI Embeddings, Gemini embedContent / batchEmbedContents | Billed on input tokens reported by the upstream |
+| REST tools | `/v1/tools/*` | Search, fetch, deep search and AI detection require a configured engine |
+| MCP servers | `/mcp`, `/mcp/server-slug` | Aggregate reviewed remote Streamable HTTP servers; user keys and optional OAuth |
+
+## Client interfaces, upstreams and presets
+
+A **request surface** determines the client protocol. An **upstream target** selects the provider and upstream model. An **adapter** converts only supported combinations. For example, an OpenAI Images request can use a DashScope, MiniMax, Seedream or Gemini image adapter.
+
+Importing a model does not create a route. Importing a provider does not supply credentials. A model that accepts video input may understand video; that does not imply support for video generation or editing.
+
+## Check these boundaries
+
+- Video generation and editing, and arbitrary protocol conversion, are outside the general capabilities of this release.
+- Realtime audio uses supported provider-native protocols, without a universal OpenAI Realtime conversion.
+- MCP upstreams use remote Streamable HTTP. The gateway does not host local stdio processes or automatically expose built-in REST tools as MCP.
+- MCP OAuth requires an integrated authorization server. The gateway validates access to protected resources.
+- Playground probes an upstream directly. Use Simulator or a real client to verify authentication, failover and charging.
+
+See the [provider coverage matrix](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/developers/reference/native-provider-coverage.md) and [adapter reference](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/developers/architecture/adapters-and-drivers.md).
+
+## Next
+
+[First successful call](/en/docs/quick-start/) · [Images](/en/docs/guides/images/) · [Audio](/en/docs/guides/audio/) · [Embeddings](/en/docs/guides/embeddings/) · [MCP](/en/docs/guides/mcp/)

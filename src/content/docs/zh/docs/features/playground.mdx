@@ -1,51 +1,25 @@
 ---
-title: 调试台（Playground）
-description: 在管理后台选定一个上游目标，编辑请求体并直连上游试跑，验证 Chat、Responses、图片、百炼音频等配置且不消耗用户预算。
+title: "调试台"
+description: "直接验证单条上游路由或工具引擎，核对协议、凭证、请求参数与响应。"
+gatewayRef: v2.18.0
 ---
 
-import { Aside, Steps } from '@astrojs/starlight/components';
+调试台（Playground）用于验证**单个上游是否可用**。它不经过用户计费路径，不扣用户额度、不写用户请求日志，也不验证完整的路由策略和故障转移。真实上游仍可能收取费用。
 
-在左侧的**推理（Inference）→ 调试台（Playground）**中打开。调试台支持 Chat、Responses、Images、Audio 等模式，并提供常用大语言模型、推理、工具调用和百炼音频请求样例。它不经过业务用户的 `sk-…` 计费路径，而是针对**一个已配置的上游目标**向对应上游发出试跑请求，帮助你快速确认供应商地址、凭证、上游模型名和请求格式是否正确。
+## 操作路径
 
-试跑**不会**写入请求日志、扣减用户预算，也**不会**经过路由池（Route Pool）的策略、熔断与故障转移。请使用真实的代理服务（Proxy）调用或[模拟器（Simulator）](/zh/docs/features/simulator/)验证完整行为。智能体工具（Agent Tools）请直接调用 `/v1/tools/*`。
+1. 选择一条上游路由，确认协议、操作和上游模型名。
+2. 载入对话、Responses、图片、音频或向量样例，再调整请求体与需要的请求头。
+3. 发送并查看状态、响应、流式事件或多模态结果。
+4. 修改配置后重新测试，避免沿用旧配置的成功结果。
+5. 转到[模拟器](/zh/docs/features/simulator/)验证真实用户、路由、计费与日志。
 
-<Aside type="tip" title="适用场景">
-	刚修改完供应商或路由时，先用调试台确认上游可以连通，再切换业务流量。
-</Aside>
+![向量调试样例](/screenshots/v2-15-0-embedding-playground.webp)
 
-<figure class="of-doc-figure">
-	<img src="/screenshots/v2-6-0-playground-tool-stream.webp" alt="在 OctaFuse 管理后台的调试台中选择路由并载入 Tool stream 请求样例。" loading="lazy" />
-	<figcaption>先在左侧选择单条路由，再在请求区载入 Connectivity、Tool stream 或 Reasoning 样例；发送后响应会显示在下方。</figcaption>
-</figure>
+路由编辑器也支持测试尚未保存的目标配置，测试不会替你保存路由。Tools 模式直连已配置的 REST 引擎；MCP 的目录与真实工具调用请按[MCP 指南](/zh/docs/guides/mcp/)验证。
 
-## 如何使用
+## 实时音频
 
-<Steps>
-1. 打开**调试台（Playground）**。
-1. 在路由下拉框中选择 **一条路由**（界面会用图标区分是否处于启用状态）。
-1. 选择 Chat、Responses、Images、Audio 等模式并编辑请求体；可从连接测试、推理参数、工具调用或百炼音频模板起步。图片生成请选 **OpenAI** 协议且挂了 Images 的路由，见 [图片生成 / 编辑](/zh/docs/guides/images/)。
-1. 发送后查看响应状态、错误信息与正文。流式请求会展示事件摘要、终态和可用的 usage；Gemini 工具调用还会整理函数名与参数，便于发现流式参数不完整等问题。
-1. 项目级 Vertex AI 路由会使用与 Proxy 相同的服务账号解析和 OAuth access token 换取流程，可在这里验证项目 ID 与 IAM 权限。
-</Steps>
+支持的实时识别路由可使用浏览器麦克风；先确认浏览器授权与模型对应的原生 WebSocket 操作。不是所有音频模型都能用同一实时入口。
 
-## 验证百炼同步多模态语音识别
-
-为路由选择 `dashscope` 协议和 `audio.transcriptions.multimodal` 操作后，可载入同步多模态语音识别模板，检查百炼原生 JSON、音频地址、上游模型名和响应中的有效时长。对应的网关入口为：
-
-```text
-POST /dashscope/api/v1/services/aigc/multimodal-generation/generation
-```
-
-调试台只验证单个上游目标，不扣减用户预算，也不会生成请求日志。需要确认用户鉴权、路由和按秒计费时，请再使用[模拟器（Simulator）](/zh/docs/features/simulator/)或真实客户端调用。
-
-## 与模拟器的区别
-
-| 工具 | 典型用途 |
-|------|----------|
-| 调试台 | 供运维 / 开发人员验证**单个上游目标 → 上游**是否配置正确 |
-| [模拟器](/zh/docs/features/simulator/) | 使用真实的 **`sk-…`** 从浏览器调用**代理服务**，验证鉴权、路由、预算与日志整条链路 |
-
-## 下一步
-
-- [路由配置](/zh/docs/guides/routing/)  
-- [模拟器](/zh/docs/features/simulator/)
+[支持边界](/zh/docs/capabilities/) · [路由配置](/zh/docs/guides/routing/) · [模拟器](/zh/docs/features/simulator/)

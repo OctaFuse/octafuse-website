@@ -1,88 +1,36 @@
 ---
-title: Documentation
-description: "Documentation for the OctaFuse AI capability gateway and operations control plane, organized for users, integrators, and operators."
+title: "Documentation"
+description: "Start with a successful call, then configure models, multimodal APIs, MCP, billing and operations."
+gatewayRef: v2.18.0
 ---
 
-import { Aside, LinkCard, CardGrid } from '@astrojs/starlight/components';
+Choose the task you want to complete. These guides target **Gateway v2.18.0**; import catalogs also identify their source revision. Canonical APIs, migrations and architecture live in the [GitHub technical reference](/en/docs/github-reference/).
 
-<div class="of-doc-command">
-	<span>gateway.docs</span>
-	<strong>Choose your path</strong>
-	<code>users → configure → observe → deploy</code>
-</div>
+## Choose your path
 
-OctaFuse is a self-hostable AI capability gateway and operations control plane. The docs follow the workflow: run it locally; configure upstreams, models, image and audio capabilities, Agent Tools, routes, and keys; use Playground / Simulator and logs when debugging; open the gateway repository reference for API fields, migrations, architecture, and deep operations.
+| Goal | Start here |
+|---|---|
+| Make a model call | [Quick start](/en/docs/quick-start/) → [Connect clients](/en/docs/guides/clients/) |
+| Use images, audio or embeddings | [Capabilities](/en/docs/capabilities/) → the relevant multimodal guide |
+| Give an Agent tools | [REST services](/en/docs/guides/tools/) or [MCP servers](/en/docs/guides/mcp/); see [OAuth](/en/docs/guides/oauth/) for sign-in |
+| Manage a team or customer account | [Users](/en/docs/guides/users/) → [Quotas and billing](/en/docs/guides/billing/) → [Keys and rate limits](/en/docs/guides/api-keys/) |
+| Integrate a product | [System integration](/en/docs/guides/integration/) with a named server-side integration key |
+| Deploy, upgrade or investigate | [Deployment options](/en/docs/deploy/overview/) → [Upgrades](/en/docs/deploy/upgrades/) → [Request flows](/en/docs/guides/request-logs/) |
 
-<div class="of-doc-path-grid">
-	<a class="of-doc-path" href="/en/docs/quick-start/">
-		<span class="of-doc-path-index">01</span>
-		<strong>I want to run it</strong>
-		<small>Local D1 → one-command Cloudflare deploy, Admin login, one test request.</small>
-	</a>
-	<a class="of-doc-path" href="/en/docs/guides/integration/">
-		<span class="of-doc-path-index">02</span>
-		<strong>I am integrating a system</strong>
-		<small>Proxy vs Admin, user API keys vs Integration Keys, and portal provisioning flows.</small>
-	</a>
-	<a class="of-doc-path" href="/en/docs/deploy/cloudflare/">
-		<span class="of-doc-path-index">03</span>
-		<strong>I am going to production</strong>
-		<small>Cloudflare Workers (default), Docker self-hosting, data placement, migration order.</small>
-	</a>
-</div>
+## The shortest configuration path
 
-<Aside type="tip" title="Suggested order">
-	Quick start → Providers → Models → Routes → Agent Tools (optional) → Users → API keys → Simulator → Deploy. Open GitHub technical reference when you need fields, SQL, architecture, or troubleshooting details.
-</Aside>
+**Provider → model → route → user and key → real request**.
 
-## Product Tour
+Use Playground to verify the upstream, then Simulator to check authentication, routing, charging and logs together. Images, audio, embeddings and tools are optional additions to a text-only setup.
 
-<div class="of-screenshot-grid">
-	<figure class="of-doc-figure">
-		<img src="/screenshots/admin-dashboard.webp" alt="OctaFuse Admin Dashboard showing API keys, request count, tokens, cost, model distribution, and usage charts." loading="lazy" />
-		<figcaption>Dashboard: start with operations, requests, tokens, spend, and recent errors.</figcaption>
-	</figure>
-	<figure class="of-doc-figure">
-		<img src="/screenshots/v2-6-0-route-billing-schedule.webp" alt="OctaFuse Admin route editor showing request mapping, upstream mapping, and Daily schedule billing windows." loading="lazy" />
-		<figcaption>Routes: review client mapping, upstream mapping, catalog rates, default factors, and Daily schedule windows in one editor.</figcaption>
-	</figure>
-	<figure class="of-doc-figure">
-		<img src="/screenshots/v2-6-0-playground-tool-stream.webp" alt="OctaFuse Admin Playground showing one selected route and the Tool stream request sample." loading="lazy" />
-		<figcaption>Playground: select one Upstream Target and load a request sample before sending live traffic through it.</figcaption>
-	</figure>
-</div>
+![Request flow with routing, upstream attempts, response and accounting](/screenshots/v2-18-0-request-detail-failover.png)
 
-## Configuration Pipeline
+Investigate failures or delays using the [request flow and timeline](/en/docs/guides/request-logs/), then use [usage and reliability](/en/docs/guides/analytics/) to decide whether routing changes are needed.
 
-<div class="of-flow">
-	<a href="/en/docs/guides/providers/"><span>1</span><strong>Providers</strong><small>Endpoints, one key, status</small></a>
-	<a href="/en/docs/guides/models/"><span>2</span><strong>Models</strong><small>Catalog and pricing</small></a>
-	<a href="/en/docs/guides/routing/"><span>3</span><strong>Routes</strong><small>Surface, Pool, Target, strategy</small></a>
-	<a href="/en/docs/guides/images/"><span>4</span><strong>Images</strong><small>Generation / edit pricing</small></a>
-	<a href="/en/docs/guides/tools/"><span>5</span><strong>Tools</strong><small>Extensible agent tools</small></a>
-	<a href="/en/docs/guides/users/"><span>6</span><strong>Users</strong><small>Accounts, budgets, model discounts</small></a>
-	<a href="/en/docs/guides/api-keys/"><span>7</span><strong>API Keys</strong><small>Issue, revoke, authenticate</small></a>
-</div>
+## Three different catalogs
 
-## Common Entry Points
+- The [website import catalog](/en/catalog/models/) contains static presets from a released version, without your credentials or deployment configuration.
+- Your gateway's public `GET /catalog/models` discovers capabilities with active routes.
+- Your gateway's authenticated `GET /v1/models` is for clients, supports type filters and uses a user key.
 
-<CardGrid>
-	<LinkCard title="Quick start" description="Local D1 → Cloudflare deploy" href="/en/docs/quick-start/" />
-	<LinkCard title="Integration" description="Proxy / Admin / key boundaries" href="/en/docs/guides/integration/" />
-	<LinkCard title="Image generation / edit" description="Images with token / per-image billing" href="/en/docs/guides/images/" />
-	<LinkCard title="Agent Tools" description="Extensible tool APIs; web tools ship today" href="/en/docs/guides/tools/" />
-	<LinkCard title="Playground" description="Probe chat, responses, images, and DashScope audio capabilities" href="/en/docs/features/playground/" />
-	<LinkCard title="Simulator" description="Validate responses, audio, and other full Proxy paths with a real key" href="/en/docs/features/simulator/" />
-	<LinkCard title="Cloudflare deployment" description="Worker + Admin + D1 (recommended)" href="/en/docs/deploy/cloudflare/" />
-	<LinkCard title="Docker deployment" description="Self-hosting, Postgres / MySQL, images" href="/en/docs/deploy/docker/" />
-</CardGrid>
-
-## Troubleshooting And Governance
-
-| I want to… | Go to |
-|--------------|-------|
-| Inspect whether a call succeeded | [Request logs](/en/docs/guides/request-logs/) |
-| Inspect usage and cost trends | [Analytics](/en/docs/guides/analytics/) |
-| Inspect budget, key lifecycle, and user-side audit | [Audit logs](/en/docs/guides/audit-logs/) |
-| Configure business timezone, billing currency, routing strategy, and alerts | [System config](/en/docs/guides/system-config/) |
-| Read APIs, migrations, architecture, billing details | [GitHub technical reference](/en/docs/github-reference/) |
+Read [Updates](/en/updates/) for release history and these guides for current tasks.

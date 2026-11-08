@@ -1,5 +1,5 @@
 ---
-title: 'OctaFuse 2.18.0: sign in to MCP with your own accounts, and manage sticky bindings'
+title: 'OctaFuse 2.18.0: OAuth for MCP and visual management of sticky bindings'
 description: When you offer gateway MCP to another product, people can sign in with that product's account instead of pasting an API key. Sticky routing can show who is bound, change the lifetime, and unbind a user. Upgrade requires migrations 0034 and 0035.
 publishDate: 2026-11-02
 updateLabel: VERSION 2.18.0
@@ -18,17 +18,17 @@ Streams no longer treat an upstream comment heartbeat as proof that the model ha
 
 ## Let people reach MCP with their own account
 
-Handing out an API key was the only way to let another product call MCP on the gateway. A key is hard to take back per person or per application, and it does not sit inside that product's own accounts.
+MCP clients can now use independent OAuth access tokens. Administrators can inspect and revoke access by user or application while keeping user API keys separate.
 
-This release can use sign-in instead. You enter your own account system in Admin. When someone opens MCP in ChatGPT, Cursor, or a similar client, they are sent to that account system to sign in and approve. They can then call MCP on the gateway without pasting a key. The sign-in page stays on your system. The gateway does not keep their password.
+This release supports sign-in through an integrated OAuth authorization server. The server handles login, consent and refresh, and issues or rotates gateway access tokens through the Admin API. The gateway itself is a resource server; entering an arbitrary login-page URL is insufficient. When someone opens MCP in ChatGPT, Cursor, or a similar client, they are sent to that account system to sign in and approve. They can then call MCP on the gateway without pasting a key. The sign-in page stays on your system. The gateway does not keep their password.
 
-Open **MCP servers → Client access and authorization**. Turn on **OAuth 2.0 sign-in (optional)**, fill the authorization server address, and save. Leave it off and the API key path is unchanged. Use https. Local development can use http on localhost. Turn the switch off and save to stop this sign-in path.
+Open **MCP servers → Client access and authorization**. Turn on **OAuth 2.0 sign-in (optional)**, fill the authorization server address, and save. Leave it off and the API key path is unchanged. Use https. Local development can use http on localhost. Turning the switch off disables OAuth discovery; revoke issued tokens separately to stop their use.
 
 ![MCP client access with OAuth sign-in on and the authorization server address covered](/screenshots/v2-18-0-mcp-oauth.webp)
 
 *Sign-in is on. People connecting to MCP are sent to the business account system entered here. The address is covered.*
 
-Access granted this way can call MCP only. Using it for chat, the model list, or any other entrance is rejected. A grant lasts 1 hour by default. After it expires, or after you revoke it in Admin, the client asks the person to sign in again. The charge is recorded on the gateway user who approved it.
+Access granted this way can call MCP only. Using it for chat, the model list, or any other entrance is rejected. The access token defaults to a 1-hour lifetime. On expiry the client may refresh through the authorization server; a new sign-in depends on the client and server. Tokens can be revoked in Admin. The charge is recorded on the gateway user who approved it.
 
 The connection guide on the same page switches between API key and OAuth sign-in. The OAuth steps cover the ChatGPT connector, Cursor, VS Code, Claude Code, and Codex, and they say whether the account system is configured.
 
@@ -84,6 +84,14 @@ The route list uses stacked or side-by-side panes as the width allows. A wide la
 |---|---|
 | **GPT-6.1 Terra** | `gpt-6.1-terra`. Standard short context is $1 input and $5 output per million tokens, cache read $0.05, 30-minute cache write $1.25. Above 272K input, the whole request uses the long-context price: input $2, output $7.5, cache read $0.10, 30-minute cache write $2.50. CNY is a USD × 7 placeholder. Import it, then attach a provider and a route. |
 | **Baidu Cloud Model Service V2** | Guangzhou, Singapore, California, and Frankfurt. These are separate from Baidu Qianfan, and regional keys must not be mixed. Guangzhou is chat only: OpenAI Chat, Responses, and Anthropic Messages. The other three also include image generation and edit, plus Gemini text and image with Bearer auth. No embeddings, audio, or video. An imported provider is not rewritten. |
+
+## Request details as a flow
+
+Request details now follow Entry → Routing and conversion → Upstream attempts → Response → Usage and accounting. Select a stage or attempt to inspect parameter changes, HTTP status, failures and price snapshots.
+
+[![Request flow and timeline showing a 429 followed by successful failover](/screenshots/v2-18-0-request-detail-failover.png)](/screenshots/v2-18-0-request-detail-failover.png)
+
+*The timeline shows both failed and successful upstream attempts, alongside the complete request flow and accounting summary.*
 
 ## Upgrade to 2.18.0
 

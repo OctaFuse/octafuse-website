@@ -1,0 +1,40 @@
+---
+title: "MCP servers"
+description: "Connect remote MCP servers, review catalogs, price tool calls and expose a single server or aggregate interface."
+gatewayRef: v2.18.0
+---
+
+Use **MCP Servers** to connect remote Streamable HTTP services. Clients use `/mcp` for all enabled servers, or `/mcp/server-slug` for one server.
+
+## Connect, review and publish
+
+1. Create a server with a slug, remote URL and required static headers. Supported remote-client JSON can prefill these fields.
+2. Test connectivity and manually sync tools, prompts and resources.
+3. Review the catalog. New items start disabled; changes to a published definition need approval before clients see them.
+4. Configure the server's default price, with optional per-tool overrides.
+5. Enable the intended items, then run the public catalog test to inspect the client's view.
+
+![MCP server and catalog management](/screenshots/v2-15-0-mcp-services.webp)
+
+## Connect clients
+
+In the connection guide select the Proxy address and all servers or one server, then copy the client configuration. Clients that accept a user API key can connect directly. For sign-in clients, complete the [OAuth integration](/en/docs/guides/oauth/) first.
+
+![MCP connection guide](/screenshots/v2-15-0-mcp-connection-guide.webp)
+
+The public catalog test reads lists and protocol capabilities only. It does not execute a tool or validate its result. Test a real tool call from a client and check request logs afterward.
+
+## Pricing and observability
+
+MCP currently bills successful `tools/call` requests. Standard price is multiplied separately by the Charged and Metered factors. A zero Charged factor makes user calls free while retaining supplier cost. Prompt and resource reads are not billed. A tool override replaces the whole server-default price rule; model discounts do not apply.
+
+Request logs identify MCP calls and OAuth applications. Missing valid tool results, tool errors and upstream failures are not charged.
+
+## Boundaries
+
+- No hosted local stdio processes or automatic conversion of built-in REST tools.
+- Importing connection settings does not import upstream OAuth; use supported remote URLs and static upstream credentials.
+- The public interface is stateless Streamable HTTP. Upstream-initiated sampling, elicitation and roots are unsupported.
+- JSON-RPC batch arrays are rejected; send individual requests.
+
+See the [MCP architecture reference](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/developers/architecture/mcp-gateway.md) for lifecycle, naming and accounting.

@@ -1,51 +1,37 @@
 ---
-title: 智能体工具（Agent Tools）
-description: 在管理台的工具页面通过供应商卡片配置第三方凭证、三账本单价、单活跃引擎与调用记录。
+title: "REST 服务"
+description: "配置网页搜索、网页抓取、深度搜索和 AI 率检测，选择活跃引擎并管理工具收费。"
+gatewayRef: v2.18.0
 ---
 
-import { Aside, Steps } from '@astrojs/starlight/components';
+REST 服务（REST Services）通过 `/v1/tools/*` 为应用和 Agent 提供独立工具 API。它们不是模型对话协议的一部分；模型产生工具调用后，由客户端执行对应工具请求。
 
-智能体工具是一组**协议无关、可扩展**的产品 API（与 `/v1/me` 同类），挂载在 `POST /v1/tools/*`，供桌面智能体在模型发起工具调用后使用。它们**不是** OpenAI、Anthropic 或 Gemini 推理协议的一部分。
+| 服务 | 入口 | 已实现引擎示例 |
+|---|---|---|
+| 网页搜索 | `/v1/tools/web-search` | 博查、Tavily、CleverSee、腾讯云 WSA |
+| 网页抓取 | `/v1/tools/web-fetch` | Firecrawl、Tavily Extract、Jina Reader |
+| 深度搜索 | `/v1/tools/web-deep-search` | Firecrawl Search、Jina Search |
+| AI 率检测 | `/v1/tools/ai-detection` | 腾讯云 TMS |
 
-当前已接入：
+## 配置与启用
 
-| 工具 | 端点 | 可选供应商（Provider） |
-|------|------|---------------|
-| 网页搜索（Web Search） | `POST /v1/tools/web-search` | 博查、Tavily、阿里云 CleverSee、腾讯云联网搜索 WSA |
-| 网页抓取（Web Fetch） | `POST /v1/tools/web-fetch` | Firecrawl、Tavily Extract、Jina Reader |
-| 深度搜索（Web Deep Search） | `POST /v1/tools/web-deep-search` | Firecrawl Search、Jina Search |
-| AI 率检测（AI Detection） | `POST /v1/tools/ai-detection` | 腾讯云 TMS（当前已实现） |
+1. 在智能体工具下打开 REST 服务，按名称、服务类型或状态筛选。
+2. 点击服务，进入弹窗维护第三方凭证、启用状态、计费规则与测试。
+3. 设置标准价、用户倍率与供应倍率，核对收费和成本预览。搜索按请求计费，AI 检测按配置的字符单元计费。
+4. 保存后启用所需引擎。每种工具当前只有一个活跃引擎，未实现或凭证不全的引擎不可启用。
+5. 用用户密钥调用真实代理入口，再到工具调用记录或请求日志查看结果。
 
-<Aside type="caution" title="依赖与限制">
-	- 需要你自备的 **第三方引擎 API Key**（以界面白名单为准）。
-	- **每种工具同时只有一个活跃引擎（Active engine）**；未配置密钥时调用返回 **503**。
-	- 联网工具按次计费；AI 率检测按 `billingUnitChars` 字符单元计费。上游失败不扣费。
-	- 每个供应商分别配置 **S 标准价 / C 用户扣费 / M 供应价**；仅 C 累加用户预算，三者可以不同。
-	- 工具不应用模型路由的倍率或每日时段；卡片会提示未保存、缺少凭证、暂不可用和亏损定价（C < M）。
-</Aside>
+用户倍率设为 `0` 时用户免费，仍记录供应成本。REST 服务不应用模型路由时段或用户模型折扣；旧独立单价配置兼容读取，新保存规则使用标准价与倍率。
 
-## 在管理台里要做什么
-
-<Steps>
-1. 打开工具配置（**Tools → Configuration**）。
-1. 在对应工具下点击供应商卡片，使用右侧抽屉填写凭证与 S / C / M 三账本单价（币种随系统计费币种变化）。
-1. 点击**仅保存配置（Save config only）**可预配置非活跃引擎；点击**保存并启用（Save & activate）**会保存草稿，并将其切换为该工具唯一的活跃引擎。未实现或凭证不完整的引擎不可启用。
-1. 清空当前活跃引擎的凭证前，请先保存并启用另一个凭证完整的引擎。
-1. 使用用户 `sk-…` 调用对应的 `/v1/tools/*`；在工具调用记录（**Tools → Invocations**）或 [请求日志](/zh/docs/guides/request-logs/) 中查看记录（`provider_id=octafuse-tools`）。
-</Steps>
-
-## 客户端最小示例
+## 一次搜索请求
 
 ```bash
-curl -sS "$GATEWAY_URL/v1/tools/web-search" \
-  -H "Authorization: Bearer sk-your-api-key" \
-  -H "Content-Type: application/json" \
+curl -sS http://localhost:8787/v1/tools/web-search \
+  -H 'Authorization: Bearer sk-your-api-key' \
+  -H 'Content-Type: application/json' \
   -d '{"query":"OctaFuse gateway","count":5}'
 ```
 
-完整字段与引擎白名单见 [GitHub · 用户 API](https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/developers/api/user.md)。
+上游失败不扣用户额度；未配置可用活跃引擎时，调用不能成功。想接入外部标准化工具协议，阅读 [MCP 服务](/zh/docs/guides/mcp/)；REST 工具不会自动作为 MCP 暴露。
 
-## 下一步
-
-- [图片生成 / 编辑](/zh/docs/guides/images/)  
-- [系统配置](/zh/docs/guides/system-config/) · [请求日志](/zh/docs/guides/request-logs/)  
+各服务字段与引擎限制见 [工具 API 参考](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/developers/api/user.md)。

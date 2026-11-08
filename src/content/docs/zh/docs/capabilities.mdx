@@ -1,0 +1,38 @@
+---
+title: "支持能力与边界"
+description: "按正式版 2.18.0 查看协议、多模态、MCP 与运行边界，区分客户端入口、上游协议和静态预设。"
+gatewayRef: v2.18.0
+---
+
+本指南以 **Gateway v2.18.0** 为基线。目录中的模型是配置起点；真正可调用的能力取决于模型、供应商端点、适配器和已启用的请求入口。
+
+## 可以接入什么
+
+| 能力 | 客户端入口 | 配置与边界 |
+|---|---|---|
+| 对话与推理 | OpenAI Chat / Responses、Anthropic Messages、Gemini 内容生成 | 同一模型可以配置多个协议入口；对话不提供任意跨协议转换 |
+| 图片生成与编辑 | OpenAI Images，或已支持的厂商原生入口 | 生成与编辑分别配置；不是每个生图适配器都支持 multipart 编辑 |
+| 语音识别与合成 | OpenAI Audio，以及已支持的 DashScope、MiniMax、ElevenLabs 入口 | 同步、异步与 WebSocket 支持范围不同，按模型和适配器选择 |
+| 向量 | OpenAI Embeddings、Gemini embedContent / batchEmbedContents | 只按上游报告的输入 Token 计费 |
+| REST 工具 | `/v1/tools/*` | 网页搜索、抓取、深度搜索及 AI 率检测；需要配置对应引擎 |
+| MCP 服务 | `/mcp`、`/mcp/服务标识` | 聚合已审核的远程 Streamable HTTP 服务；支持用户密钥及可选 OAuth |
+
+## 入口、上游与模型预设
+
+**客户端入口**决定应用发送的协议；**上游目标**决定实际供应商和上游模型；**适配器**只在已实现的协议组合之间转换。例如，客户端使用 OpenAI Images，实际可以由 DashScope、MiniMax、Seedream 或 Gemini 图像适配器处理。
+
+导入模型不会自动创建路由，导入供应商不会自动填入真实凭证。模型输入模态包含视频，表示相关模型可理解视频输入，不能据此推断网关支持视频生成或视频编辑。
+
+## 使用前确认的限制
+
+- 视频生成与编辑、任意协议之间的自动转换，不属于本版通用能力。
+- 实时音频按厂商原生协议接入，不提供通用的 OpenAI Realtime 转换。
+- MCP 上游使用远程 Streamable HTTP；不托管本地 stdio 进程，不自动把内置 REST 工具转换成 MCP。
+- MCP OAuth 需要另行对接授权服务器；网关负责资源访问与令牌校验。
+- 管理后台调试台直连上游；完整的鉴权、故障转移和扣费需通过模拟器或真实客户端验证。
+
+详细支持矩阵见 [厂商能力覆盖](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/developers/reference/native-provider-coverage.md)，适配器组合见 [适配器与驱动](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/developers/architecture/adapters-and-drivers.md)。
+
+## 选择下一步
+
+[完成第一次调用](/zh/docs/quick-start/) · [图片](/zh/docs/guides/images/) · [音频](/zh/docs/guides/audio/) · [向量](/zh/docs/guides/embeddings/) · [MCP](/zh/docs/guides/mcp/)

@@ -1,38 +1,33 @@
 ---
-title: Integration
-description: Connect your product to the Proxy for inference and to Admin HTTP APIs for provisioning with env vars and security boundaries.
+title: "System integration"
+description: "Provision users, keys and wallet credit through server-side Admin APIs while clients call Proxy."
+gatewayRef: v2.18.0
 ---
 
-import { Aside } from '@astrojs/starlight/components';
+Separate two paths: applications call **Proxy** with user credentials; a trusted business backend calls **Admin APIs** with named integration keys to maintain users, keys, quotas and configuration.
 
-**Integration** means using both the **Proxy** (inference) and the **admin HTTP APIs** behind Admin (provisioning and operations). Admin also has **Analytics** (usage and reliability) and other menus — use them as needed alongside this flow.
+## URLs and credentials
 
-## Common environment variables
+| Conventional variable | Purpose |
+|---|---|
+| `GATEWAY_URL` | Proxy root URL for model and tool requests |
+| `GATEWAY_MASTER_URL` | Admin root URL, with management calls under `/api/admin/*` |
+| `GATEWAY_MASTER_KEY` | A named Admin integration key; the historical variable name does not require the old shared Master Key |
 
-| Variable | Role |
-|----------|------|
-| `GATEWAY_URL` | **Proxy** origin — where apps/SDKs send inference requests |
-| `GATEWAY_MASTER_URL` | **Admin** origin — where backends call **admin APIs** |
-| `GATEWAY_MASTER_KEY` | A named Admin API Key created under **System Integration → Integration Keys** — **server-side only**; the environment-variable name can remain unchanged |
+Create least-privilege keys under **Integration → Integration Keys** for each business system. Keep them on trusted servers, not in browser apps or ordinary inference SDK credentials.
 
-<Aside type="caution" title="Security">
-	Never ship Integration Keys or user **`sk-…`** keys to untrusted browsers or public repos. Give each external system an independent least-privilege Integration Key.
-</Aside>
+## Typical provisioning flow
 
-## Inference (apps)
+1. Resolve a gateway user idempotently from external system and user identifiers after business signup.
+2. Set a periodic plan or add permanent wallet credit, using a unique reference for each credit operation.
+3. Issue a user key and deliver it according to your trust boundary, or retain it server-side.
+4. Send application calls to Proxy; read usage and audit through management interfaces.
+5. Configure optional model/group discounts consistently with the global factor composition mode.
 
-- Paths and payloads follow the current gateway release, including OpenAI-compatible Chat and Responses endpoints. Auth: **`Authorization: Bearer sk-…`**.
-- Optional **`GET /v1/me`** on the **Proxy** with the user key returns budget-related summaries for your UI (fields vary by release).
+See [Models](/en/docs/guides/models/) for the distinction between public discovery, user model lists and website presets. MCP sign-in requires an additional [authorization-server integration](/en/docs/guides/oauth/).
 
-## Control plane (servers)
+## Existing integrations
 
-Typical flow: after signup, your backend uses a named Integration Key to **create or update gateway users** and **create API keys**, then returns `sk-…` only to trusted environments or stores it server-side only.
+After confirming named integration keys have replaced `legacy-master`, rotate or revoke the legacy key under your migration plan. Use wallet credit for purchases rather than incrementing a periodic budget cap.
 
-Upgrades migrate the old `MASTER_KEY` value into a full-permission `legacy-master` key. Rotate or revoke it after external systems switch to named least-privilege keys.
-
-API index: [GitHub technical reference](/en/docs/github-reference/).
-
-## Next
-
-- [Docker](/en/docs/deploy/docker/) / [Cloudflare Workers](/en/docs/deploy/cloudflare/)  
-- [Playground](/en/docs/features/playground/) / [Simulator](/en/docs/features/simulator/)  
+See the [integration reference](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/developers/integration.md) and [Admin API](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/developers/api/admin.md) for fields and idempotency.

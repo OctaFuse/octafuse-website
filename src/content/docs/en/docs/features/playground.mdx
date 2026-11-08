@@ -1,51 +1,25 @@
 ---
-title: Playground
-description: Pick one Upstream Target, edit a request, and probe Chat, Responses, Images, DashScope Audio, and more without consuming user budget.
+title: "Playground"
+description: "Probe one upstream route or tool engine to validate credentials, protocol, request parameters and response."
+gatewayRef: v2.18.0
 ---
 
-import { Aside, Steps } from '@astrojs/starlight/components';
+**Playground** checks whether one upstream works. It does not use the user charging path, consume user quota, write user request logs or exercise full routing and failover. The upstream itself may still charge for probes.
 
-Open **Inference → Playground**. Playground supports Chat, Responses, Images, Audio, and other modes, with built-in samples for common LLM, reasoning, tool-call, and DashScope audio requests. It sends a **probe** for **one selected Upstream Target** straight to its upstream, so you can verify URLs, credentials, upstream model names, and request shape **without** using a customer **`sk-…`** on the normal billing path.
+## Workflow
 
-It does **not** write request logs, debit user budgets, or run Route Pool strategy, circuits, and failover. Validate the full behavior with real Proxy calls or [Simulator](/en/docs/features/simulator/). Call Agent Tools directly through `/v1/tools/*`.
+1. Select an upstream route and check protocol, operation and upstream model name.
+2. Load a Chat, Responses, image, audio or embedding example; edit the body and headers needed.
+3. Send and inspect status, response, streaming events or multimodal output.
+4. Re-test after changing configuration; do not rely on a result from an older draft.
+5. Use [Simulator](/en/docs/features/simulator/) for real user authentication, routing, charging and logs.
 
-<Aside type="tip" title="When to use">
-	After editing providers or routes, confirm upstream connectivity here before switching live traffic.
-</Aside>
+![Embedding probe example](/screenshots/v2-15-0-embedding-playground.webp)
 
-<figure class="of-doc-figure">
-	<img src="/screenshots/v2-6-0-playground-tool-stream.webp" alt="OctaFuse Admin Playground with one route selected and the Tool stream request sample loaded." loading="lazy" />
-	<figcaption>Select one route on the left, then load a Connectivity, Tool stream, or Reasoning sample in the request panel. The response appears below after Send.</figcaption>
-</figure>
+The route editor can also probe unsaved target configuration; testing does not save it. Tools mode calls configured REST engines directly. Follow the [MCP guide](/en/docs/guides/mcp/) for MCP catalog and real tool-call checks.
 
-## How to use it
+## Realtime audio
 
-<Steps>
-1. Open **Playground**.
-1. Choose **one route** from the dropdown (icons indicate enabled vs disabled).
-1. Choose Chat, Responses, Images, Audio, or another available mode and edit the request body; start from a connectivity, reasoning, tool-call, or DashScope audio template when helpful. For image generation, pick an **OpenAI** route with Images configured — see [Image generation / edit](/en/docs/guides/images/).
-1. Send and inspect status, errors, and body. Streaming requests expose event summaries, terminal state, and available usage; Gemini tool calls also summarize function names and arguments so incomplete streamed arguments are easier to spot.
-1. Project-scoped Vertex AI routes use the same service-account parsing and OAuth access-token exchange as Proxy, making Playground suitable for validating the project ID and IAM access.
-</Steps>
+Supported realtime recognition routes can use the browser microphone. Check browser permission and the model's native WebSocket operation. Audio models do not all share one realtime interface.
 
-## Validate synchronous DashScope multimodal ASR
-
-For a route using the `dashscope` protocol and `audio.transcriptions.multimodal` operation, load the synchronous multimodal ASR template to check native DashScope JSON, the audio URL, upstream model name, and returned duration. The Gateway client endpoint is:
-
-```text
-POST /dashscope/api/v1/services/aigc/multimodal-generation/generation
-```
-
-Playground checks only one Upstream Target. It does not debit user budget or create request logs. Use [Simulator](/en/docs/features/simulator/) or a real client call to verify user auth, routing, and per-second billing.
-
-## Versus Simulator
-
-| Tool | Typical goal |
-|------|----------------|
-| Playground | Ops/dev: **single Target → upstream** wiring check |
-| [Simulator](/en/docs/features/simulator/) | Real **`sk-…`** from the browser to the **Proxy** — auth, routing, budget, logs |
-
-## Next
-
-- [Routing](/en/docs/guides/routing/)  
-- [Simulator](/en/docs/features/simulator/)  
+[Capabilities](/en/docs/capabilities/) · [Routing](/en/docs/guides/routing/) · [Simulator](/en/docs/features/simulator/)

@@ -1,51 +1,30 @@
 ---
-title: 请求日志
-description: 在管理台查询推理请求，核对入站与上游路径、功能标签、用量、用户计费、供应成本和路由详情。
+title: "请求流程与日志"
+description: "从请求 ID 定位一次调用，沿流程卡片与上游时间线核对故障转移、用量和记账。"
+gatewayRef: v2.18.0
 ---
 
-import { Aside, Steps } from '@astrojs/starlight/components';
+请求日志（Request Logs）记录经过代理服务的真实调用。调试台直连上游不会生成用户请求日志；模拟器与真实客户端会。
 
-在左侧**用户（User）→ 请求日志（Request Logs）**打开请求日志。这里记录的是**经网关代理（Proxy）的真实推理调用**：时间、用户、客户端入口、实际上游、模型、路由组、供应商、用量和费用等信息，用于排障与对账。
+## 从一次错误开始
 
-<figure class="of-doc-figure">
-	<img src="/screenshots/v2-7-0-request-logs-redacted.webp" alt="OctaFuse 请求日志展示状态、入站与上游路由、功能标签、用量、用户计费、供应成本和利润；用户及外部系统信息已遮蔽。" loading="lazy" />
-	<figcaption>每一行并列展示客户端入口与实际上游，并通过标签区分大语言模型、流式输出和推理等请求特征。截图中的用户和外部系统信息已遮蔽。</figcaption>
-</figure>
+1. 用客户端返回的请求 ID 精确查询，或按时间、用户、模型、供应商、路由组和状态筛选。
+2. 核对入站入口与实际上游，避免把最终供应商误认为唯一尝试过的供应商。
+3. 展开请求流程，按处理阶段定位：请求入站 → 路由与转换 → 上游尝试 → 响应结果 → 用量与记账。
+4. 点击阶段或具体尝试，查看参数变化、HTTP 状态、失败类别、路由信息及原始快照。
 
-<Aside type="tip" title="前置">
-	需要已有流量经过**网关代理**。[调试台（Playground）](/zh/docs/features/playground/)的试跑方式**不会**出现在本日志中；若要产生与线上一致的记录，请用真实密钥调用网关代理或使用[模拟器（Simulator）](/zh/docs/features/simulator/)。
-</Aside>
+[![请求流程展示首次 429 后切换并成功](/screenshots/v2-18-0-request-detail-failover.png)](/screenshots/v2-18-0-request-detail-failover.png)
 
-## 在管理台里要做什么
+时间线按实际记录显示各次尝试和等待耗时。缺失耗时不是零耗时；上游尝试耗时与完整流式输出耗时也不是同一指标。
 
-<Steps>
-1. 打开**请求日志**。
-1. 使用时间范围、状态、模型、用户邮箱、API 密钥、供应商、路由组、协议等条件缩小范围（以页面筛选项为准）。
-1. 先在列表中核对客户端入口（Inbound）、实际上游（Upstream）、模型、路由组、供应商、功能标签和用量。
-1. 点击展开某一行，查看计费核对摘要、入口请求体、上游请求体、用量原始 JSON 等（可复制）。
-1. 核对金额与时间时，请与你在 **系统配置** 中设置的业务时区、计费币种保持一致理解。
-</Steps>
+## 核对收费
 
-## 与计费展示的关系
+「用量与记账」区分用户计费、供应成本和当次价格快照。核对目录官方时段、供应商倍率、路由窗口、用户模型与分组倍率，不用当前配置重新推算历史账单。
 
-列表中的 `C` 表示最终向用户计算的费用（Charged），`M` 表示供应成本（Metered）；右侧倍率用于快速判断是否命中路由时段或用户级模型折扣。
+周期与永久额度的实际变化在[账户审计](/zh/docs/guides/audit-logs/)查看。金额和业务日界受全局币种、业务时区影响。
 
-展开区域中的 `pricing_audit` 会记录目录价、路由倍率和最终金额。2.7.0 的新记录还可以包含 `user_charged_factor`、业务时区中的 `local_weekday` 以及命中的分时时段，便于沿着“目录价—路由价格—用户折扣”核对完整计算过程。
+## MCP 与粘性排障
 
-若需精确公式或与账单对账，请结合 [GitHub 技术参考](/zh/docs/github-reference/) 和你自己的财务口径。
+MCP 来源可按服务筛选，OAuth 调用会标明应用；费用归属令牌所属用户。粘性路由可结合绑定命中、解绑或重绑结果，与缓存读取用量和故障转移次数一起观察。
 
-## 观察供应商粘性
-
-路由池启用供应商粘性（Provider sticky）后，展开日志中的 `route_trace.sticky`：
-
-- `lookup`：绑定读取结果，例如 `hit`、`miss`、`expired`、`invalid_epoch`、`invalid_target` 或 `invalid_circuit`。
-- `attempted_target`：本次优先尝试的绑定上游目标（Target）。
-- `result`：绑定最终保持、清除、新建或重绑，也可能记录 `storage_error` / `unchanged`。
-
-将供应商粘性命中情况与缓存读取 Token、上游故障转移次数结合观察：命中稳定但缓存收益没有改善时，应检查上游是否真正共享提示词缓存（Prompt Cache）；频繁出现 `cleared` / `rebound` 时，应检查供应商返回的 429、5xx、鉴权错误与 TTL 是否合理。
-
-## 下一步
-
-- [审计日志](/zh/docs/guides/audit-logs/) — 侧重预算与账户侧变更记录  
-- [路由配置](/zh/docs/guides/routing/) — 四种策略与供应商粘性
-- [模拟器](/zh/docs/features/simulator/) — 用浏览器携带密钥试调网关代理
+单条请求说明“这次发生了什么”；跨请求趋势和供应商质量阅读[用量与可靠性分析](/zh/docs/guides/analytics/)。底层字段见 [日志 API 参考](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/developers/api/admin.md)。

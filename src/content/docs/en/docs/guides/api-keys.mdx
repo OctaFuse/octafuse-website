@@ -1,44 +1,35 @@
 ---
-title: API keys
-description: Create and manage sk- keys in Admin, inspect status and read-only budget summaries, revoke or delete keys.
+title: "API keys and rate limits"
+description: "Issue user keys, configure user and key RPM limits, and distinguish provider credentials, OAuth tokens and integration keys."
+gatewayRef: v2.18.0
 ---
 
-import { Aside, Steps } from '@astrojs/starlight/components';
+Create calling credentials under **API Keys**. Clients send `Authorization: Bearer sk-…` to Proxy. Provider credentials stay on the gateway; Admin APIs use separate named integration keys.
 
-Open **User → API Keys**. **API keys** (`sk-…`) authenticate calls to the **Proxy**: **`Authorization: Bearer sk-…`**.
+## Issue and revoke keys
 
-The list shows status, last used time, and a **read-only budget summary** tied to the owning user (so you can sanity-check spend at a glance). When creating a key, choose **attach to an existing user** or **external identity** so the wizard can resolve or create the right user (follow the on-screen steps).
+1. Select an existing user or resolve one using external identity.
+2. Choose a recognizable key name. Save the full key according to the creation dialog.
+3. Call authenticated `GET /v1/me` to verify the user and quota.
+4. Issue separate keys per application; disable, revoke or delete unused credentials.
 
-<Aside type="tip" title="Prerequisite">
-	Create a [User](/en/docs/guides/users/) first, or use external-identity mode in the key wizard.
-</Aside>
+## Two RPM limits
 
-<figure class="of-doc-figure">
-	<img src="/screenshots/admin-api-keys.webp" alt="OctaFuse Admin API Keys page showing key rows, user budget, and status with emails and key content redacted." loading="lazy" />
-	<figcaption>API Keys shows key status, owning user, and budget summaries. Emails and key fragments are pixelated in this screenshot.</figcaption>
-</figure>
+Configure requests per minute for a user and for an individual key. Both layers must allow the request; extra keys do not bypass the user limit. Quota exhaustion and rate limiting require different responses: inspect the quota pools for the former and reduce request frequency for the latter.
 
-## What to do in Admin
+![User RPM settings](/screenshots/v2-9-0-user-rate-limit.webp)
 
-<Steps>
-1. Open **API Keys**.
-1. **Create**: follow the wizard → pick or enter user info → set a display name → save and **copy** the full `sk-…` immediately (the UI usually warns it is shown only once).
-1. **Operate**: review the list; edit, revoke, or delete as needed.
-1. **Smoke test**: call **`GET /v1/me`** on your **Proxy** base URL with `Bearer sk-…` and confirm the response matches expectations.
-</Steps>
+![API key RPM settings](/screenshots/v2-9-0-api-key-rate-limit.webp)
 
-```bash
-curl -sS "http://localhost:8787/v1/me" \
-  -H "Authorization: Bearer sk-your-api-key"
-```
+Model listing and user quota queries do not consume key/user RPM and can support read-only diagnostics. See the [user API](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/developers/api/user.md) for endpoint-specific counting.
 
-Replace the URL and key with your environment.
+## Four credential types
 
-## Automation
+| Credential | Purpose |
+|---|---|
+| Provider credential | Gateway calls to the upstream provider |
+| User `sk-…` key | Client requests to Proxy, charged to the user |
+| MCP `oat_…` token | OAuth access to MCP endpoints only |
+| Admin integration key | Trusted server calls to scoped management APIs |
 
-Use the admin HTTP API from trusted servers — see the [GitHub technical reference](/en/docs/github-reference/).
-
-## Next
-
-- [Request logs](/en/docs/guides/request-logs/)  
-- [Integration](/en/docs/guides/integration/)  
+[Users](/en/docs/guides/users/) · [System integration](/en/docs/guides/integration/) · [MCP OAuth](/en/docs/guides/oauth/)

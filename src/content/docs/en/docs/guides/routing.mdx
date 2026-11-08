@@ -1,99 +1,53 @@
 ---
-title: Routing
-description: Configure protocol operations, strategies, priority, weight, weekday-aware pricing, and failover with Request Surfaces, Route Pools, and Upstream Targets.
+title: "Routing and failover"
+description: "Configure client surfaces, pools and upstream targets, with strategies, sticky routing, custom headers and pricing."
+gatewayRef: v2.18.0
 ---
 
-import { Aside, Steps } from '@astrojs/starlight/components';
+A call matches a **Request Surface**, enters a **Route Pool**, then tries an **Upstream Target**. The model ID, route group, protocol and operation determine the surface.
 
-Open **Inference → Routes**. A client request resolves a **Request Surface** by model, route group, protocol, and operation; the Surface points to a **Route Pool**; the Pool contains concrete **Upstream Targets**. Chat, Responses, Images, Audio, and other operations can therefore use independent failover pools and strategies.
+## Create a route
 
-The workspace provides **Overview** and **By model** views, plus an **Unrouted models** section for models without an active request surface. Status, kind, route-group, vendor, and Provider filters are reflected in the browser address bar so you can share the same view.
+1. Prepare a provider and model, then select a compatible protocol adapter.
+2. Review the client protocol and operation: Chat, Responses, Messages, image, audio or embedding.
+3. Select a pool and group, enter upstream model and provider, choose priority and weight, then enable and save.
+4. Probe the target in Playground and verify the full client-to-accounting path in Simulator.
 
-<Aside type="tip" title="Prerequisite">
-	Complete [Providers](/en/docs/guides/providers/) and [Models](/en/docs/guides/models/) first.
-</Aside>
+An OpenAI image surface may use a supported native upstream adapter. Conversion is limited to implemented combinations; see [capability limits](/en/docs/capabilities/).
 
-<figure class="of-doc-figure">
-	<img src="/screenshots/admin-routes-by-model.webp" alt="OctaFuse Admin Routes By model view showing filters, unrouted models, request surfaces, route groups, and upstream targets." loading="lazy" />
-	<figcaption>By model keeps filters, unrouted models, and each model's complete routing chain together. Switch to Overview when you need to compare request surfaces across models.</figcaption>
-</figure>
+## Priority and four strategies
 
-## What to do in Admin
+Higher `priority` is attempted first. Within one tier:
 
-<Steps>
-1. Open **Routes**.
-1. **Request Surface**: choose the client model and `route_group` (often `default`), then the incoming protocol / operation, such as `openai.chat`, `openai.responses`, `anthropic.messages`, or `openai.images.generations`. Gemini streaming and non-streaming routes both use `gemini.models.generate`.
-1. **Route Pool**: point the Surface to a failover pool. Set a Pool default strategy, or click a priority-tier strategy chip to override only that tier; unset values continue through the model / global inheritance chain.
-1. **Upstream Target**: choose a Provider, upstream model name and operation, then set **priority** (higher tries first), **weight**, and status.
-1. **Custom params**: add Provider-specific extensions or route defaults when needed. They are deep-merged into the upstream request body, with explicit client fields taking precedence.
-1. **Billing**: set default **charged to user** and **supplier cost** factors on the Target. Add a **Schedule** for vendor peak / off-peak pricing and optionally restrict each window to selected weekdays. A matching row overrides the defaults; its timezone comes from [System config](/en/docs/guides/system-config/).
-1. After saving, use [Playground](/en/docs/features/playground/) for a single-route upstream check; use [Simulator](/en/docs/features/simulator/) to exercise the full Proxy path with a real `sk-` key.
-</Steps>
+| Strategy | Use |
+|---|---|
+| `hash_affinity` (default) | Stable preference by user, model, group and protocol for cache continuity |
+| `weighted_random` | Random selection proportional to weight |
+| `weight_priority` | Fixed descending weight order within the tier |
+| `weighted_round_robin` | Weighted rotation; counters are not shared between runtime instances |
 
-<figure class="of-doc-figure">
-	<img src="/screenshots/v2-7-0-route-weekday-schedule.webp" alt="OctaFuse route editor showing client mapping, upstream mapping, default billing factors, time windows, and weekday selection." loading="lazy" />
-	<figcaption>Open any Upstream Target to review protocol mapping, catalog rates, defaults, time windows, and active weekdays on one page. The screenshot selects every day; use the Weekdays or Weekend preset when rates differ.</figcaption>
-</figure>
-
-## Default factors, weekdays, and schedules
-
-Starting in 2.6.0, Daily schedules saved by Admin use `schedule.mode: "override"`:
-
-- Outside every window, the Target's default Charged / Metered factors apply.
-- Inside a matching window, that row's Charged / Metered factors apply directly instead of multiplying the defaults.
-- Both sides share start and end times but can use different Charged and Metered factors.
-- Existing data without `schedule.mode` keeps the historical “default factor × window factor” behavior.
-- Starting in 2.7.0, each window can use Every day, Weekdays, Weekend, or individual day selection. Existing windows without a weekday restriction continue to run every day.
-- In the Admin API, `days` uses ISO weekday numbers: `1` is Monday and `7` is Sunday.
-- A cross-midnight window belongs to its start day. Friday `22:00–06:00`, for example, covers Friday night through 06:00 Saturday.
-
-Gateway evaluates the window at request entry using the business timezone. A long stream does not change factors when it crosses a window boundary.
-
-<Aside type="tip" title="DeepSeek weekday peak pricing">
-	When the off-peak rate is the catalog standard price, keep the default factor at `1`, then add `2`-factor windows for Monday–Friday `09:00–12:00` and `14:00–18:00`. All remaining weekday hours and the entire weekend automatically use the off-peak rate.
-</Aside>
-
-## Client impact
-
-Clients only send **`model`** and protocol-specific payloads — no hard-coded vendor details. Use a base model id, or `baseId:group` to select a route group.
-
-## Ordering and four strategies
-
-Pools first group Targets by `priority` **descending**; higher numbers try first. Within one priority tier, the effective strategy orders Targets using `weight`:
-
-| Strategy | Behavior and use |
-|----------|------------------|
-| `hash_affinity` (default) | Keeps a stable preferred Provider for the same user, model, group, and protocol, improving Prompt Cache hits; short-term traffic may be uneven. |
-| `weighted_random` | Weighted random distribution with strong load balancing for proportional allocation or A/B; weaker cache affinity. |
-| `weight_priority` | Fixed high-to-low weight order for predictable primary / backup behavior; the first Provider gets most traffic. |
-| `weighted_round_robin` | Weighted rotation for more even traffic; counters are per runtime instance and not globally synchronized. |
-
-Use different priorities for hard primary / backup across Providers. Precedence is: current priority-tier override → Route Pool default → model capability rule → model protocol rule → model default → global `ROUTE_STRATEGY` → `hash_affinity`.
-
-<Aside type="caution" title="Strategy IDs changed in 2.3.0">
-	`cache_affinity` and `fixed_order` were renamed to `hash_affinity` and `weight_priority`. Version 2.3.0 does not accept the old IDs; update automation, global config, Pool defaults, and priority-tier overrides.
-</Aside>
+A tier may override the strategy. Otherwise pool, model and global rules are inherited. See the [strategy reference](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/developers/reference/route-strategies.md) for exact precedence.
 
 ## Provider Sticky
 
-Provider Sticky is **cross-request success memory at the Route Pool level**, not a fifth ordering strategy:
+Sticky routing remembers the last successful target for a configured lifetime. It is independent of tier strategies and disabled by default. Open Provider Sticky to set the lifetime, inspect distribution and user bindings, unbind one record or clear the pool.
 
-- Without a valid binding, routing still follows priority plus one of the four strategies above; a successful Target is then recorded.
-- A valid binding is tried before priority tiers during its idle TTL. The default is 3600 seconds and each successful request renews it.
-- 429, 401 / 403, 5xx, 524, and network failures clear the binding before normal failover. A 400, 404, or image client abort keeps it.
-- Sticky is off by default. Open the Sticky dialog on the Route Group / Pool node in Routes Flow to enable it, adjust TTL, compare binding share with route weight, unbind one user, or invalidate the whole Pool.
+![Sticky binding details and unbind controls](/screenshots/v2-18-0-sticky-bindings.webp)
 
-`hash_affinity` is stateless hashing that gives a user a stable preferred Provider. Sticky persists the last successful Target in D1, Postgres, or MySQL and shares it across Worker isolates or Node instances.
+Unbinding re-runs selection and may still choose the same target. Bindings are persisted across instances, whereas `hash_affinity` is a stateless hash.
 
-## Failover and circuits
+## Custom headers and body
 
-Retryable 429, 401 / 403, 5xx, and network errors move to the next Target. Providers enter error-specific cooldowns. If every candidate is circuit-open, Proxy returns 429 with `Retry-After`.
+Headers and JSON body have separate configuration. Explicit client values win by default. Each side has its own Force override switch, making route values take precedence on that side only. Do not place HTTP headers inside the JSON request body.
 
-## Note
+![Independent header and body force override](/screenshots/v2-10-0-route-force-override.webp)
 
-**Playground** directly probes one Target and bypasses Pool strategy, failover, user billing, and request logs. Validate the full behavior with real Proxy calls or **Simulator**. Image routes must use the OpenAI protocol — see [Image generation / edit](/en/docs/guides/images/).
+## Prices and validity windows
 
-## Next
+Maintain Provider, Charged and Metered factors separately. Provider factors may have validity windows. Official model schedules and route schedules have different roles; inspect the complete price preview before saving. See [pricing and discounts](/en/docs/guides/billing/) for user factor composition.
 
-- [Users](/en/docs/guides/users/)  
-- [API keys](/en/docs/guides/api-keys/)  
+## Failures and streaming
+
+Retryable supplier failures allow subsequent candidates; circuit breakers avoid repeatedly calling unavailable accounts. Streaming first-event detection ignores comment heartbeats. The default first-event timeout is 60 seconds; another usable candidate permits failover, while the last candidate falls back to the first-chunk timeout.
+
+Inspect actual attempts in the [request timeline](/en/docs/guides/request-logs/). See the [request lifecycle](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/developers/architecture/proxy-request-lifecycle.md) for precise timeout and retry conditions.

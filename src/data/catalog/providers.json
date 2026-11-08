@@ -37,8 +37,8 @@
         "api_keys": "https://platform.deepseek.com/api_keys"
       },
       "protocols": [
-        "openai",
-        "anthropic"
+        "anthropic",
+        "openai"
       ],
       "endpoints": {
         "openai": {
@@ -82,8 +82,9 @@
         "api_keys": "https://console.volcengine.com/ark/region:ark+cn-beijing/apiKey"
       },
       "protocols": [
+        "anthropic",
         "openai",
-        "anthropic"
+        "volcengine"
       ],
       "endpoints": {
         "openai": {
@@ -131,8 +132,8 @@
         "api_keys": "https://console.volcengine.com/ark/region:ark+cn-beijing/apiKey"
       },
       "protocols": [
-        "openai",
-        "anthropic"
+        "anthropic",
+        "openai"
       ],
       "endpoints": {
         "openai": {
@@ -176,8 +177,8 @@
         "api_keys": "https://console.volcengine.com/ark/region:ark+cn-beijing/apiKey"
       },
       "protocols": [
-        "openai",
-        "anthropic"
+        "anthropic",
+        "openai"
       ],
       "endpoints": {
         "openai": {
@@ -221,8 +222,9 @@
         "api_keys": "https://console.byteplus.com/ark/region:ark+ap-southeast-1/apiKey"
       },
       "protocols": [
+        "anthropic",
         "openai",
-        "anthropic"
+        "volcengine"
       ],
       "endpoints": {
         "openai": {
@@ -269,8 +271,8 @@
         "api_keys": "https://console.byteplus.com/ark/region:ark+ap-southeast-1/apiKey"
       },
       "protocols": [
-        "openai",
-        "anthropic"
+        "anthropic",
+        "openai"
       ],
       "endpoints": {
         "openai": {
@@ -314,9 +316,9 @@
         "api_keys": "https://bailian.console.aliyun.com/cn-beijing/?tab=app#/api-key"
       },
       "protocols": [
-        "openai",
         "anthropic",
-        "dashscope"
+        "dashscope",
+        "openai"
       ],
       "endpoints": {
         "openai": {
@@ -364,8 +366,8 @@
         "api_keys": "https://bailian.console.aliyun.com/cn-beijing/?tab=app#/api-key"
       },
       "protocols": [
-        "openai",
-        "anthropic"
+        "anthropic",
+        "openai"
       ],
       "endpoints": {
         "openai": {
@@ -407,9 +409,9 @@
         "platform": "https://modelstudio.console.alibabacloud.com/"
       },
       "protocols": [
-        "openai",
         "anthropic",
-        "dashscope"
+        "dashscope",
+        "openai"
       ],
       "endpoints": {
         "openai": {
@@ -456,8 +458,8 @@
         "platform": "https://modelstudio.console.alibabacloud.com/"
       },
       "protocols": [
-        "openai",
-        "anthropic"
+        "anthropic",
+        "openai"
       ],
       "endpoints": {
         "openai": {
@@ -499,9 +501,9 @@
         "platform": "https://platform.qianwenai.com/"
       },
       "protocols": [
-        "openai",
         "anthropic",
-        "dashscope"
+        "dashscope",
+        "openai"
       ],
       "endpoints": {
         "openai": {
@@ -547,9 +549,9 @@
         "platform": "https://platform.qianwenai.com/"
       },
       "protocols": [
-        "openai",
         "anthropic",
-        "dashscope"
+        "dashscope",
+        "openai"
       ],
       "endpoints": {
         "openai": {
@@ -601,8 +603,8 @@
         "platform": "https://console.cloud.tencent.com/hunyuan"
       },
       "protocols": [
-        "openai",
-        "anthropic"
+        "anthropic",
+        "openai"
       ],
       "endpoints": {
         "openai": {
@@ -645,8 +647,8 @@
         "platform": "https://console.cloud.tencent.com/lkeap"
       },
       "protocols": [
-        "openai",
-        "anthropic"
+        "anthropic",
+        "openai"
       ],
       "endpoints": {
         "openai": {
@@ -688,8 +690,8 @@
         "platform": "https://console.bce.baidu.com/qianfan/"
       },
       "protocols": [
-        "openai",
-        "anthropic"
+        "anthropic",
+        "openai"
       ],
       "endpoints": {
         "openai": {
@@ -733,8 +735,8 @@
         "platform": "https://console.bce.baidu.com/vod-gz/"
       },
       "protocols": [
-        "openai",
-        "anthropic"
+        "anthropic",
+        "openai"
       ],
       "endpoints": {
         "openai": {
@@ -777,9 +779,9 @@
         "platform": "https://console.bce.baidu.com/vod-overseas"
       },
       "protocols": [
-        "openai",
         "anthropic",
-        "gemini"
+        "gemini",
+        "openai"
       ],
       "endpoints": {
         "openai": {
@@ -830,9 +832,9 @@
         "platform": "https://console.bce.baidu.com/vod-overseas"
       },
       "protocols": [
-        "openai",
         "anthropic",
-        "gemini"
+        "gemini",
+        "openai"
       ],
       "endpoints": {
         "openai": {
@@ -883,9 +885,9 @@
         "platform": "https://console.bce.baidu.com/vod-overseas"
       },
       "protocols": [
-        "openai",
         "anthropic",
-        "gemini"
+        "gemini",
+        "openai"
       ],
       "endpoints": {
         "openai": {
@@ -937,8 +939,8 @@
         "api_keys": "https://open.bigmodel.cn/usercenter/apikeys"
       },
       "protocols": [
-        "openai",
-        "anthropic"
+        "anthropic",
+        "openai"
       ],
       "endpoints": {
         "openai": {
@@ -984,8 +986,8 @@
         "api_keys": "https://open.bigmodel.cn/usercenter/apikeys"
       },
       "protocols": [
-        "openai",
-        "anthropic"
+        "anthropic",
+        "openai"
       ],
       "endpoints": {
         "openai": {
@@ -1068,8 +1070,8 @@
         "platform": "https://z.ai/"
       },
       "protocols": [
-        "openai",
-        "anthropic"
+        "anthropic",
+        "openai"
       ],
       "endpoints": {
         "openai": {
@@ -1111,8 +1113,8 @@
         "platform": "https://longcat.chat/"
       },
       "protocols": [
-        "openai",
-        "anthropic"
+        "anthropic",
+        "openai"
       ],
       "endpoints": {
         "openai": {
@@ -1156,8 +1158,8 @@
         "api_keys": "https://platform.moonshot.cn/console/api-keys"
       },
       "protocols": [
-        "openai",
-        "anthropic"
+        "anthropic",
+        "openai"
       ],
       "endpoints": {
         "openai": {
@@ -1200,8 +1202,8 @@
         "platform": "https://www.kimi.com/code"
       },
       "protocols": [
-        "openai",
-        "anthropic"
+        "anthropic",
+        "openai"
       ],
       "endpoints": {
         "openai": {
@@ -1243,8 +1245,9 @@
         "platform": "https://platform.minimaxi.com/"
       },
       "protocols": [
-        "openai",
-        "anthropic"
+        "anthropic",
+        "minimax",
+        "openai"
       ],
       "endpoints": {
         "openai": {
@@ -1290,8 +1293,9 @@
         "platform": "https://platform.minimax.io/"
       },
       "protocols": [
-        "openai",
-        "anthropic"
+        "anthropic",
+        "minimax",
+        "openai"
       ],
       "endpoints": {
         "openai": {
@@ -1337,7 +1341,9 @@
         "platform": "https://elevenlabs.io/app",
         "api_keys": "https://elevenlabs.io/app/developers/api-keys"
       },
-      "protocols": [],
+      "protocols": [
+        "elevenlabs"
+      ],
       "endpoints": {
         "elevenlabs": {
           "base": "https://api.elevenlabs.io/v1"
@@ -1449,8 +1455,8 @@
         "platform": "https://llama.developer.meta.com/docs"
       },
       "protocols": [
-        "openai",
-        "anthropic"
+        "anthropic",
+        "openai"
       ],
       "endpoints": {
         "openai": {
@@ -1494,8 +1500,8 @@
         "api_keys": "https://aistudio.google.com/app/apikey"
       },
       "protocols": [
-        "openai",
-        "gemini"
+        "gemini",
+        "openai"
       ],
       "endpoints": {
         "openai": {
@@ -1576,8 +1582,8 @@
         "platform": "https://console.cloud.google.com/vertex-ai"
       },
       "protocols": [
-        "openai",
-        "gemini"
+        "gemini",
+        "openai"
       ],
       "endpoints": {
         "openai": {
@@ -1742,8 +1748,8 @@
         "api_keys": "https://cloud.sambanova.ai/apis"
       },
       "protocols": [
-        "openai",
-        "anthropic"
+        "anthropic",
+        "openai"
       ],
       "endpoints": {
         "openai": {
@@ -2149,8 +2155,8 @@
         "platform": "https://platform.stepfun.com/"
       },
       "protocols": [
-        "openai",
-        "anthropic"
+        "anthropic",
+        "openai"
       ],
       "endpoints": {
         "openai": {
@@ -2232,8 +2238,8 @@
         "platform": "https://platform.xiaomimimo.com/"
       },
       "protocols": [
-        "openai",
-        "anthropic"
+        "anthropic",
+        "openai"
       ],
       "endpoints": {
         "openai": {
@@ -2276,8 +2282,8 @@
         "platform": "https://platform.xiaomimimo.com/"
       },
       "protocols": [
-        "openai",
-        "anthropic"
+        "anthropic",
+        "openai"
       ],
       "endpoints": {
         "openai": {
@@ -2321,9 +2327,9 @@
         "api_keys": "https://portal.qiniu.com/ai-inference"
       },
       "protocols": [
-        "openai",
         "anthropic",
-        "gemini"
+        "gemini",
+        "openai"
       ],
       "endpoints": {
         "openai": {
@@ -2414,9 +2420,9 @@
         "api_keys": "https://opencode.ai/auth"
       },
       "protocols": [
-        "openai",
         "anthropic",
-        "gemini"
+        "gemini",
+        "openai"
       ],
       "endpoints": {
         "openai": {
@@ -2462,8 +2468,8 @@
         "api_keys": "https://opencode.ai/auth"
       },
       "protocols": [
-        "openai",
-        "anthropic"
+        "anthropic",
+        "openai"
       ],
       "endpoints": {
         "openai": {
@@ -2506,8 +2512,8 @@
         "api_keys": "https://commandcode.ai/"
       },
       "protocols": [
-        "openai",
-        "anthropic"
+        "anthropic",
+        "openai"
       ],
       "endpoints": {
         "openai": {
@@ -2591,8 +2597,8 @@
         "api_keys": "https://vercel.com/d?to=%2F%5Bteam%5D%2F%7E%2Fai-gateway%2Fapi-keys"
       },
       "protocols": [
-        "openai",
-        "anthropic"
+        "anthropic",
+        "openai"
       ],
       "endpoints": {
         "openai": {
@@ -2638,9 +2644,9 @@
         "referral": "https://zenmux.ai/invite/PNWNOJ"
       },
       "protocols": [
-        "openai",
         "anthropic",
-        "gemini"
+        "gemini",
+        "openai"
       ],
       "endpoints": {
         "openai": {
@@ -2685,8 +2691,8 @@
         "api_keys": "https://www.scnet.cn/ui/llm/apikeys"
       },
       "protocols": [
-        "openai",
-        "anthropic"
+        "anthropic",
+        "openai"
       ],
       "endpoints": {
         "openai": {
@@ -2730,8 +2736,8 @@
         "referral": "https://cloud.siliconflow.cn/i/rA30k5VJ"
       },
       "protocols": [
-        "openai",
-        "anthropic"
+        "anthropic",
+        "openai"
       ],
       "endpoints": {
         "openai": {
@@ -2862,8 +2868,8 @@
         "api_keys": "https://ksp.console.ksyun.com/#/apiKey"
       },
       "protocols": [
-        "openai",
-        "anthropic"
+        "anthropic",
+        "openai"
       ],
       "endpoints": {
         "openai": {
@@ -2907,8 +2913,8 @@
         "api_keys": "https://ksp.console.ksyun.com/#/apiKey"
       },
       "protocols": [
-        "openai",
-        "anthropic"
+        "anthropic",
+        "openai"
       ],
       "endpoints": {
         "openai": {
@@ -2952,8 +2958,8 @@
         "api_keys": "https://open-design.ai/cloud/api-keys"
       },
       "protocols": [
-        "openai",
-        "anthropic"
+        "anthropic",
+        "openai"
       ],
       "endpoints": {
         "openai": {
@@ -2996,9 +3002,9 @@
         "platform": "https://www.wangsu.com/document/ai/aigateway-quick-start1"
       },
       "protocols": [
-        "openai",
         "anthropic",
-        "gemini"
+        "gemini",
+        "openai"
       ],
       "endpoints": {
         "openai": {

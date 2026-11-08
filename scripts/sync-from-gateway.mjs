@@ -13,8 +13,12 @@ const args = parseArgs(process.argv.slice(2));
 const ref = args.ref ?? contract.source.defaultRef ?? 'main';
 const dryRun = Boolean(args.dryRun);
 const repo = contract.source.repo;
+const ownedGatewayDirs = new Set();
+process.on('exit', () => {
+	for (const dir of ownedGatewayDirs) rmSync(dir, { recursive: true, force: true });
+});
 const gatewayDir = resolveGatewayDir(args.gatewayDir, ref);
-const commit = git(gatewayDir, ['rev-parse', 'HEAD'], { fallback: ref }).trim();
+const commit = git(gatewayDir, ['rev-parse', 'HEAD']).trim();
 const blobBase = `https://github.com/${repo}/blob/${ref}`;
 
 const missing = [];
@@ -108,27 +112,29 @@ function parseArgs(argv) {
 }
 
 function resolveGatewayDir(gatewayDirArg, gitRef) {
-	if (gatewayDirArg) {
-		const dir = resolve(root, gatewayDirArg);
-		if (!existsSync(dir)) throw new Error(`Gateway directory not found: ${dir}`);
-		return dir;
-	}
-
-	const sibling = resolve(root, '../octafuse-gateway');
-	if (existsSync(sibling)) return sibling;
-
+	if (!gitRef || gitRef.startsWith('-')) throw new Error('Expected a branch, tag, or commit ref.');
+	const local = gatewayDirArg ? resolve(root, gatewayDirArg) : resolve(root, '../octafuse-gateway');
+	if (gatewayDirArg && !existsSync(local)) throw new Error(`Gateway directory not found: ${local}`);
 	const tmp = mkdtempSync(join(tmpdir(), 'octafuse-gateway-'));
-	git(tmp, ['init']);
-	git(tmp, ['remote', 'add', 'origin', `https://github.com/${repo}.git`]);
-	git(tmp, ['fetch', '--depth', '1', 'origin', gitRef]);
-	git(tmp, ['checkout', '--detach', 'FETCH_HEAD']);
+	ownedGatewayDirs.add(tmp);
+	if (existsSync(local)) {
+		// Read the selected immutable tree without checking out or reading dirty files in the user's worktree.
+		const selectedCommit = git(local, ['rev-parse', '--verify', '--end-of-options', `${gitRef}^{commit}`]).trim();
+		git(root, ['clone', '--quiet', '--no-hardlinks', '--no-checkout', local, tmp]);
+		git(tmp, ['checkout', '--quiet', '--detach', selectedCommit]);
+	} else {
+		git(tmp, ['init', '--quiet']);
+		git(tmp, ['remote', 'add', 'origin', `https://github.com/${repo}.git`]);
+		git(tmp, ['fetch', '--depth', '1', 'origin', gitRef]);
+		git(tmp, ['checkout', '--quiet', '--detach', 'FETCH_HEAD']);
+	}
 	return tmp;
 }
 
-function cleanupGatewayDir(dir, explicitGatewayDir) {
-	if (explicitGatewayDir) return;
-	if (dirname(dir) === tmpdir() && dir.includes('octafuse-gateway-')) {
+function cleanupGatewayDir(dir) {
+	if (ownedGatewayDirs.has(dir)) {
 		rmSync(dir, { recursive: true, force: true });
+		ownedGatewayDirs.delete(dir);
 	}
 }
 
@@ -179,7 +185,7 @@ function renderCatalogOutputs(data, gatewayPath, source) {
 			},
 		},
 		links: row.catalog?.links ?? {},
-		protocols: ['openai', 'anthropic', 'gemini', 'dashscope'].filter((protocol) => Boolean(row.endpoints?.[protocol])),
+		protocols: Object.keys(row.endpoints ?? {}).filter((protocol) => Boolean(row.endpoints[protocol])).sort(),
 		endpoints: row.endpoints ?? {},
 		description: row.description != null && String(row.description).trim() ? String(row.description).trim() : null,
 		source_path: data.catalog.providerPresets,

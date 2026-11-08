@@ -1,88 +1,36 @@
 ---
-title: 文档
-description: "OctaFuse AI 能力网关与运营控制面文档：按使用者、集成开发者和运维者组织快速开始、配置、联调、部署与技术参考。"
+title: "文档"
+description: "从第一次调用开始，按模型、多模态、MCP、用户计费和运维任务使用 OctaFuse。"
+gatewayRef: v2.18.0
 ---
 
-import { Aside, LinkCard, CardGrid } from '@astrojs/starlight/components';
+先选择要完成的任务。本版指南以 **Gateway v2.18.0** 为基线；模型与供应商目录也标注其来源版本。API、迁移和架构细节以 [GitHub 技术参考](/zh/docs/github-reference/) 为准。
 
-<div class="of-doc-command">
-	<span>gateway.docs</span>
-	<strong>选择你的路径</strong>
-	<code>users → configure → observe → deploy</code>
-</div>
+## 从哪里开始
 
-OctaFuse 是可自托管的 AI 能力网关与运营控制面。文档按工作流组织：先跑起来，再配置供应商、模型、图片与音频能力、智能体工具（Agent Tools）、路由和密钥；需要联调时使用调试台（Playground）、模拟器（Simulator）和日志；需要 API、迁移、架构细节时回到 gateway 仓库的权威技术参考。
+| 你的目标 | 推荐路径 |
+|---|---|
+| 先跑通一次模型调用 | [快速开始](/zh/docs/quick-start/) → [接入客户端](/zh/docs/guides/clients/) |
+| 接入图片、音频或向量 | [支持能力](/zh/docs/capabilities/) → 对应的多模态指南 |
+| 给 Agent 提供工具 | [REST 服务](/zh/docs/guides/tools/)或[MCP 服务](/zh/docs/guides/mcp/)，需要登录授权时阅读 [OAuth](/zh/docs/guides/oauth/) |
+| 为团队或客户管理用量 | [用户](/zh/docs/guides/users/) → [额度与计费](/zh/docs/guides/billing/) → [密钥与限流](/zh/docs/guides/api-keys/) |
+| 将网关接进业务平台 | [系统集成](/zh/docs/guides/integration/)，从服务端使用具名集成密钥 |
+| 上线、升级或处理故障 | [部署选择](/zh/docs/deploy/overview/) → [升级与迁移](/zh/docs/deploy/upgrades/) → [请求流程](/zh/docs/guides/request-logs/) |
 
-<div class="of-doc-path-grid">
-	<a class="of-doc-path" href="/zh/docs/quick-start/">
-		<span class="of-doc-path-index">01</span>
-		<strong>我只想先用起来</strong>
-		<small>本地 D1 → Cloudflare 一键上云、登录管理台、发送一条测试请求。</small>
-	</a>
-	<a class="of-doc-path" href="/zh/docs/guides/integration/">
-		<span class="of-doc-path-index">02</span>
-		<strong>我要接入自己的系统</strong>
-		<small>区分代理服务（Proxy）/ 管理后台（Admin）、用户 API 密钥 / 集成密钥、门户后台自动开通流程。</small>
-	</a>
-	<a class="of-doc-path" href="/zh/docs/deploy/cloudflare/">
-		<span class="of-doc-path-index">03</span>
-		<strong>我要上线到生产</strong>
-		<small>Cloudflare Workers（默认）、Docker 自托管、数据落点与迁移顺序。</small>
-	</a>
-</div>
+## 最短配置路径
 
-<Aside type="tip" title="推荐阅读顺序">
-	快速开始 → 供应商（Providers）→ 模型（Models）→ 路由（Routes）→ 智能体工具 → 用户（Users）→ API 密钥（API Keys）→ 模拟器 → 部署。需要字段、SQL、架构或排障细节时，再打开 GitHub 技术参考。
-</Aside>
+**供应商 → 模型 → 路由 → 用户与密钥 → 一次真实调用**。
 
-## 界面速览
+先用调试台确认上游连通，再用模拟器核对完整的鉴权、选路、扣费和日志。图片、音频、向量和工具按业务需要配置，不是文本调用的前置步骤。
 
-<div class="of-screenshot-grid">
-	<figure class="of-doc-figure">
-		<img src="/screenshots/admin-dashboard.webp" alt="OctaFuse 管理后台仪表盘（Dashboard）展示 API 密钥、请求数、Token、费用、模型分布和趋势图。" loading="lazy" />
-		<figcaption>仪表盘（Dashboard）：安装后先看运行概况、请求量、Token、费用与最近错误。</figcaption>
-	</figure>
-	<figure class="of-doc-figure">
-		<img src="/screenshots/v2-6-0-route-billing-schedule.webp" alt="OctaFuse 管理后台路由编辑器展示请求入口、上游映射与每日计费时段。" loading="lazy" />
-		<figcaption>路由（Routes）：在同一编辑器中检查入口映射、上游目标、目录价、默认倍率与每日时段。</figcaption>
-	</figure>
-	<figure class="of-doc-figure">
-		<img src="/screenshots/v2-6-0-playground-tool-stream.webp" alt="OctaFuse 管理后台调试台（Playground）展示路由选择与 Tool stream 请求样例。" loading="lazy" />
-		<figcaption>调试台（Playground）：选择单个上游目标并载入请求样例，上线前先验证端点与工具调用。</figcaption>
-	</figure>
-</div>
+![请求流程从入站、路由、上游尝试到响应和记账](/screenshots/v2-18-0-request-detail-failover.png)
 
-## 配置流水线
+请求失败或变慢时，沿着[请求日志中的流程与时间线](/zh/docs/guides/request-logs/)定位，再结合[用量与可靠性分析](/zh/docs/guides/analytics/)判断是否需要调整路由。
 
-<div class="of-flow">
-	<a href="/zh/docs/guides/providers/"><span>1</span><strong>供应商（Providers）</strong><small>上游端点、单密钥与状态</small></a>
-	<a href="/zh/docs/guides/models/"><span>2</span><strong>模型（Models）</strong><small>模型目录与定价</small></a>
-	<a href="/zh/docs/guides/routing/"><span>3</span><strong>路由（Routes）</strong><small>请求入口、路由池、上游目标与策略</small></a>
-	<a href="/zh/docs/guides/images/"><span>4</span><strong>图片（Images）</strong><small>图片生成与按张 / Token 计价</small></a>
-	<a href="/zh/docs/guides/tools/"><span>5</span><strong>工具（Tools）</strong><small>可扩展智能体工具</small></a>
-	<a href="/zh/docs/guides/users/"><span>6</span><strong>用户（Users）</strong><small>账户、预算、模型折扣</small></a>
-	<a href="/zh/docs/guides/api-keys/"><span>7</span><strong>API 密钥（API Keys）</strong><small>发放、吊销、调用凭证</small></a>
-</div>
+## 三种目录不要混用
 
-## 常用入口
+- [官网模型与供应商目录](/zh/catalog/models/)：正式版本内置的静态导入预设，不包含你的真实凭证与部署配置。
+- 你的网关 `GET /catalog/models`：按已启用路由发现对外能力，无需用户密钥。
+- 你的网关 `GET /v1/models`：使用用户密钥，面向客户端发现模型；可按类型筛选。
 
-<CardGrid>
-	<LinkCard title="快速开始" description="本地 D1 → Cloudflare 上云" href="/zh/docs/quick-start/" />
-	<LinkCard title="系统集成" description="代理服务、管理后台与密钥的边界" href="/zh/docs/guides/integration/" />
-	<LinkCard title="图片生成 / 编辑" description="图片 Token 与按张计费" href="/zh/docs/guides/images/" />
-	<LinkCard title="智能体工具" description="可扩展工具 API；当前含联网类" href="/zh/docs/guides/tools/" />
-	<LinkCard title="调试台" description="联调对话、响应、图片与百炼音频等上游能力" href="/zh/docs/features/playground/" />
-	<LinkCard title="模拟器" description="用真实密钥验证响应、音频等完整代理链路" href="/zh/docs/features/simulator/" />
-	<LinkCard title="Cloudflare 部署" description="Worker + 管理后台 + D1（推荐）" href="/zh/docs/deploy/cloudflare/" />
-	<LinkCard title="Docker 部署" description="自托管、Postgres / MySQL、镜像" href="/zh/docs/deploy/docker/" />
-</CardGrid>
-
-## 排障与治理
-
-| 我想… | 去哪 |
-|--------|------|
-| 看调用是否成功 | [请求日志](/zh/docs/guides/request-logs/) |
-| 看用量与成本趋势 | [分析](/zh/docs/guides/analytics/) |
-| 看预算、密钥生命周期和用户侧审计 | [审计日志](/zh/docs/guides/audit-logs/) |
-| 配置业务时区、计费币种、路由策略和告警 | [系统配置](/zh/docs/guides/system-config/) |
-| 查 API、迁移、架构、计费细节 | [GitHub 技术参考](/zh/docs/github-reference/) |
+版本变化阅读[动态](/zh/updates/)；日常操作优先使用本指南。

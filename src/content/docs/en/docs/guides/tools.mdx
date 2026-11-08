@@ -1,51 +1,37 @@
 ---
-title: Agent Tools
-description: Configure Agent Tool credentials, three-ledger prices, one Active engine, and invocation logs through Provider cards in Admin.
+title: "REST services"
+description: "Configure search, fetch, deep search and AI detection engines, then price and inspect real tool calls."
+gatewayRef: v2.18.0
 ---
 
-import { Aside, Steps } from '@astrojs/starlight/components';
+**REST Services** exposes independent tool APIs under `/v1/tools/*`. They are separate from model conversation protocols: the client executes these requests after a model asks to use a tool.
 
-Agent Tools are **protocol-agnostic, extensible product APIs** (same family as `/v1/me`) under `POST /v1/tools/*` for desktop agents after a model tool call. They are **not** part of OpenAI / Anthropic / Gemini chat protocols.
+| Service | Endpoint | Implemented engine examples |
+|---|---|---|
+| Web search | `/v1/tools/web-search` | Bocha, Tavily, CleverSee, Tencent WSA |
+| Web fetch | `/v1/tools/web-fetch` | Firecrawl, Tavily Extract, Jina Reader |
+| Deep search | `/v1/tools/web-deep-search` | Firecrawl Search, Jina Search |
+| AI detection | `/v1/tools/ai-detection` | Tencent TMS |
 
-Available today:
+## Configure and activate
 
-| Tool | Endpoint | Available Providers |
-|------|----------|---------------------|
-| Web Search | `POST /v1/tools/web-search` | Bocha, Tavily, Alibaba Cloud CleverSee, Tencent Cloud WSA |
-| Web Fetch | `POST /v1/tools/web-fetch` | Firecrawl, Tavily Extract, Jina Reader |
-| Web Deep Search | `POST /v1/tools/web-deep-search` | Firecrawl Search, Jina Search |
-| AI Detection | `POST /v1/tools/ai-detection` | Tencent Cloud TMS (currently implemented) |
+1. Open REST Services under Agent Tools. Filter by name, service type or status.
+2. Open a service dialog to edit credentials, activation, pricing and tests.
+3. Set Standard price, Charged factor and Metered factor; check the price preview. Search bills per request; AI detection uses configured character units.
+4. Save and activate the intended engine. Each tool currently has one Active engine; unimplemented engines or incomplete credentials cannot be activated.
+5. Call Proxy with a user key, then review tool invocations or request logs.
 
-<Aside type="caution" title="Dependencies and limits">
-	- You must supply **third-party engine API keys** (see the Admin whitelist).
-	- **Exactly one Active engine per tool**; calls return **503** when the Active engine has no key.
-	- Web tools bill per call; AI Detection bills by `billingUnitChars` character units. Upstream failures are not charged.
-	- Configure **S standard / C charged / M metered** prices separately for every Provider. Only C increases the user budget, and the three prices may differ.
-	- Model Route factors and daily schedules do not apply. Cards flag unsaved changes, missing credentials, unavailable engines, and loss pricing (C < M).
-</Aside>
+A zero Charged factor makes user calls free while retaining supplier cost. Model route schedules and per-model user discounts do not apply. Legacy independent unit prices remain readable; newly saved rules use a base price and factors.
 
-## What to do in Admin
-
-<Steps>
-1. Open **Tools → Configuration**.
-1. Click a Provider card and use the right-side drawer to enter credentials plus S / C / M prices (currency follows system billing currency).
-1. Use **Save configuration only** to prepare a non-Active engine. **Save and activate** stores the draft and switches the tool’s single Active engine; unimplemented engines or incomplete credentials cannot be activated.
-1. Before clearing credentials from the current Active engine, save and activate another fully configured engine.
-1. Call `/v1/tools/*` with a user `sk-…`; inspect **Tools → Invocations** or [Request logs](/en/docs/guides/request-logs/) (`provider_id=octafuse-tools`).
-</Steps>
-
-## Minimal client call
+## Test a search
 
 ```bash
-curl -sS "$GATEWAY_URL/v1/tools/web-search" \
-  -H "Authorization: Bearer sk-your-api-key" \
-  -H "Content-Type: application/json" \
+curl -sS http://localhost:8787/v1/tools/web-search \
+  -H 'Authorization: Bearer sk-your-api-key' \
+  -H 'Content-Type: application/json' \
   -d '{"query":"OctaFuse gateway","count":5}'
 ```
 
-Full fields and engine whitelists: [GitHub · user API](https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/developers/api/user.md).
+Upstream failures are not charged. Calls require a usable Active engine. Read [MCP servers](/en/docs/guides/mcp/) to connect external standardized tool services; REST tools are not automatically exposed as MCP.
 
-## Next
-
-- [Image generation / edit](/en/docs/guides/images/)  
-- [System config](/en/docs/guides/system-config/) · [Request logs](/en/docs/guides/request-logs/)  
+See the [tool API reference](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/developers/api/user.md) for fields and engine limitations.

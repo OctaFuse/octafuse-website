@@ -256,6 +256,8 @@ const vendorVisuals: Record<string, { logo?: string; accent: string; monogram?: 
 	zhipu: { logo: zhipuLogo, accent: '#1f5eff' },
 };
 
+const providerProtocols = [...new Set(providerCatalog.items.flatMap((item) => item.protocols))].sort();
+const protocolLabels: Record<string, string> = { openai: 'OpenAI', anthropic: 'Anthropic', gemini: 'Gemini', dashscope: 'DashScope', minimax: 'MiniMax', volcengine: 'Volcengine', elevenlabs: 'ElevenLabs' };
 const modelItems = modelCatalog.items as ModelItem[];
 const modelKindCounts = {
 	all: modelItems.length,
@@ -528,6 +530,7 @@ function contributionUrl(item: ProviderItem | ModelItem) {
 		<div class="boundary-mark" aria-hidden="true">↗</div>
 		<div>
 			<strong>{t.customTitle}</strong>
+			<p class="catalog-source">{locale === 'zh' ? '来源版本' : 'Source release'}: <a href={`${repo}/tree/${catalog.source.ref}`}>{catalog.source.ref}</a></p>
 			<p>{t.customBody}</p>
 		</div>
 		<a href={`/${locale}/docs/guides/${isProviders ? 'providers' : 'models'}/`}>{t.customLink} <span aria-hidden="true">→</span></a>
@@ -613,9 +616,9 @@ function contributionUrl(item: ProviderItem | ModelItem) {
 						isProviders ? (
 							<div class="catalog-chips" role="group" aria-label="Protocol">
 								<button type="button" class="active" data-catalog-filter="all" aria-pressed="true"><span>{t.all}</span></button>
-								<button type="button" data-catalog-filter="openai" aria-pressed="false"><span>OpenAI</span></button>
-								<button type="button" data-catalog-filter="anthropic" aria-pressed="false"><span>Anthropic</span></button>
-								<button type="button" data-catalog-filter="gemini" aria-pressed="false"><span>Gemini</span></button>
+								{providerProtocols.map((protocol) => (
+									<button type="button" data-catalog-filter={protocol} aria-pressed="false"><span>{protocolLabels[protocol] ?? protocol}</span></button>
+								))}
 							</div>
 						) : (
 							<>
@@ -992,9 +995,10 @@ function contributionUrl(item: ProviderItem | ModelItem) {
 			if (button.dataset.ready === 'true') return;
 			button.dataset.ready = 'true';
 			button.addEventListener('click', async () => {
-				const value = button.dataset.copyValue ?? '';
+				const raw = button.dataset.copyValue ?? '';
+				const value = raw.startsWith('/') ? new URL(raw, window.location.origin).href : raw;
 				try {
-					await navigator.clipboard.writeText(value);
+					await navigator.clipboard.writeText(value.startsWith('/') ? new URL(value, window.location.origin).href : value);
 				} catch {
 					const textarea = document.createElement('textarea');
 					textarea.value = value;
@@ -1152,7 +1156,7 @@ function contributionUrl(item: ProviderItem | ModelItem) {
 
 			const writeClipboard = async (value: string, button: HTMLButtonElement) => {
 				try {
-					await navigator.clipboard.writeText(value);
+					await navigator.clipboard.writeText(value.startsWith('/') ? new URL(value, window.location.origin).href : value);
 				} catch {
 					const textarea = document.createElement('textarea');
 					textarea.value = value;

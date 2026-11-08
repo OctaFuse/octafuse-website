@@ -9,6 +9,7 @@ export const collections = {
 		schema: docsSchema({
 			extend: z.object({
 				publishDate: z.coerce.date().optional(),
+				gatewayRef: z.string().optional(),
 				updateLabel: z.string().optional(),
 				featuredUpdate: z.boolean().optional().default(false),
 			}),

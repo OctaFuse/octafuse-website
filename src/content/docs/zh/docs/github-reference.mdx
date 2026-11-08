@@ -32,6 +32,7 @@ import { Aside, CardGrid, LinkCard } from '@astrojs/starlight/components';
 | [快速开始](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/users/quickstart.md) | Docker 与 Cloudflare 本地 D1 的最小启动路径。 |
 | [Admin 配置指南](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/users/configuration.md) | 部署后配置 Provider、模型路由、Agent Tools、用户和 API Key。 |
 | [功能地图](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/users/features.md) | 协议、Agent Tools、路由策略、计费、管理能力与部署方式总览。 |
+| [客户端接入](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/users/connect-clients.md) | SDK、客户端和多模态调用的最小示例。 |
 
 ## 开发者与集成
 
@@ -56,6 +57,11 @@ import { Aside, CardGrid, LinkCard } from '@astrojs/starlight/components';
 | [流式计费与取消](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/developers/reference/streaming-billing.md) | 流式 Chat、客户端取消、usage 解析和扣费状态。 |
 | [文生图模型](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/developers/reference/image-models.md) | 图片模型端点、参数、Token / 按张计费、异常不扣费与运营验收。 |
 | [时间与时区](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/developers/reference/time-and-timezone.md) | UTC 存储、API 输出、Admin 显示和业务日界。 |
+| [MCP 聚合与 OAuth](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/developers/architecture/mcp-gateway.md) | 远程目录、审核、工具计费、访问令牌与授权服务器边界。 |
+| [适配器与驱动](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/developers/architecture/adapters-and-drivers.md) | 客户端入口、原生上游、透传与显式协议转换。 |
+| [厂商原生能力覆盖](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/developers/reference/native-provider-coverage.md) | 按厂商列出已实现能力与已知限制。 |
+| [模型类型](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/developers/reference/model-kinds.md) | LLM、图片、ASR、TTS 与向量的判定规则。 |
+| [用户额度审计](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/developers/reference/user-audit-logs.md) | 周期与永久额度、加额流水与用户密钥事件。 |
 
 ## 部署与运维
 
@@ -71,6 +77,15 @@ import { Aside, CardGrid, LinkCard } from '@astrojs/starlight/components';
 | [路由策略展示 ID 迁移](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/operators/migrations/route-strategy-display-ids-cutover.md) | 迁移 0021：cache_affinity / fixed_order 硬切换为 hash_affinity / weight_priority，无旧 ID 别名。 |
 | [D1 ↔ Postgres 切换](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/operators/migrations/d1-postgres-cutover.md) | ETL、对账、灰度、切换和回滚要点。 |
 | [Cloudflare 命令速查](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/cloudflare-worker/README.md) | Cloudflare 本地、dev 演示和生产 Git 自动部署命令清单。 |
+| [维护模式](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/operators/maintenance-mode.md) | 维护窗口中的推理拒绝、只读例外与管理写入冻结。 |
+| [双额度迁移](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/operators/migrations/0027-user-wallet-credit.md) | 周期额度、永久额度与加额接口切换。 |
+| [限流与入口迁移](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/operators/migrations/0028-key-rate-limit-and-ingress.md) | 用户与密钥 RPM 及入口记录。 |
+| [0030：MCP 服务](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/operators/migrations/0030-mcp-servers.md) | 迁移要求、兼容边界与发布顺序。 |
+| [0031：目录与备注](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/operators/migrations/0031-catalog-notes.md) | 迁移要求、兼容边界与发布顺序。 |
+| [0032：DashScope 音频适配器](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/operators/migrations/0032-dashscope-audio-adapters.md) | 迁移要求、兼容边界与发布顺序。 |
+| [0033：请求日志索引](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/operators/migrations/0033-request-log-provider-index.md) | 迁移要求、兼容边界与发布顺序。 |
+| [0034：粘性绑定明细](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/operators/migrations/0034-sticky-binding-affinity-key.md) | 迁移要求、兼容边界与发布顺序。 |
+| [0035：OAuth 访问令牌](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/operators/migrations/0035-oauth-access-tokens.md) | 迁移要求、兼容边界与发布顺序。 |
 
 ## 维护者与规范
 

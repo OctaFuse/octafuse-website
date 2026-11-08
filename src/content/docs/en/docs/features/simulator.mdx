@@ -1,40 +1,25 @@
 ---
-title: Simulator
-description: From the browser call your deployed Proxy with a user key to validate Chat, Responses, Images, DashScope Audio, and the full client path.
+title: "Simulator"
+description: "Call Proxy with a real user key to verify authentication, routing, failover, usage and charging."
+gatewayRef: v2.18.0
 ---
 
-import { Aside, Steps } from '@astrojs/starlight/components';
+**Simulator** sends real requests from your browser to Proxy. Use a test user's key to verify authentication, routes, quotas, failover and accounting together.
 
-Open **Inference → Simulator**. **Simulator** runs **in your browser** against the deployed **Proxy**: enter the **Proxy base URL** and a **user `sk-…` key**, choose Chat, Responses, Images, Audio, or another mode plus a model, and send — exercising **auth, routing, budget, and request logs** like a real client.
+## Verification steps
 
-This differs from [Playground](/en/docs/features/playground/), which focuses on **Admin-assisted upstream probes** for a single route.
+1. Enter the Proxy root URL and a valid user API key.
+2. Select the client model, route group and surface. Supported categories include chat, images, audio, embeddings and REST tools.
+3. Edit a request for that protocol and send it.
+4. Find it in [request logs](/en/docs/guides/request-logs/) and inspect attempts, usage and accounting.
+5. Reconcile quota deductions with user and audit records.
 
-<Aside type="caution" title="Secrets">
-	The **`sk-…` key lives in the browser** — prefer staging keys or server-side reproduction for production issues.
-</Aside>
+![Client model and request surface selection](/screenshots/v2-6-0-simulator-routing-target.webp)
 
-<figure class="of-doc-figure">
-	<img src="/screenshots/v2-6-0-simulator-routing-target.webp" alt="OctaFuse Simulator showing matching route groups and client protocols after selecting a Gemini model." loading="lazy" />
-	<figcaption>Select the client-visible model and route group first. Simulator derives the available protocols from matching request surfaces; then enter the Proxy URL and a test key.</figcaption>
-</figure>
+Simulator constructs the **client-side** request. It does not send the final upstream protocol directly. For example, the gateway converts OpenAI Images to a Gemini upstream when configured with that adapter.
 
-## How to use it
+## When Playground succeeds but Simulator fails
 
-<Steps>
-1. Open **Simulator**.
-1. Enter the **Proxy base URL** (same entry point you give apps, including `https://` and port) and the **`sk-…`** key.
-1. Choose Chat, Responses, Images, Audio, or another mode, a model id, and an optional **route group** (must match [Routing](/en/docs/guides/routing/)). For image checks, use the Images / generations (or edits) entry — see [Image generation / edit](/en/docs/guides/images/). For synchronous DashScope multimodal ASR, select its matching client request surface.
-1. Send, then confirm rows in [Request logs](/en/docs/guides/request-logs/) (including `billing_kind` / image counts).
-1. If results differ from Playground: check **user budget**, **route group**, and **key status** (revoked, etc.).
-</Steps>
+Check user and key status, quota, RPM, model ID, route group and active surfaces. Playground success only confirms the individual upstream, not every user-side condition.
 
-Simulator derives the request protocol and path from the selected **client request surface**, not from the final Upstream Target protocol. For example, if an OpenAI Audio surface routes through an explicit adapter to DashScope, Simulator still constructs the OpenAI-side client request. This keeps the test aligned with real client behavior.
-
-For native synchronous DashScope multimodal ASR added in 2.7.0, first configure a `dashscope` + `audio.transcriptions.multimodal` request surface. Simulator then constructs `/dashscope/api/v1/services/aigc/multimodal-generation/generation`; after sending, use [Request logs](/en/docs/guides/request-logs/) to verify upstream routing, audio duration, and final charge.
-
-The page may **remember** your last base URL and options **locally** in the browser for faster iteration — clear when switching machines or shared profiles.
-
-## See also
-
-- [API keys](/en/docs/guides/api-keys/)  
-- [Integration](/en/docs/guides/integration/)  
+The key is used in your browser. Use a trusted environment and dedicated test credentials, and clear saved state on shared devices. For MCP clients, follow the [MCP guide](/en/docs/guides/mcp/).

@@ -32,6 +32,7 @@ This page is generated from sync/contract.json and points to canonical technical
 | [Quickstart](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/users/quickstart.md) | Minimal Docker and Cloudflare local D1 startup paths. |
 | [Admin configuration](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/users/configuration.md) | Configure Providers, model routing, Agent Tools, users, and API keys after deployment. |
 | [Feature map](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/users/features.md) | Overview of protocols, Agent Tools, route strategies, billing, administration, and deployment. |
+| [Connect clients](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/users/connect-clients.md) | Minimal SDK, client and multimodal requests. |
 
 ## Developers and integration
 
@@ -56,6 +57,11 @@ This page is generated from sync/contract.json and points to canonical technical
 | [Streaming billing and cancellation](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/developers/reference/streaming-billing.md) | Streaming chat, client cancellation, usage parsing, and charge state. |
 | [Image models](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/developers/reference/image-models.md) | Image endpoints, parameters, Token / per-image billing, no-charge failures, and ops acceptance. |
 | [Time and timezone](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/developers/reference/time-and-timezone.md) | UTC storage, API output, Admin display, and business day boundaries. |
+| [MCP aggregation and OAuth](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/developers/architecture/mcp-gateway.md) | Remote catalogs, review, tool pricing, access tokens and authorization boundaries. |
+| [Adapters and drivers](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/developers/architecture/adapters-and-drivers.md) | Client surfaces, native upstreams, passthrough and explicit conversions. |
+| [Native provider coverage](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/developers/reference/native-provider-coverage.md) | Implemented operations and known provider-specific limitations. |
+| [Model kinds](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/developers/reference/model-kinds.md) | Classification of LLM, image, ASR, TTS and embedding models. |
+| [User quota audit](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/developers/reference/user-audit-logs.md) | Budget and wallet changes, credit records and user/key events. |
 
 ## Deployment and operations
 
@@ -71,6 +77,15 @@ This page is generated from sync/contract.json and points to canonical technical
 | [Route strategy display-ID migration](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/operators/migrations/route-strategy-display-ids-cutover.md) | Migration 0021: hard-cut cache_affinity / fixed_order to hash_affinity / weight_priority with no old-ID aliases. |
 | [D1 ↔ Postgres cutover](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/operators/migrations/d1-postgres-cutover.md) | ETL, reconciliation, canary, cutover, and rollback notes. |
 | [Cloudflare command cheatsheet](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/cloudflare-worker/README.md) | Commands for Cloudflare local dev, dev demo, and production Git deploy. |
+| [Maintenance mode](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/operators/maintenance-mode.md) | Inference rejection, read-only exceptions and Admin write freezing. |
+| [Dual-quota migration](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/operators/migrations/0027-user-wallet-credit.md) | Periodic budgets, permanent credit and the credit API cutover. |
+| [Rate-limit and ingress migration](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/operators/migrations/0028-key-rate-limit-and-ingress.md) | User/key RPM settings and ingress records. |
+| [0030: MCP servers](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/operators/migrations/0030-mcp-servers.md) | Migration requirements, compatibility and deployment order. |
+| [0031: Catalog and notes](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/operators/migrations/0031-catalog-notes.md) | Migration requirements, compatibility and deployment order. |
+| [0032: DashScope audio adapters](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/operators/migrations/0032-dashscope-audio-adapters.md) | Migration requirements, compatibility and deployment order. |
+| [0033: Request-log index](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/operators/migrations/0033-request-log-provider-index.md) | Migration requirements, compatibility and deployment order. |
+| [0034: Sticky binding details](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/operators/migrations/0034-sticky-binding-affinity-key.md) | Migration requirements, compatibility and deployment order. |
+| [0035: OAuth access tokens](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/operators/migrations/0035-oauth-access-tokens.md) | Migration requirements, compatibility and deployment order. |
 
 ## Maintainers and conventions
 

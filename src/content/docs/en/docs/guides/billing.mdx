@@ -1,0 +1,58 @@
+---
+title: "Quotas, pricing and discounts"
+description: "Understand periodic budgets, permanent credit, the three cost ledgers and route or user discounts."
+gatewayRef: v2.18.0
+---
+
+Quotas determine how much a user can consume; pricing determines the charge for a request. Check the billing currency and business timezone in [System configuration](/en/docs/guides/system-config/) before setting quotas and discounts.
+
+## Periodic budgets and permanent wallet credit
+
+| Pool | Typical use | Consumption and resets |
+|---|---|---|
+| Periodic budget | Daily, weekly or monthly plans | Resets under the user's budget rules |
+| Permanent wallet | Top-ups, signup credit, refunds or compensation | Does not reset with a subscription period |
+
+Requests consume the periodic budget first, then the wallet for any shortfall. A user with a zero periodic cap can still call when the wallet has credit. An unlimited periodic budget can produce an unlimited total remaining value.
+
+![Separate periodic budget and permanent wallet credit](/screenshots/v2-8-0-user-dual-quota.webp)
+
+Use the Admin wallet credit operation for top-ups, with a unique business reference for idempotency. Do not repeatedly increase the periodic cap to distribute purchased credit. See the [Admin API](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/developers/api/admin.md).
+
+## Three separate amounts
+
+- **Standard**: catalog pricing with the active official model schedule.
+- **Metered**: the request's calculated supplier cost.
+- **Charged**: the amount charged to the user and deducted from quota.
+
+Routes configure Charged and Metered factors separately. A Provider factor applies to both while valid, without changing Standard. Keep official model schedules separate from route schedules. Preview prices before saving, then inspect the request's recorded snapshot in [logs](/en/docs/guides/request-logs/).
+
+## User discounts have two composition modes
+
+A user may have one factor per model or different factors per route group. An exact group takes precedence over `*`; no match leaves the route price unchanged.
+
+`USER_CHARGED_COST_FACTOR_MODE` selects composition:
+
+| Mode | Rule | Route factor 0.8 and user factor 0.5 |
+|---|---|---|
+| `multiply` (default) | Multiply the factors | Final factor 0.4 |
+| `min` | Use the smaller factor | Final factor 0.5 |
+
+The user charge is based on **the current official catalog price × the composed Charged factor**. A user discount does not change supplier cost. See the [user API and billing reference](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/developers/api/user.md) for exact rules.
+
+![Model and route-group user discounts](/screenshots/v2-14-0-user-group-factors.webp)
+
+## Models and tools use different pricing rules
+
+Text and embeddings generally use tokens. Images use token or per-image pricing; audio can use tokens, duration or characters. Usage depends on the model and adapter.
+
+REST and MCP tools have their own standard price and factors. Model route schedules and per-model user discounts do not apply. MCP currently bills successful tool calls per request; REST search uses requests and AI detection uses configured character units.
+
+## Verify the result
+
+1. Review both quota pools and model/group discounts on the user.
+2. Send a request with Simulator or a real client.
+3. Check Usage and accounting in the request flow, then the two quota changes in Audit Logs.
+4. Call authenticated `GET /v1/me` to confirm the remaining amounts.
+
+[Users](/en/docs/guides/users/) · [Account audit](/en/docs/guides/audit-logs/) · [Routing](/en/docs/guides/routing/)

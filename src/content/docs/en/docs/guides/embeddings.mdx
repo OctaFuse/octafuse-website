@@ -1,0 +1,33 @@
+---
+title: "Embeddings"
+description: "Route OpenAI or Gemini embedding requests and verify vector dimensions, input usage and accounting."
+gatewayRef: v2.18.0
+---
+
+Embedding models support semantic retrieval, similarity and RAG. They have a separate model kind and request surface, rather than being a Chat output mode.
+
+## Configure an embedding model
+
+1. Configure the provider's OpenAI `embeddings` or Gemini `models.embed` endpoint.
+2. Import or create a model with `embedding` output modality and check its input token price.
+3. Add the corresponding surface and upstream target, using the actual upstream model name.
+4. Test vector count and dimensions in Playground, then use Simulator for real routing and accounting.
+
+![Embedding request and response in Playground](/screenshots/v2-15-0-embedding-playground.webp)
+
+## OpenAI-compatible request
+
+```bash
+curl -sS http://localhost:8787/v1/embeddings \
+  -H 'Authorization: Bearer sk-your-api-key' \
+  -H 'Content-Type: application/json' \
+  -d '{"model":"your-embedding-model","input":["hello","world"]}'
+```
+
+The upstream interprets parameters such as `dimensions` and `encoding_format`. Embeddings use the same route pools, failover and rate limits. Only reported input tokens are billed; a response without usage is not charged.
+
+## Gemini and model discovery
+
+Gemini uses native `:embedContent` or `:batchEmbedContents` bodies. Default `GET /v1/models` excludes embeddings; use `?kind=embedding` or `?kind=all` to discover them.
+
+See the [embedding API reference](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/developers/api/user.md#embeddings向量) for exact request and accounting rules.

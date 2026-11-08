@@ -1,50 +1,39 @@
 ---
-title: Models
-description: Maintain the model catalog in Admin with ids, display names, vendor, tags, and tiered pricing for client model names and routing.
+title: "Models and catalog sync"
+description: "Import models, maintain modalities and prices, review official changes and distinguish presets from deployed availability."
+gatewayRef: v2.18.0
 ---
 
-import { Aside, Steps } from '@astrojs/starlight/components';
+**Models** defines client-facing IDs, vendors, modalities and catalog pricing. Routes map these IDs to upstream model names so clients can use a stable name.
 
-Open **Inference → Models**. **Models** are catalog entries: the client **`model`** string is resolved here first, then [Routing](/en/docs/guides/routing/) picks the upstream path. You can create, edit, import presets, and edit tiered pricing; the list surfaces how routes are attached to each model.
+## Import and configure
 
-<Aside type="tip" title="Prerequisite">
-	Configure at least one [Provider](/en/docs/guides/providers/) first.
-</Aside>
+1. Import from the [model catalog](/en/catalog/models/) or create a custom model.
+2. Check its kind: LLM, image, ASR, TTS or embedding. Modalities and valid pricing rules determine the kind together.
+3. Review context, maximum output, release date, notes and pricing. Tags are administrator-managed; import does not create routes.
+4. Add a usable upstream and active surface under [Routes](/en/docs/guides/routing/), then make a real call.
 
-<figure class="of-doc-figure">
-	<img src="/screenshots/v2-6-0-model-import.webp" alt="OctaFuse Admin importing image-model presets from the static model catalog." loading="lazy" />
-	<figcaption>Click Import to filter the catalog by model kind. Presets whose IDs already exist in Gateway are disabled so import cannot overwrite current configuration.</figcaption>
-</figure>
+## Check official updates
 
-## What to do in Admin
+Manually trigger Check official updates to compare names, modalities, specifications, descriptions and prices. Choose official or local values per model or in bulk. **Prices are kept by default; inspect affected routes before applying changes.** Missing official fields do not clear local values.
 
-<Steps>
-1. Open **Models**.
-1. **Create or edit**: set the **model id** clients and routes will use, **display name**, **vendor**, and other form fields (context limits, etc.).
-1. **Import from catalog**: bulk pre-fill from the built-in catalog, then review and save.
-1. **Pricing**: use the tier editor in the page (currency display follows your global billing currency setting).
-1. After saving, add at least one **active** route in [Routing](/en/docs/guides/routing/) or clients cannot resolve the model.
-1. **Capabilities and billing mode**: for Images, verify `image_billing_mode` (token / per_image); for transcription, verify `audio_billing_mode` (token / per_second). Default `hash_affinity` routing keeps a stable preferred Provider at protocol granularity.
-</Steps>
+![Official model catalog comparison](/screenshots/v2-15-0-model-official-sync.webp)
 
-<Aside type="note" title="Gemini 3.1 Flash-Lite model ID">
-	The built-in preset now uses `gemini-3.1-flash-lite` instead of `gemini-3.1-flash-lite-preview`. The model remains in preview. Static presets do not overwrite imported rows; delete and re-import or edit the model ID manually.
-</Aside>
+Imported records and the website catalog are different data sets. Refreshing static presets does not silently change deployed prices, tags or routes.
 
-## How clients pass `model`
+## Kind and billing
 
-Use the **base model id**, or **`baseModelId:routeGroup`** (for example `my-model:free`). The route group must match what you configured in Admin. Protocol details: [GitHub technical reference](/en/docs/github-reference/).
+| Kind | Check |
+|---|---|
+| LLM | Input, output and cache prices, long-context tiers and official schedules |
+| Image | Token or per-image mode and size, quality or reference-image conditions |
+| ASR / TTS | Duration, characters or tokens, matching the adapter's measured usage |
+| Embedding | Input token price; excluded from default model listing |
 
-## `/v1/models` vs `/catalog/models`
+## Three discovery interfaces
 
-| Endpoint | Auth | Typical use |
-|----------|------|-------------|
-| **`GET /v1/models`** | User `sk-…` | Agents / SDKs; LLMs by default (excludes image, ASR, and TTS). `kind=image` for image models; `kind=audio` for ASR and TTS |
-| **`GET /catalog/models`** | None | Public portal discovery; protocols and route groups from active routes |
+- Website catalog: released import presets, including models not enabled in your deployment.
+- Your gateway's public `GET /catalog/models`: capabilities with active routes.
+- User-authenticated `GET /v1/models`: LLMs by default, with `kind=image/asr/tts/embedding` and other filters.
 
-They are not the same response shape — do not mix them. Image pricing: [Image generation / edit](/en/docs/guides/images/).
-
-## Next
-
-- [Routing](/en/docs/guides/routing/) · [Image generation / edit](/en/docs/guides/images/)  
-- [API keys](/en/docs/guides/api-keys/)  
+See the [model-kind reference](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/developers/reference/model-kinds.md) and [client configuration](/en/docs/guides/clients/) for IDs and route groups.

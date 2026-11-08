@@ -1,115 +1,34 @@
 ---
-title: Cloudflare Workers 部署
-description: 默认推荐路径：通过一条 CLI 命令将代理服务（Proxy）+ 管理后台（Admin）+ 共享 D1 部署到你的 Cloudflare 账号；个人与小流量通常可在免费额度内运行。
+title: "Cloudflare 部署"
+description: "使用官方引导脚本部署 Proxy、Admin 与共享 D1，并验证模型、工具和实时链路。"
+gatewayRef: v2.18.0
 ---
 
-import { Aside } from '@astrojs/starlight/components';
+Cloudflare 形态下，Proxy 和 Admin 分别运行在 Worker，共享同一 D1。它是一种受支持的部署选择；资源限制和运行费用取决于所选平台套餐与实际用量。
 
-该形态下：**代理服务**与**管理后台**各为一个 **Worker**，**共享同一 D1**（绑定名 **`DB`**）。这是 OctaFuse 的**默认生产路径**——个人与小流量通常可在 Workers / D1 免费额度内完成部署与日常使用。
+## 使用引导脚本
 
-<Aside type="tip" title="外部用户最快上云">
-	在仓库根目录执行引导脚本（bootstrap）`npm run bootstrap:cloudflare`，即可创建 / 复用 D1、执行迁移、部署两个 Worker，并写入管理后台密钥（Secret）。完整说明见 [OctaFuse Gateway Cloudflare 快速部署](https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/operators/deployment/cloudflare-quickstart.md)。
-</Aside>
-
-<Aside type="note" title="权威细节">
-	本页是面向部署者的常用路径摘要。Workers Builds、多实例、错误 **10181** 等完整运维说明见 [GitHub 技术参考](/zh/docs/github-reference/) 中的 **Cloudflare 部署**。
-</Aside>
-
-## 一键运行引导脚本（推荐）
+准备 Cloudflare 账号、Node.js 与 npm，在目标 Gateway 版本的仓库中运行：
 
 ```bash
-git clone https://github.com/OctaFuse/octafuse-gateway.git
-cd octafuse-gateway
 npm install
 npx wrangler login
 npm run bootstrap:cloudflare
 ```
 
-脚本会：创建或复用 D1 → 执行远程迁移 → 部署代理服务 / 管理后台 → 写入 `ADMIN_PASSWORD` Secret → 打印下游 `GATEWAY_*` 配置提示。
+按脚本提示创建或选择资源、设置管理后台密码，并记录输出的 Proxy 与 Admin 地址。完整的资源、变量和故障处理以 [Cloudflare 快速部署参考](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/operators/deployment/cloudflare-quickstart.md) 为准。
 
-本机先试用、不上云：见 [快速开始 · 本机启动](/zh/docs/quick-start/)。
+## 部署后配置
 
-## 如何更新版本
+1. 登录 Admin，配置供应商、模型与路由，创建测试用户和用户密钥。
+2. 先验证普通请求，再验证业务使用的图片、音频、向量或 MCP 操作。
+3. 使用实时能力时，检查对应原生 WebSocket 连接和回传事件。
+4. 查看请求流程与账户变化，避免只根据 `/health` 判断业务可用。
 
-为已上线实例发布新版本时，请在 **octafuse-gateway** 仓库根目录操作。升级前先备份重要配置，并阅读该版本的[发布说明（Release）](https://github.com/OctaFuse/octafuse-gateway/releases)和变更日志（Changelog）中的**升级说明**。
+## 更新版本与迁移
 
-```bash
-git pull --ff-only
-npm ci
-```
+固定目标版本，先阅读[升级与迁移](/zh/docs/deploy/upgrades/)。备份 D1，执行该目标版本尚未应用的迁移，再更新匹配版本的 Proxy 和 Admin。已有 Workers Builds 或其他 Git 集成部署按各自配置执行，不要额外重复发布一套资源。
 
-有新的 D1 迁移时（推荐：**先迁移，再部署依赖新数据库结构的 Worker**）：
+密钥放入平台 Secret 或部署配置，生产资源标识不要写入公开文档。需要改用 Postgres 或 MySQL 时，先阅读[部署模式](/zh/docs/deploy/overview/)与数据库切换参考。
 
-```bash
-npm run deploy:cloudflare -- <instance> --migrate
-```
-
-没有数据库变更时：
-
-```bash
-npm run deploy:cloudflare -- <instance>
-```
-
-也可只更新一侧：
-
-```bash
-npm run deploy:cloudflare -- <instance> --proxy-only
-npm run deploy:cloudflare -- <instance> --admin-only
-```
-
-`<instance>` 对应 `cloudflare-worker/<instance>.env`（例如 `production`）。**D1 迁移不会因为 Worker 重新部署而自动执行**；Workers Builds（Connect to Git）同样不会自动跑迁移，有新 SQL 时仍须带 `--migrate` 或先 `db:migrate:remote`。
-
-完整排障与清理说明见 [OctaFuse Gateway Cloudflare 快速部署 · 后续升级](https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/operators/deployment/cloudflare-quickstart.md#12-后续升级)。
-
-## 配置模型（深入）
-
-| 层级 | 说明 |
-|------|------|
-| `packages/*/wrangler.base.jsonc` | 已提交模板（无生产 `database_id`） |
-| `packages/proxy/wrangler.jsonc` 等 | **生成产物**（gitignore），由 `gen:wrangler` 写入 |
-| [`cloudflare-worker/example.env`](https://github.com/OctaFuse/octafuse-gateway/blob/main/cloudflare-worker/example.env) | **开发演示**的基准配置（可提交） |
-| `cloudflare-worker/<instance>.env` | **生产 / 私有**（gitignore）；或仅使用 Cloudflare Dashboard 的**构建变量（Build variables）** |
-
-`gen-wrangler` 只读取**环境变量**（`process.env`），无论它们来自 Cloudflare Dashboard 还是 `dotenv -e` 文件。
-
-## 其它路径
-
-| 路径 | 何时用 |
-|------|--------|
-| **本地开发** | 本机改代码、本地 D1（见 [快速开始](/zh/docs/quick-start/)） |
-| **开发演示** | 公共测试 `test-api.octafuse.dev`（`example.env` + CLI） |
-| **Workers Builds** | 通过连接 Git（Connect to Git）自动发布（D1 迁移仍需手动） |
-
-### 远程部署后回到本地开发
-
-执行过 `deploy:*` 或 `db:migrate:remote` 后，本机生成的 `wrangler.jsonc` 可能带有远程 `D1_DATABASE_ID`。回到本地开发前，请在未导出 `D1_DATABASE_ID` 的 shell 中执行 `npm run gen:wrangler`，再重启 `dev:proxy` / `dev:admin`。
-
-### Workers Builds 命令（可选）
-
-**根目录（Root directory）留空**（即 monorepo 根目录）。`npm ci` 的 `postinstall` 会运行 `gen:wrangler`。
-
-| Worker | Build command | Deploy command |
-|--------|---------------|----------------|
-| **Proxy** | `npm ci && npm run gen:wrangler` | `npm run deploy -w @octafuse/proxy` |
-| **Admin** | `npm ci && npm run gen:wrangler && npm run build:cf -w @octafuse/admin` | `cd packages/admin && npx opennextjs-cloudflare deploy` |
-
-<Aside type="caution" title="D1 迁移不在 CI">
-	Git 流水线**不会**自动跑 D1 迁移。有新 SQL 时，用 `deploy:cloudflare -- <instance> --migrate` 或先 `db:migrate:remote`。
-</Aside>
-
-## Secret 与下游配置
-
-- **`ADMIN_PASSWORD`**：引导脚本会写入；也可执行 `npx wrangler secret put ADMIN_PASSWORD --name <ADMIN_WORKER_NAME>`。
-- 下游门户：`GATEWAY_URL`（代理服务）、`GATEWAY_MASTER_URL`（管理后台），以及在 **系统集成 → 集成密钥** 创建的具名 Admin API Key（环境变量可继续命名为 `GATEWAY_MASTER_KEY`）。
-
-## 与 Docker 自建如何选
-
-- **默认 / 边缘 / 免自备服务器** → 本页（Cloudflare）。  
-- **数据驻留、内网、BYO Postgres/MySQL** → [Docker 部署](/zh/docs/deploy/docker/)。
-
-## 相关页面
-
-- [快速开始](/zh/docs/quick-start/)  
-- [Docker 部署](/zh/docs/deploy/docker/)  
-- [系统集成](/zh/docs/guides/integration/)  
-- [GitHub 技术参考](/zh/docs/github-reference/)  
+运维配置与构建路径见 [Cloudflare 运维参考](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/operators/deployment/cloudflare.md)。

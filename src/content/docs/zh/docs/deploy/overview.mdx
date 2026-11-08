@@ -1,0 +1,25 @@
+---
+title: "选择部署方式"
+description: "按数据落点、运行环境和运维方式选择 Docker 或 Cloudflare，并规划第一次调用与后续升级。"
+gatewayRef: v2.18.0
+---
+
+OctaFuse 的代理服务和管理后台共用一套数据。先选择运行环境与数据库，再按照同版本的部署参考执行。
+
+| 方案 | 数据库 | 适合的需求 | 入口 |
+|---|---|---|---|
+| Docker / Node 自托管 | Postgres 或 MySQL | 现有容器平台、私有网络、明确的数据落点与备份流程 | [Docker](/zh/docs/deploy/docker/) |
+| Cloudflare Workers | D1 | 希望使用边缘运行环境，接受平台资源与套餐约束 | [Cloudflare](/zh/docs/deploy/cloudflare/) |
+
+两种方案都可运行模型、REST 工具和已支持的 MCP 能力。外部上游的连通性、地区可用性和 WebSocket 路径仍需按实际环境验证。
+
+## 第一次体验与生产部署
+
+本地最快验证可从[快速开始](/zh/docs/quick-start/)选择一条路径。生产环境还需准备：
+
+1. 同版本的 Proxy、Admin 与迁移工具，使用相同目标数据库。
+2. 管理后台强密码、上游凭证与具名集成密钥的保管方式。
+3. HTTPS、备份、健康检查，以及能覆盖实际客户端协议的验收请求。
+4. 后续[升级与迁移](/zh/docs/deploy/upgrades/)和[维护窗口](/zh/docs/deploy/maintenance/)流程。
+
+完整支持矩阵与部署模式见 [部署参考](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/operators/deployment/README.md)。官网提供路径选择与摘要，数据库命令和平台配置以对应版本的仓库文档为准。

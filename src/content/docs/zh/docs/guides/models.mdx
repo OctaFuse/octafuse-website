@@ -1,50 +1,39 @@
 ---
-title: 模型配置
-description: 在管理台维护模型目录：标识、展示名、厂商、标签与定价，供客户端 model 参数与路由使用。
+title: "模型与官方目录"
+description: "导入模型、维护能力与目录价，比较官方变更，并区分静态目录与部署中的可调用模型。"
+gatewayRef: v2.18.0
 ---
 
-import { Aside, Steps } from '@astrojs/starlight/components';
+模型（Models）维护客户端可识别的模型 ID、厂商、输入输出模态与目录价。供应商实际模型名在路由中映射，客户端不必跟着上游名称变化。
 
-在左侧推理（**Inference**）下打开模型（**Models**）页面。模型是网关的门面目录：客户端请求中的 `model` 会先匹配这里维护的条目，再结合 [路由配置](/zh/docs/guides/routing/) 决定使用哪个上游。你可以在页面中新建、编辑或导入预设，并维护分层定价；列表中还会提示与模型相关的路由情况。
+## 导入和配置
 
-<Aside type="tip" title="前置">
-	建议已配置至少一个 [供应商](/zh/docs/guides/providers/)。
-</Aside>
+1. 从[模型目录](/zh/catalog/models/)导入，或新建自定义模型。
+2. 核对模型类型：LLM、图片、语音识别、语音合成或向量；类型由模态和计费规则共同判定。
+3. 维护上下文、最大输出、发布日期、备注和目录价格。标签由管理员维护，导入不自动创建路由。
+4. 在[路由](/zh/docs/guides/routing/)中添加至少一个可用上游和已启用入口，再执行真实调用。
 
-<figure class="of-doc-figure">
-	<img src="/screenshots/v2-6-0-model-import.webp" alt="OctaFuse 管理后台从静态模型目录筛选并导入图片模型预设。" loading="lazy" />
-	<figcaption>点击 Import 可按模型类型筛选目录；已在 Gateway 中的同 ID 预设会禁用，避免导入时覆盖现有配置。</figcaption>
-</figure>
+## 检查官方更新
 
-## 在管理台里要做什么
+管理员手动点击「检查官方更新」，逐项比较模型名称、模态、规格、介绍与价格。可对单模型或批量选择采用官方值或保留当前值；**价格默认保留，应用前核对受影响的路由**。官方未提供的字段不会据此清空本地值。
 
-<Steps>
-1. 打开模型（**Models**）页面。
-1. **新建或编辑**：设置与客户端和路由中一致的**模型标识**、**展示名称**、**厂商**等表单字段；按需填写上下文长度、输出上限等信息（以界面为准）。
-1. **从目录导入**：使用内置模型目录批量预填，导入后请核对并保存。
-1. **定价**：在页面中的分层定价编辑器里维护各档位价格（界面金额单位会随全局计费币种设置变化）。
-1. **保存后**：务必在 [路由配置](/zh/docs/guides/routing/) 中为该模型添加至少一条状态为 `active` 的路由，否则客户端无法正常路由。
-1. **能力与计费模式**：图片模型需核对 `image_billing_mode`（`token` / `per_image`），语音转写模型需核对 `audio_billing_mode`（`token` / `per_second`）；默认的 `hash_affinity` 路由策略会在协议粒度稳定首选同一供应商。
-</Steps>
+![模型官方目录逐项对比与同步](/screenshots/v2-15-0-model-official-sync.webp)
 
-<Aside type="note" title="Gemini 3.1 Flash-Lite 模型 ID">
-	内置预设现使用 `gemini-3.1-flash-lite`，不再使用 `gemini-3.1-flash-lite-preview`。该模型目前仍处于预览阶段；静态目录不会覆盖已导入的旧记录，如需切换请删除后重新导入或手动修改模型 ID。
-</Aside>
+已导入模型与官网静态目录属于不同数据：更新静态目录不会悄悄改写部署中的价格、标签或路由。
 
-## 客户端 `model` 怎么写
+## 模型类型与计费
 
-可使用 **基础模型标识**，或使用 **`基础模型标识:路由组`**（例如 `my-model:free`）以指定路由组；路由组名称须与路由页配置一致。更完整的协议说明见 [GitHub 技术参考](/zh/docs/github-reference/)。
+| 类型 | 核对重点 |
+|---|---|
+| LLM | 输入、输出和缓存价，长上下文档位与官方时段 |
+| 图片 | Token 或按张模式，尺寸、质量及参考图等价格条件 |
+| ASR / TTS | 秒、字符或 Token 计费，与适配器实际用量匹配 |
+| 向量 | 输入 Token 单价，默认模型列表不包含向量 |
 
-## `/v1/models` 与 `/catalog/models`
+## 三个发现入口
 
-| 接口 | 鉴权 | 典型用途 |
-|------|------|----------|
-| **`GET /v1/models`** | 用户 `sk-…` | 智能体（Agent）与 SDK；默认仅返回 LLM（不含文生图、ASR、TTS）；`kind=image` 为文生图，`kind=audio` 为 ASR + TTS |
-| **`GET /catalog/models`** | 无 | 门户公开发现；按 `active` 路由聚合协议与路由组 |
+- 官网目录：正式版本的导入预设，可包含尚未在你部署中启用的模型。
+- 你的网关 `GET /catalog/models`：公开发现有活跃路由的能力。
+- 用户 `GET /v1/models`：客户端模型列表；默认 LLM，其他类型使用 `kind=image/asr/tts/embedding` 等筛选。
 
-二者不是同一响应形态，请勿混用。图片生成定价见 [图片生成 / 编辑](/zh/docs/guides/images/)。
-
-## 下一步
-
-- [路由配置](/zh/docs/guides/routing/) · [图片生成 / 编辑](/zh/docs/guides/images/)  
-- [API Key 管理](/zh/docs/guides/api-keys/)  
+协议、模态和类型判定见 [模型类型参考](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/developers/reference/model-kinds.md)；[接入客户端](/zh/docs/guides/clients/)说明模型 ID 和路由组的写法。

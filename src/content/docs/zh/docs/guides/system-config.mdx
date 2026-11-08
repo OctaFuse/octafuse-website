@@ -1,34 +1,27 @@
 ---
-title: 系统配置
-description: 在管理台系统页维护业务时区、计费币种、全局路由策略、告警 Webhook 及其他全局项。
+title: "系统配置"
+description: "维护币种、业务时区、全局路由与用户倍率模式，并独立管理维护和集成凭证。"
+gatewayRef: v2.18.0
 ---
 
-import { Aside, Steps } from '@astrojs/starlight/components';
+在系统配置（Config）中维护全局默认值。模型和路由可以按其覆盖规则继续覆盖部分默认设置。
 
-在左侧系统（**System**）下打开配置（**Config**）页面。此处集中维护影响全站行为的参数，例如：
+| 配置 | 影响 |
+|---|---|
+| 业务时区 | 价格窗口、用量业务日界、周期重置与后台时间展示 |
+| 计费币种 | 目录价、工具单价、费用与统计的解释口径 |
+| 全局路由策略 | 未被更具体规则覆盖时的默认选路方式 |
+| 用户倍率合成模式 | `multiply` 相乘，或 `min` 取路由与用户倍率中的较小值 |
+| 告警 Webhook | 按已支持事件对接通知渠道 |
 
-- **业务时区**、**计费币种**：影响列表与统计中的时间、金额展示口径；业务时区同时用于路由每日时段（**Daily schedule**）调价的窗口判定。新配置命中时段后直接使用该行倍率，未命中时使用路由默认倍率；未设置 `schedule.mode` 的旧配置仍保持叠乘语义。
-- **全局路由策略**：`ROUTE_STRATEGY` 可设为 `hash_affinity`（默认）、`weighted_random`、`weight_priority` 或 `weighted_round_robin`；模型规则、路由池默认策略和 `priority` 层策略可继续覆盖。
-- **告警 Webhook**（如飞书、企业微信）：可选，用于对接事件通知。
-- **自定义键值**：高级场景下可新增其他全局配置项（键名与含义请与运维约定一致）。
+## 修改前后核对
 
-敏感内容支持在界面上 **显示 / 隐藏** 切换，便于投屏演示时脱敏。
+1. 阅读卡片作用范围，确认币种与时区适合当前业务数据。
+2. 每张卡片独立保存或撤销，检查未保存提示。
+3. 使用新请求确认路由、价格预览与日志结果；旧请求仍使用当时的计价快照。
 
-<Aside type="note" title="集成密钥已独立管理">
-	Admin API Key 不再保存在系统配置中。请在 **系统集成 → 集成密钥（Integration Keys）** 为不同系统和使用场景创建具名、最小权限密钥，详见[系统集成](/zh/docs/guides/integration/)。
-</Aside>
+![系统配置卡片独立保存与未保存提示](/screenshots/v2-14-0-config-unsaved.webp)
 
-## 在管理台里要做什么
+维护窗口通过[维护模式](/zh/docs/deploy/maintenance/)控制；Admin 凭证通过[系统集成](/zh/docs/guides/integration/)的集成密钥管理；MCP 授权服务器在[MCP OAuth](/zh/docs/guides/oauth/)中配置。
 
-<Steps>
-1. 打开系统配置（**Config**）。
-1. 核对业务时区、计费币种是否符合组织规范。
-1. 在全局路由策略（**Global route strategy**）卡片中点击**修改（Change）**，选择未被模型或路由池覆盖时使用的默认策略。
-1. 按需配置或轮换告警地址。
-1. 若有约定好的其他全局项，通过**添加（Add）**（或等效入口）新增并保存。
-</Steps>
-
-## 下一步
-
-- [系统集成](/zh/docs/guides/integration/)  
-- [线上部署](/zh/docs/deploy/docker/)  
+[价格与折扣](/zh/docs/guides/billing/) · [路由](/zh/docs/guides/routing/) · [技术参考](/zh/docs/github-reference/)

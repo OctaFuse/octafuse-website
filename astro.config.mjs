@@ -6,12 +6,13 @@ import { docsSidebar } from './src/config/sidebar.ts';
 // https://astro.build/config
 export default defineConfig({
 	site: 'https://octafuse.dev',
-	trailingSlash: 'always',
+	// Keep extensionless catalog endpoints reachable in dev as well as on the static host.
+	trailingSlash: 'ignore',
 	integrations: [
 		starlight({
 			title: 'OctaFuse',
 			description:
-				'可自托管的开源 AI 能力网关与运营控制面：统一接入 Chat、图片生成与可扩展 Agent Tools，集中管理路由、密钥、预算、计费和审计。',
+				'可自托管的开源 AI 能力网关与运营控制面：统一接入对话、图片、语音、向量与 MCP，集中管理路由、用户额度、计费和请求追踪。',
 			tagline: '统一 AI 能力，掌控每一次调用',
 			defaultLocale: 'zh',
 			logo: {

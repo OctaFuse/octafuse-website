@@ -1,101 +1,68 @@
 ---
-title: 快速开始
-description: 用 Cloudflare 路径（本地 D1 → 一键上云）跑通 OctaFuse：启动代理服务和管理后台、执行健康检查并登录管理台。
+title: "快速开始"
+description: "启动网关、连接一个上游，并用用户密钥完成第一次真实模型调用。"
+gatewayRef: v2.18.0
 ---
 
-import { Aside, Steps } from '@astrojs/starlight/components';
+目标是完成一次 **客户端 → 网关 → 上游 → 日志与扣费** 的完整调用。先选择部署方式；两条路径之后使用相同的配置流程。
 
-本页做一件事：按 **默认推荐的 Cloudflare 路径** 把 OctaFuse 跑起来，并能打开管理台。个人与小流量通常可在 Workers / D1 **免费额度**内完成部署与日常使用。
+## 1. 启动网关
 
-更细的供应商、路由和密钥配置方法见 **[使用指南](/zh/docs/guides/providers/)**。不用 Cloudflare 时见 [Docker 部署](/zh/docs/deploy/docker/)。
+### Docker 本地体验
 
-<Aside type="note" title="命令所在仓库">
-	以下命令在 **[octafuse-gateway](https://github.com/OctaFuse/octafuse-gateway)** 仓库**根目录**执行。
-</Aside>
-
-## 1. 本机启动（本地 D1）
-
-### 先决条件
-
-- **Node.js 20+**、npm。
-- 无需 Cloudflare 账号。
-
-### 克隆并启动
+准备 Docker 和 Compose，克隆正式版本：
 
 ```bash
-git clone https://github.com/OctaFuse/octafuse-gateway.git
+git clone --branch v2.18.0 --depth 1 https://github.com/OctaFuse/octafuse-gateway.git
 cd octafuse-gateway
+docker compose -f docker/compose/quickstart.yml up --build
+```
+
+该示例启动 Postgres、迁移任务、代理服务和管理后台。代理服务为 `http://localhost:8787`，管理后台为 `http://localhost:8789`，本地示例账号为 `admin / changeme`。
+
+### Cloudflare 本地体验与部署
+
+需要 Node.js、npm；在同一仓库执行：
+
+```bash
 npm install
 npm run db:migrate
 npm run dev:proxy
 ```
 
-另开终端：
+另开终端执行 `npm run dev:admin`。代理服务和管理后台分别在 `127.0.0.1:8787`、`127.0.0.1:8789`，本地默认账号为 `admin / admin`。上云步骤见 [Cloudflare 部署](/zh/docs/deploy/cloudflare/)。
+
+以上登录信息仅用于本地示例。生产部署、密码和数据落点的选择见[部署方式](/zh/docs/deploy/overview/)。
+
+## 2. 配置一个模型
+
+1. 在供应商（Providers）中导入一个实际使用的供应商，填写自己的上游凭证，核对协议端点。
+2. 在模型（Models）中导入一个该供应商可调用的模型。导入仅创建模型记录。
+3. 在路由（Routes）中添加上游目标，选匹配的协议适配器，填写实际的上游模型名。初次使用保留 `default` 路由组。
+4. 在调试台（Playground）测试这条上游路由，确认地址、凭证和模型可用。
+5. 创建用户，为其设置[周期额度或永久额度](/zh/docs/guides/billing/)，再创建用户 API 密钥。
+
+## 3. 发送第一次真实请求
 
 ```bash
-npm run dev:admin
-```
-
-| 服务 | 地址 / 位置 |
-|------|-------------|
-| 代理服务（Proxy） | `http://127.0.0.1:8787` |
-| 管理后台（Admin） | `http://127.0.0.1:8789` |
-| 控制台登录 | `admin` / `admin`（本地默认；首次 `dev:admin` 会自动生成 `packages/admin/.dev.vars`） |
-| 本地 D1 | `./.wrangler/state` |
-| 管理 API Bearer 密钥 | 登录后台后在 **Integration Keys** 创建（管理 API 使用，不是网页密码） |
-
-健康检查：
-
-```bash
-curl -sS http://127.0.0.1:8787/health
-```
-
-## 2. 部署到 Cloudflare
-
-前置：Cloudflare 账号，本机已 `npx wrangler login`。
-
-```bash
-npx wrangler login
-npm run bootstrap:cloudflare
-```
-
-完成后按终端提示核对 `GATEWAY_URL` / `GATEWAY_MASTER_URL`，并用 `GET $GATEWAY_URL/health` 验证。完整步骤与发版见 [Cloudflare Workers 部署](/zh/docs/deploy/cloudflare/)。
-
-## 登录管理台
-
-1. 本地打开 **`http://127.0.0.1:8789`**（上云后使用管理后台地址）。
-2. 本地默认账号：**`admin` / `admin`**（仅本机；可改 `packages/admin/.dev.vars`）。上云时使用 bootstrap 设置的 `ADMIN_PASSWORD`。Docker 本地一键体验默认是 `admin` / `changeme`，见 [Docker 部署](/zh/docs/deploy/docker/)。
-
-<figure class="of-doc-figure">
-	<img src="/screenshots/admin-dashboard.webp" alt="OctaFuse 管理后台仪表盘（Dashboard）登录后的总览页面。" loading="lazy" />
-	<figcaption>登录成功后，仪表盘（Dashboard）会显示 API 密钥、账户、请求、Token、费用、延迟和最近错误等运行概况。</figcaption>
-</figure>
-
-## 建议的下一步（使用指南顺序）
-
-<Steps>
-1. [供应商（Providers）配置](/zh/docs/guides/providers/) — 接入上游模型服务
-1. [模型（Models）配置](/zh/docs/guides/models/) — 维护网关识别的模型目录
-1. [路由（Routes）配置](/zh/docs/guides/routing/) — 用请求入口（Request Surface）→ 路由池（Route Pool）→ 上游目标（Upstream Target）把客户端 `model` 与 `operation` 映射到上游
-1. [智能体工具（Agent Tools）](/zh/docs/guides/tools/)（可选）— 配置网页搜索（Web Search）、网页抓取（Web Fetch）和深度搜索（Web Deep Search）的启用引擎
-1. [用户（Users）管理](/zh/docs/guides/users/)与 [API 密钥（API Keys）管理](/zh/docs/guides/api-keys/) — 确定谁可以调用以及额度多少
-</Steps>
-
-## 可选：立刻打一条测试请求
-
-在管理台里配好**供应商、模型、请求入口、路由池、上游目标和 API 密钥**后，将密钥与 `model` 换成真实值：
-
-```bash
-curl -sS http://127.0.0.1:8787/v1/chat/completions \
-  -H "Authorization: Bearer sk-your-api-key" \
-  -H "Content-Type: application/json" \
+curl -sS http://localhost:8787/v1/chat/completions \
+  -H 'Authorization: Bearer sk-your-api-key' \
+  -H 'Content-Type: application/json' \
   -d '{"model":"your-route-model","messages":[{"role":"user","content":"Hello"}]}'
 ```
 
-上云后把主机换成你的代理服务地址。
+将模型名和密钥替换为自己的配置；上云后替换代理服务地址。Chat 请求需要已启用的 Chat 请求入口；Responses 等协议应使用对应入口与请求格式。
 
-如果模型已经配置 Responses 请求入口，也可以把路径换成 `/v1/responses`，并按 Responses 请求格式发送 `input`。
+## 4. 确认整条链路
 
-## 不用 Cloudflare？
+- 返回模型内容：确认真实请求已通过网关。
+- 打开[请求日志](/zh/docs/guides/request-logs/)：查看实际供应商、上游尝试、用量与记账。
+- 调用 `GET /v1/me` 并携带用户密钥：核对周期额度、永久余额与总剩余额度。
 
-Docker / Postgres / MySQL 等自托管路径见 [Docker 部署](/zh/docs/deploy/docker/)。更多本地组合（Node + SQL、冒烟脚本）见 [GitHub · 本地开发](https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/developers/local-development.md)。
+调试台的直连测试不生成这些用户调用记录。也可以使用[模拟器](/zh/docs/features/simulator/)完成上述验证。
+
+## 下一步
+
+[接入 SDK 与 IDE](/zh/docs/guides/clients/) · [路由与故障转移](/zh/docs/guides/routing/) · [MCP 服务](/zh/docs/guides/mcp/) · [生产部署](/zh/docs/deploy/overview/)
+
+完整环境要求与操作说明见 [技术参考](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/users/quickstart.md)。

@@ -1,34 +1,27 @@
 ---
-title: System config
-description: Set business timezone, billing currency, global routing strategy, alert webhooks, and other global values in Admin System → Config.
+title: "System configuration"
+description: "Set currency, business timezone, global routing and discount composition, with separate maintenance and integration controls."
+gatewayRef: v2.18.0
 ---
 
-import { Aside, Steps } from '@astrojs/starlight/components';
+Use **Config** to maintain global defaults. Model and route rules may override specific settings according to their precedence.
 
-Open **System → Config**. This screen groups global settings such as:
+| Setting | Effect |
+|---|---|
+| Business timezone | Price windows, business-day usage, resets and Admin time display |
+| Billing currency | Interpretation of model/tool prices, charges and statistics |
+| Global routing strategy | Default candidate selection when no more specific rule applies |
+| User factor composition | `multiply` combines factors; `min` chooses the smaller route/user factor |
+| Alert webhooks | Notifications for supported events |
 
-- **Business timezone** and **billing currency** — affect how times and money render across Admin; business timezone also drives route **Daily schedule** window evaluation. New configuration uses a matching row as the effective factor and the route default outside windows; legacy configuration without `schedule.mode` keeps multiplication semantics.
-- **Global route strategy** — set `ROUTE_STRATEGY` to `hash_affinity` (default), `weighted_random`, `weight_priority`, or `weighted_round_robin`; model rules, Route Pool defaults, and priority-tier policies can override it.
-- **Alert webhooks** (for example Feishu or WeCom) — optional incident notifications.
-- **Custom entries** — advanced global values whose names and meanings your team defines.
+## Before and after a change
 
-Sensitive values can be **shown or hidden** in the UI for screen-sharing.
+1. Review the card's scope and the effect of currency and timezone on existing data.
+2. Save or discard each card independently; check unsaved indicators.
+3. Verify with new requests, price previews and logs. Old requests keep their recorded pricing snapshots.
 
-<Aside type="note" title="Integration Keys are managed separately">
-	Admin API Keys no longer live in System Config. Create named least-privilege keys for each system and use case under **System Integration → Integration Keys**. See [Integration](/en/docs/guides/integration/).
-</Aside>
+![Independent configuration card saving](/screenshots/v2-14-0-config-unsaved.webp)
 
-## What to do in Admin
+Use [Maintenance](/en/docs/deploy/maintenance/) for windows, [Integration Keys](/en/docs/guides/integration/) for Admin credentials and [MCP OAuth](/en/docs/guides/oauth/) for the authorization server.
 
-<Steps>
-1. Open **Config**.
-1. Verify business timezone and billing currency match your policy.
-1. On the global route strategy card, click **Change** and select the fallback used when no model or Route Pool policy overrides it.
-1. Configure or rotate alert URLs if needed.
-1. Add any other agreed global entries via **Add** (or the equivalent control) and save.
-</Steps>
-
-## Next
-
-- [Integration](/en/docs/guides/integration/)  
-- [Docker](/en/docs/deploy/docker/)  
+[Pricing](/en/docs/guides/billing/) · [Routing](/en/docs/guides/routing/) · [Technical reference](/en/docs/github-reference/)

@@ -1,0 +1,37 @@
+---
+title: "接入客户端"
+description: "为 SDK、IDE 和命令行工具配置网关地址、用户密钥、模型 ID 与对应协议。"
+gatewayRef: v2.18.0
+---
+
+开始前，先完成[第一次调用](/zh/docs/quick-start/)。客户端使用的是**用户 API 密钥**，不是供应商凭证，也不是管理 API 的集成密钥。
+
+## 按客户端协议配置
+
+| 客户端 | 地址或入口 | 需要准备 |
+|---|---|---|
+| OpenAI 兼容 SDK、IDE、CLI | Base URL：`http://localhost:8787/v1` | 用户密钥、网关模型 ID、已启用的 Chat 或 Responses 请求入口 |
+| Anthropic 兼容客户端 | 请求地址：`http://localhost:8787/v1/messages` | 对应的 Messages 请求入口；SDK 的 base URL 按其拼接规则配置 |
+| Gemini 原生客户端 | `http://localhost:8787/v1beta/models/模型ID:generateContent` | Gemini 请求入口及其原生请求体 |
+| MCP 客户端 | `http://localhost:8787/mcp` 或 `/mcp/服务标识` | 已启用的 MCP 服务，用户密钥或 [OAuth 授权](/zh/docs/guides/oauth/) |
+
+上表地址均为本地示例；部署后换成自己的代理服务域名。不同客户端可能自动拼接 `/v1`，保存前检查最终请求路径，避免重复前缀。
+
+## 选择模型与路由组
+
+客户端填写模型页中的网关模型 ID，实际供应商模型名由路由映射。需要指定分组时使用 `模型ID:路由组`，例如 `your-model:free`。可使用的协议取决于该分组已启用的请求入口。
+
+`GET /v1/models` 使用用户密钥，默认只列 LLM。图片、识别、合成、向量分别使用 `kind=image`、`kind=asr`、`kind=tts`、`kind=embedding`；`kind=all` 查看全部类型。`kind=audio` 兼容返回 ASR 和 TTS。
+
+## Responses 最小验证
+
+```bash
+curl -sS http://localhost:8787/v1/responses \
+  -H 'Authorization: Bearer sk-your-api-key' \
+  -H 'Content-Type: application/json' \
+  -d '{"model":"your-route-model","input":"Hello"}'
+```
+
+模型可在 Chat 中调用，不代表它已经配置 Responses、Messages 或 Gemini 入口。遇到协议或模型找不到时，先到[路由](/zh/docs/guides/routing/)核对入口，再到[请求日志](/zh/docs/guides/request-logs/)查看处理结果。
+
+SDK 字段与更多样例见 [客户端接入参考](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/users/connect-clients.md)。

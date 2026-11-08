@@ -1,0 +1,35 @@
+---
+title: "升级与迁移"
+description: "按正式版本检查数据库迁移、备份、维护窗口和服务更新，并完成业务验收。"
+gatewayRef: v2.18.0
+---
+
+升级前记录当前版本和目标版本，阅读目标版本的兼容性变化。跨多个版本升级时，执行全部尚未应用的迁移，不能只运行最后一个版本新增的 SQL。
+
+## 通用顺序
+
+1. 备份数据库，确认可恢复路径。
+2. 根据迁移要求安排[维护模式](/zh/docs/deploy/maintenance/)，等待在途请求结束。
+3. 按编号应用目标数据库对应的待执行迁移。
+4. 更新匹配版本的 Proxy、Admin 和迁移工具。
+5. 验证健康、登录、真实请求、日志及额度变化，再解除维护。
+
+具体版本可能要求更严格的切换顺序，不要仅根据本摘要执行跨版本生产迁移。
+
+## 2.18.0 的升级入口
+
+从 2.17.0 升级需要 **0034** 和 **0035**：前者支持粘性绑定用户明细，后者支持独立 OAuth 访问令牌与请求日志关联。需要先迁移，再更新服务；即使暂不启用 OAuth，也不能跳过结构迁移。
+
+- [0034：粘性绑定](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/operators/migrations/0034-sticky-binding-affinity-key.md)
+- [0035：OAuth 访问令牌](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/operators/migrations/0035-oauth-access-tokens.md)
+
+更早版本还涉及双额度、模型配置与 MCP 等变更。完整索引见 [迁移与切换索引](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/operators/README.md)。
+
+## 升级后检查什么
+
+- 原有客户端协议、模型 ID、路由组和用户 Key 可正常调用。
+- 新功能按需配置，目录导入没有覆盖已有价格和供应商凭证。
+- 计费、额度、故障转移和工具调用符合预期。
+- 数据库切换后确认维护状态；切换环境可能同时复制了维护配置。
+
+历史说明保留各版本当时的语义。[版本动态](/zh/updates/)用于查看变化，本页用于组织升级过程。

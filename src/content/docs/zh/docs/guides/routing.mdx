@@ -1,99 +1,53 @@
 ---
-title: 路由配置
-description: 使用请求入口、路由池与上游目标配置协议操作、路由策略、优先级、权重、按星期分时计价和故障转移。
+title: "路由与故障转移"
+description: "配置客户端入口、路由池和上游目标，管理策略、粘性、自定义头及计费倍率。"
+gatewayRef: v2.18.0
 ---
 
-import { Aside, Steps } from '@astrojs/starlight/components';
+一条调用先匹配客户端的**请求入口（Request Surface）**，进入**路由池（Route Pool）**，再尝试其中的**上游目标（Upstream Target）**。模型 ID、路由组、协议和操作共同决定入口。
 
-在左侧推理（**Inference**）下打开路由（**Routes**）。客户端请求先按模型、路由组、协议与操作命中请求入口（**Surface**）；请求入口指向路由池（**Route Pool**）；路由池内包含具体的上游目标（**Upstream targets**）。Chat、Responses、图片和音频等操作可以使用独立的故障转移池和路由策略。
+## 建立第一条路由
 
-工作台支持**总览（Overview）**与**按模型（By model）**两种视角，并在 **Unrouted models** 区域集中展示尚未启用请求入口的模型。状态、类型、路由组、厂商和 Provider 筛选会反映在浏览器地址栏，便于分享同一视图。
+1. 准备好供应商和模型，选择匹配的协议适配器。
+2. 检查客户端协议与操作，例如 Chat、Responses、Messages、图片、音频或向量。
+3. 选择路由池与分组，填写上游模型名、供应商、优先级和权重，启用并保存。
+4. 用调试台测试上游，再用模拟器验证入口到记账的完整链路。
 
-<Aside type="tip" title="前置">
-	需已完成 [供应商](/zh/docs/guides/providers/) 与 [模型](/zh/docs/guides/models/)。
-</Aside>
+图片客户端使用 OpenAI 接口时，上游也可以是已实现转换的原生协议；不是所有操作都可任意转换，见[能力边界](/zh/docs/capabilities/)。
 
-<figure class="of-doc-figure">
-	<img src="/screenshots/admin-routes-by-model.webp" alt="OctaFuse 管理后台 Routes 按模型视角展示筛选条件、未接线路由、请求入口、路由组和上游目标。" loading="lazy" />
-	<figcaption>按模型视角把筛选区、未接线模型和单个模型的完整路由链路放在同一页面；需要跨模型观察请求入口时，可切换到总览。</figcaption>
-</figure>
+## 优先级与四种策略
 
-## 在管理台里要做什么
+`priority` 越大越先尝试。同一层由生效策略决定顺序：
 
-<Steps>
-1. 打开路由（**Routes**）。
-1. **请求入口（Surface）**：选择客户端模型与 `route_group`（常用 `default`），再指定入口协议和 `operation`，例如 `openai.chat`、`openai.responses`、`anthropic.messages`、`openai.images.generations`；Gemini 流式与非流式统一选择 `gemini.models.generate`。
-1. **路由池（Route Pool）**：让请求入口指向一个故障转移池；可设置路由池的默认策略，也可点击各 `priority` 层的策略（**Policy**）芯片，单独覆盖该层。未设置时继续继承模型或全局策略。
-1. **上游目标（Upstream Target）**：选择供应商（**Provider**），填写上游实际模型名与 `operation`，设置 `priority`（数字越大越先尝试）、`weight` 和启用状态。
-1. **自定义参数（Custom params）**：按需填写供应商扩展参数或路由默认值。它们会与上游请求体深度合并，客户端显式传入的字段优先。
-1. **计费**：在上游目标中设置用户计费（**Charged cost**）和供应成本（**Metered cost**）相对目录标准价的默认倍率；如需对齐供应商的高峰价和闲时价，再配置分时时段（**Schedule**），并按需限定星期。命中时段后，该行倍率会覆盖默认倍率；时区见 [系统配置](/zh/docs/guides/system-config/)。
-1. **保存后**：用[调试台（Playground）](/zh/docs/features/playground/)针对单条路由做上游试跑；若要验证“真实密钥 + 网关入口”整条链路，请用[模拟器（Simulator）](/zh/docs/features/simulator/)。
-</Steps>
+| 策略 | 适用方式 |
+|---|---|
+| `hash_affinity`（默认） | 稳定首选，保持同用户、模型、分组与协议的缓存连续性 |
+| `weighted_random` | 按权重随机分流 |
+| `weight_priority` | 同层按权重从高到低固定主备 |
+| `weighted_round_robin` | 按权重轮转；运行实例间不共享计数器 |
 
-<figure class="of-doc-figure">
-	<img src="/screenshots/v2-7-0-route-weekday-schedule.webp" alt="OctaFuse 路由编辑器集中展示客户端入口、上游映射、默认计费倍率、时段和星期选择。" loading="lazy" />
-	<figcaption>打开任一上游目标，可在同一页面核对协议映射、目录标准价、默认倍率、时间窗口及生效星期。截图中的窗口选择了每天；需要区分工作日和周末时，可使用对应快捷按钮。</figcaption>
-</figure>
-
-## 默认倍率、星期与分时时段
-
-2.6.0 起，Admin 新保存的每日时段使用 `schedule.mode: "override"`：
-
-- 未命中任何时段时，使用上游目标的默认 Charged / Metered 倍率。
-- 命中时段时，直接使用该行的 Charged / Metered 倍率，不再与默认倍率相乘。
-- 两侧共用相同的起止时间，但可以分别填写用户计费倍率与供应成本倍率。
-- 为兼容已部署配置，未设置 `schedule.mode` 的旧数据仍沿用“默认倍率 × 时段倍率”的叠乘规则。
-- 2.7.0 起，每个窗口可以选择“每天”“工作日”“周末”，也可以逐日选择；没有限定星期的旧窗口仍然每天生效。
-- 通过管理接口配置时，`days` 使用 ISO 星期编号：`1` 代表周一，`7` 代表周日。
-- 跨午夜窗口的星期归属于开始日。例如，周五 `22:00–06:00` 覆盖周五 22:00 至周六 06:00。
-
-窗口按请求进入 Gateway 的时刻和业务时区判定；长时间流式请求不会在跨越时段边界后切换倍率。
-
-<Aside type="tip" title="DeepSeek 工作日高峰配置">
-	以低谷价作为目录标准价时，可将默认倍率保持为 `1`，再为周一至周五的 `09:00–12:00`、`14:00–18:00` 设置 `2` 倍覆盖。工作日其他时间和周末全天会自动使用低谷价。
-</Aside>
-
-## 与客户端的关系
-
-客户端只需传 **`model`** 及协议要求的请求体，无需写死供应商信息。可使用基础模型 ID，或用 `baseId:group` 选择路由组。
-
-## 路由顺序与四种策略
-
-路由池先按上游目标的 `priority` **降序分层**，数字越大越先尝试；同一 `priority` 层再按生效策略与 `weight` 排序：
-
-| 策略 | 特点与适用场景 |
-|------|----------------|
-| `hash_affinity`（默认） | 同一用户、模型、分组与协议会稳定首选同一供应商，提示词缓存（Prompt Cache）命中率高；短时流量可能不完全均匀。 |
-| `weighted_random` | 按 `weight` 加权随机分流，负载均衡性高，适合比例分摊或 A/B；缓存亲和较弱。 |
-| `weight_priority` | 同层按 `weight` 从高到低固定排序，适合可预测的主备结构；首选供应商承担大部分流量。 |
-| `weighted_round_robin` | 按 `weight` 轮转，更均匀；计数器按运行实例维护，多实例间不全局同步。 |
-
-跨供应商硬主备请使用不同的 `priority`。策略覆盖顺序为：当前 `priority` 层覆盖 → 路由池默认 → 模型能力规则 → 模型协议规则 → 模型默认 → 全局 `ROUTE_STRATEGY` → `hash_affinity`。
-
-<Aside type="caution" title="2.3.0 策略 ID 已硬切换">
-	`cache_affinity` 与 `fixed_order` 已分别改为 `hash_affinity` 与 `weight_priority`，v2.3.0 不再接受旧 ID。外部自动化、全局配置、路由池和 `priority` 层配置都必须使用新名称。
-</Aside>
+支持按优先级层覆盖策略。没有有效覆盖时逐层继承路由池、模型和全局规则，准确优先级见 [路由策略参考](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/developers/reference/route-strategies.md)。
 
 ## 供应商粘性
 
-供应商粘性（**Provider sticky**）是**路由池级的跨请求成功记忆**，不是第五种层内策略：
+粘性记住上次成功的上游目标，并在有效期内优先复用；它与层内策略独立，默认关闭。点击「Provider 粘性」可配置有效期、查看绑定分布与用户明细、逐条解绑或清除整个池的绑定。
 
-- 无有效绑定时，仍按 `priority` 与上面的四种策略选路；成功后记录上游目标。
-- 有效绑定会在空闲 TTL 内跨 `priority` 优先尝试；默认 TTL 为 3600 秒，每次成功会续期。
-- 429、401 / 403、5xx、524 或网络错误会解绑并继续常规故障转移；400、404 与图片客户端取消不会解绑。
-- 供应商粘性默认关闭。在拓扑视图（**Topology**）的路由组或路由池节点中，点击供应商粘性状态芯片（关闭时显示**粘性 · 关闭**，英文 UI 为 **Sticky · Off**），打开供应商粘性设置；你可以在此启用或关闭该功能、调整 TTL、查看绑定分布与权重、按用户解绑或让整个路由池的绑定失效。
+![供应商粘性绑定明细与解绑](/screenshots/v2-18-0-sticky-bindings.webp)
 
-`hash_affinity` 是无状态哈希，尽量让同一用户稳定首选同一供应商；供应商粘性则持久记住上次成功的上游目标，并在 D1、Postgres、MySQL 中跨 Worker isolate 或 Node 实例共享。
+解绑后会重新选路，仍可能选回原目标。绑定跨实例共享，`hash_affinity` 则是无状态哈希，两者用途不同。
 
-## 故障转移与熔断
+## 自定义请求头与请求体
 
-可重试的 429、401 / 403、5xx 与网络错误会继续尝试下一个上游目标；供应商会按错误类型进入不同冷却时间。若所有候选都处于熔断状态，Proxy 返回 429 并携带 `Retry-After`。
+请求头和 JSON 请求体分别配置，默认客户端显式值优先。两侧各有独立的强制覆盖（Force override）开关：启用哪一侧，哪一侧使用路由值优先。不要把需要发送给上游的请求头误写入 JSON。
 
-## 说明
+![路由请求头、请求体和强制覆盖](/screenshots/v2-10-0-route-force-override.webp)
 
-调试台直连单个上游目标，不经过路由池策略、故障转移、用户计费或请求日志；完整行为请用真实代理调用或模拟器验证。图片生成路由须为 OpenAI 协议，见[图片生成 / 编辑](/zh/docs/guides/images/)。
+## 价格与有效期
 
-## 下一步
+供应商倍率、用户计费倍率和供应成本倍率分别维护；供应商倍率还可限定有效期。模型官方时段和路由分时窗口各有职责，保存前查看完整价格预览。用户倍率的合成方式见[额度、价格与折扣](/zh/docs/guides/billing/)。
 
-- [用户管理](/zh/docs/guides/users/)  
-- [API Key 管理](/zh/docs/guides/api-keys/)  
+## 失败后会发生什么
+
+可重试的供应商故障会触发后续候选尝试；熔断避免反复请求不可用账号。流式首事件判断不把注释心跳当成有效内容；首事件超时默认 60 秒，仍有可用候选时可换路，最后候选由首包超时兜底。
+
+用[请求流程与时间线](/zh/docs/guides/request-logs/)查看实际尝试，不要只凭最终供应商猜测路由过程。详细错误、超时与重试条件见 [请求生命周期](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/developers/architecture/proxy-request-lifecycle.md)。

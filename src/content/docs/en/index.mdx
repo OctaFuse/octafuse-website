@@ -1,6 +1,6 @@
 ---
 title: OctaFuse
-description: A self-hostable open-source AI capability gateway and operations control plane. Unify Chat, Responses, images, audio, and Agent Tools with Surface → Pool → Target routing, budgets, billing, and audit. Supports Cloudflare Workers + D1 and Docker / Postgres / MySQL. AGPLv3.
+description: "A self-hosted AI gateway for chat, images, speech, embeddings and MCP. Manage provider routing, user quotas, billing and request tracing on Docker or Cloudflare."
 template: splash
 sidebar:
   hidden: true
@@ -8,7 +8,7 @@ hero:
   title: '<span class="of-hero-heading"><img src="/logo.svg" class="of-hero-logo" width="104" height="104" alt="" /><span class="of-hero-heading-text"><span class="of-hero-kicker">AI Gateway & Control Plane</span><span class="of-hero-title">OctaFuse</span></span></span>'
   tagline: Unify AI capabilities. Control every call.
   image:
-    html: '<div class="of-gateway-console" aria-label="OctaFuse AI capability gateway architecture"><div class="of-console-top"><span></span><strong>capability.route</strong><code>live</code></div><div class="of-console-grid"><div class="of-console-lane of-console-capabilities" aria-label="Upstream capabilities"><p class="of-console-label">Upstream capabilities</p><div class="of-console-node"><i>LLM</i><span><strong>Reasoning Models</strong><small>chat · code · reasoning</small></span></div><div class="of-console-node"><i>IMG</i><span><strong>Image Models</strong><small>generate · edit · vision</small></span></div><div class="of-console-node"><i>AUD</i><span><strong>Audio Models</strong><small>ASR · TTS · realtime</small></span></div><div class="of-console-node"><i>VID</i><span><strong>Video Models</strong><small>generate · edit · understand</small></span></div><div class="of-console-node"><i>EXT</i><span><strong>External Capabilities</strong><small>search · fetch · tools</small></span></div></div><div class="of-console-core"><span>OctaFuse</span><strong>Capability Gateway</strong><div class="of-console-core-tags"><small>route</small><small>keys</small><small>budget</small><small>failover</small><small>billing</small><small>audit</small></div></div><div class="of-console-lane of-console-interfaces" aria-label="Unified access surfaces"><p class="of-console-label">Unified access</p><div class="of-console-node"><i>TXT</i><span><strong>LLM APIs</strong><small>Chat · Responses · Messages</small></span></div><div class="of-console-node"><i>IMG</i><span><strong>Images API</strong><small>generations · edits</small></span></div><div class="of-console-node"><i>AUD</i><span><strong>Audio API</strong><small>ASR · TTS · realtime</small></span></div><div class="of-console-node"><i>TOOL</i><span><strong>Tools API</strong><small>agents · extensions</small></span></div><div class="of-console-node"><i>ADM</i><span><strong>Admin API</strong><small>users · keys · budgets</small></span></div></div></div><div class="of-console-metrics"><span><strong>5</strong> capability types</span><span><strong>N+</strong> upstream services</span><span><strong>1</strong> unified gateway</span><span><strong>5</strong> access surfaces</span></div></div>'
+    html: '<div class="of-gateway-console" aria-label="OctaFuse AI capability gateway architecture"><div class="of-console-top"><span></span><strong>capability.route</strong><code>live</code></div><div class="of-console-grid"><div class="of-console-lane of-console-capabilities" aria-label="Upstream capabilities"><p class="of-console-label">Upstream capabilities</p><div class="of-console-node"><i>LLM</i><span><strong>Reasoning Models</strong><small>chat · code · reasoning</small></span></div><div class="of-console-node"><i>IMG</i><span><strong>Image Models</strong><small>generate · edit · vision</small></span></div><div class="of-console-node"><i>AUD</i><span><strong>Audio Models</strong><small>ASR · TTS · realtime</small></span></div><div class="of-console-node"><i>VEC</i><span><strong>Embeddings</strong><small>embed · retrieve · RAG</small></span></div><div class="of-console-node"><i>EXT</i><span><strong>External Capabilities</strong><small>REST · MCP · tools</small></span></div></div><div class="of-console-core"><span>OctaFuse</span><strong>Capability Gateway</strong><div class="of-console-core-tags"><small>route</small><small>keys</small><small>budget</small><small>failover</small><small>billing</small><small>audit</small></div></div><div class="of-console-lane of-console-interfaces" aria-label="Unified access surfaces"><p class="of-console-label">Unified access</p><div class="of-console-node"><i>TXT</i><span><strong>LLM APIs</strong><small>Chat · Responses · Messages</small></span></div><div class="of-console-node"><i>IMG</i><span><strong>Images API</strong><small>generations · edits</small></span></div><div class="of-console-node"><i>AUD</i><span><strong>Audio API</strong><small>ASR · TTS · realtime</small></span></div><div class="of-console-node"><i>TOOL</i><span><strong>Tools API</strong><small>REST tools · MCP</small></span></div><div class="of-console-node"><i>ADM</i><span><strong>Admin API</strong><small>users · keys · budgets</small></span></div></div></div><div class="of-console-metrics"><span><strong>5</strong> capability types</span><span><strong>N+</strong> upstream services</span><span><strong>1</strong> unified gateway</span><span><strong>5</strong> access surfaces</span></div></div>'
   actions:
     - text: Quick start
       link: /en/docs/quick-start/
@@ -22,81 +22,30 @@ hero:
 
 import { Card, CardGrid } from '@astrojs/starlight/components';
 
-AI capabilities are expanding beyond text models into image generation, Agent Tools, private models, and specialized services. Providers, compatible endpoints, coding plans, self-hosted services, and internal accounts each bring their own **Base URLs**, keys, quotas, pricing, and logs. Applications need something simpler: one stable entrypoint, controlled routing, clear budgets, and traceable request history.
+**Bring AI services behind one controlled entry point.** OctaFuse manages model and tool access, routing, user quotas and request records. Applications use a gateway URL and user key; provider configuration, fallback routes, pricing and access controls live in Admin.
 
-**OctaFuse is a self-hostable AI capability gateway and operations control plane.** Unify Chat, Responses, image generation and editing, ASR, TTS, realtime speech, Agent Tools, and private model services. Request Surface → Route Pool → Upstream Target topology keeps routing, failover, Provider circuits, budgets, billing, audit, and Admin APIs under your control. Clients still use one Gateway URL and one user key.
+## What you can do
 
-## Application Scenarios
-
-<CardGrid stagger>
-	<Card title="Individual developers" icon="add-document">
-		Consolidate model subscriptions, coding plans, image generation, Agent Tools, and backup upstreams behind one Gateway. Cursor, CLIs, scripts, and personal tools only need one Gateway URL and one user key.
-	</Card>
-	<Card title="AI apps and agents" icon="laptop">
-		Build against stable model IDs and common protocols. Move model swaps, canary routes, backup providers, degradation, and default parameters into the gateway layer.
-	</Card>
-	<Card title="Platform and IT teams" icon="setting">
-		Create separate users and API keys for departments, projects, members, or customers, with budget periods, status, and metadata outside application services.
-	</Card>
-	<Card title="API proxy businesses" icon="external">
-		Connect multiple upstream Providers; represent multiple accounts at the same vendor as separate Providers. Issue downstream customer keys and manage each customer through request logs, cost lenses, and audit records.
-	</Card>
-	<Card title="Private and hybrid models" icon="setting">
-		Put self-hosted compatible services, internal models, Ollama / vLLM paths, and public model providers behind one routing system with a consistent external surface.
-	</Card>
-	<Card title="Cost and reliability ops" icon="analytics">
-		Observe usage and failures by model, Provider, user, and reliability view, then tune Route Pool strategy, priority / weight, budgets, and time-of-day pricing.
-	</Card>
+<CardGrid>
+  <Card title="Connect models and tools" icon="puzzle">Use the appropriate protocols for chat, Responses, images, speech and embeddings. Manage REST tools and remote MCP servers, with optional OAuth for MCP clients.</Card>
+  <Card title="Keep requests moving" icon="random">Distribute requests with priorities, weights and four routing strategies. Provider Sticky remembers successful upstreams; failover and circuit breakers handle unavailable targets.</Card>
+  <Card title="Give users clear quotas" icon="padlock">Manage periodic budgets and permanent wallet credit separately. Apply user and key rate limits, model and route-group discounts, and separate supplier cost, standard price and user charges.</Card>
+  <Card title="Understand each request" icon="magnifier">Follow entry, routing, upstream attempts, response and accounting on a request timeline. Use usage, cost, cache and reliability views to improve configuration.</Card>
+  <Card title="Connect another service" icon="laptop">Model IDs, protocol surfaces and explicit adapters control upstream differences. Import presets, then review official model and provider changes field by field.</Card>
+  <Card title="Run it in your environment" icon="rocket">Choose Docker with Postgres / MySQL, or Cloudflare Workers with D1. Integrate a product backend through Admin APIs to provision users, issue keys and add credit.</Card>
 </CardGrid>
 
-## Product Capabilities
+## Choose a use case
 
-<CardGrid stagger>
-	<Card title="Multi-protocol, multimodal entrypoint" icon="external">
-		Supports OpenAI Chat, Responses, Images, Audio, and Models; Anthropic Messages; Gemini `generateContent` / `streamGenerateContent`; and native DashScope audio. Portals can discover capabilities through public `GET /catalog/models`.
-	</Card>
-	<Card title="Image generation / edit" icon="open-book">
-		OpenAI-compatible `POST /v1/images/generations` and `edits`, with explicit Token or per-image (`per_image`) pricing. Client cancellation, Gateway timeout, and explicit upstream failures do not charge.
-	</Card>
-	<Card title="Agent Tools" icon="puzzle">
-		Extensible product APIs for agents (`/v1/tools/*`). Web Search supports Bocha, Tavily, CleverSee, and Tencent Cloud WSA; Web Fetch supports Firecrawl, Tavily Extract, and Jina Reader; Deep Search supports Firecrawl Search and Jina Search.
-	</Card>
-	<Card title="Surface → Pool → Target routing" icon="random">
-		Client requests resolve a protocol and operation Request Surface, then enter a Route Pool. Pools group Upstream Targets by priority and order each tier with strategy plus weight before automatic failover.
-	</Card>
-	<Card title="Provider and model presets" icon="document">
-		One-click Admin import for project-scoped Vertex AI, BytePlus, Model Studio International, Meta Model API, Cerebras, SambaNova, Hugging Face, Vercel, and many model, aggregation, and Coding / Token Plan presets.
-	</Card>
-	<Card title="Single-key Providers and presets" icon="approve-check">
-		Each Provider owns one upstream API key and status; represent multiple vendor accounts as separate Providers. Import Provider / Model presets in Admin, add the real key, then attach routes.
-	</Card>
-	<Card title="Four strategies, Provider Sticky, and circuits" icon="warning">
-		Choose `hash_affinity`, `weighted_random`, `weight_priority`, or `weighted_round_robin`, with optional per-priority-tier overrides. Provider Sticky can remember a successful Target across requests; 429, 401 / 403, and consecutive 5xx responses trigger Provider-level cooldowns.
-	</Card>
-	<Card title="User keys, budgets, and pricing" icon="padlock">
-		Govern access through External system → User → API Key. Model requests record **supplier cost**, **catalog list price**, and **charged to user**. Matching Daily schedule windows override default factors while legacy configuration keeps multiplication semantics.
-	</Card>
-	<Card title="Logs, audit, analytics" icon="magnifier">
-		Request logs capture protocol / operation, model, route group, Surface, Pool, Target, Provider, tokens, status, and three cost views. Audit logs track budget charges, resets, and user / key lifecycle events.
-	</Card>
-	<Card title="Playground and Simulator" icon="open-book">
-		Playground uses built-in samples to test one route and observe streams and Gemini tool calls. Simulator derives the protocol from the client request surface and uses a real user key to verify auth, routing, billing, and logs.
-	</Card>
-	<Card title="Deployment and integration" icon="rocket">
-		Default **Cloudflare Workers + D1** (individuals and light traffic can usually stay in the free tier); or Node / Docker with PostgreSQL or MySQL 8. External portals can provision users, keys, and budgets through **`/api/admin/*`**.
-	</Card>
-</CardGrid>
+- **Personal tooling**: configure models and tools for IDEs, CLIs and scripts, with backup upstreams.
+- **Teams and AI applications**: issue separate credentials and manage quotas, rate limits and usage.
+- **Agents and tool platforms**: connect REST engines and remote MCP servers, review catalogs and price calls.
+- **Product portals and API services**: provision users, distribute quotas, set discounts and read usage through Admin APIs.
 
-## Next Steps
+## Start with a successful call
 
-Default path is **Cloudflare**: try Wrangler + local D1, then one CLI onto your account; configure Provider, model, and route, create a user key, and point clients at the Gateway Base URL.
+[Quick start](/en/docs/quick-start/) → [Connect clients](/en/docs/guides/clients/) → [Inspect the request flow](/en/docs/guides/request-logs/).
 
-- [**Quick start**](/en/docs/quick-start/) — local D1 → Cloudflare deploy
-- [OctaFuse updates](/en/updates/) — releases, product progress, and field notes
-- [Providers](/en/docs/guides/providers/) · [Models](/en/docs/guides/models/) · [Routing](/en/docs/guides/routing/)
-- [Provider Catalog](/en/catalog/providers/) · [Model Catalog](/en/catalog/models/) — browse the static presets bundled for direct Gateway import
-- [Images](/en/docs/guides/images/) · [Agent Tools](/en/docs/guides/tools/) · [Analytics](/en/docs/guides/analytics/)
-- [Request logs](/en/docs/guides/request-logs/) · [Audit logs](/en/docs/guides/audit-logs/) · [System config](/en/docs/guides/system-config/)
-- [Cloudflare deployment](/en/docs/deploy/cloudflare/) · [Docker deployment](/en/docs/deploy/docker/)
-- [GitHub technical reference](/en/docs/github-reference/) — APIs, architecture, migrations, and operations index
-- [Source repository](https://github.com/OctaFuse/octafuse-gateway) · [Contributing](https://github.com/OctaFuse/octafuse-gateway/blob/main/CONTRIBUTING.md)
+Read [capabilities and limits](/en/docs/capabilities/) for supported interfaces, and [deployment options](/en/docs/deploy/overview/) to choose data placement and runtime.
+
+[Provider catalog](/en/catalog/providers/) · [Model catalog](/en/catalog/models/) · [Docs](/en/docs/) · [Updates](/en/updates/) · [GitHub](https://github.com/OctaFuse/octafuse-gateway)

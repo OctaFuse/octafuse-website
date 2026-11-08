@@ -1,37 +1,22 @@
 ---
-title: 审计日志
-description: 在管理台查看与用户预算、用量扣减、密钥生命周期相关的审计记录，与请求日志互补。
+title: "账户审计"
+description: "核对周期与永久额度变化、加额流水和用户密钥生命周期，并关联实际请求。"
+gatewayRef: v2.18.0
 ---
 
-import { Aside, Steps } from '@astrojs/starlight/components';
+审计日志（Audit Logs）侧重用户、密钥与额度事件。它与[请求日志](/zh/docs/guides/request-logs/)配合使用，不是所有供应商和路由编辑操作的完整配置审计。
 
-在左侧**用户（User）→ 审计日志（Audit Logs）**打开审计页。这里的记录关注**“账户与预算侧发生了什么”**：例如预算调整、用量扣减、用户或密钥的创建与变更、管理台对用户 / 密钥的修改等，并尽量标注关联的密钥或请求上下文。
+## 从事件定位问题
 
-它**不是**「在管理台里每一次改供应商、改路由菜单点击」的完整配置审计台账；若你需要配置变更追责，请结合变更管理流程或另行接入运维审计。
+1. 选择时间范围、事件类型、来源、原因和操作者；必要时填写用户邮箱、Actor ID 或关联 ID。
+2. 区分周期额度扣减、永久额度扣减与加额、周期重置及用户/密钥生命周期。
+3. 展开记录查看账户快照差异和变更原因。
+4. 用关联请求 ID 回到调用流程，核对实际费用；充值问题从用户的加额流水追查业务引用。
 
-<figure class="of-doc-figure">
-	<img src="/screenshots/admin-audit-logs.webp" alt="OctaFuse 管理后台审计日志（Audit Logs）页面展示时间范围、事件类型、事件来源、事件原因和操作者身份等组合筛选项。" loading="lazy" />
-	<figcaption>新版筛选区可组合选择事件类型、来源、原因、操作者及身份，再用邮箱、Actor ID 或关联 ID 进一步定位记录。</figcaption>
-</figure>
+![账户审计组合筛选](/screenshots/v2-10-0-audit-log-filters.webp)
 
-<Aside type="tip" title="与请求日志的区别">
-	**请求日志**：每一次推理 HTTP 调用轨迹。**审计日志**：与 **用户预算与身份/密钥生命周期** 相关的变更与扣减记录。
-</Aside>
+## 周期与永久额度分别对账
 
-## 在管理台里要做什么
+同一次请求可能同时消耗两种额度，按各自变化核对。永久加额应关联唯一业务流水，周期重置不应被解释为永久余额清空。
 
-<Steps>
-1. 打开**审计日志**。
-1. 先用时间范围，再组合选择事件类型、事件来源、事件原因、操作者及操作者身份；需要精确定位时，再填写 Actor ID、用户邮箱或 Correlation ID。
-1. 展开行查看预算计划说明、用户快照差异、变更详情等（界面会省略与列表重复的字段）。
-1. 若只关心某一用户：也可从 [用户管理](/zh/docs/guides/users/) 进入该用户详情页查看相关片段。
-</Steps>
-
-## 进一步阅读
-
-更底层的字段与事件定义见主仓库文档索引：[GitHub 技术参考](/zh/docs/github-reference/)。
-
-## 下一步
-
-- [系统配置](/zh/docs/guides/system-config/)  
-- [用户管理](/zh/docs/guides/users/)  
+账户含义见[额度与计费](/zh/docs/guides/billing/)，事件定义见 [账户审计参考](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/developers/reference/user-audit-logs.md)。

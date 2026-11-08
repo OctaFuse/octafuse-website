@@ -1,0 +1,26 @@
+---
+title: "Provider quotas"
+description: "Inspect supported upstream balances and subscription windows without confusing them with user quotas."
+gatewayRef: v2.18.0
+---
+
+Provider quota checks help assess upstream capacity. They do not change gateway user allowances or replace a real connectivity test.
+
+## Inspect and refresh
+
+1. Open a provider with configured credentials.
+2. For supported account types, inspect balance, plan windows, usage, reset times and the last check result.
+3. Refresh when needed. On failure, check provider kind, credentials, upstream interface and the check timestamp.
+4. Combine the result with request errors and reliability metrics before changing fallback routes.
+
+![Provider balances and plan windows](/screenshots/v2-12-0-provider-quota.webp)
+
+## Interpret the result
+
+Pay-as-you-go accounts may report money; Coding / Token Plans may expose five-hour, weekly or other subscription windows. Use the units and windows returned by that provider. Different platforms' values are not directly additive.
+
+Some platforms require a separate management credential or have no stable quota interface. Missing quota data does not mean inference is unsupported; a successful quota check does not guarantee access to every model either.
+
+Quota support depends on the gateway version. After upgrading, verify the checks available for that release and account type.
+
+See [Providers](/en/docs/guides/providers/) for account setup and [billing](/en/docs/guides/billing/) for user allowances. Supported checks follow the [Admin API](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/developers/api/admin.md) and the matching implementation revision.

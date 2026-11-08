@@ -31,3 +31,6 @@ jobs:
 
       - name: Build site
         run: npm run build
+
+      - name: Check content, links and catalogs
+        run: npm run check:site

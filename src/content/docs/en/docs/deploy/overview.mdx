@@ -1,0 +1,25 @@
+---
+title: "Choose a deployment"
+description: "Choose Docker or Cloudflare by runtime, database placement and operational requirements."
+gatewayRef: v2.18.0
+---
+
+Proxy and Admin share one data plane. Choose the runtime and database first, then use deployment instructions matching the same release.
+
+| Option | Database | Suitable needs | Guide |
+|---|---|---|---|
+| Self-hosted Docker / Node | Postgres or MySQL | Existing container platforms, private networks and explicit backup/data placement | [Docker](/en/docs/deploy/docker/) |
+| Cloudflare Workers | D1 | Edge execution with platform resource and plan constraints | [Cloudflare](/en/docs/deploy/cloudflare/) |
+
+Both options run models, REST tools and supported MCP capabilities. Verify upstream reachability, regional availability and WebSocket paths in the actual environment.
+
+## Local evaluation and production
+
+Use [Quick start](/en/docs/quick-start/) for a local evaluation. For production prepare:
+
+1. Matching Proxy, Admin and migration versions connected to the same database.
+2. A strong Admin password and secure handling of provider credentials and named integration keys.
+3. HTTPS, backups, health checks and real tests for the client protocols in use.
+4. An [upgrade](/en/docs/deploy/upgrades/) and [maintenance](/en/docs/deploy/maintenance/) procedure.
+
+See the [deployment reference](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/operators/deployment/README.md) for supported combinations. This site summarizes choices; database commands and platform settings live in the release-specific repository docs.

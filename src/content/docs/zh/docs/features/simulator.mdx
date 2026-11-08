@@ -1,40 +1,25 @@
 ---
-title: 模拟器（Simulator）
-description: 在浏览器中填写代理服务地址与用户密钥，按各协议试发 Chat、Responses、图片和百炼音频请求，用于完整链路联调与验收。
+title: "模拟器"
+description: "用真实用户密钥调用代理服务，验证鉴权、选路、故障转移、用量与扣费。"
+gatewayRef: v2.18.0
 ---
 
-import { Aside, Steps } from '@astrojs/starlight/components';
+模拟器（Simulator）在浏览器中向你的代理服务发送真实请求。使用测试用户密钥，可完整验证用户鉴权、路由、额度、故障转移和记账。
 
-在左侧的**推理（Inference）→ 模拟器（Simulator）**中打开。模拟器会在**你的浏览器中**直接向已部署的**代理服务**发送请求：填写**代理服务根地址**与**用户 API 密钥 `sk-…`**，再选择 Chat、Responses、Images、Audio 等模式和模型，即可验证**鉴权、路由、预算扣减、请求日志**等与线上一致的行为。
+## 验证步骤
 
-这与[调试台（Playground）](/zh/docs/features/playground/)不同：调试台侧重“由管理后台代你直连上游，试跑单条路由”，模拟器则侧重“像真实客户端一样调用网关入口”。
+1. 填入代理服务根地址和有效用户 API 密钥。
+2. 选择客户端模型、路由组及对应入口；支持的类型包含对话、图片、音频、向量和 REST 工具。
+3. 编辑对应协议的请求并发送。
+4. 查看响应后，到[请求日志](/zh/docs/guides/request-logs/)找到这次调用，检查上游尝试、用量和记账。
+5. 用用户额度与审计记录核对扣减结果。
 
-<Aside type="caution" title="密钥">
-	**`sk-…` 会出现在浏览器中**，仅建议在测试环境中使用或使用脱敏密钥；遇到生产问题时，优先在服务端使用相同请求复现。
-</Aside>
+![按模型和入口选择真实代理请求](/screenshots/v2-6-0-simulator-routing-target.webp)
 
-<figure class="of-doc-figure">
-	<img src="/screenshots/v2-6-0-simulator-routing-target.webp" alt="OctaFuse Simulator 选择 Gemini 模型后显示匹配路由组与可用客户端协议。" loading="lazy" />
-	<figcaption>先选择客户端可见模型和路由组，Simulator 会根据匹配的请求入口显示可用协议；再填写 Proxy 地址与测试密钥发送请求。</figcaption>
-</figure>
+模拟器按**客户端入口**构造请求，而不是照最终上游协议发送。例如，OpenAI Images 经过适配器转到 Gemini，上游转换由网关完成。
 
-## 如何使用
+## 与调试台结果不同时
 
-<Steps>
-1. 打开**模拟器（Simulator）**。
-1. 填写**代理服务根地址**（与你为应用配置的网关入口一致，包含 `https://` 与端口）和 **`sk-…`**。
-1. 选择 Chat、Responses、Images、Audio 等模式、模型标识和可选 **路由组**（需与 [路由配置](/zh/docs/guides/routing/) 中一致）。验证图片生成时选择 Images / generations（或 edits）入口，见 [图片生成 / 编辑](/zh/docs/guides/images/)；验证百炼同步多模态语音识别时选择对应的 DashScope 请求入口。
-1. 发送请求后，到 [请求日志](/zh/docs/guides/request-logs/) 中核对是否出现对应记录（含 `billing_kind` / image count）。
-1. 若与调试台表现不一致，请检查**用户预算**、**路由组**、**密钥是否被吊销**等常见因素。
-</Steps>
+优先检查用户与密钥状态、可用额度、RPM、模型 ID、路由组及启用入口。调试台成功只证明单个上游可用，不证明用户侧调用条件都已满足。
 
-Simulator 按你选择的**客户端请求入口**决定请求协议和路径，而不是按最终上游目标的协议发送。例如客户端从 OpenAI Audio 入口进入、路由再通过显式适配器转到 DashScope 时，Simulator 仍会构造 OpenAI 侧请求。这可以更准确地复现真实客户端行为。
-
-对于 2.7.0 新增的百炼原生同步多模态语音识别，请先为模型配置 `dashscope` + `audio.transcriptions.multimodal` 请求入口；模拟器会据此构造 `/dashscope/api/v1/services/aigc/multimodal-generation/generation` 请求。发送后可到[请求日志](/zh/docs/guides/request-logs/)核对上游路由、音频时长和最终费用。
-
-页面可能会 **在本机浏览器** 记住你上次填写的地址、协议等，便于反复调试；更换环境或共用电脑时注意清理。
-
-## 相关页面
-
-- [API Key 管理](/zh/docs/guides/api-keys/)  
-- [系统集成](/zh/docs/guides/integration/)  
+密钥会在你的浏览器内用于请求，使用受信任环境与专用测试凭证；共享设备使用后清理保存状态。MCP 客户端接入请使用[MCP 指南](/zh/docs/guides/mcp/)。
