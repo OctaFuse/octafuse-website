@@ -20,7 +20,7 @@ A particular release may require a stricter cutover. This summary is not a subst
 
 Upgrading from 2.18.0 to 2.19.0 **adds no database migration** and no new or renamed environment variables or `system_config` keys. Update the Proxy, Admin and migrate images to the same version and perform a rolling restart. When upgrading from an earlier release, still apply every migration that has not yet run.
 
-- The Admin maintenance page and OAuth settings entry now live under Config and MCP Servers; the old addresses redirect.
+- Maintenance mode now lives in the Maintenance mode section of System → Config, and the old address redirects. Integration Keys moved into the System group.
 - New catalog entries (such as `claude-fable-5-2`, `glm-5v-turbo`, `hy4` and `gpt-image-2.6-flare`) must be imported and routed manually; already imported models are not overwritten.
 - From 2026-12-01 Google automatically reroutes `gemini-2.5-pro` and `gemini-2.5-flash`. Review related routes beforehand.
 - After upgrading, spot-check routes, request logs, Playground and Simulator to confirm filters and navigation behave as expected in the new UI. See the [v2.19.0 release notes](https://github.com/OctaFuse/octafuse-gateway/releases/tag/v2.19.0) for the full list.
