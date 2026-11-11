@@ -1,7 +1,7 @@
 ---
 title: "Request flows and logs"
 description: "Locate a request by ID and inspect routing, upstream attempts, failover, usage and accounting."
-gatewayRef: v2.18.0
+gatewayRef: v2.19.0
 ---
 
 **Request Logs** records real Proxy calls. Direct Playground probes do not generate user request records; Simulator and real clients do.
@@ -17,6 +17,8 @@ gatewayRef: v2.18.0
 
 The timeline uses recorded attempts and waiting intervals. Missing duration is not zero duration. Upstream attempt timing and the full streaming output interval are different measurements.
 
+Common filters sit on top and advanced conditions below. Time ranges use the business timezone and may be open-ended on either side or unlimited. Amounts in the list keep the billing and cost multipliers beside them. When an upstream returns an HTML error page, the list shows a summary and the full body stays in the request detail.
+
 ## Check charges
 
 Usage and accounting separates the user charge, supplier cost and recorded price snapshot. Review official schedules, Provider factors, route windows and model/group discounts. Do not recompute an old bill from today's configuration.
@@ -27,4 +29,4 @@ Use [Audit Logs](/en/docs/guides/audit-logs/) for changes to the budget and wall
 
 Filter MCP calls by service; OAuth calls identify the application and charge its associated user. For Sticky, combine lookup, unbind and rebound information with cache-read usage and failover counts.
 
-One request explains one execution. Use [usage and reliability](/en/docs/guides/analytics/) for trends. See the [log API reference](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/developers/api/admin.md) for fields.
+One request explains one execution. Use [usage and reliability](/en/docs/guides/analytics/) for trends. See the [log API reference](https://github.com/OctaFuse/octafuse-gateway/blob/v2.19.0/docs/developers/api/admin.md) for fields.

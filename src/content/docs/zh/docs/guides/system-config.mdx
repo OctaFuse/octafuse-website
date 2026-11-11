@@ -1,18 +1,18 @@
 ---
 title: "系统配置"
 description: "维护币种、业务时区、全局路由与用户倍率模式，并独立管理维护和集成凭证。"
-gatewayRef: v2.18.0
+gatewayRef: v2.19.0
 ---
 
-在系统配置（Config）中维护全局默认值。模型和路由可以按其覆盖规则继续覆盖部分默认设置。
+在系统 → 配置（Config）中维护全局默认值，页面分为「基础设置」「路由与计费」「通知」和「维护模式」四个分区。模型和路由可以按其覆盖规则继续覆盖部分默认设置。
 
-| 配置 | 影响 |
+| 配置（分区） | 影响 |
 |---|---|
-| 业务时区 | 价格窗口、用量业务日界、周期重置与后台时间展示 |
-| 计费币种 | 目录价、工具单价、费用与统计的解释口径 |
-| 全局路由策略 | 未被更具体规则覆盖时的默认选路方式 |
-| 用户倍率合成模式 | `multiply` 相乘，或 `min` 取路由与用户倍率中的较小值 |
-| 告警 Webhook | 按已支持事件对接通知渠道 |
+| 业务时区（基础设置） | 价格窗口、用量业务日界、周期重置与后台时间展示 |
+| 计费币种（基础设置） | 目录价、工具单价、费用与统计的解释口径 |
+| 全局路由策略（路由与计费） | 未被更具体规则覆盖时的默认选路方式 |
+| 用户倍率合成模式（路由与计费） | `multiply` 相乘，或 `min` 取路由与用户倍率中的较小值 |
+| 告警 Webhook（通知） | 按已支持事件对接通知渠道 |
 
 ## 修改前后核对
 
@@ -22,6 +22,6 @@ gatewayRef: v2.18.0
 
 ![系统配置卡片独立保存与未保存提示](/screenshots/v2-14-0-config-unsaved.webp)
 
-维护窗口通过[维护模式](/zh/docs/deploy/maintenance/)控制；Admin 凭证通过[系统集成](/zh/docs/guides/integration/)的集成密钥管理；MCP 授权服务器在[MCP OAuth](/zh/docs/guides/oauth/)中配置。
+维护窗口在本页「维护模式」分区控制，详见[维护模式](/zh/docs/deploy/maintenance/)；Admin 凭证在系统 → 集成密钥中管理，见[系统集成](/zh/docs/guides/integration/)；MCP 授权服务器在 MCP 服务页配置，见[MCP OAuth](/zh/docs/guides/oauth/)。
 
 [价格与折扣](/zh/docs/guides/billing/) · [路由](/zh/docs/guides/routing/) · [技术参考](/zh/docs/github-reference/)

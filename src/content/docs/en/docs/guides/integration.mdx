@@ -1,7 +1,7 @@
 ---
 title: "System integration"
 description: "Provision users, keys and wallet credit through server-side Admin APIs while clients call Proxy."
-gatewayRef: v2.18.0
+gatewayRef: v2.19.0
 ---
 
 Separate two paths: applications call **Proxy** with user credentials; a trusted business backend calls **Admin APIs** with named integration keys to maintain users, keys, quotas and configuration.
@@ -14,7 +14,7 @@ Separate two paths: applications call **Proxy** with user credentials; a trusted
 | `GATEWAY_MASTER_URL` | Admin root URL, with management calls under `/api/admin/*` |
 | `GATEWAY_MASTER_KEY` | A named Admin integration key; the historical variable name does not require the old shared Master Key |
 
-Create least-privilege keys under **Integration → Integration Keys** for each business system. Keep them on trusted servers, not in browser apps or ordinary inference SDK credentials.
+Create least-privilege keys under **System → Integration Keys** for each business system. Keep them on trusted servers, not in browser apps or ordinary inference SDK credentials.
 
 ## Typical provisioning flow
 
@@ -30,4 +30,4 @@ See [Models](/en/docs/guides/models/) for the distinction between public discove
 
 After confirming named integration keys have replaced `legacy-master`, rotate or revoke the legacy key under your migration plan. Use wallet credit for purchases rather than incrementing a periodic budget cap.
 
-See the [integration reference](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/developers/integration.md) and [Admin API](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/developers/api/admin.md) for fields and idempotency.
+See the [integration reference](https://github.com/OctaFuse/octafuse-gateway/blob/v2.19.0/docs/developers/integration.md) and [Admin API](https://github.com/OctaFuse/octafuse-gateway/blob/v2.19.0/docs/developers/api/admin.md) for fields and idempotency.

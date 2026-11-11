@@ -1,7 +1,7 @@
 ---
 title: "Usage and reliability"
 description: "Compare costs, cache behavior, latency and failures by model, provider or user, then inspect individual requests."
-gatewayRef: v2.18.0
+gatewayRef: v2.19.0
 ---
 
 **Analytics** aggregates real gateway calls. Check the time window, business timezone and currency before comparing volume, usage, user charges and supplier cost.
@@ -19,6 +19,8 @@ gatewayRef: v2.18.0
 2. Compare success, first-token timing, upstream latency and cache metrics rather than final success alone.
 3. Open [request logs](/en/docs/guides/request-logs/) for the affected model, provider or user and inspect attempt failures.
 4. Decide whether to change priorities, weights, Sticky, fallback accounts or user quotas.
+
+The time range is restored from the page address, so a view can be revisited or shared. Drilling from usage into logs keeps your filters, and historical activity locates logs by request ID.
 
 ![Model usage and costs](/screenshots/v2-13-0-model-usage.webp)
 

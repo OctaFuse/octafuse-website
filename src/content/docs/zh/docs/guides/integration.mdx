@@ -1,7 +1,7 @@
 ---
 title: "系统集成"
 description: "通过服务端管理 API 开通用户、发放密钥与永久额度，并把客户端流量发送到 Proxy。"
-gatewayRef: v2.18.0
+gatewayRef: v2.19.0
 ---
 
 集成时区分两条链路：应用使用用户凭证调用 **Proxy**；业务服务端使用具名集成密钥调用 **Admin API**，维护用户、密钥、额度与配置。
@@ -14,7 +14,7 @@ gatewayRef: v2.18.0
 | `GATEWAY_MASTER_URL` | Admin 根地址，服务端在其下调用 `/api/admin/*` |
 | `GATEWAY_MASTER_KEY` | 具名 Admin 集成密钥；变量名沿用历史约定，不表示使用旧的共享 Master Key |
 
-在系统集成 → 集成密钥（Integration Keys）中，为不同业务创建最小权限密钥。它们只放在受信任服务端，不作为浏览器或普通 SDK 的模型调用密钥。
+在系统 → 集成密钥（Integration Keys）中，为不同业务创建最小权限密钥。它们只放在受信任服务端，不作为浏览器或普通 SDK 的模型调用密钥。
 
 ## 常见业务流程
 
@@ -30,4 +30,4 @@ gatewayRef: v2.18.0
 
 确认具名集成密钥已替换历史 `legacy-master` 后，再按实际迁移计划轮换或吊销旧密钥。周期额度和永久额度分开管理，不要继续用累加周期预算的方式充值。
 
-接口字段和幂等规则以 [系统集成参考](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/developers/integration.md) 与 [Admin API](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/developers/api/admin.md) 为准。
+接口字段和幂等规则以 [系统集成参考](https://github.com/OctaFuse/octafuse-gateway/blob/v2.19.0/docs/developers/integration.md) 与 [Admin API](https://github.com/OctaFuse/octafuse-gateway/blob/v2.19.0/docs/developers/api/admin.md) 为准。

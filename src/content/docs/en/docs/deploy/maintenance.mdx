@@ -1,10 +1,10 @@
 ---
 title: "Maintenance mode"
 description: "Reject new inference work during a maintenance window, keep health checks and optionally freeze Admin writes."
-gatewayRef: v2.18.0
+gatewayRef: v2.19.0
 ---
 
-Use **System → Maintenance** to set a window and message for a migration or cutover. Enabling maintenance does not run database migrations for you.
+Use the **Maintenance mode** section of **System → Config** to set a window and message for a migration or cutover; the old Maintenance address redirects there. Enabling maintenance does not run database migrations for you.
 
 ## Behavior
 
@@ -19,11 +19,11 @@ Use **System → Maintenance** to set a window and message for a migration or cu
 
 ## Run a window
 
-1. Set expected duration and localized messages; decide whether to freeze Admin writes.
-2. Enable and verify the banner and new-request response. Per-process caches introduce a short propagation delay.
+1. Set the expected duration (a positive whole number of minutes) and localized messages, preview what clients will see, and decide whether to freeze Admin writes. The duration is only a hint; maintenance never ends automatically.
+2. Enable and verify the banner and new-request response. Per-process caches introduce a short propagation delay. While maintenance is active, the same section shows the expected recovery time and lets you extend or end it.
 3. Wait for in-flight work before applying the migration or cutover instructions.
 4. Disable maintenance on the environment actually receiving traffic, then make a real test call.
 
 Configuration read failures allow traffic. Maintenance mode does not replace enforced database or network isolation. Database cutovers may copy maintenance state, so check it explicitly after switching.
 
-See the [maintenance reference](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/operators/maintenance-mode.md) for exceptions, permissions and runtime details.
+See the [maintenance reference](https://github.com/OctaFuse/octafuse-gateway/blob/v2.19.0/docs/operators/maintenance-mode.md) for exceptions, permissions and runtime details.

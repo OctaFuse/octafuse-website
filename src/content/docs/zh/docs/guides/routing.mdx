@@ -1,7 +1,7 @@
 ---
 title: "路由与故障转移"
 description: "配置客户端入口、路由池和上游目标，管理策略、粘性、自定义头及计费倍率。"
-gatewayRef: v2.18.0
+gatewayRef: v2.19.0
 ---
 
 一条调用先匹配客户端的**请求入口（Request Surface）**，进入**路由池（Route Pool）**，再尝试其中的**上游目标（Upstream Target）**。模型 ID、路由组、协议和操作共同决定入口。
@@ -26,7 +26,7 @@ gatewayRef: v2.18.0
 | `weight_priority` | 同层按权重从高到低固定主备 |
 | `weighted_round_robin` | 按权重轮转；运行实例间不共享计数器 |
 
-支持按优先级层覆盖策略。没有有效覆盖时逐层继承路由池、模型和全局规则，准确优先级见 [路由策略参考](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/developers/reference/route-strategies.md)。
+支持按优先级层覆盖策略。没有有效覆盖时逐层继承路由池、模型和全局规则，准确优先级见 [路由策略参考](https://github.com/OctaFuse/octafuse-gateway/blob/v2.19.0/docs/developers/reference/route-strategies.md)。
 
 ## 供应商粘性
 
@@ -50,4 +50,4 @@ gatewayRef: v2.18.0
 
 可重试的供应商故障会触发后续候选尝试；熔断避免反复请求不可用账号。流式首事件判断不把注释心跳当成有效内容；首事件超时默认 60 秒，仍有可用候选时可换路，最后候选由首包超时兜底。
 
-用[请求流程与时间线](/zh/docs/guides/request-logs/)查看实际尝试，不要只凭最终供应商猜测路由过程。详细错误、超时与重试条件见 [请求生命周期](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/developers/architecture/proxy-request-lifecycle.md)。
+用[请求流程与时间线](/zh/docs/guides/request-logs/)查看实际尝试，不要只凭最终供应商猜测路由过程。详细错误、超时与重试条件见 [请求生命周期](https://github.com/OctaFuse/octafuse-gateway/blob/v2.19.0/docs/developers/architecture/proxy-request-lifecycle.md)。

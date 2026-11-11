@@ -1,7 +1,7 @@
 ---
 title: "Quick start"
 description: "Start the gateway, connect one provider and complete a real model call with a user key."
-gatewayRef: v2.18.0
+gatewayRef: v2.19.0
 ---
 
 The goal is a complete **client → gateway → upstream → logs and charging** request. Pick a runtime, then follow the same configuration steps.
@@ -13,7 +13,7 @@ The goal is a complete **client → gateway → upstream → logs and charging**
 Install Docker and Compose, then clone the released version:
 
 ```bash
-git clone --branch v2.18.0 --depth 1 https://github.com/OctaFuse/octafuse-gateway.git
+git clone --branch v2.19.0 --depth 1 https://github.com/OctaFuse/octafuse-gateway.git
 cd octafuse-gateway
 docker compose -f docker/compose/quickstart.yml up --build
 ```
@@ -65,4 +65,4 @@ Playground's direct probes do not create these user request records. [Simulator]
 
 [Connect an SDK or IDE](/en/docs/guides/clients/) · [Routing and failover](/en/docs/guides/routing/) · [MCP](/en/docs/guides/mcp/) · [Production deployment](/en/docs/deploy/overview/)
 
-See the [canonical quickstart](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/users/quickstart.md) for environment requirements.
+See the [canonical quickstart](https://github.com/OctaFuse/octafuse-gateway/blob/v2.19.0/docs/users/quickstart.md) for environment requirements.

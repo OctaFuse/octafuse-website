@@ -1,7 +1,7 @@
 ---
 title: "Routing and failover"
 description: "Configure client surfaces, pools and upstream targets, with strategies, sticky routing, custom headers and pricing."
-gatewayRef: v2.18.0
+gatewayRef: v2.19.0
 ---
 
 A call matches a **Request Surface**, enters a **Route Pool**, then tries an **Upstream Target**. The model ID, route group, protocol and operation determine the surface.
@@ -26,7 +26,7 @@ Higher `priority` is attempted first. Within one tier:
 | `weight_priority` | Fixed descending weight order within the tier |
 | `weighted_round_robin` | Weighted rotation; counters are not shared between runtime instances |
 
-A tier may override the strategy. Otherwise pool, model and global rules are inherited. See the [strategy reference](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/developers/reference/route-strategies.md) for exact precedence.
+A tier may override the strategy. Otherwise pool, model and global rules are inherited. See the [strategy reference](https://github.com/OctaFuse/octafuse-gateway/blob/v2.19.0/docs/developers/reference/route-strategies.md) for exact precedence.
 
 ## Provider Sticky
 
@@ -50,4 +50,4 @@ Maintain Provider, Charged and Metered factors separately. Provider factors may 
 
 Retryable supplier failures allow subsequent candidates; circuit breakers avoid repeatedly calling unavailable accounts. Streaming first-event detection ignores comment heartbeats. The default first-event timeout is 60 seconds; another usable candidate permits failover, while the last candidate falls back to the first-chunk timeout.
 
-Inspect actual attempts in the [request timeline](/en/docs/guides/request-logs/). See the [request lifecycle](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/developers/architecture/proxy-request-lifecycle.md) for precise timeout and retry conditions.
+Inspect actual attempts in the [request timeline](/en/docs/guides/request-logs/). See the [request lifecycle](https://github.com/OctaFuse/octafuse-gateway/blob/v2.19.0/docs/developers/architecture/proxy-request-lifecycle.md) for precise timeout and retry conditions.

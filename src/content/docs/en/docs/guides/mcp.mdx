@@ -1,7 +1,7 @@
 ---
 title: "MCP servers"
 description: "Connect remote MCP servers, review catalogs, price tool calls and expose a single server or aggregate interface."
-gatewayRef: v2.18.0
+gatewayRef: v2.19.0
 ---
 
 Use **MCP Servers** to connect remote Streamable HTTP services. Clients use `/mcp` for all enabled servers, or `/mcp/server-slug` for one server.
@@ -18,7 +18,7 @@ Use **MCP Servers** to connect remote Streamable HTTP services. Clients use `/mc
 
 ## Connect clients
 
-In the connection guide select the Proxy address and all servers or one server, then copy the client configuration. Clients that accept a user API key can connect directly. For sign-in clients, complete the [OAuth integration](/en/docs/guides/oauth/) first.
+In the connection guide select the Proxy address and all servers or one server, then copy the client configuration. A service's details can also open the guide for that service, and returning to the page restores the client section and expanded authorizations. Clients that accept a user API key can connect directly. For sign-in clients, complete the [OAuth integration](/en/docs/guides/oauth/) first.
 
 ![MCP connection guide](/screenshots/v2-15-0-mcp-connection-guide.webp)
 
@@ -37,4 +37,4 @@ Request logs identify MCP calls and OAuth applications. Missing valid tool resul
 - The public interface is stateless Streamable HTTP. Upstream-initiated sampling, elicitation and roots are unsupported.
 - JSON-RPC batch arrays are rejected; send individual requests.
 
-See the [MCP architecture reference](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/developers/architecture/mcp-gateway.md) for lifecycle, naming and accounting.
+See the [MCP architecture reference](https://github.com/OctaFuse/octafuse-gateway/blob/v2.19.0/docs/developers/architecture/mcp-gateway.md) for lifecycle, naming and accounting.

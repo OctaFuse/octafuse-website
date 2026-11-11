@@ -1,7 +1,7 @@
 ---
 title: "Simulator"
 description: "Call Proxy with a real user key to verify authentication, routing, failover, usage and charging."
-gatewayRef: v2.18.0
+gatewayRef: v2.19.0
 ---
 
 **Simulator** sends real requests from your browser to Proxy. Use a test user's key to verify authentication, routes, quotas, failover and accounting together.
@@ -15,6 +15,8 @@ gatewayRef: v2.18.0
 5. Reconcile quota deductions with user and audit records.
 
 ![Client model and request surface selection](/screenshots/v2-6-0-simulator-routing-target.webp)
+
+While a request is in flight the Simulator locks its connection and target. The request still produces real charges and logs.
 
 Simulator constructs the **client-side** request. It does not send the final upstream protocol directly. For example, the gateway converts OpenAI Images to a Gemini upstream when configured with that adapter.
 

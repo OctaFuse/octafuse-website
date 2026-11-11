@@ -1,7 +1,7 @@
 ---
 title: "MCP 服务"
 description: "接入远程 MCP、同步审核目录、配置工具收费，并让客户端通过单服务或聚合入口调用。"
-gatewayRef: v2.18.0
+gatewayRef: v2.19.0
 ---
 
 在 MCP 服务（MCP Servers）中，把远程 Streamable HTTP 服务接入网关。客户端可以通过 `/mcp` 使用全部已启用服务，或通过 `/mcp/服务标识` 只访问一个服务。
@@ -18,7 +18,7 @@ gatewayRef: v2.18.0
 
 ## 配置客户端
 
-使用「接入指南」选择代理服务地址、全部服务或单服务，再复制对应客户端的配置。支持用户 API 密钥的客户端可以直接连接；需要登录授权的客户端请先完成 [OAuth 对接](/zh/docs/guides/oauth/)。
+使用「接入指南」选择代理服务地址、全部服务或单服务，再复制对应客户端的配置；服务详情中也能直接打开当前服务的接入指南，返回页面时会恢复客户端分区与授权的展开状态。支持用户 API 密钥的客户端可以直接连接；需要登录授权的客户端请先完成 [OAuth 对接](/zh/docs/guides/oauth/)。
 
 ![MCP 接入指南](/screenshots/v2-15-0-mcp-connection-guide.webp)
 
@@ -37,4 +37,4 @@ gatewayRef: v2.18.0
 - 对外为无会话的 Streamable HTTP；不支持上游反向发起的 sampling、elicitation、roots。
 - 不接受 JSON-RPC 批量数组，应逐条发送请求。
 
-完整生命周期、命名空间与计费语义见 [MCP 架构参考](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/developers/architecture/mcp-gateway.md)。
+完整生命周期、命名空间与计费语义见 [MCP 架构参考](https://github.com/OctaFuse/octafuse-gateway/blob/v2.19.0/docs/developers/architecture/mcp-gateway.md)。

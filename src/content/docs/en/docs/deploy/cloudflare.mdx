@@ -1,7 +1,7 @@
 ---
 title: "Cloudflare deployment"
 description: "Use the bootstrap flow for Proxy, Admin and shared D1, then verify the client operations you need."
-gatewayRef: v2.18.0
+gatewayRef: v2.19.0
 ---
 
 In this deployment Proxy and Admin each run as a Worker and share D1. Cloudflare is one supported option; resource limits and charges depend on the plan and actual usage.
@@ -16,7 +16,7 @@ npx wrangler login
 npm run bootstrap:cloudflare
 ```
 
-Follow the prompts to create or select resources and set Admin credentials. Record the resulting Proxy and Admin URLs. Use the [Cloudflare quick deployment reference](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/operators/deployment/cloudflare-quickstart.md) for exact resource settings and troubleshooting.
+Follow the prompts to create or select resources and set Admin credentials. Record the resulting Proxy and Admin URLs. Use the [Cloudflare quick deployment reference](https://github.com/OctaFuse/octafuse-gateway/blob/v2.19.0/docs/operators/deployment/cloudflare-quickstart.md) for exact resource settings and troubleshooting.
 
 ## Configure and verify
 
@@ -31,4 +31,4 @@ Pin the target version and read [Upgrades](/en/docs/deploy/upgrades/). Back up D
 
 Store credentials as platform secrets or protected deployment values. Use the [deployment overview](/en/docs/deploy/overview/) and database cutover reference before changing to Postgres or MySQL.
 
-See the [Cloudflare operations reference](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/operators/deployment/cloudflare.md) for build and configuration details.
+See the [Cloudflare operations reference](https://github.com/OctaFuse/octafuse-gateway/blob/v2.19.0/docs/operators/deployment/cloudflare.md) for build and configuration details.

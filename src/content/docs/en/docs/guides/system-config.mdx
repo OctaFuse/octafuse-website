@@ -1,18 +1,18 @@
 ---
 title: "System configuration"
 description: "Set currency, business timezone, global routing and discount composition, with separate maintenance and integration controls."
-gatewayRef: v2.18.0
+gatewayRef: v2.19.0
 ---
 
-Use **Config** to maintain global defaults. Model and route rules may override specific settings according to their precedence.
+Use **System → Config** to maintain global defaults. The page is split into General, Routing & billing, Notifications and Maintenance mode sections. Model and route rules may override specific settings according to their precedence.
 
-| Setting | Effect |
+| Setting (section) | Effect |
 |---|---|
-| Business timezone | Price windows, business-day usage, resets and Admin time display |
-| Billing currency | Interpretation of model/tool prices, charges and statistics |
-| Global routing strategy | Default candidate selection when no more specific rule applies |
-| User factor composition | `multiply` combines factors; `min` chooses the smaller route/user factor |
-| Alert webhooks | Notifications for supported events |
+| Business timezone (General) | Price windows, business-day usage, resets and Admin time display |
+| Billing currency (General) | Interpretation of model/tool prices, charges and statistics |
+| Global routing strategy (Routing & billing) | Default candidate selection when no more specific rule applies |
+| User factor composition (Routing & billing) | `multiply` combines factors; `min` chooses the smaller route/user factor |
+| Alert webhooks (Notifications) | Notifications for supported events |
 
 ## Before and after a change
 
@@ -22,6 +22,6 @@ Use **Config** to maintain global defaults. Model and route rules may override s
 
 ![Independent configuration card saving](/screenshots/v2-14-0-config-unsaved.webp)
 
-Use [Maintenance](/en/docs/deploy/maintenance/) for windows, [Integration Keys](/en/docs/guides/integration/) for Admin credentials and [MCP OAuth](/en/docs/guides/oauth/) for the authorization server.
+Maintenance windows are controlled in this page's Maintenance mode section (see [Maintenance](/en/docs/deploy/maintenance/)). Admin credentials live under System → Integration Keys ([Integration Keys](/en/docs/guides/integration/)). The MCP authorization server is configured on the MCP Servers page ([MCP OAuth](/en/docs/guides/oauth/)).
 
 [Pricing](/en/docs/guides/billing/) · [Routing](/en/docs/guides/routing/) · [Technical reference](/en/docs/github-reference/)

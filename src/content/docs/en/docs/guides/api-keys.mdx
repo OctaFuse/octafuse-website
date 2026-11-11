@@ -1,15 +1,15 @@
 ---
 title: "API keys and rate limits"
 description: "Issue user keys, configure user and key RPM limits, and distinguish provider credentials, OAuth tokens and integration keys."
-gatewayRef: v2.18.0
+gatewayRef: v2.19.0
 ---
 
 Create calling credentials under **API Keys**. Clients send `Authorization: Bearer sk-…` to Proxy. Provider credentials stay on the gateway; Admin APIs use separate named integration keys.
 
 ## Issue and revoke keys
 
-1. Select an existing user or resolve one using external identity.
-2. Choose a recognizable key name. Save the full key according to the creation dialog.
+1. Search for an existing user, enter a user ID by hand, or resolve one using external identity.
+2. Choose a recognizable key name. Save the full key according to the creation dialog; keys appear masked in the list by default.
 3. Call authenticated `GET /v1/me` to verify the user and quota.
 4. Issue separate keys per application; disable, revoke or delete unused credentials.
 
@@ -21,7 +21,7 @@ Configure requests per minute for a user and for an individual key. Both layers 
 
 ![API key RPM settings](/screenshots/v2-9-0-api-key-rate-limit.webp)
 
-Model listing and user quota queries do not consume key/user RPM and can support read-only diagnostics. See the [user API](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/developers/api/user.md) for endpoint-specific counting.
+Model listing and user quota queries do not consume key/user RPM and can support read-only diagnostics. See the [user API](https://github.com/OctaFuse/octafuse-gateway/blob/v2.19.0/docs/developers/api/user.md) for endpoint-specific counting.
 
 ## Four credential types
 

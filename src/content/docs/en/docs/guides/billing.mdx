@@ -1,7 +1,7 @@
 ---
 title: "Quotas, pricing and discounts"
 description: "Understand periodic budgets, permanent credit, the three cost ledgers and route or user discounts."
-gatewayRef: v2.18.0
+gatewayRef: v2.19.0
 ---
 
 Quotas determine how much a user can consume; pricing determines the charge for a request. Check the billing currency and business timezone in [System configuration](/en/docs/guides/system-config/) before setting quotas and discounts.
@@ -17,7 +17,7 @@ Requests consume the periodic budget first, then the wallet for any shortfall. A
 
 ![Separate periodic budget and permanent wallet credit](/screenshots/v2-8-0-user-dual-quota.webp)
 
-Use the Admin wallet credit operation for top-ups, with a unique business reference for idempotency. Do not repeatedly increase the periodic cap to distribute purchased credit. See the [Admin API](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/developers/api/admin.md).
+Use the Admin wallet credit operation for top-ups, with a unique business reference for idempotency. Do not repeatedly increase the periodic cap to distribute purchased credit. See the [Admin API](https://github.com/OctaFuse/octafuse-gateway/blob/v2.19.0/docs/developers/api/admin.md).
 
 ## Three separate amounts
 
@@ -38,7 +38,7 @@ A user may have one factor per model or different factors per route group. An ex
 | `multiply` (default) | Multiply the factors | Final factor 0.4 |
 | `min` | Use the smaller factor | Final factor 0.5 |
 
-The user charge is based on **the current official catalog price × the composed Charged factor**. A user discount does not change supplier cost. See the [user API and billing reference](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/developers/api/user.md) for exact rules.
+The user charge is based on **the current official catalog price × the composed Charged factor**. A user discount does not change supplier cost. See the [user API and billing reference](https://github.com/OctaFuse/octafuse-gateway/blob/v2.19.0/docs/developers/api/user.md) for exact rules.
 
 ![Model and route-group user discounts](/screenshots/v2-14-0-user-group-factors.webp)
 

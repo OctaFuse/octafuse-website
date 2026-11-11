@@ -1,7 +1,7 @@
 ---
 title: "Embeddings"
 description: "Route OpenAI or Gemini embedding requests and verify vector dimensions, input usage and accounting."
-gatewayRef: v2.18.0
+gatewayRef: v2.19.0
 ---
 
 Embedding models support semantic retrieval, similarity and RAG. They have a separate model kind and request surface, rather than being a Chat output mode.
@@ -30,4 +30,4 @@ The upstream interprets parameters such as `dimensions` and `encoding_format`. E
 
 Gemini uses native `:embedContent` or `:batchEmbedContents` bodies. Default `GET /v1/models` excludes embeddings; use `?kind=embedding` or `?kind=all` to discover them.
 
-See the [embedding API reference](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/developers/api/user.md#embeddings向量) for exact request and accounting rules.
+See the [embedding API reference](https://github.com/OctaFuse/octafuse-gateway/blob/v2.19.0/docs/developers/api/user.md#embeddings向量) for exact request and accounting rules.

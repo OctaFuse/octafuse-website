@@ -1,7 +1,7 @@
 ---
 title: "Speech and realtime audio"
 description: "Connect ASR, TTS and supported realtime WebSockets, checking protocol and billing units per model and adapter."
-gatewayRef: v2.18.0
+gatewayRef: v2.19.0
 ---
 
 ASR converts audio to text; TTS converts text to audio. Synchronous files, asynchronous jobs and realtime sessions use different operations and accounting units.
@@ -40,4 +40,4 @@ curl -sS http://localhost:8787/v1/audio/speech \
 
 Use `kind=asr` or `kind=tts` for model listing; `kind=audio` includes both. A provider offering an operation does not by itself mean the gateway implements it.
 
-Read the [coverage matrix](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/developers/reference/native-provider-coverage.md) and [user API](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/developers/api/user.md) for exact operations and fields.
+Read the [coverage matrix](https://github.com/OctaFuse/octafuse-gateway/blob/v2.19.0/docs/developers/reference/native-provider-coverage.md) and [user API](https://github.com/OctaFuse/octafuse-gateway/blob/v2.19.0/docs/developers/api/user.md) for exact operations and fields.

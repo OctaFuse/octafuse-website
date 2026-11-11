@@ -1,7 +1,7 @@
 ---
 title: "额度、价格与折扣"
 description: "理解周期额度、永久额度、三种成本口径，以及路由和用户折扣如何合成。"
-gatewayRef: v2.18.0
+gatewayRef: v2.19.0
 ---
 
 额度决定还能调用多少，价格决定一次调用扣多少。先确认[系统配置](/zh/docs/guides/system-config/)中的计费币种与业务时区，再为用户设置额度和折扣。
@@ -17,7 +17,7 @@ gatewayRef: v2.18.0
 
 ![用户详情中的周期额度与永久额度](/screenshots/v2-8-0-user-dual-quota.webp)
 
-日常加购应通过 Admin 的永久额度加额接口完成，并传入唯一业务流水号保证幂等；不要通过反复增加周期预算发放购买额度。接口契约见 [Admin API](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/developers/api/admin.md)。
+日常加购应通过 Admin 的永久额度加额接口完成，并传入唯一业务流水号保证幂等；不要通过反复增加周期预算发放购买额度。接口契约见 [Admin API](https://github.com/OctaFuse/octafuse-gateway/blob/v2.19.0/docs/developers/api/admin.md)。
 
 ## 三种金额各自代表什么
 
@@ -38,7 +38,7 @@ gatewayRef: v2.18.0
 | `multiply`（默认） | 两个倍率相乘 | 最终倍率 0.4 |
 | `min` | 取两者较小值 | 最终倍率 0.5 |
 
-最终用户费用基于**官方当刻目录价 × 合成后的用户计费倍率**。用户折扣不会修改供应成本；字段级规则见 [用户 API 与计费语义](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/developers/api/user.md)。
+最终用户费用基于**官方当刻目录价 × 合成后的用户计费倍率**。用户折扣不会修改供应成本；字段级规则见 [用户 API 与计费语义](https://github.com/OctaFuse/octafuse-gateway/blob/v2.19.0/docs/developers/api/user.md)。
 
 ![按模型与路由组配置用户倍率](/screenshots/v2-14-0-user-group-factors.webp)
 

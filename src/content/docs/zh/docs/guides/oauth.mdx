@@ -1,7 +1,7 @@
 ---
 title: "MCP OAuth 授权"
 description: "对接授权服务器，为 MCP 客户端提供登录授权、独立访问令牌与按应用撤销能力。"
-gatewayRef: v2.18.0
+gatewayRef: v2.19.0
 ---
 
 OAuth 适用于希望用户在 MCP 客户端登录授权、而不是手动粘贴用户 Key 的场景。**先准备与网关完成对接的授权服务器**：它负责登录、同意授权、刷新以及通过 Admin API 签发和轮换网关访问令牌。
@@ -14,7 +14,7 @@ OctaFuse Gateway 是资源服务器，不提供授权服务器。填写普通登
 
 ## 开启授权发现
 
-1. 打开 MCP 服务页的「客户端接入与授权」。
+1. 打开 MCP 服务页的「客户端接入」分区，找到「OAuth 2.0 授权登录（可选）」卡片。
 2. 启用「OAuth 2.0 授权登录」，填写授权服务器的 HTTPS 源地址并保存；本机开发允许 HTTP localhost。
 3. 在接入指南中切换到 OAuth，按对应客户端的步骤连接。
 4. 完成一次授权和工具调用，确认请求日志中的应用名与所属用户正确。
@@ -32,4 +32,4 @@ OctaFuse Gateway 是资源服务器，不提供授权服务器。填写普通登
 
 先确认授权服务器已完成协议与令牌签发对接，再检查资源发现地址、客户端回调和令牌状态。401 通常需要重新取得有效令牌；用 MCP 令牌调用聊天等其他接口会因作用域不匹配被拒绝。
 
-对接 API、发现元数据和刷新职责见 [OAuth 技术参考](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/developers/architecture/mcp-gateway.md#oauth-授权发现)。
+对接 API、发现元数据和刷新职责见 [OAuth 技术参考](https://github.com/OctaFuse/octafuse-gateway/blob/v2.19.0/docs/developers/architecture/mcp-gateway.md#oauth-授权发现)。

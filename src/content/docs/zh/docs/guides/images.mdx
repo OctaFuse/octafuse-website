@@ -1,7 +1,7 @@
 ---
 title: "图片生成与编辑"
 description: "为 OpenAI Images 或厂商原生入口选择适配器，区分客户端协议、实际上游与计费方式。"
-gatewayRef: v2.18.0
+gatewayRef: v2.19.0
 ---
 
 先确定客户端使用哪种入口，再选择兼容的上游适配器。**OpenAI Images 是客户端协议，不要求实际上游也使用 OpenAI 协议。**
@@ -34,8 +34,10 @@ curl -sS http://localhost:8787/v1/images/generations \
 
 图片模型列表使用 `GET /v1/models?kind=image`。图片编辑使用 `/v1/images/edits`，仅在所选上游与适配器支持时可用；有些生成入口使用 JSON 参考图完成图生图，与 multipart 编辑不同。
 
+**GPT Image 2.6**（`gpt-image-2.6-flare`、`gpt-image-2.6-sunburst`）只支持 Images API 的 generations 与 edits，不能作为 Chat Completions 或 Responses 的主模型。`complexity` 作为客户端额外字段转发，不要写成路由默认值；`svg` / `gif` 输出格式及 GIF 的 `frame_count`、`frame_duration_ms` 同样作为额外字段转发，且只用于 generations。edits 不支持这两种格式，edits 里的 markup 文件目前也不会转发。
+
 ## 计费与结果检查
 
 成功后核对返回图片、张数、用量和当次价格快照。客户端取消、网关超时、明确的上游错误或空结果不扣用户额度；不要将“按图片输出”误解为所有模型均按张计费。
 
-模型参数、尺寸档位、原生路径和不扣费边界见 [图片技术参考](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/developers/reference/image-models.md) 与 [厂商覆盖矩阵](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/developers/reference/native-provider-coverage.md)。
+模型参数、尺寸档位、原生路径和不扣费边界见 [图片技术参考](https://github.com/OctaFuse/octafuse-gateway/blob/v2.19.0/docs/developers/reference/image-models.md) 与 [厂商覆盖矩阵](https://github.com/OctaFuse/octafuse-gateway/blob/v2.19.0/docs/developers/reference/native-provider-coverage.md)。

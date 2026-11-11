@@ -1,7 +1,7 @@
 ---
 title: "MCP OAuth authorization"
 description: "Integrate an authorization server for MCP sign-in, separate access tokens and per-application revocation."
-gatewayRef: v2.18.0
+gatewayRef: v2.19.0
 ---
 
 OAuth lets users approve MCP access in a client without pasting a user API key. **First integrate an authorization server** that handles login, consent and refresh, and issues or rotates gateway tokens through the Admin API.
@@ -14,7 +14,7 @@ Existing API-key access remains usable. This OAuth flow does not authorize gener
 
 ## Enable discovery
 
-1. Open Client access and authorization on the MCP Servers page.
+1. Open the Client access & authorization section on the MCP Servers page and find the OAuth 2.0 sign-in (optional) card.
 2. Enable OAuth 2.0 sign-in, enter the authorization server's HTTPS origin and save. HTTP localhost is allowed for local development.
 3. Switch the connection guide to OAuth and follow the client-specific steps.
 4. Authorize and call a tool, then verify the application name and gateway user in logs.
@@ -32,4 +32,4 @@ Existing API-key access remains usable. This OAuth flow does not authorize gener
 
 Check that the server implements the discovery and token integration before investigating client callbacks and token status. A 401 requires valid authorization; an MCP token is rejected on chat and other endpoints because its scope is limited.
 
-See the [OAuth technical reference](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/developers/architecture/mcp-gateway.md#oauth-授权发现) for discovery, issuance and refresh responsibilities.
+See the [OAuth technical reference](https://github.com/OctaFuse/octafuse-gateway/blob/v2.19.0/docs/developers/architecture/mcp-gateway.md#oauth-授权发现) for discovery, issuance and refresh responsibilities.

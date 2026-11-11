@@ -1,7 +1,7 @@
 ---
 title: "REST services"
 description: "Configure search, fetch, deep search and AI detection engines, then price and inspect real tool calls."
-gatewayRef: v2.18.0
+gatewayRef: v2.19.0
 ---
 
 **REST Services** exposes independent tool APIs under `/v1/tools/*`. They are separate from model conversation protocols: the client executes these requests after a model asks to use a tool.
@@ -16,7 +16,7 @@ gatewayRef: v2.18.0
 ## Configure and activate
 
 1. Open REST Services under Agent Tools. Filter by name, service type or status.
-2. Open a service dialog to edit credentials, activation, pricing and tests.
+2. Open a service dialog to edit credentials, activation, pricing and tests; saving submits only that service, and unsaved edits can be reverted.
 3. Set Standard price, Charged factor and Metered factor; check the price preview. Search bills per request; AI detection uses configured character units.
 4. Save and activate the intended engine. Each tool currently has one Active engine; unimplemented engines or incomplete credentials cannot be activated.
 5. Call Proxy with a user key, then review tool invocations or request logs.
@@ -34,4 +34,4 @@ curl -sS http://localhost:8787/v1/tools/web-search \
 
 Upstream failures are not charged. Calls require a usable Active engine. Read [MCP servers](/en/docs/guides/mcp/) to connect external standardized tool services; REST tools are not automatically exposed as MCP.
 
-See the [tool API reference](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/developers/api/user.md) for fields and engine limitations.
+See the [tool API reference](https://github.com/OctaFuse/octafuse-gateway/blob/v2.19.0/docs/developers/api/user.md) for fields and engine limitations.

@@ -1,7 +1,7 @@
 ---
 title: "Image generation and editing"
 description: "Choose adapters for OpenAI Images or native providers, separating client protocol, upstream protocol and billing."
-gatewayRef: v2.18.0
+gatewayRef: v2.19.0
 ---
 
 Choose the client interface first, then a compatible adapter. **OpenAI Images is a client protocol; the actual upstream may use a different native protocol.**
@@ -34,8 +34,10 @@ curl -sS http://localhost:8787/v1/images/generations \
 
 List image models using `GET /v1/models?kind=image`. `/v1/images/edits` is usable only when both the upstream and adapter support it. JSON reference-image generation is different from multipart editing.
 
+**GPT Image 2.6** (`gpt-image-2.6-flare`, `gpt-image-2.6-sunburst`) supports only Images API generations and edits and cannot be the primary model for Chat Completions or Responses. `complexity` is forwarded as a client extra field; do not set it as a route default. The `svg` / `gif` output formats and the GIF `frame_count` and `frame_duration_ms` fields are likewise forwarded as extra fields and apply only to generations. Edits do not support these formats, and a markup file in an edit is currently not forwarded.
+
 ## Verify results and charges
 
 Check returned images, image count, usage and the request's price snapshot. Client cancellation, gateway timeout, explicit upstream errors and empty results are not charged to the user. Image output does not imply per-image billing for every model.
 
-See the [image reference](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/developers/reference/image-models.md) and [provider coverage matrix](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/developers/reference/native-provider-coverage.md) for sizes, parameters and native interfaces.
+See the [image reference](https://github.com/OctaFuse/octafuse-gateway/blob/v2.19.0/docs/developers/reference/image-models.md) and [provider coverage matrix](https://github.com/OctaFuse/octafuse-gateway/blob/v2.19.0/docs/developers/reference/native-provider-coverage.md) for sizes, parameters and native interfaces.

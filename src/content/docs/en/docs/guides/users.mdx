@@ -1,7 +1,7 @@
 ---
 title: "Users"
 description: "Create accounts for members, projects or customers, with periodic budgets, wallet credit and model/group discounts."
-gatewayRef: v2.18.0
+gatewayRef: v2.19.0
 ---
 
 Create gateway accounts under **Users**. The user owns quotas, charging and user-level rate limits; API keys belong to that user. Multiple keys share the user's quota rather than creating additional allowance.
@@ -13,6 +13,8 @@ Create gateway accounts under **Users**. The user owns quotas, charging and user
 3. Set optional model or route-group factors. After saving, use the model list preview to check the user's model and discount view.
 4. Issue and manage [API keys](/en/docs/guides/api-keys/) for the user.
 5. Follow activity, request logs and audit logs to investigate usage and quota changes.
+
+The user list focuses on identity, status, quota and configuration; the full user ID is in the details. The form expands optional fields on demand and validates email, identity, quota and JSON, and the details link to the user's keys and usage records.
 
 ![User discounts by model and route group](/screenshots/v2-14-0-user-group-factors.webp)
 

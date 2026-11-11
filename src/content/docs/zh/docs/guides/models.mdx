@@ -1,7 +1,7 @@
 ---
 title: "模型与官方目录"
 description: "导入模型、维护能力与目录价，比较官方变更，并区分静态目录与部署中的可调用模型。"
-gatewayRef: v2.18.0
+gatewayRef: v2.19.0
 ---
 
 模型（Models）维护客户端可识别的模型 ID、厂商、输入输出模态与目录价。供应商实际模型名在路由中映射，客户端不必跟着上游名称变化。
@@ -13,9 +13,9 @@ gatewayRef: v2.18.0
 3. 维护上下文、最大输出、发布日期、备注和目录价格。标签由管理员维护，导入不自动创建路由。
 4. 在[路由](/zh/docs/guides/routing/)中添加至少一个可用上游和已启用入口，再执行真实调用。
 
-## 检查官方更新
+## 与官方目录同步
 
-管理员手动点击「检查官方更新」，逐项比较模型名称、模态、规格、介绍与价格。可对单模型或批量选择采用官方值或保留当前值；**价格默认保留，应用前核对受影响的路由**。官方未提供的字段不会据此清空本地值。
+管理员手动点击「同步」，先比对再确认应用，逐项比较模型名称、模态、规格、介绍与价格。可对单模型或批量选择采用官方值或保留当前值；**价格默认保留，应用前核对受影响的路由**。官方未提供的字段不会据此清空本地值。
 
 ![模型官方目录逐项对比与同步](/screenshots/v2-15-0-model-official-sync.webp)
 
@@ -36,4 +36,4 @@ gatewayRef: v2.18.0
 - 你的网关 `GET /catalog/models`：公开发现有活跃路由的能力。
 - 用户 `GET /v1/models`：客户端模型列表；默认 LLM，其他类型使用 `kind=image/asr/tts/embedding` 等筛选。
 
-协议、模态和类型判定见 [模型类型参考](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/developers/reference/model-kinds.md)；[接入客户端](/zh/docs/guides/clients/)说明模型 ID 和路由组的写法。
+协议、模态和类型判定见 [模型类型参考](https://github.com/OctaFuse/octafuse-gateway/blob/v2.19.0/docs/developers/reference/model-kinds.md)；[接入客户端](/zh/docs/guides/clients/)说明模型 ID 和路由组的写法。

@@ -1,7 +1,7 @@
 ---
 title: "供应商配置"
 description: "配置上游账号与协议端点，导入模板，并有选择地同步官方更新。"
-gatewayRef: v2.18.0
+gatewayRef: v2.19.0
 ---
 
 供应商（Providers）中的一条记录代表一个上游账号：协议端点、一份凭证和启用状态。同一平台的多个账号使用多条记录，再放进对应路由池。
@@ -16,7 +16,7 @@ gatewayRef: v2.18.0
 
 ## 与官方模板比较更新
 
-「检查官方更新」由管理员手动触发。出现差异时，按字段比较介绍与端点，选择采用官方值或保留本地值；保存前查看受影响的路由。导入新版本目录不会自动覆盖已有账号的凭证和配置。
+管理员在供应商页点击「同步」手动触发：先比对官方模板与已导入供应商的差异，确认后才应用。出现差异时，按字段比较介绍与端点，选择采用官方值或保留本地值；保存前查看受影响的路由。导入新版本目录不会自动覆盖已有账号的凭证和配置。
 
 模型的目录更新在[模型页](/zh/docs/guides/models/)单独处理。运行状态与余额检查见[供应商额度](/zh/docs/guides/provider-quotas/)。
 
@@ -24,7 +24,7 @@ gatewayRef: v2.18.0
 
 Gemini 端点支持 query-key 或 Bearer 鉴权；项目级 Vertex AI 使用服务账号换取访问令牌。导入项目级模板后替换项目与区域占位符，并按模板要求填写完整服务账号 JSON。
 
-原生 Gemini 内容生成使用统一的 `models.generate` 模板，流式和非流式在运行时选择对应 action。供应商端点、鉴权和 URL 覆盖的准确写法见 [配置参考](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/users/configuration.md)。
+原生 Gemini 内容生成使用统一的 `models.generate` 模板，流式和非流式在运行时选择对应 action。供应商端点、鉴权和 URL 覆盖的准确写法见 [配置参考](https://github.com/OctaFuse/octafuse-gateway/blob/v2.19.0/docs/users/configuration.md)。
 
 ## 日常变更
 

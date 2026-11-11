@@ -3,11 +3,11 @@
   "catalog": "models",
   "source": {
     "repo": "OctaFuse/octafuse-gateway",
-    "ref": "v2.18.0",
-    "commit": "1c649fc59dbf7191294306b9c3e5928d723e477e"
+    "ref": "v2.19.0",
+    "commit": "2b112c2b6a161e20ea212071ba954ae9bdbb9cbe"
   },
   "source_path": "packages/admin/lib/model-presets",
-  "count": 173,
+  "count": 196,
   "items": [
     {
       "id": "qwen-audio-3.1-asr-flash-message",
@@ -869,6 +869,92 @@
       "source_path": "packages/admin/lib/model-presets/aliyun-audio-tts.json"
     },
     {
+      "id": "qwen-audio-3.1-tts-next",
+      "display_name": "Qwen Audio 3.1 TTS Next",
+      "description": "DashScope unified audio generation (Audiogen) model that synthesizes voice, sound effects, and ambient audio from text, timestamps, and reference audio. Billed by input and output tokens.",
+      "i18n": {
+        "en": "DashScope unified audio generation (Audiogen) model that synthesizes voice, sound effects, and ambient audio from text, timestamps, and reference audio. Billed by input and output tokens.",
+        "zh": "DashScope 统一音频生成（Audiogen）模型，可基于文本、时间戳与参考音频一次生成人声、音效与环境音。按输入和输出 Token 计费。",
+        "ja": "DashScope の統合音声生成（Audiogen）モデルです。テキスト・タイムスタンプ・参照音声から人声、効果音、環境音をまとめて生成し、入力と出力のトークンで課金します。",
+        "ko": "DashScope 통합 오디오 생성(Audiogen) 모델입니다. 텍스트, 타임스탬프, 참고 오디오로부터 목소리, 효과음, 환경음을 한 번에 생성하고 입력과 출력 토큰으로 과금합니다."
+      },
+      "vendor": "aliyun",
+      "pricing": {
+        "usd": {
+          "audio_billing_mode": "token",
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 0.92,
+              "output_price": 1.87
+            }
+          ]
+        },
+        "cny": {
+          "audio_billing_mode": "token",
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 6,
+              "output_price": 12
+            }
+          ]
+        }
+      },
+      "modalities": {
+        "input": [
+          "text"
+        ],
+        "output": [
+          "audio"
+        ]
+      },
+      "released": "2026-09-21",
+      "vendor_label": "Alibaba Cloud",
+      "kind": "asr",
+      "source_path": "packages/admin/lib/model-presets/aliyun-audio-tts.json"
+    },
+    {
+      "id": "qwen-audio-3.1-tts-plus",
+      "display_name": "Qwen Audio 3.1 TTS Plus",
+      "description": "DashScope high-quality professional text-to-speech model with multilingual/dialect, streaming synthesis and voice cloning; billed by generated characters.",
+      "i18n": {
+        "en": "DashScope high-quality professional text-to-speech model with multilingual/dialect, streaming synthesis and voice cloning; billed by generated characters.",
+        "zh": "DashScope 高质量专业语音合成模型，支持多语言/方言、流式合成与声音复刻，按生成字符数计费。",
+        "ja": "DashScope の高品質なプロ向け音声合成です。多言語・方言、ストリーミング合成、ボイスクローンに対応し、生成した文字数で課金します。",
+        "ko": "DashScope 고품질 전문 음성 합성입니다. 다국어·방언, 스트리밍 합성, 보이스 클로닝을 지원하고 생성한 글자 수로 과금합니다."
+      },
+      "vendor": "aliyun",
+      "pricing": {
+        "usd": {
+          "audio_billing_mode": "per_character",
+          "audio": {
+            "price_per_character": 0.00002,
+            "minimum_characters": 0
+          }
+        },
+        "cny": {
+          "audio_billing_mode": "per_character",
+          "audio": {
+            "price_per_character": 0.00014,
+            "minimum_characters": 0
+          }
+        }
+      },
+      "modalities": {
+        "input": [
+          "text"
+        ],
+        "output": [
+          "audio"
+        ]
+      },
+      "released": "2026-10-21",
+      "vendor_label": "Alibaba Cloud",
+      "kind": "tts",
+      "source_path": "packages/admin/lib/model-presets/aliyun-audio-tts.json"
+    },
+    {
       "id": "qwen3.7-text-embedding",
       "display_name": "Qwen3.7 Text Embedding",
       "description": "Alibaba Cloud Model Studio text embedding model. Billed by input tokens only. Use the OpenAI-compatible POST /v1/embeddings.",
@@ -962,6 +1048,56 @@
           "embedding"
         ]
       },
+      "vendor_label": "Alibaba Cloud",
+      "kind": "embedding",
+      "source_path": "packages/admin/lib/model-presets/aliyun-embedding.json"
+    },
+    {
+      "id": "qwen3.7-text-embedding-flash",
+      "display_name": "Qwen3.7 Text Embedding Flash",
+      "description": "Alibaba Cloud Model Studio lightweight Qwen3.7 text embedding model optimized for cost and throughput. Billed by input tokens only. Use the OpenAI-compatible POST /v1/embeddings.",
+      "i18n": {
+        "en": "Alibaba Cloud Model Studio lightweight Qwen3.7 text embedding model optimized for cost and throughput. Billed by input tokens only. Use the OpenAI-compatible POST /v1/embeddings.",
+        "zh": "阿里云百炼轻量版 Qwen3.7 文本向量模型，面向成本与吞吐敏感场景，仅按输入 Token 计费。通过 OpenAI 兼容的 POST /v1/embeddings 调用。",
+        "ja": "Alibaba Cloud Model Studio の軽量版 Qwen3.7 テキスト埋め込みモデルです。コストとスループット重視向けで、入力トークンだけが課金対象です。OpenAI 互換の POST /v1/embeddings から呼び出します。",
+        "ko": "Alibaba Cloud Model Studio의 경량형 Qwen3.7 텍스트 임베딩 모델입니다. 비용·처리량 민감 시나리오에 적합하며 입력 토큰만 과금됩니다. OpenAI 호환 POST /v1/embeddings로 호출합니다."
+      },
+      "vendor": "aliyun",
+      "context_window": null,
+      "max_tokens": null,
+      "pricing": {
+        "usd": {
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 0.01875,
+              "output_price": 0,
+              "cache_read_price": null,
+              "cache_write_price": null
+            }
+          ]
+        },
+        "cny": {
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 0.125,
+              "output_price": 0,
+              "cache_read_price": null,
+              "cache_write_price": null
+            }
+          ]
+        }
+      },
+      "modalities": {
+        "input": [
+          "text"
+        ],
+        "output": [
+          "embedding"
+        ]
+      },
+      "released": "2026-09-01",
       "vendor_label": "Alibaba Cloud",
       "kind": "embedding",
       "source_path": "packages/admin/lib/model-presets/aliyun-embedding.json"
@@ -2069,6 +2205,7 @@
         ]
       },
       "released": "2026-02-16",
+      "retired": "2027-01-19",
       "vendor_label": "Alibaba Cloud",
       "kind": "llm",
       "source_path": "packages/admin/lib/model-presets/aliyun.json"
@@ -2327,6 +2464,58 @@
       "vendor_label": "Alibaba Cloud",
       "kind": "llm",
       "source_path": "packages/admin/lib/model-presets/aliyun.json"
+    },
+    {
+      "id": "claude-fable-5-2",
+      "display_name": "Claude Fable 5.2",
+      "description": "Anthropic's model built for demanding reasoning and long-horizon agentic work. It has a 1M context window and a 128K synchronous max output. Adaptive thinking is always on and cannot be turned off; the default effort is high, and supported values are low, medium, high, xhigh, and max. Setting thinking to disabled or sending budget_tokens returns 400. Forced tool_choice values any and tool return 400; use auto or none. Non-default temperature, top_p, and top_k return 400. 人民币价为美元刊例价 ×7 的换算占位价，非官方人民币刊例。",
+      "i18n": {
+        "en": "Anthropic's model built for demanding reasoning and long-horizon agentic work. It has a 1M context window and a 128K synchronous max output. Adaptive thinking is always on and cannot be turned off; the default effort is high, and supported values are low, medium, high, xhigh, and max. Setting thinking to disabled or sending budget_tokens returns 400. Forced tool_choice values any and tool return 400; use auto or none. Non-default temperature, top_p, and top_k return 400. 人民币价为美元刊例价 ×7 的换算占位价，非官方人民币刊例。",
+        "zh": "面向高要求推理与长程 Agent 工作的 Anthropic 模型。上下文 1M，同步最大输出 128K。自适应思考始终开启且不能关闭，默认 effort 为 high，支持 low、medium、high、xhigh 和 max。thinking 设为 disabled，或手动传入 budget_tokens，会返回 400。tool_choice 的 any 与 tool 会返回 400，应使用 auto 或 none。非默认的 temperature、top_p、top_k 也会返回 400。人民币价为美元刊例价 ×7 的换算占位价，非官方人民币刊例。",
+        "ja": "要求の高い推論と、長い期間のエージェント作業向けに作られた Anthropic モデルです。コンテキストは 1M、同期の最大出力は 128K です。適応的思考は常にオンで切ることができません。effort の初期値は high で、low、medium、high、xhigh、max を指定できます。thinking を disabled にするか、budget_tokens を手で指定すると 400 が返ります。tool_choice の any と tool は 400 になるので、auto か none を使います。初期値でない temperature、top_p、top_k も 400 になります。人民币价为美元刊例价 ×7 的换算占位价，非官方人民币刊例。",
+        "ko": "높은 수준의 추론과 긴 흐름의 에이전트 작업을 위해 만든 Anthropic 모델입니다. 컨텍스트는 1M이고, 동기 최대 출력은 128K입니다. 적응형 사고는 항상 켜져 있고 끌 수 없습니다. effort 기본값은 high이며 low, medium, high, xhigh, max를 지정할 수 있습니다. thinking을 disabled로 두거나 budget_tokens를 직접 넣으면 400이 반환됩니다. tool_choice의 any와 tool은 400이 나므로 auto 또는 none을 씁니다. 기본값이 아닌 temperature, top_p, top_k도 400입니다. 人民币价为美元刊例价 ×7 的换算占位价，非官方人民币刊例。"
+      },
+      "vendor": "anthropic",
+      "context_window": 1000000,
+      "max_tokens": 128000,
+      "pricing": {
+        "usd": {
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 8,
+              "output_price": 40,
+              "cache_read_price": 0.2,
+              "cache_write_price": 10
+            }
+          ]
+        },
+        "cny": {
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 56,
+              "output_price": 280,
+              "cache_read_price": 1.4,
+              "cache_write_price": 70
+            }
+          ]
+        }
+      },
+      "modalities": {
+        "input": [
+          "text",
+          "image",
+          "file"
+        ],
+        "output": [
+          "text"
+        ]
+      },
+      "released": "2026-11-09",
+      "vendor_label": "Anthropic",
+      "kind": "llm",
+      "source_path": "packages/admin/lib/model-presets/anthropic.json"
     },
     {
       "id": "claude-sonnet-5-5",
@@ -3540,15 +3729,15 @@
     {
       "id": "doubao-seed-2-1-pro-260915",
       "display_name": "Doubao Seed 2.1 Pro (260915)",
-      "description": "A Doubao Seed 2.1 Pro model for deep thinking, tool calling, structured output, GUI tasks, and multimodal understanding of text, images, and video. Context window is 1024K and maximum answer is 256K. BytePlus ModelArk does not list this model, so there is no USD price.",
+      "description": "A Doubao Seed 2.1 Pro model for deep thinking, tool calling, structured output, GUI tasks, and multimodal understanding of text, images, and video. Context window is 1M and maximum answer is 256K. BytePlus ModelArk does not list this model, so there is no USD price.",
       "i18n": {
-        "en": "A Doubao Seed 2.1 Pro model for deep thinking, tool calling, structured output, GUI tasks, and multimodal understanding of text, images, and video. Context window is 1024K and maximum answer is 256K. BytePlus ModelArk does not list this model, so there is no USD price.",
-        "zh": "面向深度思考、工具调用、结构化输出、GUI 任务，以及文本、图像与视频多模态理解的豆包 Seed 2.1 Pro。上下文窗口 1024K，最大回答 256K。BytePlus ModelArk 未上架该模型，因此没有美元刊例价。",
-        "ja": "深い思考、ツール呼び出し、構造化出力、GUI タスク、それにテキスト・画像・動画の理解向けの Doubao Seed 2.1 Pro です。コンテキストは 1024K、回答の上限は 256K です。BytePlus ModelArk には載っていないため、米ドルの定価はありません。",
-        "ko": "깊은 사고, 도구 호출, 구조화 출력, GUI 작업, 그리고 텍스트·이미지·영상 이해용 Doubao Seed 2.1 Pro입니다. 컨텍스트는 1024K, 답변 상한은 256K입니다. BytePlus ModelArk에 올라 있지 않아 미국 달러 정가는 없습니다."
+        "en": "A Doubao Seed 2.1 Pro model for deep thinking, tool calling, structured output, GUI tasks, and multimodal understanding of text, images, and video. Context window is 1M and maximum answer is 256K. BytePlus ModelArk does not list this model, so there is no USD price.",
+        "zh": "面向深度思考、工具调用、结构化输出、GUI 任务，以及文本、图像与视频多模态理解的豆包 Seed 2.1 Pro。上下文窗口 1M，最大回答 256K。BytePlus ModelArk 未上架该模型，因此没有美元刊例价。",
+        "ja": "深い思考、ツール呼び出し、構造化出力、GUI タスク、それにテキスト・画像・動画の理解向けの Doubao Seed 2.1 Pro です。コンテキストは 1M、回答の上限は 256K です。BytePlus ModelArk には載っていないため、米ドルの定価はありません。",
+        "ko": "깊은 사고, 도구 호출, 구조화 출력, GUI 작업, 그리고 텍스트·이미지·영상 이해용 Doubao Seed 2.1 Pro입니다. 컨텍스트는 1M, 답변 상한은 256K입니다. BytePlus ModelArk에 올라 있지 않아 미국 달러 정가는 없습니다."
       },
       "vendor": "bytedance",
-      "context_window": 1024000,
+      "context_window": 1000000,
       "max_tokens": 256000,
       "pricing": {
         "cny": {
@@ -3581,15 +3770,15 @@
     {
       "id": "doubao-seed-2-1-lite-260915",
       "display_name": "Doubao Seed 2.1 Lite (260915)",
-      "description": "A Doubao Seed 2.1 Lite model for deep thinking, tool calling, structured output, GUI tasks, and multimodal understanding of text, images, video, and audio. Context window is 1024K and maximum answer is 256K. Official audio-input list price is not stored in this preset: CNY 12 per million tokens (cache hit 2.4). BytePlus ModelArk does not list this model, so there is no USD price.",
+      "description": "A Doubao Seed 2.1 Lite model for deep thinking, tool calling, structured output, GUI tasks, and multimodal understanding of text, images, video, and audio. Context window is 1M and maximum answer is 256K. Official audio-input list price is not stored in this preset: CNY 12 per million tokens (cache hit 2.4). BytePlus ModelArk does not list this model, so there is no USD price.",
       "i18n": {
-        "en": "A Doubao Seed 2.1 Lite model for deep thinking, tool calling, structured output, GUI tasks, and multimodal understanding of text, images, video, and audio. Context window is 1024K and maximum answer is 256K. Official audio-input list price is not stored in this preset: CNY 12 per million tokens (cache hit 2.4). BytePlus ModelArk does not list this model, so there is no USD price.",
-        "zh": "面向深度思考、工具调用、结构化输出、GUI 任务，以及文本、图像、视频与音频多模态理解的豆包 Seed 2.1 Lite。上下文窗口 1024K，最大回答 256K。音频输入刊例价未写入价格档：人民币 12 元每百万 token（缓存命中 2.4）。BytePlus ModelArk 未上架该模型，因此没有美元刊例价。",
-        "ja": "深い思考、ツール呼び出し、構造化出力、GUI タスク、それにテキスト・画像・動画・音声の理解向けの Doubao Seed 2.1 Lite です。コンテキストは 1024K、回答の上限は 256K です。音声入力の定価は料金ティアに入れていません。人民元は100万トークンあたり 12 元（キャッシュヒット 2.4）です。BytePlus ModelArk には載っていないため、米ドルの定価はありません。",
-        "ko": "깊은 사고, 도구 호출, 구조화 출력, GUI 작업, 그리고 텍스트·이미지·영상·오디오 이해용 Doubao Seed 2.1 Lite입니다. 컨텍스트는 1024K, 답변 상한은 256K입니다. 오디오 입력 정가는 가격 구간에 넣지 않았습니다. 위안화는 100만 토큰당 12위안(캐시 적중 2.4)입니다. BytePlus ModelArk에 올라 있지 않아 미국 달러 정가는 없습니다."
+        "en": "A Doubao Seed 2.1 Lite model for deep thinking, tool calling, structured output, GUI tasks, and multimodal understanding of text, images, video, and audio. Context window is 1M and maximum answer is 256K. Official audio-input list price is not stored in this preset: CNY 12 per million tokens (cache hit 2.4). BytePlus ModelArk does not list this model, so there is no USD price.",
+        "zh": "面向深度思考、工具调用、结构化输出、GUI 任务，以及文本、图像、视频与音频多模态理解的豆包 Seed 2.1 Lite。上下文窗口 1M，最大回答 256K。音频输入刊例价未写入价格档：人民币 12 元每百万 token（缓存命中 2.4）。BytePlus ModelArk 未上架该模型，因此没有美元刊例价。",
+        "ja": "深い思考、ツール呼び出し、構造化出力、GUI タスク、それにテキスト・画像・動画・音声の理解向けの Doubao Seed 2.1 Lite です。コンテキストは 1M、回答の上限は 256K です。音声入力の定価は料金ティアに入れていません。人民元は100万トークンあたり 12 元（キャッシュヒット 2.4）です。BytePlus ModelArk には載っていないため、米ドルの定価はありません。",
+        "ko": "깊은 사고, 도구 호출, 구조화 출력, GUI 작업, 그리고 텍스트·이미지·영상·오디오 이해용 Doubao Seed 2.1 Lite입니다. 컨텍스트는 1M, 답변 상한은 256K입니다. 오디오 입력 정가는 가격 구간에 넣지 않았습니다. 위안화는 100만 토큰당 12위안(캐시 적중 2.4)입니다. BytePlus ModelArk에 올라 있지 않아 미국 달러 정가는 없습니다."
       },
       "vendor": "bytedance",
-      "context_window": 1024000,
+      "context_window": 1000000,
       "max_tokens": 256000,
       "pricing": {
         "cny": {
@@ -3815,7 +4004,8 @@
       },
       "modalities": {
         "input": [
-          "text"
+          "text",
+          "image"
         ],
         "output": [
           "text"
@@ -4026,6 +4216,7 @@
         ]
       },
       "released": "2026-07-31",
+      "retired": "2026-09-10",
       "vendor_label": "DeepSeek",
       "kind": "llm",
       "source_path": "packages/admin/lib/model-presets/deepseek.json"
@@ -4671,7 +4862,7 @@
           "image"
         ]
       },
-      "released": "2026-02-01",
+      "released": "2026-05-28",
       "vendor_label": "Google",
       "kind": "image",
       "source_path": "packages/admin/lib/model-presets/google-image.json"
@@ -4730,8 +4921,126 @@
           "image"
         ]
       },
-      "released": "2025-11-01",
+      "released": "2025-11-20",
       "retired": "2026-06-25",
+      "vendor_label": "Google",
+      "kind": "image",
+      "source_path": "packages/admin/lib/model-presets/google-image.json"
+    },
+    {
+      "id": "gemini-3.1-flash-lite-image",
+      "display_name": "Gemini 3.1 Flash Lite Image",
+      "description": "Google's lightweight image generation and editing model, also known as Nano Banana 2 Lite. Text and image input are billed at $0.25 per million tokens; image output at $30. CNY prices are a placeholder converted from the USD list price at ×7, not an official CNY list price.",
+      "i18n": {
+        "en": "Google's lightweight image generation and editing model, also known as Nano Banana 2 Lite. Text and image input are billed at $0.25 per million tokens; image output at $30. CNY prices are a placeholder converted from the USD list price at ×7, not an official CNY list price.",
+        "zh": "Google 轻量级图片生成与编辑模型，亦称 Nano Banana 2 Lite。文本与图片输入按每百万 token 0.25 美元计费，图片输出 30 美元。人民币价为美元刊例价 ×7 的换算占位价，非官方人民币刊例。",
+        "ja": "Google の軽量な画像生成・編集モデルです。Nano Banana 2 Lite とも呼ばれます。テキスト・画像入力は 100 万トークンあたり 0.25 ドル、画像出力は 30 ドルです。人民元価格は公式人民元刊例ではなく、米ドル刊例に ×7 を掛けた換算の仮置き価格です。",
+        "ko": "Google의 경량 이미지 생성·편집 모델로, Nano Banana 2 Lite로도 불립니다. 텍스트·이미지 입력은 토큰 100만 개당 0.25달러, 이미지 출력은 30달러입니다. 위안화 가격은 공식 위안화 게재가가 아닌, 달러 게재가 ×7 환산의 임시 가격입니다."
+      },
+      "vendor": "google",
+      "context_window": null,
+      "max_tokens": null,
+      "pricing": {
+        "usd": {
+          "image_billing_mode": "token",
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 0.25,
+              "output_price": 1.5,
+              "cache_read_price": null,
+              "cache_write_price": null,
+              "image_input_price": 0.25,
+              "image_input_cache_price": null,
+              "image_output_price": 30
+            }
+          ]
+        },
+        "cny": {
+          "image_billing_mode": "token",
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 1.75,
+              "output_price": 10.5,
+              "cache_read_price": null,
+              "cache_write_price": null,
+              "image_input_price": 1.75,
+              "image_input_cache_price": null,
+              "image_output_price": 210
+            }
+          ]
+        }
+      },
+      "modalities": {
+        "input": [
+          "text",
+          "image"
+        ],
+        "output": [
+          "image"
+        ]
+      },
+      "released": "2026-06-30",
+      "vendor_label": "Google",
+      "kind": "image",
+      "source_path": "packages/admin/lib/model-presets/google-image.json"
+    },
+    {
+      "id": "gemini-3-pro-image",
+      "display_name": "Gemini 3 Pro Image",
+      "description": "Google's advanced image generation model for grounded creation and detailed visual editing, also known as Nano Banana Pro. Text and image input are billed at $2 per million tokens; image output at $120. CNY prices are a placeholder converted from the USD list price at ×7, not an official CNY list price.",
+      "i18n": {
+        "en": "Google's advanced image generation model for grounded creation and detailed visual editing, also known as Nano Banana Pro. Text and image input are billed at $2 per million tokens; image output at $120. CNY prices are a placeholder converted from the USD list price at ×7, not an official CNY list price.",
+        "zh": "Google 高级图片生成模型，擅长有依据的创作与精细视觉编辑，亦称 Nano Banana Pro。文本与图片输入按每百万 token 2 美元计费，图片输出 120 美元。人民币价为美元刊例价 ×7 的换算占位价，非官方人民币刊例。",
+        "ja": "Google の上位画像生成モデルです。Nano Banana Pro とも呼ばれ、根拠のある制作と細かい視覚編集が得意です。テキスト・画像入力は 100 万トークンあたり 2 ドル、画像出力は 120 ドルです。人民元価格は公式人民元刊例ではなく、米ドル刊例に ×7 を掛けた換算の仮置き価格です。",
+        "ko": "Google의 상위 이미지 생성 모델로, 근거 있는 제작과 세밀한 시각 편집에 강하며 Nano Banana Pro로도 불립니다. 텍스트·이미지 입력은 토큰 100만 개당 2달러, 이미지 출력은 120달러입니다. 위안화 가격은 공식 위안화 게재가가 아닌, 달러 게재가 ×7 환산의 임시 가격입니다."
+      },
+      "vendor": "google",
+      "context_window": null,
+      "max_tokens": null,
+      "pricing": {
+        "usd": {
+          "image_billing_mode": "token",
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 2,
+              "output_price": 12,
+              "cache_read_price": null,
+              "cache_write_price": null,
+              "image_input_price": 2,
+              "image_input_cache_price": null,
+              "image_output_price": 120
+            }
+          ]
+        },
+        "cny": {
+          "image_billing_mode": "token",
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 14,
+              "output_price": 84,
+              "cache_read_price": null,
+              "cache_write_price": null,
+              "image_input_price": 14,
+              "image_input_cache_price": null,
+              "image_output_price": 840
+            }
+          ]
+        }
+      },
+      "modalities": {
+        "input": [
+          "text",
+          "image"
+        ],
+        "output": [
+          "image"
+        ]
+      },
+      "released": "2026-05-28",
       "vendor_label": "Google",
       "kind": "image",
       "source_path": "packages/admin/lib/model-presets/google-image.json"
@@ -5231,7 +5540,7 @@
           "text"
         ]
       },
-      "released": "2026-03-03",
+      "released": "2026-05-07",
       "retired": "2027-05-07",
       "vendor_label": "Google",
       "kind": "llm",
@@ -5301,6 +5610,7 @@
         ]
       },
       "released": "2025-06-17",
+      "retired": "2026-12-01",
       "vendor_label": "Google",
       "kind": "llm",
       "source_path": "packages/admin/lib/model-presets/google.json"
@@ -5355,6 +5665,7 @@
         ]
       },
       "released": "2025-06-17",
+      "retired": "2026-12-01",
       "vendor_label": "Google",
       "kind": "llm",
       "source_path": "packages/admin/lib/model-presets/google.json"
@@ -5671,8 +5982,8 @@
         "ko": "실무, 코딩, 현장의 디지털 작업용 MiniMax입니다. 여러 디지털 업무에서의 학습으로, 코딩의 바탕을 처음부터 끝까지 이어지는 실무로 넓혔습니다."
       },
       "vendor": "minimax",
-      "context_window": 196000,
-      "max_tokens": 128000,
+      "context_window": 200000,
+      "max_tokens": 200000,
       "pricing": {
         "usd": {
           "tiers": [
@@ -5722,8 +6033,8 @@
         "ko": "스스로 진행하는 실무와 여러 에이전트의 협업용 MiniMax입니다. 현장 업무에서의 자율성, 여러 에이전트 연계, 지속적인 개선을 중시합니다."
       },
       "vendor": "minimax",
-      "context_window": 196000,
-      "max_tokens": 128000,
+      "context_window": 200000,
+      "max_tokens": 200000,
       "pricing": {
         "usd": {
           "tiers": [
@@ -5775,7 +6086,7 @@
       "vendor": "minimax",
       "retired": "2026-11-18",
       "context_window": 200000,
-      "max_tokens": 128000,
+      "max_tokens": 200000,
       "pricing": {
         "usd": {
           "tiers": [
@@ -5824,7 +6135,7 @@
       },
       "vendor": "minimax",
       "context_window": 1000000,
-      "max_tokens": 64000,
+      "max_tokens": 512000,
       "pricing": {
         "usd": {
           "tiers": [
@@ -6488,6 +6799,128 @@
       "source_path": "packages/admin/lib/model-presets/openai-audio-asr.json"
     },
     {
+      "id": "gpt-realtime-whisper",
+      "display_name": "GPT Realtime Whisper",
+      "description": "OpenAI's streaming speech-to-text model for low-latency realtime transcription sessions. Official rate $0.017 per minute ($0.00028 per second); gateway meters by duration (per second). CNY price is a placeholder converted from the USD list price at ×7, not an official CNY list price.",
+      "i18n": {
+        "en": "OpenAI's streaming speech-to-text model for low-latency realtime transcription sessions. Official rate $0.017 per minute ($0.00028 per second); gateway meters by duration (per second). CNY price is a placeholder converted from the USD list price at ×7, not an official CNY list price.",
+        "zh": "OpenAI 流式语音转写模型，用于低延迟实时转写会话。官方价 $0.017/分钟（$0.00028/秒），网关按时长（每秒）计费。人民币价为美元刊例价 ×7 的换算占位价，非官方人民币刊例。",
+        "ja": "OpenAI のストリーム音声文字起こしモデルで、低遅延のリアルタイム文字起こしセッション向けです。公式価格は $0.017/分（$0.00028/秒）で、ゲートウェイは時間（毎秒）で課金します。人民元価格はドル建ての定価を ×7 した仮の価格で、公式の人民元定価ではありません。",
+        "ko": "OpenAI의 스트리밍 음성 받아쓰기 모델로, 저지연 실시간 받아쓰기 세션용입니다. 공식 가격은 분당 $0.017(초당 $0.00028)이며, 게이트웨이는 시간(초)으로 과금합니다. 위안화 가격은 달러 정가에 ×7을 한 임시 가격이며, 공식 위안화 정가가 아닙니다."
+      },
+      "vendor": "openai",
+      "context_window": 16000,
+      "max_tokens": 2000,
+      "pricing": {
+        "usd": {
+          "audio_billing_mode": "per_second",
+          "audio": {
+            "price_per_second": 0.00028,
+            "minimum_seconds": 1
+          }
+        },
+        "cny": {
+          "audio_billing_mode": "per_second",
+          "audio": {
+            "price_per_second": 0.00196,
+            "minimum_seconds": 1
+          }
+        }
+      },
+      "modalities": {
+        "input": [
+          "audio",
+          "text"
+        ],
+        "output": [
+          "text"
+        ]
+      },
+      "vendor_label": "OpenAI",
+      "kind": "asr",
+      "source_path": "packages/admin/lib/model-presets/openai-audio-asr.json"
+    },
+    {
+      "id": "gpt-live-transcribe",
+      "display_name": "GPT Live Transcribe",
+      "description": "OpenAI's low-latency streaming speech-to-text model, a recommended replacement for whisper-1 and gpt-4o-transcribe. Official rate $0.017 per minute ($0.000283 per second); gateway meters by duration (per second). CNY price is a placeholder converted from the USD list price at ×7, not an official CNY list price.",
+      "i18n": {
+        "en": "OpenAI's low-latency streaming speech-to-text model, a recommended replacement for whisper-1 and gpt-4o-transcribe. Official rate $0.017 per minute ($0.000283 per second); gateway meters by duration (per second). CNY price is a placeholder converted from the USD list price at ×7, not an official CNY list price.",
+        "zh": "OpenAI 低延迟流式语音转写模型，为 whisper-1 与 gpt-4o-transcribe 的官方推荐替代。官方价 $0.017/分钟（$0.000283/秒），网关按时长（每秒）计费。人民币价为美元刊例价 ×7 的换算占位价，非官方人民币刊例。",
+        "ja": "OpenAI の低遅延ストリーム音声文字起こしモデルで、whisper-1 と gpt-4o-transcribe の公式な移行先です。公式価格は $0.017/分（$0.000283/秒）で、ゲートウェイは時間（毎秒）で課金します。人民元価格はドル建ての定価を ×7 した仮の価格で、公式の人民元定価ではありません。",
+        "ko": "OpenAI의 저지연 스트리밍 음성 받아쓰기 모델로, whisper-1과 gpt-4o-transcribe의 공식 대체 모델입니다. 공식 가격은 분당 $0.017(초당 $0.000283)이며, 게이트웨이는 시간(초)으로 과금합니다. 위안화 가격은 달러 정가에 ×7을 한 임시 가격이며, 공식 위안화 정가가 아닙니다."
+      },
+      "vendor": "openai",
+      "pricing": {
+        "usd": {
+          "audio_billing_mode": "per_second",
+          "audio": {
+            "price_per_second": 0.000283,
+            "minimum_seconds": 1
+          }
+        },
+        "cny": {
+          "audio_billing_mode": "per_second",
+          "audio": {
+            "price_per_second": 0.001981,
+            "minimum_seconds": 1
+          }
+        }
+      },
+      "modalities": {
+        "input": [
+          "audio",
+          "text"
+        ],
+        "output": [
+          "text"
+        ]
+      },
+      "vendor_label": "OpenAI",
+      "kind": "asr",
+      "source_path": "packages/admin/lib/model-presets/openai-audio-asr.json"
+    },
+    {
+      "id": "gpt-transcribe",
+      "display_name": "GPT Transcribe",
+      "description": "OpenAI's high-accuracy speech-to-text model for file and Realtime transcription, a recommended replacement for whisper-1 and gpt-4o-transcribe. Official rate $0.0045 per minute ($0.000075 per second); gateway meters by duration (per second). CNY price is a placeholder converted from the USD list price at ×7, not an official CNY list price.",
+      "i18n": {
+        "en": "OpenAI's high-accuracy speech-to-text model for file and Realtime transcription, a recommended replacement for whisper-1 and gpt-4o-transcribe. Official rate $0.0045 per minute ($0.000075 per second); gateway meters by duration (per second). CNY price is a placeholder converted from the USD list price at ×7, not an official CNY list price.",
+        "zh": "OpenAI 高精度语音转写模型，支持文件与实时转写，为 whisper-1 与 gpt-4o-transcribe 的官方推荐替代。官方价 $0.0045/分钟（$0.000075/秒），网关按时长（每秒）计费。人民币价为美元刊例价 ×7 的换算占位价，非官方人民币刊例。",
+        "ja": "OpenAI の高精度音声文字起こしモデルで、ファイルとリアルタイムの文字起こしに対応し、whisper-1 と gpt-4o-transcribe の公式な移行先です。公式価格は $0.0045/分（$0.000075/秒）で、ゲートウェイは時間（毎秒）で課金します。人民元価格はドル建ての定価を ×7 した仮の価格で、公式の人民元定価ではありません。",
+        "ko": "OpenAI의 고정밀 음성 받아쓰기 모델로, 파일과 실시간 받아쓰기를 지원하며 whisper-1과 gpt-4o-transcribe의 공식 대체 모델입니다. 공식 가격은 분당 $0.0045(초당 $0.000075)이며, 게이트웨이는 시간(초)으로 과금합니다. 위안화 가격은 달러 정가에 ×7을 한 임시 가격이며, 공식 위안화 정가가 아닙니다."
+      },
+      "vendor": "openai",
+      "pricing": {
+        "usd": {
+          "audio_billing_mode": "per_second",
+          "audio": {
+            "price_per_second": 0.000075,
+            "minimum_seconds": 1
+          }
+        },
+        "cny": {
+          "audio_billing_mode": "per_second",
+          "audio": {
+            "price_per_second": 0.000525,
+            "minimum_seconds": 1
+          }
+        }
+      },
+      "modalities": {
+        "input": [
+          "audio",
+          "text"
+        ],
+        "output": [
+          "text"
+        ]
+      },
+      "vendor_label": "OpenAI",
+      "kind": "asr",
+      "source_path": "packages/admin/lib/model-presets/openai-audio-asr.json"
+    },
+    {
       "id": "text-embedding-3-small",
       "display_name": "Text Embedding 3 Small",
       "description": "OpenAI's small, efficient text embedding model (1536 dimensions by default; supports the dimensions parameter). Billed by input tokens via POST /v1/embeddings.",
@@ -6498,7 +6931,7 @@
         "ko": "OpenAI의 작고 효율적인 텍스트 임베딩입니다(기본 1536차원, dimensions를 지정할 수 있습니다). POST /v1/embeddings로 호출하며, 입력 토큰만 과금됩니다."
       },
       "vendor": "openai",
-      "context_window": 8192,
+      "context_window": 8191,
       "max_tokens": null,
       "pricing": {
         "usd": {
@@ -6547,7 +6980,7 @@
         "ko": "OpenAI에서 성능이 가장 높은 텍스트 임베딩입니다(기본 3072차원, dimensions를 지정할 수 있습니다). POST /v1/embeddings로 호출하며, 입력 토큰만 과금됩니다."
       },
       "vendor": "openai",
-      "context_window": 8192,
+      "context_window": 8191,
       "max_tokens": null,
       "pricing": {
         "usd": {
@@ -6596,7 +7029,7 @@
         "ko": "OpenAI의 이전 세대 텍스트 임베딩입니다(1536차원). POST /v1/embeddings로 호출하며, 입력 토큰만 과금됩니다."
       },
       "vendor": "openai",
-      "context_window": 8192,
+      "context_window": 8191,
       "max_tokens": null,
       "pricing": {
         "usd": {
@@ -6633,6 +7066,124 @@
       "vendor_label": "OpenAI",
       "kind": "embedding",
       "source_path": "packages/admin/lib/model-presets/openai-embedding.json"
+    },
+    {
+      "id": "gpt-image-2.6-flare",
+      "display_name": "GPT Image 2.6 Flare",
+      "description": "OpenAI's fastest model for high-quality, everyday image generation and iteration. It accepts text and image inputs and produces image outputs. Complexity supports low, medium, and high (default high). Quality supports low, medium, high, xhigh, max, and auto. Images API generations can return SVG and animated GIF, and Images API edits accept markup-guided edits. Use the Images API generations and edits endpoints. This model id is not supported on Responses or Chat Completions.",
+      "i18n": {
+        "en": "OpenAI's fastest model for high-quality, everyday image generation and iteration. It accepts text and image inputs and produces image outputs. Complexity supports low, medium, and high (default high). Quality supports low, medium, high, xhigh, max, and auto. Images API generations can return SVG and animated GIF, and Images API edits accept markup-guided edits. Use the Images API generations and edits endpoints. This model id is not supported on Responses or Chat Completions.",
+        "zh": "OpenAI 面向日常高质量出图与迭代的最快模型。接受文本与图片输入，输出图片。complexity 支持 low、medium、high，默认 high。quality 支持 low、medium、high、xhigh、max 和 auto。Images API 的 generations 可输出 SVG 与动态 GIF，edits 支持按标记引导的编辑。请通过 Images API 的 generations 与 edits 调用。该模型 ID 不支持 Responses 或 Chat Completions。",
+        "ja": "日常の高品質な画像生成と反復のための、OpenAI でいちばん速いモデルです。テキストと画像を受け取り、画像を出します。complexity は low、medium、high で、既定は high です。quality は low、medium、high、xhigh、max、auto です。Images API の generations では SVG とアニメーション GIF を出力でき、edits ではマークアップに沿った編集ができます。Images API の generations と edits から呼び出します。このモデル ID は Responses と Chat Completions では使えません。",
+        "ko": "일상적인 고품질 이미지 생성과 반복을 위한, OpenAI에서 가장 빠른 모델입니다. 텍스트와 이미지를 받고 이미지를 냅니다. complexity는 low, medium, high이며 기본값은 high입니다. quality는 low, medium, high, xhigh, max, auto입니다. Images API generations는 SVG와 애니메이션 GIF를 출력할 수 있고, edits는 마크업 안내 편집을 받습니다. Images API의 generations와 edits로 호출합니다. 이 모델 ID는 Responses와 Chat Completions에서 지원되지 않습니다."
+      },
+      "vendor": "openai",
+      "context_window": null,
+      "max_tokens": null,
+      "pricing": {
+        "usd": {
+          "image_billing_mode": "token",
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 5,
+              "output_price": 0,
+              "cache_read_price": 1.25,
+              "cache_write_price": null,
+              "image_input_price": 8,
+              "image_input_cache_price": 2,
+              "image_output_price": 30
+            }
+          ]
+        },
+        "cny": {
+          "image_billing_mode": "token",
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 35,
+              "output_price": 0,
+              "cache_read_price": 8.75,
+              "cache_write_price": null,
+              "image_input_price": 56,
+              "image_input_cache_price": 14,
+              "image_output_price": 210
+            }
+          ]
+        }
+      },
+      "modalities": {
+        "input": [
+          "text",
+          "image"
+        ],
+        "output": [
+          "image"
+        ]
+      },
+      "released": "2026-11-04",
+      "vendor_label": "OpenAI",
+      "kind": "image",
+      "source_path": "packages/admin/lib/model-presets/openai-image.json"
+    },
+    {
+      "id": "gpt-image-2.6-sunburst",
+      "display_name": "GPT Image 2.6 Sunburst",
+      "description": "OpenAI's GPT Image 2.6 Sunburst generates and edits images from text and image inputs. Use it for workflows where editing precision and detailed visual work matter most. Complexity supports low, medium, and high (default high). Quality supports low, medium, high, xhigh, max, and auto. Images API generations can return SVG and animated GIF, and Images API edits accept markup-guided edits. Use the Images API generations and edits endpoints. This model id is not supported on Responses or Chat Completions.",
+      "i18n": {
+        "en": "OpenAI's GPT Image 2.6 Sunburst generates and edits images from text and image inputs. Use it for workflows where editing precision and detailed visual work matter most. Complexity supports low, medium, and high (default high). Quality supports low, medium, high, xhigh, max, and auto. Images API generations can return SVG and animated GIF, and Images API edits accept markup-guided edits. Use the Images API generations and edits endpoints. This model id is not supported on Responses or Chat Completions.",
+        "zh": "OpenAI 面向精细编辑与细节视觉工作的图片生成与编辑模型。接受文本与图片输入，输出图片，适合对编辑精度要求更高的工作流。complexity 支持 low、medium、high，默认 high。quality 支持 low、medium、high、xhigh、max 和 auto。Images API 的 generations 可输出 SVG 与动态 GIF，edits 支持按标记引导的编辑。请通过 Images API 的 generations 与 edits 调用。该模型 ID 不支持 Responses 或 Chat Completions。",
+        "ja": "編集の精度と細部の視覚作業を重視するときの、OpenAI の画像生成・編集モデルです。テキストと画像を受け取り、画像を出します。complexity は low、medium、high で、既定は high です。quality は low、medium、high、xhigh、max、auto です。Images API の generations では SVG とアニメーション GIF を出力でき、edits ではマークアップに沿った編集ができます。Images API の generations と edits から呼び出します。このモデル ID は Responses と Chat Completions では使えません。",
+        "ko": "편집 정밀도와 세밀한 시각 작업이 중요할 때의 OpenAI 이미지 생성·편집 모델입니다. 텍스트와 이미지를 받고 이미지를 냅니다. complexity는 low, medium, high이며 기본값은 high입니다. quality는 low, medium, high, xhigh, max, auto입니다. Images API generations는 SVG와 애니메이션 GIF를 출력할 수 있고, edits는 마크업 안내 편집을 받습니다. Images API의 generations와 edits로 호출합니다. 이 모델 ID는 Responses와 Chat Completions에서 지원되지 않습니다."
+      },
+      "vendor": "openai",
+      "context_window": null,
+      "max_tokens": null,
+      "pricing": {
+        "usd": {
+          "image_billing_mode": "token",
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 5,
+              "output_price": 0,
+              "cache_read_price": 1.25,
+              "cache_write_price": null,
+              "image_input_price": 8,
+              "image_input_cache_price": 2,
+              "image_output_price": 30
+            }
+          ]
+        },
+        "cny": {
+          "image_billing_mode": "token",
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 35,
+              "output_price": 0,
+              "cache_read_price": 8.75,
+              "cache_write_price": null,
+              "image_input_price": 56,
+              "image_input_cache_price": 14,
+              "image_output_price": 210
+            }
+          ]
+        }
+      },
+      "modalities": {
+        "input": [
+          "text",
+          "image"
+        ],
+        "output": [
+          "image"
+        ]
+      },
+      "released": "2026-11-04",
+      "vendor_label": "OpenAI",
+      "kind": "image",
+      "source_path": "packages/admin/lib/model-presets/openai-image.json"
     },
     {
       "id": "gpt-image-2.5-flare",
@@ -6807,6 +7358,125 @@
         ]
       },
       "released": "2026-04-01",
+      "vendor_label": "OpenAI",
+      "kind": "image",
+      "source_path": "packages/admin/lib/model-presets/openai-image.json"
+    },
+    {
+      "id": "gpt-image-1.5",
+      "display_name": "GPT Image 1.5",
+      "description": "OpenAI's image generation model billed per token. Text tokens: $5 input / $1.25 cached / $10 output; image tokens: $8 input / $2 cached / $32 output. CNY prices are a placeholder converted from the USD list price at ×7, not an official CNY list price.",
+      "i18n": {
+        "en": "OpenAI's image generation model billed per token. Text tokens: $5 input / $1.25 cached / $10 output; image tokens: $8 input / $2 cached / $32 output. CNY prices are a placeholder converted from the USD list price at ×7, not an official CNY list price.",
+        "zh": "OpenAI 图片生成模型，按 token 计费。文本 token：输入 $5 / 缓存 $1.25 / 输出 $10；图像 token：输入 $8 / 缓存 $2 / 输出 $32。人民币价为美元刊例价 ×7 的换算占位价，非官方人民币刊例。",
+        "ja": "OpenAI の画像生成モデルで、トークン単位で課金されます。テキスト token は入力 $5 / キャッシュ $1.25 / 出力 $10、画像 token は入力 $8 / キャッシュ $2 / 出力 $32 です。人民元価格はドル建ての定価を ×7 した仮の価格で、公式の人民元定価ではありません。",
+        "ko": "OpenAI의 이미지 생성 모델로, 토큰 단위로 과금됩니다. 텍스트 토큰은 입력 $5 / 캐시 $1.25 / 출력 $10, 이미지 토큰은 입력 $8 / 캐시 $2 / 출력 $32입니다. 위안화 가격은 달러 정가에 ×7을 한 임시 가격이며, 공식 위안화 정가가 아닙니다."
+      },
+      "vendor": "openai",
+      "context_window": null,
+      "max_tokens": null,
+      "pricing": {
+        "usd": {
+          "image_billing_mode": "token",
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 5,
+              "output_price": 10,
+              "cache_read_price": 1.25,
+              "cache_write_price": null,
+              "image_input_price": 8,
+              "image_input_cache_price": 2,
+              "image_output_price": 32
+            }
+          ]
+        },
+        "cny": {
+          "image_billing_mode": "token",
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 35,
+              "output_price": 70,
+              "cache_read_price": 8.75,
+              "cache_write_price": null,
+              "image_input_price": 56,
+              "image_input_cache_price": 14,
+              "image_output_price": 224
+            }
+          ]
+        }
+      },
+      "modalities": {
+        "input": [
+          "text",
+          "image"
+        ],
+        "output": [
+          "image"
+        ]
+      },
+      "released": "2025-12-16",
+      "retired": "2026-12-01",
+      "vendor_label": "OpenAI",
+      "kind": "image",
+      "source_path": "packages/admin/lib/model-presets/openai-image.json"
+    },
+    {
+      "id": "gpt-image-1-mini",
+      "display_name": "GPT Image 1 Mini",
+      "description": "OpenAI's cost-efficient image generation model billed per token. Text tokens: $2 input / $0.20 cached (text output is not billed); image tokens: $2.50 input / $0.25 cached / $8 output. CNY prices are a placeholder converted from the USD list price at ×7, not an official CNY list price.",
+      "i18n": {
+        "en": "OpenAI's cost-efficient image generation model billed per token. Text tokens: $2 input / $0.20 cached (text output is not billed); image tokens: $2.50 input / $0.25 cached / $8 output. CNY prices are a placeholder converted from the USD list price at ×7, not an official CNY list price.",
+        "zh": "OpenAI 高性价比图片生成模型，按 token 计费。文本 token：输入 $2 / 缓存 $0.20（文本输出不计费）；图像 token：输入 $2.50 / 缓存 $0.25 / 输出 $8。人民币价为美元刊例价 ×7 的换算占位价，非官方人民币刊例。",
+        "ja": "OpenAI の低コスト画像生成モデルで、トークン単位で課金されます。テキスト token は入力 $2 / キャッシュ $0.20（テキスト出力は課金なし）、画像 token は入力 $2.50 / キャッシュ $0.25 / 出力 $8 です。人民元価格はドル建ての定価を ×7 した仮の価格で、公式の人民元定価ではありません。",
+        "ko": "OpenAI의 가성비 이미지 생성 모델로, 토큰 단위로 과금됩니다. 텍스트 토큰은 입력 $2 / 캐시 $0.20(텍스트 출력은 과금 없음), 이미지 토큰은 입력 $2.50 / 캐시 $0.25 / 출력 $8입니다. 위안화 가격은 달러 정가에 ×7을 한 임시 가격이며, 공식 위안화 정가가 아닙니다."
+      },
+      "vendor": "openai",
+      "context_window": null,
+      "max_tokens": null,
+      "pricing": {
+        "usd": {
+          "image_billing_mode": "token",
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 2,
+              "output_price": 0,
+              "cache_read_price": 0.2,
+              "cache_write_price": null,
+              "image_input_price": 2.5,
+              "image_input_cache_price": 0.25,
+              "image_output_price": 8
+            }
+          ]
+        },
+        "cny": {
+          "image_billing_mode": "token",
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 14,
+              "output_price": 0,
+              "cache_read_price": 1.4,
+              "cache_write_price": null,
+              "image_input_price": 17.5,
+              "image_input_cache_price": 1.75,
+              "image_output_price": 56
+            }
+          ]
+        }
+      },
+      "modalities": {
+        "input": [
+          "text",
+          "image"
+        ],
+        "output": [
+          "image"
+        ]
+      },
+      "retired": "2026-12-01",
       "vendor_label": "OpenAI",
       "kind": "image",
       "source_path": "packages/admin/lib/model-presets/openai-image.json"
@@ -7681,6 +8351,187 @@
       "source_path": "packages/admin/lib/model-presets/openai.json"
     },
     {
+      "id": "gpt-5.5-pro",
+      "display_name": "GPT-5.5 Pro",
+      "description": "A higher-compute version of GPT-5.5 that thinks harder for smarter, more precise answers. reasoning.effort supports medium, high (default), and xhigh. Available via the Responses API; some requests may take several minutes. CNY prices are a placeholder converted from the USD list price at ×7, not an official CNY list price.",
+      "i18n": {
+        "en": "A higher-compute version of GPT-5.5 that thinks harder for smarter, more precise answers. reasoning.effort supports medium, high (default), and xhigh. Available via the Responses API; some requests may take several minutes. CNY prices are a placeholder converted from the USD list price at ×7, not an official CNY list price.",
+        "zh": "GPT-5.5 的高算力版本，以更多推理换取更聪明、更精确的回答。reasoning.effort 支持 medium、high（默认）和 xhigh。通过 Responses API 调用，部分请求可能耗时数分钟。人民币价为美元刊例价 ×7 的换算占位价，非官方人民币刊例。",
+        "ja": "GPT-5.5 の高コンピューティング版で、より深く考えて正確な答えを出します。reasoning.effort は medium、high（初期値）、xhigh です。Responses API で利用でき、数分かかる場合があります。人民元価格はドル建ての定価を ×7 した仮の価格で、公式の人民元定価ではありません。",
+        "ko": "GPT-5.5의 고컴퓨팅 버전으로, 더 많이 생각해 더 정확한 답을 냅니다. reasoning.effort는 medium, high(기본값), xhigh입니다. Responses API로 호출하며 일부 요청은 몇 분 걸릴 수 있습니다. 위안화 가격은 달러 정가에 ×7을 한 임시 가격이며, 공식 위안화 정가가 아닙니다."
+      },
+      "vendor": "openai",
+      "context_window": 1050000,
+      "max_tokens": 128000,
+      "pricing": {
+        "usd": {
+          "tiers": [
+            {
+              "upto": 272000,
+              "input_price": 30,
+              "output_price": 180,
+              "cache_read_price": null,
+              "cache_write_price": null
+            },
+            {
+              "upto": null,
+              "input_price": 60,
+              "output_price": 270,
+              "cache_read_price": null,
+              "cache_write_price": null
+            }
+          ]
+        },
+        "cny": {
+          "tiers": [
+            {
+              "upto": 272000,
+              "input_price": 210,
+              "output_price": 1260,
+              "cache_read_price": null,
+              "cache_write_price": null
+            },
+            {
+              "upto": null,
+              "input_price": 420,
+              "output_price": 1890,
+              "cache_read_price": null,
+              "cache_write_price": null
+            }
+          ]
+        }
+      },
+      "modalities": {
+        "input": [
+          "text",
+          "image"
+        ],
+        "output": [
+          "text"
+        ]
+      },
+      "released": "2026-04-23",
+      "vendor_label": "OpenAI",
+      "kind": "llm",
+      "source_path": "packages/admin/lib/model-presets/openai.json"
+    },
+    {
+      "id": "gpt-5.4-pro",
+      "display_name": "GPT-5.4 Pro",
+      "description": "The higher-compute Pro tier of GPT-5.4, with a 1.05M context window and 128K max output. Cached input is not offered. Available via the Responses API. CNY prices are a placeholder converted from the USD list price at ×7, not an official CNY list price.",
+      "i18n": {
+        "en": "The higher-compute Pro tier of GPT-5.4, with a 1.05M context window and 128K max output. Cached input is not offered. Available via the Responses API. CNY prices are a placeholder converted from the USD list price at ×7, not an official CNY list price.",
+        "zh": "GPT-5.4 的高算力 Pro 档位，上下文 1.05M、最大输出 128K，不提供缓存输入折扣。通过 Responses API 调用。人民币价为美元刊例价 ×7 的换算占位价，非官方人民币刊例。",
+        "ja": "GPT-5.4 の高コンピューティング版 Pro です。コンテキスト 1.05M、最大出力 128K、キャッシュ入力割引はありません。Responses API で利用できます。人民元価格はドル建ての定価を ×7 した仮の価格で、公式の人民元定価ではありません。",
+        "ko": "GPT-5.4의 고컴퓨팅 Pro 등급입니다. 컨텍스트 1.05M, 최대 출력 128K, 캐시 입력 할인은 없습니다. Responses API로 호출합니다. 위안화 가격은 달러 정가에 ×7을 한 임시 가격이며, 공식 위안화 정가가 아닙니다."
+      },
+      "vendor": "openai",
+      "context_window": 1050000,
+      "max_tokens": 128000,
+      "pricing": {
+        "usd": {
+          "tiers": [
+            {
+              "upto": 272000,
+              "input_price": 30,
+              "output_price": 180,
+              "cache_read_price": null,
+              "cache_write_price": null
+            },
+            {
+              "upto": null,
+              "input_price": 60,
+              "output_price": 270,
+              "cache_read_price": null,
+              "cache_write_price": null
+            }
+          ]
+        },
+        "cny": {
+          "tiers": [
+            {
+              "upto": 272000,
+              "input_price": 210,
+              "output_price": 1260,
+              "cache_read_price": null,
+              "cache_write_price": null
+            },
+            {
+              "upto": null,
+              "input_price": 420,
+              "output_price": 1890,
+              "cache_read_price": null,
+              "cache_write_price": null
+            }
+          ]
+        }
+      },
+      "modalities": {
+        "input": [
+          "text",
+          "image"
+        ],
+        "output": [
+          "text"
+        ]
+      },
+      "released": "2026-03-05",
+      "vendor_label": "OpenAI",
+      "kind": "llm",
+      "source_path": "packages/admin/lib/model-presets/openai.json"
+    },
+    {
+      "id": "gpt-5.2-pro",
+      "display_name": "GPT-5.2 Pro",
+      "description": "The Pro tier of GPT-5.2, priced at $21 per million input tokens and $168 per million output tokens, with a 400K context window and 128K max output. Cached input is not offered. CNY prices are a placeholder converted from the USD list price at ×7, not an official CNY list price.",
+      "i18n": {
+        "en": "The Pro tier of GPT-5.2, priced at $21 per million input tokens and $168 per million output tokens, with a 400K context window and 128K max output. Cached input is not offered. CNY prices are a placeholder converted from the USD list price at ×7, not an official CNY list price.",
+        "zh": "GPT-5.2 的 Pro 档位，输入 $21/百万 token、输出 $168/百万 token，上下文 400K、最大输出 128K，不提供缓存输入折扣。人民币价为美元刊例价 ×7 的换算占位价，非官方人民币刊例。",
+        "ja": "GPT-5.2 の Pro 版です。入力 100 万トークンあたり $21、出力 $168、コンテキスト 400K・最大出力 128K で、キャッシュ入力割引はありません。人民元価格はドル建ての定価を ×7 した仮の価格で、公式の人民元定価ではありません。",
+        "ko": "GPT-5.2의 Pro 등급입니다. 입력 토큰 100만 개당 $21, 출력 $168이며 컨텍스트 400K, 최대 출력 128K, 캐시 입력 할인은 없습니다. 위안화 가격은 달러 정가에 ×7을 한 임시 가격이며, 공식 위안화 정가가 아닙니다."
+      },
+      "vendor": "openai",
+      "context_window": 400000,
+      "max_tokens": 128000,
+      "pricing": {
+        "usd": {
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 21,
+              "output_price": 168,
+              "cache_read_price": null,
+              "cache_write_price": null
+            }
+          ]
+        },
+        "cny": {
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 147,
+              "output_price": 1176,
+              "cache_read_price": null,
+              "cache_write_price": null
+            }
+          ]
+        }
+      },
+      "modalities": {
+        "input": [
+          "text",
+          "image"
+        ],
+        "output": [
+          "text"
+        ]
+      },
+      "released": "2025-12-11",
+      "vendor_label": "OpenAI",
+      "kind": "llm",
+      "source_path": "packages/admin/lib/model-presets/openai.json"
+    },
+    {
       "id": "step-3.7-flash",
       "display_name": "Step 3.7 Flash",
       "description": "An efficient multimodal StepFun model for native image and video understanding. Its multimodal mixture-of-experts design combines a large language backbone with native image and video understanding.",
@@ -7733,6 +8584,208 @@
       "source_path": "packages/admin/lib/model-presets/stepfun.json"
     },
     {
+      "id": "step-5-preview",
+      "display_name": "Step 5 Preview",
+      "description": "StepFun's flagship multimodal reasoning model for agentic work, software engineering, and finance, with a 1M context and 64K max output.",
+      "i18n": {
+        "en": "StepFun's flagship multimodal reasoning model for agentic work, software engineering, and finance, with a 1M context and 64K max output.",
+        "zh": "阶跃星辰旗舰多模态推理模型，面向智能体工作、软件工程与金融场景，1M 上下文、最大输出 64K。",
+        "ja": "StepFun のフラッグシップマルチモーダル推論モデル。エージェント業務、ソフト開発、金融向けで、1M コンテキスト・最大出力 64K です。",
+        "ko": "StepFun의 플래그십 멀티모달 추론 모델. 에이전트 업무, 소프트웨어 개발, 금융 대상이며 1M 컨텍스트, 최대 출력 64K입니다."
+      },
+      "vendor": "stepfun",
+      "context_window": 1000000,
+      "max_tokens": 64000,
+      "pricing": {
+        "usd": {
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 1,
+              "output_price": 2.7,
+              "cache_read_price": 0.1,
+              "cache_write_price": null
+            }
+          ]
+        },
+        "cny": {
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 7,
+              "output_price": 20,
+              "cache_read_price": 0.7,
+              "cache_write_price": null
+            }
+          ]
+        }
+      },
+      "modalities": {
+        "input": [
+          "text",
+          "image",
+          "video"
+        ],
+        "output": [
+          "text"
+        ]
+      },
+      "vendor_label": "StepFun",
+      "kind": "llm",
+      "source_path": "packages/admin/lib/model-presets/stepfun.json"
+    },
+    {
+      "id": "step-3.5-flash",
+      "display_name": "Step 3.5 Flash",
+      "description": "A cost-efficient text-only reasoning model from StepFun.",
+      "i18n": {
+        "en": "A cost-efficient text-only reasoning model from StepFun.",
+        "zh": "阶跃星辰高性价比纯文本推理模型。",
+        "ja": "StepFun の高コスパなテキスト専用推論モデル。",
+        "ko": "StepFun의 가성비 좋은 텍스트 전용 추론 모델."
+      },
+      "vendor": "stepfun",
+      "context_window": null,
+      "max_tokens": null,
+      "pricing": {
+        "usd": {
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 0.1,
+              "output_price": 0.3,
+              "cache_read_price": 0.02,
+              "cache_write_price": null
+            }
+          ]
+        },
+        "cny": {
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 0.7,
+              "output_price": 2.1,
+              "cache_read_price": 0.14,
+              "cache_write_price": null
+            }
+          ]
+        }
+      },
+      "modalities": {
+        "input": [
+          "text"
+        ],
+        "output": [
+          "text"
+        ]
+      },
+      "vendor_label": "StepFun",
+      "kind": "llm",
+      "source_path": "packages/admin/lib/model-presets/stepfun.json"
+    },
+    {
+      "id": "step-1o-turbo-vision",
+      "display_name": "Step 1o Turbo Vision",
+      "description": "A fast StepFun vision model for image and video understanding, with text, image, and video input and text-only output, on a 32K context window.",
+      "i18n": {
+        "en": "A fast StepFun vision model for image and video understanding, with text, image, and video input and text-only output, on a 32K context window.",
+        "zh": "阶跃星辰高速视觉理解模型，支持文本、图像和视频输入、仅文本输出，上下文 32K，擅长图像与视频理解。",
+        "ja": "StepFun の高速ビジョンモデル。テキスト・画像・動画出力入力に対応し、出力はテキストのみ、コンテキストは 32K です。",
+        "ko": "StepFun의 고속 비전 모델. 텍스트·이미지·영상 입력에 대응하고 출력은 텍스트만, 컨텍스트는 32K입니다."
+      },
+      "vendor": "stepfun",
+      "context_window": 32000,
+      "max_tokens": null,
+      "pricing": {
+        "usd": {
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 0.36,
+              "output_price": 1.15,
+              "cache_read_price": 0.07,
+              "cache_write_price": null
+            }
+          ]
+        },
+        "cny": {
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 2.5,
+              "output_price": 8,
+              "cache_read_price": 0.5,
+              "cache_write_price": null
+            }
+          ]
+        }
+      },
+      "modalities": {
+        "input": [
+          "text",
+          "image",
+          "video"
+        ],
+        "output": [
+          "text"
+        ]
+      },
+      "vendor_label": "StepFun",
+      "kind": "llm",
+      "source_path": "packages/admin/lib/model-presets/stepfun.json"
+    },
+    {
+      "id": "hy4",
+      "display_name": "Hy4",
+      "description": "Tencent's flagship Hy4 general-availability model, a broad upgrade over Hy4 preview with stronger agentic capabilities and better results on long-horizon, real-world productivity tasks. Hy4 adds visual understanding for the first time and offers a 1M context window for agentic, coding, and productivity workloads.",
+      "i18n": {
+        "en": "Tencent's flagship Hy4 general-availability model, a broad upgrade over Hy4 preview with stronger agentic capabilities and better results on long-horizon, real-world productivity tasks. Hy4 adds visual understanding for the first time and offers a 1M context window for agentic, coding, and productivity workloads.",
+        "zh": "腾讯混元 Hy4 正式版，相比 Hy4 preview 全面大幅提升，尤其强化 Agent 能力与长程、真实生产力任务表现，并首次引入图片理解。上下文 1M，面向 Agent、Coding 与生产力场景。",
+        "ja": "Tencent の Hy4 正式版で、Hy4 preview から全体に大きく強化されています。特にエージェントの力と、長く続く実務タスクでの成果が上がり、画像理解も初めて加わりました。コンテキストは 1M で、エージェント、コーディング、実務向けです。",
+        "ko": "Tencent의 Hy4 정식 버전으로, Hy4 preview보다 전반적으로 크게 좋아졌습니다. 특히 에이전트 능력과 길게 이어지는 실무 작업 성과가 올랐고, 이미지 이해가 처음 추가됐습니다. 컨텍스트는 1M이며 에이전트, 코딩, 실무에 맞춰져 있습니다."
+      },
+      "vendor": "tencent",
+      "context_window": 1000000,
+      "max_tokens": 64000,
+      "pricing": {
+        "usd": {
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 0.834,
+              "output_price": 2.501,
+              "cache_read_price": 0.042,
+              "cache_write_price": null
+            }
+          ]
+        },
+        "cny": {
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 6,
+              "output_price": 18,
+              "cache_read_price": 0.3,
+              "cache_write_price": null
+            }
+          ]
+        }
+      },
+      "modalities": {
+        "input": [
+          "text",
+          "image"
+        ],
+        "output": [
+          "text"
+        ]
+      },
+      "released": "2026-11-04",
+      "vendor_label": "Tencent",
+      "kind": "llm",
+      "source_path": "packages/admin/lib/model-presets/tencent.json"
+    },
+    {
       "id": "hy4-preview",
       "display_name": "Hy4 preview",
       "description": "Tencent's next-generation productivity model with significantly enhanced Agent and complex task execution capabilities. Hy4 preview features 770B total parameters with 49B active parameters and is optimized for agentic, coding, and productivity scenarios, with stronger capabilities in understanding, planning, tool use, and sustained execution for complex tasks.",
@@ -7743,7 +8796,7 @@
         "ko": "Tencent의 차세대 실무 모델로, 에이전트와 어려운 작업 실행이 크게 올라갔습니다. Hy4 preview는 총 파라미터 770B, 활성 파라미터 49B입니다. 에이전트, 코딩, 실무에 맞춰, 어려운 일에서의 이해, 계획, 도구 호출, 중간에 끊기지 않는 실행을 강화했습니다."
       },
       "vendor": "tencent",
-      "context_window": 1024000,
+      "context_window": 1000000,
       "max_tokens": 64000,
       "pricing": {
         "usd": {
@@ -8000,6 +9053,7 @@
             "default": 0.05,
             "by_size": {
               "1k": 0.05,
+              "1.5k": 0.06,
               "2k": 0.07
             },
             "input": {
@@ -8014,6 +9068,7 @@
             "default": 0.35,
             "by_size": {
               "1k": 0.35,
+              "1.5k": 0.42,
               "2k": 0.49
             },
             "input": {
@@ -8421,7 +9476,7 @@
           "text"
         ]
       },
-      "released": "2026-07-08",
+      "released": "2026-07-16",
       "vendor_label": "xAI (Grok)",
       "kind": "llm",
       "source_path": "packages/admin/lib/model-presets/xai.json"
@@ -8557,7 +9612,7 @@
         "ko": "어려운 추론, 코딩, 에이전트용 고성능 Xiaomi MiMo입니다."
       },
       "vendor": "xiaomi",
-      "context_window": 1050000,
+      "context_window": 1000000,
       "max_tokens": 128000,
       "pricing": {
         "usd": {
@@ -8626,7 +9681,7 @@
         "ko": "소프트웨어 개발과 긴 주기의 에이전트용 Xiaomi MiMo 플래그십입니다. 범용 에이전트 능력, 어려운 소프트웨어 개발, 긴 실행을 특히 강화했습니다."
       },
       "vendor": "xiaomi",
-      "context_window": 1050000,
+      "context_window": 1000000,
       "max_tokens": 128000,
       "pricing": {
         "usd": {
@@ -8681,7 +9736,7 @@
         "ko": "비용과 능력의 균형을 맞추고, 에이전트와 시각 이해에 쓰는 MiMo 옴니 모델입니다. 처음부터 옴니모달이라, 추론 비용을 낮추면서 Pro에 가까운 에이전트 성능을 내고 시각 이해도 강화했습니다."
       },
       "vendor": "xiaomi",
-      "context_window": 1050000,
+      "context_window": 1000000,
       "max_tokens": 128000,
       "pricing": {
         "usd": {
@@ -8736,7 +9791,7 @@
         "ko": "전문적이고 기간이 길며 절차가 많은 작업용 Xiaomi MiMo 옴니 플래그십입니다. 과학 연구와 사이버 보안도 다룹니다."
       },
       "vendor": "xiaomi",
-      "context_window": 1050000,
+      "context_window": 1000000,
       "max_tokens": 128000,
       "pricing": {
         "usd": {
@@ -8789,7 +9844,7 @@
         "ko": "잦은 사무와 규모가 큰 처리용으로, 비용 대비 성능이 좋은 Xiaomi MiMo 옴니 모델입니다."
       },
       "vendor": "xiaomi",
-      "context_window": 1050000,
+      "context_window": 1000000,
       "max_tokens": 128000,
       "pricing": {
         "usd": {
@@ -8842,7 +9897,7 @@
         "ko": "MiMo V2.6 Pro의 플래그십 능력을 유지한 초고속 서빙입니다. 출력 속도는 최대 약 20배이며, 실시간성과 지연을 강하게 신경 쓰는 처리용입니다."
       },
       "vendor": "xiaomi",
-      "context_window": 1050000,
+      "context_window": 1000000,
       "max_tokens": 128000,
       "pricing": {
         "usd": {
@@ -8955,6 +10010,13 @@
         "cny": {
           "tiers": [
             {
+              "upto": 32000,
+              "input_price": 4,
+              "output_price": 18,
+              "cache_read_price": 1,
+              "cache_write_price": null
+            },
+            {
               "upto": null,
               "input_price": 6,
               "output_price": 22,
@@ -9005,6 +10067,13 @@
         "cny": {
           "tiers": [
             {
+              "upto": 32000,
+              "input_price": 5,
+              "output_price": 22,
+              "cache_read_price": 1.2,
+              "cache_write_price": null
+            },
+            {
               "upto": null,
               "input_price": 7,
               "output_price": 26,
@@ -9016,8 +10085,7 @@
       },
       "modalities": {
         "input": [
-          "text",
-          "image"
+          "text"
         ],
         "output": [
           "text"
@@ -9056,10 +10124,17 @@
         "cny": {
           "tiers": [
             {
+              "upto": 32000,
+              "input_price": 6,
+              "output_price": 24,
+              "cache_read_price": 1.3,
+              "cache_write_price": null
+            },
+            {
               "upto": null,
               "input_price": 8,
               "output_price": 28,
-              "cache_read_price": 1.3,
+              "cache_read_price": 2,
               "cache_write_price": null
             }
           ]
@@ -9280,6 +10355,153 @@
         ]
       },
       "released": "2026-09-18",
+      "vendor_label": "Zhipu AI",
+      "kind": "llm",
+      "source_path": "packages/admin/lib/model-presets/zhipu.json"
+    },
+    {
+      "id": "glm-5.3-flashx-legal",
+      "display_name": "GLM-5.3-FlashX-Legal",
+      "description": "A legal-domain high-throughput GLM-5.3-FlashX serving SKU with a 1M context window, priced identically to GLM-5.3-FlashX.",
+      "i18n": {
+        "en": "A legal-domain high-throughput GLM-5.3-FlashX serving SKU with a 1M context window, priced identically to GLM-5.3-FlashX.",
+        "zh": "面向法律领域的高吞吐 GLM-5.3-FlashX 服务规格，沿用 1M 上下文，定价与 GLM-5.3-FlashX 一致。",
+        "ja": "法域向の高スループット GLM-5.3-FlashX 提供仕様。1M コンテキストを継承し、価格は GLM-5.3-FlashX と同一です。",
+        "ko": "법률 도메인 대상 고처리량 GLM-5.3-FlashX 제공 사양. 1M 컨텍스트를 쓰고 가격은 GLM-5.3-FlashX와 같습니다."
+      },
+      "vendor": "zhipu",
+      "context_window": 1000000,
+      "max_tokens": 128000,
+      "pricing": {
+        "usd": {
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 0.37,
+              "output_price": 1.25,
+              "cache_read_price": 0.075,
+              "cache_write_price": null
+            }
+          ]
+        },
+        "cny": {
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 2,
+              "output_price": 7,
+              "cache_read_price": 0.57,
+              "cache_write_price": null
+            }
+          ]
+        }
+      },
+      "modalities": {
+        "input": [
+          "text"
+        ],
+        "output": [
+          "text"
+        ]
+      },
+      "vendor_label": "Zhipu AI",
+      "kind": "llm",
+      "source_path": "packages/admin/lib/model-presets/zhipu.json"
+    },
+    {
+      "id": "glm-5v-turbo",
+      "display_name": "GLM-5V-Turbo",
+      "description": "Zhipu's first multimodal coding model for vision-based coding and agent workflows. Input covers video, image, text, and file, and output is text. The context window is 200K and the maximum output is 128K. Official docs say it does not understand files, video, and images at the same time. Thinking can be turned on or off; published examples set thinking.type to enabled. Z.AI pricing does not list this model, so there is no USD price.",
+      "i18n": {
+        "en": "Zhipu's first multimodal coding model for vision-based coding and agent workflows. Input covers video, image, text, and file, and output is text. The context window is 200K and the maximum output is 128K. Official docs say it does not understand files, video, and images at the same time. Thinking can be turned on or off; published examples set thinking.type to enabled. Z.AI pricing does not list this model, so there is no USD price.",
+        "zh": "智谱首个面向视觉编程与 Agent 工作流的多模态 Coding 基座模型。输入为视频、图像、文本与文件，输出文本。上下文窗口 200K，最大输出 128K。官方注明不支持同时理解文件、视频和图像。思考模式可以开启或关闭，公开示例把 thinking.type 设为 enabled。Z.AI 定价页未收录该模型，因此没有美元刊例价。",
+        "ja": "視覚的なコーディングとエージェント向けの、智譜初のマルチモーダル Coding 基盤モデルです。入力は動画、画像、テキスト、ファイルで、出力はテキストです。コンテキストは 200K、最大出力は 128K です。公式には、ファイル、動画、画像を同時には理解しないとあります。思考モードはオンとオフを切り替えられ、公開例は thinking.type を enabled にしています。Z.AI の料金表に載っていないため、米ドルの定価はありません。",
+        "ko": "시각 코딩과 에이전트용으로, Zhipu의 첫 멀티모달 Coding 기반 모델입니다. 입력은 영상, 이미지, 텍스트, 파일이고 출력은 텍스트입니다. 컨텍스트는 200K, 최대 출력은 128K입니다. 공식 문서는 파일, 영상, 이미지를 동시에 이해하지 않는다고 적습니다. 사고 모드는 켜거나 끌 수 있고, 공개 예시는 thinking.type 을 enabled 로 둡니다. Z.AI 가격표에 없어 미국 달러 정가는 없습니다."
+      },
+      "vendor": "zhipu",
+      "context_window": 200000,
+      "max_tokens": 128000,
+      "pricing": {
+        "cny": {
+          "tiers": [
+            {
+              "upto": 32000,
+              "input_price": 5,
+              "output_price": 22,
+              "cache_read_price": 1.2,
+              "cache_write_price": null
+            },
+            {
+              "upto": null,
+              "input_price": 7,
+              "output_price": 26,
+              "cache_read_price": 1.8,
+              "cache_write_price": null
+            }
+          ]
+        }
+      },
+      "modalities": {
+        "input": [
+          "text",
+          "image",
+          "video",
+          "file"
+        ],
+        "output": [
+          "text"
+        ]
+      },
+      "vendor_label": "Zhipu AI",
+      "kind": "llm",
+      "source_path": "packages/admin/lib/model-presets/zhipu.json"
+    },
+    {
+      "id": "glm-ocr",
+      "display_name": "GLM-OCR",
+      "description": "A lightweight professional OCR model for document and image parsing, with a 32K context and PDF/image input.",
+      "i18n": {
+        "en": "A lightweight professional OCR model for document and image parsing, with a 32K context and PDF/image input.",
+        "zh": "轻量级专业 OCR 模型，支持 PDF 与图片输入的文档解析，上下文 32K。",
+        "ja": "軽量な专业 OCR モデル。PDF と画像入力の文書解析に対応し、コンテキストは 32K です。",
+        "ko": "경량 전문 OCR 모델. PDF와 이미지 입력의 문서 파싱을 지원하고 컨텍스트는 32K입니다."
+      },
+      "vendor": "zhipu",
+      "context_window": 32000,
+      "max_tokens": null,
+      "pricing": {
+        "usd": {
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 0.029,
+              "output_price": 0.029,
+              "cache_read_price": null,
+              "cache_write_price": null
+            }
+          ]
+        },
+        "cny": {
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 0.2,
+              "output_price": 0.2,
+              "cache_read_price": null,
+              "cache_write_price": null
+            }
+          ]
+        }
+      },
+      "modalities": {
+        "input": [
+          "image",
+          "file"
+        ],
+        "output": [
+          "text"
+        ]
+      },
       "vendor_label": "Zhipu AI",
       "kind": "llm",
       "source_path": "packages/admin/lib/model-presets/zhipu.json"

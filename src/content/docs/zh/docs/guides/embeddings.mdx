@@ -1,7 +1,7 @@
 ---
 title: "向量 Embeddings"
 description: "通过 OpenAI 或 Gemini 接入向量模型，验证维度、输入用量与路由故障转移。"
-gatewayRef: v2.18.0
+gatewayRef: v2.19.0
 ---
 
 向量模型用于语义检索、相似度计算和 RAG 等场景。它使用独立的模型类型与请求入口，不是 Chat 请求中的一种输出模式。
@@ -30,4 +30,4 @@ curl -sS http://localhost:8787/v1/embeddings \
 
 Gemini 使用 `:embedContent` 或 `:batchEmbedContents`，请求体按原生协议发送。默认 `GET /v1/models` 不包含向量，发现向量模型请使用 `?kind=embedding` 或 `?kind=all`。
 
-完整请求与计费约定见 [向量 API 参考](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/developers/api/user.md#embeddings向量)。
+完整请求与计费约定见 [向量 API 参考](https://github.com/OctaFuse/octafuse-gateway/blob/v2.19.0/docs/developers/api/user.md#embeddings向量)。

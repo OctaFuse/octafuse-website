@@ -1,7 +1,7 @@
 ---
 title: "Upgrades and migrations"
 description: "Plan backups, maintenance, pending database migrations and matching service rollouts, then verify real requests."
-gatewayRef: v2.18.0
+gatewayRef: v2.19.0
 ---
 
 Record the current and target versions and review compatibility changes. When skipping releases, apply every pending migration, not just the final release's new SQL.
@@ -16,14 +16,23 @@ Record the current and target versions and review compatibility changes. When sk
 
 A particular release may require a stricter cutover. This summary is not a substitute for its production migration instructions.
 
+## Upgrade to 2.19.0
+
+Upgrading from 2.18.0 to 2.19.0 **adds no database migration** and no new or renamed environment variables or `system_config` keys. Update the Proxy, Admin and migrate images to the same version and perform a rolling restart. When upgrading from an earlier release, still apply every migration that has not yet run.
+
+- The Admin maintenance page and OAuth settings entry now live under Config and MCP Servers; the old addresses redirect.
+- New catalog entries (such as `claude-fable-5-2`, `glm-5v-turbo`, `hy4` and `gpt-image-2.6-flare`) must be imported and routed manually; already imported models are not overwritten.
+- From 2026-12-01 Google automatically reroutes `gemini-2.5-pro` and `gemini-2.5-flash`. Review related routes beforehand.
+- After upgrading, spot-check routes, request logs, Playground and Simulator to confirm filters and navigation behave as expected in the new UI. See the [v2.19.0 release notes](https://github.com/OctaFuse/octafuse-gateway/releases/tag/v2.19.0) for the full list.
+
 ## Upgrade to 2.18.0
 
 From 2.17.0 apply **0034** and **0035** first. They support sticky binding user details and separate OAuth access tokens with request-log attribution. Apply schema changes even when OAuth will not yet be enabled.
 
-- [0034: sticky bindings](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/operators/migrations/0034-sticky-binding-affinity-key.md)
-- [0035: OAuth access tokens](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/operators/migrations/0035-oauth-access-tokens.md)
+- [0034: sticky bindings](https://github.com/OctaFuse/octafuse-gateway/blob/v2.19.0/docs/operators/migrations/0034-sticky-binding-affinity-key.md)
+- [0035: OAuth access tokens](https://github.com/OctaFuse/octafuse-gateway/blob/v2.19.0/docs/operators/migrations/0035-oauth-access-tokens.md)
 
-Earlier upgrades also involve dual quota pools, model configuration and MCP. See the [migration index](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/operators/README.md) for all transitions.
+Earlier upgrades also involve dual quota pools, model configuration and MCP. See the [migration index](https://github.com/OctaFuse/octafuse-gateway/blob/v2.19.0/docs/operators/README.md) for all transitions.
 
 ## After deployment
 

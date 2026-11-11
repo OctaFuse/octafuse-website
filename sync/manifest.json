@@ -1,7 +1,7 @@
 {
   "source": "OctaFuse/octafuse-gateway",
-  "ref": "v2.18.0",
-  "commit": "1c649fc59dbf7191294306b9c3e5928d723e477e",
+  "ref": "v2.19.0",
+  "commit": "2b112c2b6a161e20ea212071ba954ae9bdbb9cbe",
   "contract": "sync/contract.json",
   "targets": [
     "src/content/docs/zh/docs/github-reference.mdx",

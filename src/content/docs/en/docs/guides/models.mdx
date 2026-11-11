@@ -1,7 +1,7 @@
 ---
 title: "Models and catalog sync"
 description: "Import models, maintain modalities and prices, review official changes and distinguish presets from deployed availability."
-gatewayRef: v2.18.0
+gatewayRef: v2.19.0
 ---
 
 **Models** defines client-facing IDs, vendors, modalities and catalog pricing. Routes map these IDs to upstream model names so clients can use a stable name.
@@ -13,9 +13,9 @@ gatewayRef: v2.18.0
 3. Review context, maximum output, release date, notes and pricing. Tags are administrator-managed; import does not create routes.
 4. Add a usable upstream and active surface under [Routes](/en/docs/guides/routing/), then make a real call.
 
-## Check official updates
+## Sync with the official catalog
 
-Manually trigger Check official updates to compare names, modalities, specifications, descriptions and prices. Choose official or local values per model or in bulk. **Prices are kept by default; inspect affected routes before applying changes.** Missing official fields do not clear local values.
+Manually trigger **Sync**; it compares first and applies only after you confirm. It compares names, modalities, specifications, descriptions and prices. Choose official or local values per model or in bulk. **Prices are kept by default; inspect affected routes before applying changes.** Missing official fields do not clear local values.
 
 ![Official model catalog comparison](/screenshots/v2-15-0-model-official-sync.webp)
 
@@ -36,4 +36,4 @@ Imported records and the website catalog are different data sets. Refreshing sta
 - Your gateway's public `GET /catalog/models`: capabilities with active routes.
 - User-authenticated `GET /v1/models`: LLMs by default, with `kind=image/asr/tts/embedding` and other filters.
 
-See the [model-kind reference](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/developers/reference/model-kinds.md) and [client configuration](/en/docs/guides/clients/) for IDs and route groups.
+See the [model-kind reference](https://github.com/OctaFuse/octafuse-gateway/blob/v2.19.0/docs/developers/reference/model-kinds.md) and [client configuration](/en/docs/guides/clients/) for IDs and route groups.

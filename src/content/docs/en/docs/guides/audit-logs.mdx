@@ -1,7 +1,7 @@
 ---
 title: "Account audit"
 description: "Reconcile budget and wallet changes, credit operations and user/key lifecycle events with requests."
-gatewayRef: v2.18.0
+gatewayRef: v2.19.0
 ---
 
 **Audit Logs** focuses on user, key and quota events. Combine it with [request logs](/en/docs/guides/request-logs/); it is not a complete audit trail of every provider or route configuration edit.
@@ -13,10 +13,12 @@ gatewayRef: v2.18.0
 3. Expand a record for snapshot differences and reasons.
 4. Follow a related request ID to check the charge. Trace top-ups through the user's credit history and business reference.
 
+The list summarizes event, identity and quota change; details show before/after values and the raw snapshot. Per-request charge events are excluded by default; use the charge shortcut ranges when you need them, and jump from a record to its related request.
+
 ![Combined audit filters](/screenshots/v2-10-0-audit-log-filters.webp)
 
 ## Reconcile both pools
 
 A request may consume both pools, so inspect their changes separately. Wallet credit should carry a unique business reference. A periodic reset does not clear the wallet.
 
-Read [billing](/en/docs/guides/billing/) and the [audit reference](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/developers/reference/user-audit-logs.md) for definitions.
+Read [billing](/en/docs/guides/billing/) and the [audit reference](https://github.com/OctaFuse/octafuse-gateway/blob/v2.19.0/docs/developers/reference/user-audit-logs.md) for definitions.

@@ -1,7 +1,7 @@
 ---
 title: "语音与实时音频"
 description: "接入 ASR、TTS 与已支持的实时 WebSocket，按模型和适配器核对协议与计费单位。"
-gatewayRef: v2.18.0
+gatewayRef: v2.19.0
 ---
 
 语音识别（ASR）把音频转为文本；语音合成（TTS）把文本转为音频。同步文件、异步任务和实时会话的端点与计费方式不同，应分开配置。
@@ -40,4 +40,4 @@ curl -sS http://localhost:8787/v1/audio/speech \
 
 列表分别使用 `kind=asr` 和 `kind=tts`；`kind=audio` 同时列出两者。预设没有列出的厂商功能不能据此视为网关已支持。
 
-厂商与操作覆盖见 [能力矩阵](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/developers/reference/native-provider-coverage.md)，调用字段见 [用户 API](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/developers/api/user.md)。
+厂商与操作覆盖见 [能力矩阵](https://github.com/OctaFuse/octafuse-gateway/blob/v2.19.0/docs/developers/reference/native-provider-coverage.md)，调用字段见 [用户 API](https://github.com/OctaFuse/octafuse-gateway/blob/v2.19.0/docs/developers/api/user.md)。

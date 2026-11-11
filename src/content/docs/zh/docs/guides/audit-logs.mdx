@@ -1,7 +1,7 @@
 ---
 title: "账户审计"
 description: "核对周期与永久额度变化、加额流水和用户密钥生命周期，并关联实际请求。"
-gatewayRef: v2.18.0
+gatewayRef: v2.19.0
 ---
 
 审计日志（Audit Logs）侧重用户、密钥与额度事件。它与[请求日志](/zh/docs/guides/request-logs/)配合使用，不是所有供应商和路由编辑操作的完整配置审计。
@@ -13,10 +13,12 @@ gatewayRef: v2.18.0
 3. 展开记录查看账户快照差异和变更原因。
 4. 用关联请求 ID 回到调用流程，核对实际费用；充值问题从用户的加额流水追查业务引用。
 
+列表展示事件、身份和额度变动摘要；详情可查看前后值及原始快照。默认排除逐次扣费事件，需要时使用扣费快捷范围，并可从记录跳转到关联请求。
+
 ![账户审计组合筛选](/screenshots/v2-10-0-audit-log-filters.webp)
 
 ## 周期与永久额度分别对账
 
 同一次请求可能同时消耗两种额度，按各自变化核对。永久加额应关联唯一业务流水，周期重置不应被解释为永久余额清空。
 
-账户含义见[额度与计费](/zh/docs/guides/billing/)，事件定义见 [账户审计参考](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/developers/reference/user-audit-logs.md)。
+账户含义见[额度与计费](/zh/docs/guides/billing/)，事件定义见 [账户审计参考](https://github.com/OctaFuse/octafuse-gateway/blob/v2.19.0/docs/developers/reference/user-audit-logs.md)。

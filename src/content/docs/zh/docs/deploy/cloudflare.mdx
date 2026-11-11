@@ -1,7 +1,7 @@
 ---
 title: "Cloudflare 部署"
 description: "使用官方引导脚本部署 Proxy、Admin 与共享 D1，并验证模型、工具和实时链路。"
-gatewayRef: v2.18.0
+gatewayRef: v2.19.0
 ---
 
 Cloudflare 形态下，Proxy 和 Admin 分别运行在 Worker，共享同一 D1。它是一种受支持的部署选择；资源限制和运行费用取决于所选平台套餐与实际用量。
@@ -16,7 +16,7 @@ npx wrangler login
 npm run bootstrap:cloudflare
 ```
 
-按脚本提示创建或选择资源、设置管理后台密码，并记录输出的 Proxy 与 Admin 地址。完整的资源、变量和故障处理以 [Cloudflare 快速部署参考](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/operators/deployment/cloudflare-quickstart.md) 为准。
+按脚本提示创建或选择资源、设置管理后台密码，并记录输出的 Proxy 与 Admin 地址。完整的资源、变量和故障处理以 [Cloudflare 快速部署参考](https://github.com/OctaFuse/octafuse-gateway/blob/v2.19.0/docs/operators/deployment/cloudflare-quickstart.md) 为准。
 
 ## 部署后配置
 
@@ -31,4 +31,4 @@ npm run bootstrap:cloudflare
 
 密钥放入平台 Secret 或部署配置，生产资源标识不要写入公开文档。需要改用 Postgres 或 MySQL 时，先阅读[部署模式](/zh/docs/deploy/overview/)与数据库切换参考。
 
-运维配置与构建路径见 [Cloudflare 运维参考](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/operators/deployment/cloudflare.md)。
+运维配置与构建路径见 [Cloudflare 运维参考](https://github.com/OctaFuse/octafuse-gateway/blob/v2.19.0/docs/operators/deployment/cloudflare.md)。

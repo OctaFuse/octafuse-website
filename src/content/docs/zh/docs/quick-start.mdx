@@ -1,7 +1,7 @@
 ---
 title: "快速开始"
 description: "启动网关、连接一个上游，并用用户密钥完成第一次真实模型调用。"
-gatewayRef: v2.18.0
+gatewayRef: v2.19.0
 ---
 
 目标是完成一次 **客户端 → 网关 → 上游 → 日志与扣费** 的完整调用。先选择部署方式；两条路径之后使用相同的配置流程。
@@ -13,7 +13,7 @@ gatewayRef: v2.18.0
 准备 Docker 和 Compose，克隆正式版本：
 
 ```bash
-git clone --branch v2.18.0 --depth 1 https://github.com/OctaFuse/octafuse-gateway.git
+git clone --branch v2.19.0 --depth 1 https://github.com/OctaFuse/octafuse-gateway.git
 cd octafuse-gateway
 docker compose -f docker/compose/quickstart.yml up --build
 ```
@@ -65,4 +65,4 @@ curl -sS http://localhost:8787/v1/chat/completions \
 
 [接入 SDK 与 IDE](/zh/docs/guides/clients/) · [路由与故障转移](/zh/docs/guides/routing/) · [MCP 服务](/zh/docs/guides/mcp/) · [生产部署](/zh/docs/deploy/overview/)
 
-完整环境要求与操作说明见 [技术参考](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/users/quickstart.md)。
+完整环境要求与操作说明见 [技术参考](https://github.com/OctaFuse/octafuse-gateway/blob/v2.19.0/docs/users/quickstart.md)。

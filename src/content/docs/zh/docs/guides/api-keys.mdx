@@ -1,15 +1,15 @@
 ---
 title: "API 密钥与限流"
 description: "发放用户调用密钥，配置用户与密钥两层限流，并正确区分上游凭证、OAuth 令牌和集成密钥。"
-gatewayRef: v2.18.0
+gatewayRef: v2.19.0
 ---
 
 在 API 密钥（API Keys）页为用户创建调用凭证。客户端以 `Authorization: Bearer sk-…` 请求代理服务；供应商密钥留在网关，管理 API 使用另一类具名集成密钥。
 
 ## 发放和回收
 
-1. 选择已有用户，或通过外部身份解析对应用户。
-2. 设置可识别的密钥名称，创建后按界面提示保存完整密钥。
+1. 搜索并选择已有用户，或手填用户 ID、通过外部身份解析对应用户。
+2. 设置可识别的密钥名称，创建后按界面提示保存完整密钥；列表中密钥默认掩码展示。
 3. 使用用户密钥调用 `GET /v1/me` 验证归属和额度。
 4. 按应用分别发 Key；不再使用时停用、吊销或删除，不长期共用同一把密钥。
 
@@ -21,7 +21,7 @@ gatewayRef: v2.18.0
 
 ![密钥级限流配置](/screenshots/v2-9-0-api-key-rate-limit.webp)
 
-模型列表和用户额度查询不消耗用户/密钥 RPM，可用于错误后的只读诊断。具体计数入口与返回字段见 [用户 API](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/developers/api/user.md)。
+模型列表和用户额度查询不消耗用户/密钥 RPM，可用于错误后的只读诊断。具体计数入口与返回字段见 [用户 API](https://github.com/OctaFuse/octafuse-gateway/blob/v2.19.0/docs/developers/api/user.md)。
 
 ## 四种凭证的用途
 

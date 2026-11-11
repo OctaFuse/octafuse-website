@@ -1,7 +1,7 @@
 ---
 title: "升级与迁移"
 description: "按正式版本检查数据库迁移、备份、维护窗口和服务更新，并完成业务验收。"
-gatewayRef: v2.18.0
+gatewayRef: v2.19.0
 ---
 
 升级前记录当前版本和目标版本，阅读目标版本的兼容性变化。跨多个版本升级时，执行全部尚未应用的迁移，不能只运行最后一个版本新增的 SQL。
@@ -16,14 +16,23 @@ gatewayRef: v2.18.0
 
 具体版本可能要求更严格的切换顺序，不要仅根据本摘要执行跨版本生产迁移。
 
+## 2.19.0 的升级入口
+
+从 2.18.0 升级到 2.19.0 **没有新增数据库迁移**，也没有新增或改名的环境变量与 `system_config` 键；将 Proxy、Admin 和迁移镜像更新到同一版本后滚动重启即可。从更早版本升级时，仍需补齐其间尚未应用的迁移。
+
+- 管理后台的维护页和 OAuth 配置入口已并入「配置」与「MCP 服务」，旧地址会自动跳转。
+- 新目录项（如 `claude-fable-5-2`、`glm-5v-turbo`、`hy4`、`gpt-image-2.6-flare`）需要手工导入并配置路由，不会覆盖已导入的模型。
+- `gemini-2.5-pro` 与 `gemini-2.5-flash` 在 2026-12-01 起由 Google 自动改路由，请提前检查相关路由。
+- 升级后抽查路由、请求日志、调试台和模拟器，确认新界面下的筛选与跳转符合预期。完整变更见 [v2.19.0 发布说明](https://github.com/OctaFuse/octafuse-gateway/releases/tag/v2.19.0)。
+
 ## 2.18.0 的升级入口
 
 从 2.17.0 升级需要 **0034** 和 **0035**：前者支持粘性绑定用户明细，后者支持独立 OAuth 访问令牌与请求日志关联。需要先迁移，再更新服务；即使暂不启用 OAuth，也不能跳过结构迁移。
 
-- [0034：粘性绑定](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/operators/migrations/0034-sticky-binding-affinity-key.md)
-- [0035：OAuth 访问令牌](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/operators/migrations/0035-oauth-access-tokens.md)
+- [0034：粘性绑定](https://github.com/OctaFuse/octafuse-gateway/blob/v2.19.0/docs/operators/migrations/0034-sticky-binding-affinity-key.md)
+- [0035：OAuth 访问令牌](https://github.com/OctaFuse/octafuse-gateway/blob/v2.19.0/docs/operators/migrations/0035-oauth-access-tokens.md)
 
-更早版本还涉及双额度、模型配置与 MCP 等变更。完整索引见 [迁移与切换索引](https://github.com/OctaFuse/octafuse-gateway/blob/v2.18.0/docs/operators/README.md)。
+更早版本还涉及双额度、模型配置与 MCP 等变更。完整索引见 [迁移与切换索引](https://github.com/OctaFuse/octafuse-gateway/blob/v2.19.0/docs/operators/README.md)。
 
 ## 升级后检查什么
 
