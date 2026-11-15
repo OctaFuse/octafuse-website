@@ -3,11 +3,11 @@
   "catalog": "models",
   "source": {
     "repo": "OctaFuse/octafuse-gateway",
-    "ref": "v2.19.0",
-    "commit": "2b112c2b6a161e20ea212071ba954ae9bdbb9cbe"
+    "ref": "v2.20.0",
+    "commit": "2bcee068b11ecfc5204405003a95464d2886c49b"
   },
   "source_path": "packages/admin/lib/model-presets",
-  "count": 196,
+  "count": 201,
   "items": [
     {
       "id": "qwen-audio-3.1-asr-flash-message",
@@ -1379,6 +1379,59 @@
       "vendor_label": "Alibaba Cloud",
       "kind": "image",
       "source_path": "packages/admin/lib/model-presets/aliyun-image.json"
+    },
+    {
+      "id": "qwen4-max-preview",
+      "display_name": "Qwen4 Max Preview",
+      "description": "Next-generation flagship multimodal Qwen preview for coding, office productivity, frontend design, and complex agentic tasks. Accepts text, image, and video input, with a 1M context window and about 393K max output shared by thinking and the answer. Thinking is on by default and adjustable with reasoning_effort (low / medium / xhigh, default xhigh); reasoning_effort and thinking_budget cannot be set together. Available only through Token Plan, not pay-as-you-go; the preview runs until 2026-11-25 24:00 (UTC+8) and the model is retired afterwards. Prices are aligned to the previous same-tier model qwen3.8-max for now; Alibaba has not published list prices for Qwen4-Max, so update them at general availability.",
+      "i18n": {
+        "en": "Next-generation flagship multimodal Qwen preview for coding, office productivity, frontend design, and complex agentic tasks. Accepts text, image, and video input, with a 1M context window and about 393K max output shared by thinking and the answer. Thinking is on by default and adjustable with reasoning_effort (low / medium / xhigh, default xhigh); reasoning_effort and thinking_budget cannot be set together. Available only through Token Plan, not pay-as-you-go; the preview runs until 2026-11-25 24:00 (UTC+8) and the model is retired afterwards. Prices are aligned to the previous same-tier model qwen3.8-max for now; Alibaba has not published list prices for Qwen4-Max, so update them at general availability.",
+        "zh": "千问新一代旗舰多模态预览模型，面向编程、办公、前端设计与复杂智能体任务。支持文本、图片和视频输入，上下文 1M，最大输出约 393K（思考与回答共享）。默认开启深度思考，可用 reasoning_effort（low / medium / xhigh，默认 xhigh）调节；reasoning_effort 与 thinking_budget 不能同时设置。仅在 Token Plan 订阅中提供，不支持按量计费；预览期至 2026-11-25 24:00（UTC+8），之后下线。价格暂按同档位上一版 qwen3.8-max 的刊例对齐，官方尚未公布 Qwen4-Max 的刊例价，正式版发布后更新。",
+        "ja": "次世代フラッグシップのマルチモーダル Qwen プレビューモデルで、コーディング、オフィス業務、フロントエンド設計、複雑なエージェント作業に向きます。テキスト・画像・動画を入力でき、コンテキストは 1M、最大出力は約 393K（思考と回答で共有）です。思考は既定でオンで、reasoning_effort（low / medium / xhigh、既定は xhigh）で調整できます。reasoning_effort と thinking_budget は同時に指定できません。Token Plan のサブスクリプションでのみ提供され、従量課金は使えません。プレビュー期間は 2026-11-25 24:00（UTC+8）までで、その後は終了します。価格は当面、同じ階層の前世代 qwen3.8-max の定価に合わせています。Qwen4-Max の定価は未公表のため、正式版の公開後に更新してください。",
+        "ko": "차세대 플래그십 멀티모달 Qwen 프리뷰 모델로, 코딩, 오피스 업무, 프런트엔드 디자인, 복잡한 에이전트 작업에 적합합니다. 텍스트·이미지·동영상 입력을 지원하며 컨텍스트는 1M, 최대 출력은 약 393K(사고와 답변이 공유)입니다. 사고는 기본으로 켜져 있고 reasoning_effort(low / medium / xhigh, 기본값 xhigh)로 조절할 수 있습니다. reasoning_effort와 thinking_budget은 동시에 설정할 수 없습니다. Token Plan 구독으로만 제공되며 종량제는 지원하지 않습니다. 프리뷰 기간은 2026-11-25 24:00(UTC+8)까지이며 이후 종료됩니다. 가격은 우선 같은 등급의 이전 모델 qwen3.8-max 정가에 맞췄습니다. Qwen4-Max 정가가 아직 공개되지 않았으므로 정식 출시 후 갱신하세요."
+      },
+      "vendor": "aliyun",
+      "context_window": 1000000,
+      "max_tokens": 393216,
+      "pricing": {
+        "usd": {
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 2,
+              "output_price": 6,
+              "cache_read_price": 0.25,
+              "cache_write_price": 2.5
+            }
+          ]
+        },
+        "cny": {
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 12,
+              "output_price": 36,
+              "cache_read_price": 1.5,
+              "cache_write_price": 15
+            }
+          ]
+        }
+      },
+      "modalities": {
+        "input": [
+          "text",
+          "image",
+          "video"
+        ],
+        "output": [
+          "text"
+        ]
+      },
+      "released": "2026-11-11",
+      "retired": "2026-11-26",
+      "vendor_label": "Alibaba Cloud",
+      "kind": "llm",
+      "source_path": "packages/admin/lib/model-presets/aliyun.json"
     },
     {
       "id": "qwen3.8-max",
@@ -5046,6 +5099,114 @@
       "source_path": "packages/admin/lib/model-presets/google-image.json"
     },
     {
+      "id": "gemini-4-hydrogen",
+      "display_name": "Gemini 4 Hydrogen",
+      "description": "Google's fast Gemini model for everyday coding and agentic workflows, adapted from Gemini 4 Carbon. Input, thinking, and output share a 1M window; synchronous output defaults to 64K, and long decode can reach 1M. Thinking level is low, medium, high (default), or xhigh. Official list price is a flat $1.50 / $7.50 per 1M tokens across the whole window, with implicit cache at $0.075. 人民币价为美元刊例价 ×7 的换算占位价，非官方人民币刊例。",
+      "i18n": {
+        "en": "Google's fast Gemini model for everyday coding and agentic workflows, adapted from Gemini 4 Carbon. Input, thinking, and output share a 1M window; synchronous output defaults to 64K, and long decode can reach 1M. Thinking level is low, medium, high (default), or xhigh. Official list price is a flat $1.50 / $7.50 per 1M tokens across the whole window, with implicit cache at $0.075. 人民币价为美元刊例价 ×7 的换算占位价，非官方人民币刊例。",
+        "zh": "面向日常编码与 Agent 工作流的高速 Gemini 模型，由 Gemini 4 Carbon 适配而来。输入、思考与输出共用 1M 窗口；同步输出默认 64K，长解码最高可达 1M。思考档位为 low、medium、high（默认）或 xhigh。官方刊例为整个窗口统一每 1M token 输入 $1.50、输出 $7.50，隐式缓存 $0.075。人民币价为美元刊例价 ×7 的换算占位价，非官方人民币刊例。",
+        "ja": "日常的なコーディングとエージェントワークフロー向けの高速な Gemini モデルで、Gemini 4 Carbon をもとに調整されています。入力と思考と出力は 1M のウィンドウを共有します。同期出力の初期値は 64K で、長いデコードは最大 1M です。思考レベルは low、medium、high（初期値）、xhigh です。公式定価はウィンドウ全体で一律、1M トークンあたり入力 $1.50、出力 $7.50、暗黙キャッシュ $0.075 です。人民币价为美元刊例价 ×7 的换算占位价，非官方人民币刊例。",
+        "ko": "일상적인 코딩과 에이전트 워크플로를 위한 빠른 Gemini 모델로, Gemini 4 Carbon을 기반으로 조정되었습니다. 입력, 사고, 출력은 1M 창을 공유합니다. 동기 출력 기본값은 64K이고 긴 디코드는 최대 1M입니다. 사고 수준은 low, medium, high(기본값), xhigh입니다. 공식 정가는 창 전체에 동일하게 1M 토큰당 입력 $1.50, 출력 $7.50, 암시적 캐시 $0.075입니다. 人民币价为美元刊例价 ×7 的换算占位价，非官方人民币刊例。"
+      },
+      "vendor": "google",
+      "context_window": 1000000,
+      "max_tokens": 64000,
+      "pricing": {
+        "usd": {
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 1.5,
+              "output_price": 7.5,
+              "cache_read_price": 0.075,
+              "cache_write_price": null
+            }
+          ]
+        },
+        "cny": {
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 10.5,
+              "output_price": 52.5,
+              "cache_read_price": 0.525,
+              "cache_write_price": null
+            }
+          ]
+        }
+      },
+      "modalities": {
+        "input": [
+          "text",
+          "image",
+          "audio",
+          "video",
+          "file"
+        ],
+        "output": [
+          "text"
+        ]
+      },
+      "released": "2026-11-12",
+      "vendor_label": "Google",
+      "kind": "llm",
+      "source_path": "packages/admin/lib/model-presets/google.json"
+    },
+    {
+      "id": "gemini-4-carbon",
+      "display_name": "Gemini 4 Carbon",
+      "description": "Google's most capable Gemini reasoning model for complex software engineering, scientific problem solving, and long-horizon agents. Input, thinking, and output share a 1M window; synchronous output defaults to 64K, and long decode can reach 1M. Thinking level is low, medium, or high (default medium) and cannot be turned off. Official list price is $4 / $20 per 1M tokens with implicit cache at $0.20. 人民币价为美元刊例价 ×7 的换算占位价，非官方人民币刊例。",
+      "i18n": {
+        "en": "Google's most capable Gemini reasoning model for complex software engineering, scientific problem solving, and long-horizon agents. Input, thinking, and output share a 1M window; synchronous output defaults to 64K, and long decode can reach 1M. Thinking level is low, medium, or high (default medium) and cannot be turned off. Official list price is $4 / $20 per 1M tokens with implicit cache at $0.20. 人民币价为美元刊例价 ×7 的换算占位价，非官方人民币刊例。",
+        "zh": "面向复杂软件工程、科学问题求解与长程 Agent 的最强 Gemini 推理模型。输入、思考与输出共用 1M 窗口；同步输出默认 64K，长解码最高可达 1M。思考档位为 low、medium 或 high，默认 medium，不能关闭。官方刊例为每 1M token 输入 $4、输出 $20，隐式缓存 $0.20。人民币价为美元刊例价 ×7 的换算占位价，非官方人民币刊例。",
+        "ja": "複雑なソフトウェア開発、科学的な問題解決、長い期間のエージェント向けの、最も高性能な Gemini 推論モデルです。入力と思考と出力は 1M のウィンドウを共有します。同期出力の初期値は 64K で、長いデコードは最大 1M です。思考レベルは low、medium、high で、初期値は medium、オフにはできません。公式定価は 1M トークンあたり入力 $4、出力 $20、暗黙キャッシュ $0.20 です。人民币价为美元刊例价 ×7 的换算占位价，非官方人民币刊例。",
+        "ko": "복잡한 소프트웨어 개발, 과학 문제 풀이, 긴 흐름의 에이전트를 위한 가장 뛰어난 Gemini 추론 모델입니다. 입력, 사고, 출력은 1M 창을 공유합니다. 동기 출력 기본값은 64K이고 긴 디코드는 최대 1M입니다. 사고 수준은 low, medium, high이며 기본값은 medium이고 끌 수 없습니다. 공식 정가는 1M 토큰당 입력 $4, 출력 $20, 암시적 캐시 $0.20입니다. 人民币价为美元刊例价 ×7 的换算占位价，非官方人民币刊例。"
+      },
+      "vendor": "google",
+      "context_window": 1000000,
+      "max_tokens": 64000,
+      "pricing": {
+        "usd": {
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 4,
+              "output_price": 20,
+              "cache_read_price": 0.2,
+              "cache_write_price": null
+            }
+          ]
+        },
+        "cny": {
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 28,
+              "output_price": 140,
+              "cache_read_price": 1.4,
+              "cache_write_price": null
+            }
+          ]
+        }
+      },
+      "modalities": {
+        "input": [
+          "text",
+          "image",
+          "audio",
+          "video",
+          "file"
+        ],
+        "output": [
+          "text"
+        ]
+      },
+      "released": "2026-11-10",
+      "vendor_label": "Google",
+      "kind": "llm",
+      "source_path": "packages/admin/lib/model-presets/google.json"
+    },
+    {
       "id": "gemini-4-argon",
       "display_name": "Gemini 4 Argon",
       "description": "Google's flagship Gemini reasoning model for complex software engineering, scientific problem solving, and multi-step agents. Input and output share a ~1M window; synchronous output defaults to 64K, and long decode can reach ~1M.",
@@ -5890,6 +6051,120 @@
       "vendor_label": "MiniMax",
       "kind": "tts",
       "source_path": "packages/admin/lib/model-presets/minimax-audio-tts.json"
+    },
+    {
+      "id": "minimax-h3-image",
+      "display_name": "MiniMax H3 Image",
+      "description": "MiniMax text-to-image and image editing on the OpenAI-compatible Images API. Text-to-image is POST /v1/images/generations and edits are POST /v1/images/edits. The international base is https://api.minimax.io/v1 and the China base is https://api.minimax.cn/v1. Set the route provider model name to MiniMax-H3-Image. Prompt length is at most 32K characters; with prompt enhancement off, only about the first 4K tokens apply. Prompt enhancement is on by default for text-to-image and can be turned off with disable_prompt_enhanced=true in client extras; image edits always enhance. Preview images, masked edits, and transparent backgrounds are not supported. Output area is up to 20M pixels, with aspect ratio 1:3–3:1. Area is 1K, 2K, or 4K (default 4K), or WIDTHxHEIGHT. Token list prices per 1M tokens are text input $2.3, image input $1.5, and image output $3.8. Official domestic CNY list prices are ¥15, ¥10, and ¥25 per 1M tokens.",
+      "i18n": {
+        "en": "MiniMax text-to-image and image editing on the OpenAI-compatible Images API. Text-to-image is POST /v1/images/generations and edits are POST /v1/images/edits. The international base is https://api.minimax.io/v1 and the China base is https://api.minimax.cn/v1. Set the route provider model name to MiniMax-H3-Image. Prompt length is at most 32K characters; with prompt enhancement off, only about the first 4K tokens apply. Prompt enhancement is on by default for text-to-image and can be turned off with disable_prompt_enhanced=true in client extras; image edits always enhance. Preview images, masked edits, and transparent backgrounds are not supported. Output area is up to 20M pixels, with aspect ratio 1:3–3:1. Area is 1K, 2K, or 4K (default 4K), or WIDTHxHEIGHT. Token list prices per 1M tokens are text input $2.3, image input $1.5, and image output $3.8. Official domestic CNY list prices are ¥15, ¥10, and ¥25 per 1M tokens.",
+        "zh": "MiniMax 文生图与图片编辑，走 OpenAI 兼容的 Images API。文生图为 POST /v1/images/generations，编辑为 POST /v1/images/edits。国际区地址为 https://api.minimax.io/v1，中国区为 https://api.minimax.cn/v1。路由上的上游模型名称填 MiniMax-H3-Image。提示词最长 32K 字符；关闭提示词增强时，大约只有前 4K token 生效。文生图默认开启提示词增强，可在客户端额外字段用 disable_prompt_enhanced=true 关闭；图片编辑始终增强。不支持预览图、蒙版编辑和透明背景。输出面积最高 20M 像素，宽高比 1:3–3:1。面积可为 1K、2K、4K（默认 4K）或 WIDTHxHEIGHT。按每 1M token 的刊例：文本输入 $2.3、图像输入 $1.5、图像输出 $3.8。中国区官方人民币刊例为每 1M token ¥15、¥10、¥25。",
+        "ja": "MiniMax のテキストから画像を作り、画像を編集するモデルで、OpenAI 互換の Images API を使います。テキストから画像は POST /v1/images/generations、編集は POST /v1/images/edits です。国際リージョンは https://api.minimax.io/v1、中国リージョンは https://api.minimax.cn/v1 です。ルートのプロバイダーモデル名は MiniMax-H3-Image にします。プロンプトは最大 32K 文字で、プロンプト拡張を切ると最初の約 4K トークンだけが使われます。テキストからの生成ではプロンプト拡張が既定でオンで、クライアントの追加フィールド disable_prompt_enhanced=true で切れます。画像編集は常に拡張します。プレビュー画像、マスク編集、透明背景には対応しません。出力面積は最大 20M ピクセル、縦横比は 1:3–3:1 です。面積は 1K、2K、4K（既定 4K）または WIDTHxHEIGHT です。1M トークンあたりの定価は、テキスト入力 $2.3、画像入力 $1.5、画像出力 $3.8 です。中国の公式人民元定価は 1M トークンあたり ¥15、¥10、¥25 です。",
+        "ko": "MiniMax 텍스트 투 이미지와 이미지 편집 모델로, OpenAI 호환 Images API를 씁니다. 텍스트 투 이미지는 POST /v1/images/generations, 편집은 POST /v1/images/edits입니다. 국제 리전은 https://api.minimax.io/v1, 중국 리전은 https://api.minimax.cn/v1입니다. 라우트의 공급자 모델명은 MiniMax-H3-Image입니다. 프롬프트는 최대 32K 문자이며, 프롬프트 강화를 끄면 앞쪽 약 4K 토큰만 적용됩니다. 텍스트 투 이미지는 프롬프트 강화가 기본으로 켜져 있고, 클라이언트 추가 필드의 disable_prompt_enhanced=true로 끌 수 있습니다. 이미지 편집은 항상 강화합니다. 미리보기 이미지, 마스크 편집, 투명 배경은 지원하지 않습니다. 출력 면적은 최대 20M 픽셀이고 가로세로 비는 1:3–3:1입니다. 면적은 1K, 2K, 4K(기본 4K) 또는 WIDTHxHEIGHT입니다. 1M 토큰당 정가는 텍스트 입력 $2.3, 이미지 입력 $1.5, 이미지 출력 $3.8입니다. 중국 공식 위안 정가는 1M 토큰당 ¥15, ¥10, ¥25입니다."
+      },
+      "vendor": "minimax",
+      "pricing": {
+        "usd": {
+          "image_billing_mode": "token",
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 2.3,
+              "output_price": 0,
+              "cache_read_price": null,
+              "cache_write_price": null,
+              "image_input_price": 1.5,
+              "image_input_cache_price": null,
+              "image_output_price": 3.8
+            }
+          ]
+        },
+        "cny": {
+          "image_billing_mode": "token",
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 15,
+              "output_price": 0,
+              "cache_read_price": null,
+              "cache_write_price": null,
+              "image_input_price": 10,
+              "image_input_cache_price": null,
+              "image_output_price": 25
+            }
+          ]
+        }
+      },
+      "modalities": {
+        "input": [
+          "text",
+          "image"
+        ],
+        "output": [
+          "image"
+        ]
+      },
+      "released": "2026-11-10",
+      "vendor_label": "MiniMax",
+      "kind": "image",
+      "source_path": "packages/admin/lib/model-presets/minimax-image.json"
+    },
+    {
+      "id": "minimax-h3-image-highspeed",
+      "display_name": "MiniMax H3 Image Highspeed",
+      "description": "MiniMax H3 Image Highspeed uses the same OpenAI-compatible Images API, parameters, and limits as MiniMax H3 Image. Only the upstream model name and token list price differ. Text-to-image is POST /v1/images/generations and edits are POST /v1/images/edits. The international base is https://api.minimax.io/v1 and the China base is https://api.minimax.cn/v1. Set the route provider model name to MiniMax-H3-Image-Highspeed. Prompt length is at most 32K characters; with prompt enhancement off, only about the first 4K tokens apply. Prompt enhancement is on by default for text-to-image and can be turned off with disable_prompt_enhanced=true in client extras; image edits always enhance. Preview images, masked edits, and transparent backgrounds are not supported. Output area is up to 20M pixels, with aspect ratio 1:3–3:1. Area is 1K, 2K, or 4K (default 4K), or WIDTHxHEIGHT. Token list prices per 1M tokens are text input $2.3, image input $3, and image output $7.6. Official domestic CNY list prices are ¥15, ¥20, and ¥50 per 1M tokens.",
+      "i18n": {
+        "en": "MiniMax H3 Image Highspeed uses the same OpenAI-compatible Images API, parameters, and limits as MiniMax H3 Image. Only the upstream model name and token list price differ. Text-to-image is POST /v1/images/generations and edits are POST /v1/images/edits. The international base is https://api.minimax.io/v1 and the China base is https://api.minimax.cn/v1. Set the route provider model name to MiniMax-H3-Image-Highspeed. Prompt length is at most 32K characters; with prompt enhancement off, only about the first 4K tokens apply. Prompt enhancement is on by default for text-to-image and can be turned off with disable_prompt_enhanced=true in client extras; image edits always enhance. Preview images, masked edits, and transparent backgrounds are not supported. Output area is up to 20M pixels, with aspect ratio 1:3–3:1. Area is 1K, 2K, or 4K (default 4K), or WIDTHxHEIGHT. Token list prices per 1M tokens are text input $2.3, image input $3, and image output $7.6. Official domestic CNY list prices are ¥15, ¥20, and ¥50 per 1M tokens.",
+        "zh": "MiniMax H3 Image Highspeed 与 MiniMax H3 Image 使用同一套 OpenAI 兼容 Images API、参数和限制，只是上游模型名称和 token 刊例不同。文生图为 POST /v1/images/generations，编辑为 POST /v1/images/edits。国际区地址为 https://api.minimax.io/v1，中国区为 https://api.minimax.cn/v1。路由上的上游模型名称填 MiniMax-H3-Image-Highspeed。提示词最长 32K 字符；关闭提示词增强时，大约只有前 4K token 生效。文生图默认开启提示词增强，可在客户端额外字段用 disable_prompt_enhanced=true 关闭；图片编辑始终增强。不支持预览图、蒙版编辑和透明背景。输出面积最高 20M 像素，宽高比 1:3–3:1。面积可为 1K、2K、4K（默认 4K）或 WIDTHxHEIGHT。按每 1M token 的刊例：文本输入 $2.3、图像输入 $3、图像输出 $7.6。中国区官方人民币刊例为每 1M token ¥15、¥20、¥50。",
+        "ja": "MiniMax H3 Image Highspeed は MiniMax H3 Image と同じ OpenAI 互換 Images API、パラメータ、上限を使います。違うのは上流のモデル名とトークン定価だけです。テキストから画像は POST /v1/images/generations、編集は POST /v1/images/edits です。国際リージョンは https://api.minimax.io/v1、中国リージョンは https://api.minimax.cn/v1 です。ルートのプロバイダーモデル名は MiniMax-H3-Image-Highspeed にします。プロンプトは最大 32K 文字で、プロンプト拡張を切ると最初の約 4K トークンだけが使われます。テキストからの生成ではプロンプト拡張が既定でオンで、クライアントの追加フィールド disable_prompt_enhanced=true で切れます。画像編集は常に拡張します。プレビュー画像、マスク編集、透明背景には対応しません。出力面積は最大 20M ピクセル、縦横比は 1:3–3:1 です。面積は 1K、2K、4K（既定 4K）または WIDTHxHEIGHT です。1M トークンあたりの定価は、テキスト入力 $2.3、画像入力 $3、画像出力 $7.6 です。中国の公式人民元定価は 1M トークンあたり ¥15、¥20、¥50 です。",
+        "ko": "MiniMax H3 Image Highspeed는 MiniMax H3 Image와 같은 OpenAI 호환 Images API, 파라미터, 한도를 씁니다. 다른 점은 업스트림 모델명과 토큰 정가뿐입니다. 텍스트 투 이미지는 POST /v1/images/generations, 편집은 POST /v1/images/edits입니다. 국제 리전은 https://api.minimax.io/v1, 중국 리전은 https://api.minimax.cn/v1입니다. 라우트의 공급자 모델명은 MiniMax-H3-Image-Highspeed입니다. 프롬프트는 최대 32K 문자이며, 프롬프트 강화를 끄면 앞쪽 약 4K 토큰만 적용됩니다. 텍스트 투 이미지는 프롬프트 강화가 기본으로 켜져 있고, 클라이언트 추가 필드의 disable_prompt_enhanced=true로 끌 수 있습니다. 이미지 편집은 항상 강화합니다. 미리보기 이미지, 마스크 편집, 투명 배경은 지원하지 않습니다. 출력 면적은 최대 20M 픽셀이고 가로세로 비는 1:3–3:1입니다. 면적은 1K, 2K, 4K(기본 4K) 또는 WIDTHxHEIGHT입니다. 1M 토큰당 정가는 텍스트 입력 $2.3, 이미지 입력 $3, 이미지 출력 $7.6입니다. 중국 공식 위안 정가는 1M 토큰당 ¥15, ¥20, ¥50입니다."
+      },
+      "vendor": "minimax",
+      "pricing": {
+        "usd": {
+          "image_billing_mode": "token",
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 2.3,
+              "output_price": 0,
+              "cache_read_price": null,
+              "cache_write_price": null,
+              "image_input_price": 3,
+              "image_input_cache_price": null,
+              "image_output_price": 7.6
+            }
+          ]
+        },
+        "cny": {
+          "image_billing_mode": "token",
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 15,
+              "output_price": 0,
+              "cache_read_price": null,
+              "cache_write_price": null,
+              "image_input_price": 20,
+              "image_input_cache_price": null,
+              "image_output_price": 50
+            }
+          ]
+        }
+      },
+      "modalities": {
+        "input": [
+          "text",
+          "image"
+        ],
+        "output": [
+          "image"
+        ]
+      },
+      "released": "2026-11-10",
+      "vendor_label": "MiniMax",
+      "kind": "image",
+      "source_path": "packages/admin/lib/model-presets/minimax-image.json"
     },
     {
       "id": "minimax-image-01",
@@ -7358,6 +7633,7 @@
         ]
       },
       "released": "2026-04-01",
+      "retired": "2027-02-10",
       "vendor_label": "OpenAI",
       "kind": "image",
       "source_path": "packages/admin/lib/model-presets/openai-image.json"
