@@ -1,15 +1,15 @@
 ---
 title: "Simulator"
 description: "Call Proxy with a real user key to verify authentication, routing, failover, usage and charging."
-gatewayRef: v2.19.0
+gatewayRef: v2.20.0
 ---
 
 **Simulator** sends real requests from your browser to Proxy. Use a test user's key to verify authentication, routes, quotas, failover and accounting together.
 
 ## Verification steps
 
-1. Enter the Proxy root URL and a valid user API key.
-2. Select the client model, route group and surface. Supported categories include chat, images, audio, embeddings and REST tools.
+1. Open Simulator from the Testing group in the sidebar, confirm the Proxy root URL (taken from the deployment by default and overridable in the browser) and enter a valid user API key.
+2. Choose Models or Tools at the top. In model mode, pick the client model, route group and surface by category (chat, images, audio, embeddings); in tool mode, pick the REST tool to call. Switching keeps the connection and key and clears the previous response.
 3. Edit a request for that protocol and send it.
 4. Find it in [request logs](/en/docs/guides/request-logs/) and inspect attempts, usage and accounting.
 5. Reconcile quota deductions with user and audit records.

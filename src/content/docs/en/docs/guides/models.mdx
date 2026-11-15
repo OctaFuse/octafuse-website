@@ -1,7 +1,7 @@
 ---
 title: "Models and catalog sync"
 description: "Import models, maintain modalities and prices, review official changes and distinguish presets from deployed availability."
-gatewayRef: v2.19.0
+gatewayRef: v2.20.0
 ---
 
 **Models** defines client-facing IDs, vendors, modalities and catalog pricing. Routes map these IDs to upstream model names so clients can use a stable name.
@@ -36,4 +36,4 @@ Imported records and the website catalog are different data sets. Refreshing sta
 - Your gateway's public `GET /catalog/models`: capabilities with active routes.
 - User-authenticated `GET /v1/models`: LLMs by default, with `kind=image/asr/tts/embedding` and other filters.
 
-See the [model-kind reference](https://github.com/OctaFuse/octafuse-gateway/blob/v2.19.0/docs/developers/reference/model-kinds.md) and [client configuration](/en/docs/guides/clients/) for IDs and route groups.
+See the [model-kind reference](https://github.com/OctaFuse/octafuse-gateway/blob/v2.20.0/docs/developers/reference/model-kinds.md) and [client configuration](/en/docs/guides/clients/) for IDs and route groups.

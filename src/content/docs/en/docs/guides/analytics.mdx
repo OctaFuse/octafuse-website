@@ -1,7 +1,7 @@
 ---
 title: "Usage and reliability"
 description: "Compare costs, cache behavior, latency and failures by model, provider or user, then inspect individual requests."
-gatewayRef: v2.19.0
+gatewayRef: v2.20.0
 ---
 
 **Analytics** aggregates real gateway calls. Check the time window, business timezone and currency before comparing volume, usage, user charges and supplier cost.
@@ -12,6 +12,10 @@ gatewayRef: v2.19.0
 | Provider usage | Which upstreams receive traffic and incur costs? |
 | User usage | Which members or customers consume quota? |
 | Reliability | Where are failures, first-token delays and upstream waits concentrated? |
+
+## Start with the dashboard
+
+The dashboard on the Admin home page answers "is everything normal right now": cost relationships, P95 first-response and request latency, failovers, unhealthy providers and the error mix sit on one page and can be compared with the previous period of equal length. Live throughput shows RPM and TPM for the last 60 seconds. Turn on auto refresh (off by default, 10 seconds to 5 minutes) when you need to watch changes. Clicking a metric opens the matching logs or analytics with the same time range.
 
 ## From a trend to a request
 

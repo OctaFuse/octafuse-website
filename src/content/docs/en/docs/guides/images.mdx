@@ -1,7 +1,7 @@
 ---
 title: "Image generation and editing"
 description: "Choose adapters for OpenAI Images or native providers, separating client protocol, upstream protocol and billing."
-gatewayRef: v2.19.0
+gatewayRef: v2.20.0
 ---
 
 Choose the client interface first, then a compatible adapter. **OpenAI Images is a client protocol; the actual upstream may use a different native protocol.**
@@ -40,4 +40,4 @@ List image models using `GET /v1/models?kind=image`. `/v1/images/edits` is usabl
 
 Check returned images, image count, usage and the request's price snapshot. Client cancellation, gateway timeout, explicit upstream errors and empty results are not charged to the user. Image output does not imply per-image billing for every model.
 
-See the [image reference](https://github.com/OctaFuse/octafuse-gateway/blob/v2.19.0/docs/developers/reference/image-models.md) and [provider coverage matrix](https://github.com/OctaFuse/octafuse-gateway/blob/v2.19.0/docs/developers/reference/native-provider-coverage.md) for sizes, parameters and native interfaces.
+See the [image reference](https://github.com/OctaFuse/octafuse-gateway/blob/v2.20.0/docs/developers/reference/image-models.md) and [provider coverage matrix](https://github.com/OctaFuse/octafuse-gateway/blob/v2.20.0/docs/developers/reference/native-provider-coverage.md) for sizes, parameters and native interfaces.

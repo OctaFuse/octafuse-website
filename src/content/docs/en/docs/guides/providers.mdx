@@ -1,7 +1,7 @@
 ---
 title: "Providers"
 description: "Configure upstream accounts and endpoints, import templates and selectively apply official updates."
-gatewayRef: v2.19.0
+gatewayRef: v2.20.0
 ---
 
 One **Provider** record represents one upstream account: protocol endpoints, one credential and activation state. Use separate records for multiple accounts on the same platform, then place them in route pools.
@@ -24,7 +24,7 @@ Review model changes separately under [Models](/en/docs/guides/models/). See [pr
 
 Gemini supports query-key and Bearer authentication. Project-scoped Vertex AI exchanges service-account credentials for an access token. Replace project and region placeholders and provide the complete service-account JSON required by that template.
 
-Native Gemini content generation uses a unified `models.generate` template; the runtime chooses streaming or non-streaming actions. See the [configuration reference](https://github.com/OctaFuse/octafuse-gateway/blob/v2.19.0/docs/users/configuration.md) for exact authentication and URL rules.
+Native Gemini content generation uses a unified `models.generate` template; the runtime chooses streaming or non-streaming actions. See the [configuration reference](https://github.com/OctaFuse/octafuse-gateway/blob/v2.20.0/docs/users/configuration.md) for exact authentication and URL rules.
 
 ## Maintenance
 

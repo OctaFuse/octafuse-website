@@ -1,7 +1,7 @@
 ---
 title: "图片生成与编辑"
 description: "为 OpenAI Images 或厂商原生入口选择适配器，区分客户端协议、实际上游与计费方式。"
-gatewayRef: v2.19.0
+gatewayRef: v2.20.0
 ---
 
 先确定客户端使用哪种入口，再选择兼容的上游适配器。**OpenAI Images 是客户端协议，不要求实际上游也使用 OpenAI 协议。**
@@ -40,4 +40,4 @@ curl -sS http://localhost:8787/v1/images/generations \
 
 成功后核对返回图片、张数、用量和当次价格快照。客户端取消、网关超时、明确的上游错误或空结果不扣用户额度；不要将“按图片输出”误解为所有模型均按张计费。
 
-模型参数、尺寸档位、原生路径和不扣费边界见 [图片技术参考](https://github.com/OctaFuse/octafuse-gateway/blob/v2.19.0/docs/developers/reference/image-models.md) 与 [厂商覆盖矩阵](https://github.com/OctaFuse/octafuse-gateway/blob/v2.19.0/docs/developers/reference/native-provider-coverage.md)。
+模型参数、尺寸档位、原生路径和不扣费边界见 [图片技术参考](https://github.com/OctaFuse/octafuse-gateway/blob/v2.20.0/docs/developers/reference/image-models.md) 与 [厂商覆盖矩阵](https://github.com/OctaFuse/octafuse-gateway/blob/v2.20.0/docs/developers/reference/native-provider-coverage.md)。

@@ -1,10 +1,18 @@
 ---
 title: "Request flows and logs"
-description: "Locate a request by ID and inspect routing, upstream attempts, failover, usage and accounting."
-gatewayRef: v2.19.0
+description: "Locate a model or tool call by ID, filter by type, model and provider, and inspect failover, usage and accounting."
+gatewayRef: v2.20.0
 ---
 
-**Request Logs** records real Proxy calls. Direct Playground probes do not generate user request records; Simulator and real clients do.
+**Request Logs**, in the Logs group of the sidebar, records real Proxy calls: model requests, REST tool calls and MCP tool calls (the former Invocations page is merged here). Direct Playground probes do not generate user request records; Simulator and real clients do.
+
+## Filter by type, model and provider
+
+Type, Model and Provider are two-level multi-select filters, and selections are combined:
+
+- **Type** splits into models (LLM, image, ASR, TTS, embeddings) and tools (each REST tool and each MCP server), so you can, for example, view image requests together with one tool's calls.
+- **Model** is grouped by vendor and **Provider** by kind. Select a whole group or individual items, and search inside the panel.
+- Multiple selections are listed below the filter bar and can be removed one by one. Filters are linked: when the scope contains only tool calls, model, provider, protocol and route-group filters do not apply.
 
 ## Start with a failed request
 
@@ -17,7 +25,11 @@ gatewayRef: v2.19.0
 
 The timeline uses recorded attempts and waiting intervals. Missing duration is not zero duration. Upstream attempt timing and the full streaming output interval are different measurements.
 
-Common filters sit on top and advanced conditions below. Time ranges use the business timezone and may be open-ended on either side or unlimited. Amounts in the list keep the billing and cost multipliers beside them. When an upstream returns an HTML error page, the list shows a summary and the full body stays in the request detail.
+Common filters expand with the page width, and conditions such as exact IDs open on demand. Time ranges use the business timezone and may be open-ended on either side or unlimited. Amounts in the list keep the billing and cost multipliers beside them. When an upstream returns an HTML error page, the list shows a summary and the full body stays in the request detail. To watch new traffic, turn on auto refresh (10 seconds to 5 minutes); while you read the list, new entries are announced before they appear.
+
+## Tool call details
+
+Tool call details show an overview, request, response and accounting instead of the model request flow. REST tools list the engine, request parameters and results; MCP tools list the server, upstream tool, arguments and returned content. Switch the request and response areas between Preview and Raw data at the top right. When a call fails, the top of the detail shows the original error and what to check, with links to the tool configuration or MCP server.
 
 ## Check charges
 
@@ -29,4 +41,4 @@ Use [Audit Logs](/en/docs/guides/audit-logs/) for changes to the budget and wall
 
 Filter MCP calls by service; OAuth calls identify the application and charge its associated user. For Sticky, combine lookup, unbind and rebound information with cache-read usage and failover counts.
 
-One request explains one execution. Use [usage and reliability](/en/docs/guides/analytics/) for trends. See the [log API reference](https://github.com/OctaFuse/octafuse-gateway/blob/v2.19.0/docs/developers/api/admin.md) for fields.
+One request explains one execution. Use [usage and reliability](/en/docs/guides/analytics/) for trends. See the [log API reference](https://github.com/OctaFuse/octafuse-gateway/blob/v2.20.0/docs/developers/api/admin.md) for fields.

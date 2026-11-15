@@ -1,7 +1,7 @@
 ---
 title: "维护模式"
 description: "在维护窗口拒绝新推理请求，保留健康检查，并按需冻结管理端写入。"
-gatewayRef: v2.19.0
+gatewayRef: v2.20.0
 ---
 
 在系统 → 配置（Config）的「维护模式」分区设置维护时间与提示，旧的维护模式地址会自动跳转到这里。适合迁移、切换或维护窗口；它不会自动为你执行数据库迁移。
@@ -26,4 +26,4 @@ gatewayRef: v2.19.0
 
 配置读取失败时采用放行行为；维护模式不能替代数据库或网络层的强制隔离。跨数据库迁移可能复制维护配置，切换后需要明确检查。
 
-完整例外接口、权限与运行语义见 [维护模式参考](https://github.com/OctaFuse/octafuse-gateway/blob/v2.19.0/docs/operators/maintenance-mode.md)。
+完整例外接口、权限与运行语义见 [维护模式参考](https://github.com/OctaFuse/octafuse-gateway/blob/v2.20.0/docs/operators/maintenance-mode.md)。
