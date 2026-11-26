@@ -1,0 +1,127 @@
+---
+title: OctaFuse 2.21.0：更多 MCP 客户端能直接接入，供应商可配默认请求参数，路由编辑器能拉上游模型清单
+description: MCP OAuth 支持机密客户端、手工签发凭据，新增 Claude Code、Cursor、VS Code 等客户端预设；供应商可按协议设置默认请求头和请求体；路由编辑器直接从供应商拉取上游模型清单；供应商和模型导入目录默认从官网加载；管理后台新增登录失败锁定。升级需先执行迁移 0037 和 0038。
+publishDate: 2026-11-26
+updateLabel: VERSION 2.21.0
+featuredUpdate: true
+template: splash
+prev: false
+next: false
+lastUpdated: false
+sidebar:
+  hidden: true
+---
+
+OctaFuse Gateway 2.21.0 的重点有三件事：让更多 MCP 客户端能直接接入你的 Gateway；供应商可以配置默认请求参数，不必每条路由都重复填；路由编辑器能直接从供应商拉取上游模型清单，不用再手抄模型名。
+
+另外，供应商和模型的导入目录改为默认从官网加载，管理后台新增登录失败锁定，路由配置界面整体重做，调试台和模拟器能看到发往上游的实际请求。
+
+**这一版有两条必须先执行的数据库迁移 0037 和 0038**，只新增可空列或带默认值的列。升级后默认不改变现有行为。
+
+## 01｜MCP 授权：更多客户端能直接接入
+
+2.20.0 让 Gateway 自己充当 OAuth 授权服务器，这一版继续补齐客户端兼容，让 Claude Code、Cursor、VS Code 这类客户端也能接入：
+
+- **机密客户端**：动态注册支持机密客户端，注册时返回一次性可见的 `client_secret`。令牌和撤销端点支持 `client_secret_basic` 与 `client_secret_post`，机密客户端可以省略 PKCE。
+- **手工签发凭据**：有些客户端不支持动态注册，可以在后台为它手工签发固定凭据，需要时重置密钥或删除客户端。客户端列表可按注册方式筛选，并能看出是否配置了密钥。
+- **更多预设**：新增 Claude Code、Cursor、VS Code、Gemini CLI 和本地 MCP 客户端预设，WorkBuddy 补充了回调域名，一键导入即可。
+- **回调规则更灵活**：支持子域通配和末尾 `*` 前缀匹配，具体地址优先；本机 `localhost` 回调和 `127.0.0.1` 一样支持动态端口。
+- **发现地址补齐**：新增 `/.well-known/oauth-authorization-server/mcp[/{slug}]`、`/mcp/.well-known/oauth-authorization-server` 等路径，`/mcp` 的 401 响应声明 `scope="mcp"`，客户端能自己找到授权入口。
+- **CIMD**：需要用 HTTPS 元数据文档标识客户端时，可以在 OAuth 卡片里开启，或设置 `MCP_OAUTH_CIMD_ENABLED=true`。默认关闭。
+
+![MCP 服务页「应用与用户授权」里展开的导入预设菜单，下方是客户端接入文档的 Cursor 配置](/screenshots/v2-21-0-oauth-presets.webp)
+
+*MCP 服务 → 客户端接入 → OAuth 2.0（英文界面）。「导入预设」菜单里新增了 Claude Code、Cursor、VS Code 和 Gemini CLI；下方的客户端接入文档按客户端给出配置，图中是 Cursor 的 `mcp.json`。用户邮箱已遮盖，令牌只显示前缀。*
+
+某个客户端注册失败时，先在日志里搜 `registration rejected`，通常是回调地址没有匹配到任何应用。使用反向代理的部署，还要确认转发了 `/.well-known/oauth-authorization-server*`。配置步骤见 [MCP OAuth 授权](/zh/docs/guides/oauth/)。
+
+另外，MCP 服务页的目录审核现在能逐项对比工具定义和参数结构的变化，接受、启用或跳过后继续下一项，也支持批量接受变更、批量启用新增条目。
+
+## 02｜供应商默认请求参数
+
+很多上游需要固定的请求头或请求体字段，比如某个自定义头、固定的采样参数。以前只能在每条路由里分别填。现在供应商编辑弹窗有了「自定义参数」页签：
+
+- 可以**按上游协议**分别设置默认请求头和请求体；
+- 路由仍可单独覆盖，**路由配置优先于供应商配置**；
+- 受保护的请求头和 `model` 字段依旧由网关管理，不会被覆盖；
+- 原生透传和 WebSocket 入口也会带上配置的请求头。
+
+![供应商编辑弹窗的「自定义参数」页签：左侧按协议切换，右侧分别设置默认请求头和请求体](/screenshots/v2-21-0-provider-custom-params.webp)
+
+*供应商编辑弹窗的「自定义参数」页签（英文界面）。左侧按上游协议切换，右侧分别设置默认请求头和请求体。图中的 `X-Title` 和 `temperature` 只是示例值，没有保存。*
+
+调试台预览和线上请求使用同一套合并逻辑，保存前就能看到最终发往上游的内容。详见 [供应商](/zh/docs/guides/providers/#自定义请求参数)。
+
+## 03｜路由编辑器：直接选上游模型
+
+新建或编辑路由时，点击「供应商模型名称」，Gateway 会按所选供应商加载它的上游模型列表，在下拉框里按模型 ID 或展示名搜索即可，最多返回 1000 条，只列出符合当前路由操作类型的候选。
+
+- 仍然可以手工输入任意 ID；供应商没有可用的列表接口，或者还没填密钥时，保持手工输入。
+- 候选只帮你填写，不代表你的账号有调用权限；刷新结果不落库。
+
+路由配置页本身也重做了：
+
+- **筛选**：模型和供应商支持搜索、分组多选和逐项移除，筛选条件可以通过链接分享；
+- **布局**：「按模型」的卡片和列表都能在紧凑与平铺之间切换，浏览器会记住选择；
+- **价格**：始终逐行展示全部适用时段，并标出当前生效的时段，倍率可在实际倍率与原始倍率间切换；
+- **复制**：调用路径和模型 ID 可以直接复制；点击模型名称编辑模型，点击标题旁的加号为当前入口添加供应商。
+
+![路由配置页按模型展示 DeepSeek V4.1 Flash：左侧是入口与路由组，右侧按优先级分层列出上游及分时段倍率](/screenshots/v2-21-0-route-list.webp)
+
+*路由配置页（英文界面，搜索了 DeepSeek V4）。左侧是请求入口、路由组和粘性设置；右侧按优先级分层列出上游，带请求参数的路由有「Params」标记，价格按时段逐行显示，当前生效的时段有蓝色竖线。账户名已替换为通用名称。*
+
+## 04｜导入目录改为从官网加载
+
+供应商和模型的导入弹窗现在默认从 `https://octafuse.dev` 加载目录，不必等 Gateway 发版才能看到新增的模板和模型。模型导入新增「模型厂商」筛选，可以和功能分类、搜索、生命周期筛选组合使用。
+
+两点留意：
+
+- **内网或离线部署**：Admin 进程需要能出站访问该站点。否则请把 `CATALOG_BASE_URL` 指向你自己的目录镜像，镜像需提供 `/api/catalog/providers`、`/api/catalog/models` 和 `/api/catalog/models-by-vendor/{vendor}`，否则导入弹窗无法加载目录。
+- **导入稳定性**：供应商导入改用模板英文名作为稳定键，远端目录顺序变化不会再导入错条目；仍携带旧下标的请求返回 `409`，重新加载目录再选择即可。
+
+## 05｜管理后台的其他改动
+
+- **登录失败锁定**：同一来源或全局管理员账户在 30 分钟内连续 5 次登录失败后，新登录请求冷却 30 分钟，登录页显示倒计时。计数只保存在 Admin 进程内，重启后清空；现有会话、管理 API Key 和代理服务不受影响。用错误密码反复重试的自动化脚本会触发锁定。
+- **调试台与模拟器**：调试台按线上规则预览请求头和请求体，标明配置来自供应商还是路由，发送后展示服务端回传的上游请求；模拟器可以对照输入 JSON 和网关请求；语言模型调用完成后，可按请求 ID 查看脱敏的上游快照和生效配置。
+- **供应商列表**：宽屏下新增「启用状态」列，卡片也更紧凑，待填密钥和无密钥状态更醒目。
+- **Gemini 签名错误重试**：上游返回 `Corrupted thought signature` 时，网关会清理会话历史里的思考签名，并向同一上游重试一次。
+
+## 06｜模型目录与供应商模板
+
+已导入的模型不会被覆盖，导入也不会自动挂路由；新模型需要手工导入并配置路由。以下价格均按每百万 token 计，Gemini 和 GPT 的人民币目录价按美元刊例价 ×7 换算。
+
+| 模型 | 说明 |
+|---|---|
+| **Gemini 4 Neon** | `gemini-4-neon`，多模态输入，1M 窗口，同步输出默认 64K。输入 $3、输出 $15，隐式缓存 $0.15。思考默认 `high`，不支持关闭，传入 `minimal` 或 `thinking_budget` 会返回 400。 |
+| **GPT-6.2 Astra / Sol** | `gpt-6.2-astra`、`gpt-6.2-sol`，1.05M 上下文、128K 输出。Astra 输入 $8、输出 $40；Sol 输入 $2、输出 $10。输入超过 272K 时，输入与缓存价翻倍、输出价为 1.5 倍。工具调用须用 Responses API，两款都不接受 `reasoning.effort=none`。 |
+| **Hy4 flash** | `hy4-flash`，1M 上下文、约 64K 输出。国内输入 ¥0.5、输出 ¥2；国际输入 $0.07、输出 $0.281。目录价未计入截至 2026-11-30 的 TokenHub 五折优惠。`hy4-preview` 已标记于 2026-12-07 下线。 |
+| **Qwen4 Max** | `qwen4-max` 正式版，1M 上下文、128K 输出，默认思考档 `high`。国内输入 ¥10、输出 ¥30；国际输入 $1.5、输出 $4.5。`qwen4-max-preview` 的目录价已与正式版对齐，官方预览期至 2026-11-25。 |
+
+供应商模板方面：
+
+- **OpenCode**：Zen 和 Go 的导入模板分别改用 `https://opencode.ai/inference` 和 `https://opencode.ai/inference/go`。已有供应商不会自动更新，需要手动改地址。
+- **Modelink**：新增七牛云 AI 海外接入模板（`api.modelink.ai`），预填 OpenAI Chat、Responses、Images、Anthropic 以及 Vertex 兼容的 Gemini 端点。中国大陆继续使用「七牛云 AI」模板。
+
+完整规格和缓存价格见 [模型目录](/zh/catalog/models/)。
+
+## 升级须知
+
+**从 2.20.0 升级到 2.21.0 需要先执行迁移 0037 和 0038。** D1、Postgres、MySQL 都有对应脚本，只新增列，已有数据不变。
+
+1. 备份数据库，先执行 0037（OAuth 客户端凭据字段）和 0038（供应商 `custom_params` 可空列）。
+2. 将 Proxy、Admin 和 migrate 三个镜像更新到同一版本，再滚动重启。
+3. 升级后抽查 MCP 客户端授权、供应商自定义参数、路由编辑器的模型候选和导入弹窗。
+
+升级时还需留意：
+
+- **目录出站访问**：Admin 默认从 `https://octafuse.dev` 加载导入目录；内网或离线部署升级前先设置 `CATALOG_BASE_URL`。可选变量还有 `CATALOG_TIMEOUT_MS`、`CATALOG_TTL_MS`，见 [Docker 部署](/zh/docs/deploy/docker/)。
+- **登录锁定**：自动化脚本用错误密码重试会被锁定 30 分钟。
+- **OpenCode**：已有供应商的地址不会自动更新。
+- **CIMD**：`MCP_OAUTH_CIMD_ENABLED` 默认关闭，不开启则行为不变。
+
+完整变更见 [GitHub Release v2.21.0](https://github.com/OctaFuse/octafuse-gateway/releases/tag/v2.21.0) 和 [更新记录](https://github.com/OctaFuse/octafuse-gateway/blob/v2.21.0/CHANGELOG.md)，升级步骤见 [升级与迁移](/zh/docs/deploy/upgrades/)。
+
+- [OctaFuse 官网](https://octafuse.dev/zh/)
+- [GitHub 仓库](https://github.com/OctaFuse/octafuse-gateway)
+
+如果 OctaFuse 对你的项目有帮助，欢迎在 GitHub 上点一个 **Star** 支持，也欢迎提交 PR。我们也在寻找对项目感兴趣的兼职或全职伙伴。
