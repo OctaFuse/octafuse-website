@@ -1,7 +1,7 @@
 ---
 title: "REST 服务"
 description: "配置网页搜索、网页抓取、深度搜索和 AI 率检测，选择活跃引擎并管理工具收费。"
-gatewayRef: v2.20.0
+gatewayRef: v2.21.0
 ---
 
 REST 服务（REST Services）通过 `/v1/tools/*` 为应用和 Agent 提供独立工具 API。它们不是模型对话协议的一部分；模型产生工具调用后，由客户端执行对应工具请求。
@@ -43,4 +43,4 @@ curl -sS http://localhost:8787/v1/tools/web-search \
 
 上游失败不扣用户额度；未配置可用活跃引擎时，调用不能成功。想接入外部标准化工具协议，阅读 [MCP 服务](/zh/docs/guides/mcp/)；REST 工具不会自动作为 MCP 暴露。
 
-各服务字段与引擎限制见 [工具 API 参考](https://github.com/OctaFuse/octafuse-gateway/blob/v2.20.0/docs/developers/api/user.md)。
+各服务字段与引擎限制见 [工具 API 参考](https://github.com/OctaFuse/octafuse-gateway/blob/v2.21.0/docs/developers/api/user.md)。

@@ -1,10 +1,10 @@
 ---
 title: "支持能力与边界"
-description: "按正式版 2.20.0 查看协议、多模态、MCP 与运行边界，区分客户端入口、上游协议和静态预设。"
-gatewayRef: v2.20.0
+description: "按正式版 2.21.0 查看协议、多模态、MCP 与运行边界，区分客户端入口、上游协议和静态预设。"
+gatewayRef: v2.21.0
 ---
 
-本指南以 **Gateway v2.20.0** 为基线。目录中的模型是配置起点；真正可调用的能力取决于模型、供应商端点、适配器和已启用的请求入口。
+本指南以 **Gateway v2.21.0** 为基线。目录中的模型是配置起点；真正可调用的能力取决于模型、供应商端点、适配器和已启用的请求入口。
 
 ## 可以接入什么
 
@@ -15,7 +15,7 @@ gatewayRef: v2.20.0
 | 语音识别与合成 | OpenAI Audio，以及已支持的 DashScope、MiniMax、ElevenLabs 入口 | 同步、异步与 WebSocket 支持范围不同，按模型和适配器选择 |
 | 向量 | OpenAI Embeddings、Gemini embedContent / batchEmbedContents | 只按上游报告的输入 Token 计费 |
 | REST 工具 | `/v1/tools/*` | 网页搜索、抓取、深度搜索及 AI 率检测；需要配置对应引擎 |
-| MCP 服务 | `/mcp`、`/mcp/服务标识` | 聚合已审核的远程 Streamable HTTP 服务；支持用户密钥及可选 OAuth |
+| MCP 服务 | `/mcp`、`/mcp/服务标识` | 聚合已审核的远程 Streamable HTTP 服务；支持用户密钥及可选 OAuth（内置或外部授权服务器） |
 
 ## 入口、上游与模型预设
 
@@ -28,10 +28,10 @@ gatewayRef: v2.20.0
 - 视频生成与编辑、任意协议之间的自动转换，不属于本版通用能力。
 - 实时音频按厂商原生协议接入，不提供通用的 OpenAI Realtime 转换。
 - MCP 上游使用远程 Streamable HTTP；不托管本地 stdio 进程，不自动把内置 REST 工具转换成 MCP。
-- MCP OAuth 需要另行对接授权服务器；网关负责资源访问与令牌校验。
+- MCP OAuth 可使用 Gateway 内置授权服务器（支持公开、机密、手工与 CIMD 客户端），也可对接外部授权服务器；业务系统负责登录与同意页，用户账号需对应到网关用户。
 - 管理后台调试台直连上游；完整的鉴权、故障转移和扣费需通过模拟器或真实客户端验证。
 
-详细支持矩阵见 [厂商能力覆盖](https://github.com/OctaFuse/octafuse-gateway/blob/v2.20.0/docs/developers/reference/native-provider-coverage.md)，适配器组合见 [适配器与驱动](https://github.com/OctaFuse/octafuse-gateway/blob/v2.20.0/docs/developers/architecture/adapters-and-drivers.md)。
+详细支持矩阵见 [厂商能力覆盖](https://github.com/OctaFuse/octafuse-gateway/blob/v2.21.0/docs/developers/reference/native-provider-coverage.md)，适配器组合见 [适配器与驱动](https://github.com/OctaFuse/octafuse-gateway/blob/v2.21.0/docs/developers/architecture/adapters-and-drivers.md)。
 
 ## 选择下一步
 

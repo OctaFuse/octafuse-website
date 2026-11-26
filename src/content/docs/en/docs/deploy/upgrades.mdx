@@ -1,7 +1,7 @@
 ---
 title: "Upgrades and migrations"
 description: "Plan backups, maintenance, pending database migrations and matching service rollouts, then verify real requests."
-gatewayRef: v2.20.0
+gatewayRef: v2.21.0
 ---
 
 Record the current and target versions and review compatibility changes. When skipping releases, apply every pending migration, not just the final release's new SQL.
@@ -16,11 +16,23 @@ Record the current and target versions and review compatibility changes. When sk
 
 A particular release may require a stricter cutover. This summary is not a substitute for its production migration instructions.
 
+## Upgrade to 2.21.0
+
+From 2.20.0 apply **0037** and **0038** first. The former adds credential fields to OAuth clients (used by confidential and manual clients and CIMD); the latter adds a nullable `custom_params` column to providers. Both only add columns and leave existing data unchanged. Migrate before updating the Proxy, Admin and migrate images to the same version; the new services read the new columns and fail if they are missing, while older services keep working against a migrated database.
+
+- [0037: OAuth confidential and manual clients](https://github.com/OctaFuse/octafuse-gateway/blob/v2.21.0/docs/operators/migrations/0037-oauth-client-credentials.md)
+- [0038: provider default request parameters](https://github.com/OctaFuse/octafuse-gateway/blob/v2.21.0/docs/operators/migrations/0038-provider-custom-params.md)
+- **Admin now imports providers and models from the official catalog by default.** Admin must be able to reach `https://octafuse.dev` over outbound HTTPS. For internal or offline deployments, point Admin's `CATALOG_BASE_URL` at a reachable HTTPS catalog mirror before upgrading; otherwise import and sync preview cannot load the catalog. Provider import requests that carry an old array index return 409; reload the catalog and select again.
+- Admin adds sign-in lockout: 5 failures trigger a 30-minute cooldown, counted in process memory.
+- New optional `MCP_OAUTH_CIMD_ENABLED` (off by default). The OpenCode import template addresses changed; update existing providers manually if you want to switch.
+- New catalog entries (such as `gemini-4-neon`, `gpt-6.2-astra`, `gpt-6.2-sol`, `hy4-flash` and `qwen4-max`) must be imported and routed manually; already imported models are not overwritten.
+- After upgrading, spot-check MCP client authorization, provider custom parameters, route-editor model candidates and the import dialog. See the [v2.21.0 release notes](https://github.com/OctaFuse/octafuse-gateway/releases/tag/v2.21.0) for the full list.
+
 ## Upgrade to 2.20.0
 
 From 2.19.0 apply **0036** first. It adds the application directory, client registration and authorization request tables for the built-in OAuth authorization server, plus nullable columns on OAuth access tokens. Migrate before updating the Proxy, Admin and migrate images to the same version; older Proxy and Admin versions keep working against the migrated database. Apply the schema change even if you will not enable the built-in server yet.
 
-- [0036: built-in OAuth authorization server](https://github.com/OctaFuse/octafuse-gateway/blob/v2.20.0/docs/operators/migrations/0036-oauth-authorization-server.md)
+- [0036: built-in OAuth authorization server](https://github.com/OctaFuse/octafuse-gateway/blob/v2.21.0/docs/operators/migrations/0036-oauth-authorization-server.md)
 - New `MCP_OAUTH_ISSUER` and optional `MCP_OAUTH_CONSENT_URL`; with `MCP_OAUTH_ISSUER` empty, behavior is unchanged. Admin adds an optional runtime variable `GATEWAY_PROXY_URL` for the default Proxy address used by REST docs, Simulator and MCP connection guides.
 - Integration keys that call `/api/admin/oauth/*` need `oauth.read`, `oauth.write` or `oauth.consent`.
 - Invocations are now part of Request logs; the old `/gateway/tools/invocations` address redirects there with its filters.
@@ -40,10 +52,10 @@ Upgrading from 2.18.0 to 2.19.0 **adds no database migration** and no new or ren
 
 From 2.17.0 apply **0034** and **0035** first. They support sticky binding user details and separate OAuth access tokens with request-log attribution. Apply schema changes even when OAuth will not yet be enabled.
 
-- [0034: sticky bindings](https://github.com/OctaFuse/octafuse-gateway/blob/v2.20.0/docs/operators/migrations/0034-sticky-binding-affinity-key.md)
-- [0035: OAuth access tokens](https://github.com/OctaFuse/octafuse-gateway/blob/v2.20.0/docs/operators/migrations/0035-oauth-access-tokens.md)
+- [0034: sticky bindings](https://github.com/OctaFuse/octafuse-gateway/blob/v2.21.0/docs/operators/migrations/0034-sticky-binding-affinity-key.md)
+- [0035: OAuth access tokens](https://github.com/OctaFuse/octafuse-gateway/blob/v2.21.0/docs/operators/migrations/0035-oauth-access-tokens.md)
 
-Earlier upgrades also involve dual quota pools, model configuration and MCP. See the [migration index](https://github.com/OctaFuse/octafuse-gateway/blob/v2.20.0/docs/operators/README.md) for all transitions.
+Earlier upgrades also involve dual quota pools, model configuration and MCP. See the [migration index](https://github.com/OctaFuse/octafuse-gateway/blob/v2.21.0/docs/operators/README.md) for all transitions.
 
 ## After deployment
 

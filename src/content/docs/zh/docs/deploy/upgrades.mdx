@@ -1,7 +1,7 @@
 ---
 title: "升级与迁移"
 description: "按正式版本检查数据库迁移、备份、维护窗口和服务更新，并完成业务验收。"
-gatewayRef: v2.20.0
+gatewayRef: v2.21.0
 ---
 
 升级前记录当前版本和目标版本，阅读目标版本的兼容性变化。跨多个版本升级时，执行全部尚未应用的迁移，不能只运行最后一个版本新增的 SQL。
@@ -16,11 +16,23 @@ gatewayRef: v2.20.0
 
 具体版本可能要求更严格的切换顺序，不要仅根据本摘要执行跨版本生产迁移。
 
+## 2.21.0 的升级入口
+
+从 2.20.0 升级需要 **0037** 和 **0038**：前者为 OAuth 客户端增加凭据字段（机密客户端、手工客户端与 CIMD 使用），后者为供应商增加可空的 `custom_params` 字段。都只新增列，已有数据不变。先执行迁移，再把 Proxy、Admin 和迁移镜像更新到同一版本；新版服务读取新列，列不存在会报错，旧版服务配合已迁移的库可以正常运行。
+
+- [0037：OAuth 机密客户端与手工客户端](https://github.com/OctaFuse/octafuse-gateway/blob/v2.21.0/docs/operators/migrations/0037-oauth-client-credentials.md)
+- [0038：供应商默认请求参数](https://github.com/OctaFuse/octafuse-gateway/blob/v2.21.0/docs/operators/migrations/0038-provider-custom-params.md)
+- **管理后台默认从官网目录导入供应商和模型。** Admin 需要能出站访问 `https://octafuse.dev`；内网或离线部署升级前，把 Admin 的 `CATALOG_BASE_URL` 指向可访问的 HTTPS 目录镜像，否则导入与同步预览无法加载目录。携带旧下标的供应商导入请求会返回 409，刷新目录后重新选择。
+- 管理后台新增登录失败锁定：5 次失败后冷却 30 分钟，计数在进程内。
+- 新增可选的 `MCP_OAUTH_CIMD_ENABLED`（默认关闭）。OpenCode 导入模板的地址已调整，已有供应商如需切换须手动更新。
+- 新目录项（如 `gemini-4-neon`、`gpt-6.2-astra`、`gpt-6.2-sol`、`hy4-flash`、`qwen4-max`）需要手工导入并配置路由，不会覆盖已导入的模型。
+- 升级后抽查 MCP 客户端授权、供应商自定义参数、路由编辑器的模型候选和导入弹窗。完整变更见 [v2.21.0 发布说明](https://github.com/OctaFuse/octafuse-gateway/releases/tag/v2.21.0)。
+
 ## 2.20.0 的升级入口
 
 从 2.19.0 升级需要 **0036**：新增内置 OAuth 授权服务器所需的应用目录、客户端注册与授权请求表，并给 OAuth 访问令牌增加可空列。先执行迁移，再把 Proxy、Admin 和迁移镜像更新到同一版本；旧版 Proxy / Admin 配合已迁移的库可以正常运行。即使暂不启用内置授权服务器，也不能跳过结构迁移。
 
-- [0036：内置 OAuth 授权服务器](https://github.com/OctaFuse/octafuse-gateway/blob/v2.20.0/docs/operators/migrations/0036-oauth-authorization-server.md)
+- [0036：内置 OAuth 授权服务器](https://github.com/OctaFuse/octafuse-gateway/blob/v2.21.0/docs/operators/migrations/0036-oauth-authorization-server.md)
 - 新增 `MCP_OAUTH_ISSUER` 与可选的 `MCP_OAUTH_CONSENT_URL`；`MCP_OAUTH_ISSUER` 为空时行为与升级前一致。Admin 新增可选的运行时变量 `GATEWAY_PROXY_URL`，用于 REST 文档、模拟器与 MCP 接入的默认 Proxy 地址。
 - 调用 `/api/admin/oauth/*` 的集成密钥需要授予 `oauth.read`、`oauth.write` 或 `oauth.consent`。
 - 「调用记录」已并入「请求日志」，旧地址 `/gateway/tools/invocations` 会带着筛选跳转过去。
@@ -40,10 +52,10 @@ gatewayRef: v2.20.0
 
 从 2.17.0 升级需要 **0034** 和 **0035**：前者支持粘性绑定用户明细，后者支持独立 OAuth 访问令牌与请求日志关联。需要先迁移，再更新服务；即使暂不启用 OAuth，也不能跳过结构迁移。
 
-- [0034：粘性绑定](https://github.com/OctaFuse/octafuse-gateway/blob/v2.20.0/docs/operators/migrations/0034-sticky-binding-affinity-key.md)
-- [0035：OAuth 访问令牌](https://github.com/OctaFuse/octafuse-gateway/blob/v2.20.0/docs/operators/migrations/0035-oauth-access-tokens.md)
+- [0034：粘性绑定](https://github.com/OctaFuse/octafuse-gateway/blob/v2.21.0/docs/operators/migrations/0034-sticky-binding-affinity-key.md)
+- [0035：OAuth 访问令牌](https://github.com/OctaFuse/octafuse-gateway/blob/v2.21.0/docs/operators/migrations/0035-oauth-access-tokens.md)
 
-更早版本还涉及双额度、模型配置与 MCP 等变更。完整索引见 [迁移与切换索引](https://github.com/OctaFuse/octafuse-gateway/blob/v2.20.0/docs/operators/README.md)。
+更早版本还涉及双额度、模型配置与 MCP 等变更。完整索引见 [迁移与切换索引](https://github.com/OctaFuse/octafuse-gateway/blob/v2.21.0/docs/operators/README.md)。
 
 ## 升级后检查什么
 

@@ -1,7 +1,7 @@
 ---
 title: "MCP OAuth 授权"
 description: "让 MCP 客户端用业务系统账号登录授权，无需填写 API Key；可用内置授权服务器，也可对接外部授权服务器。"
-gatewayRef: v2.20.0
+gatewayRef: v2.21.0
 ---
 
 OAuth 适用于把 Gateway 的 MCP 服务提供给外部用户、又不希望他们手动粘贴 API Key 的场景。用户在 ChatGPT、Claude、Codex 等客户端里点击连接，跳到你的业务系统登录并同意，客户端就拿到一个只能访问 MCP 的令牌。现有 API Key 接入不受影响。
@@ -20,13 +20,45 @@ OAuth 只用于 MCP 入口，不是模型接口的通用登录方式，也不会
 
 ## 使用内置授权服务器
 
-1. **准备应用目录**：在「OAuth 访问令牌」区的「应用」中点击「导入预设」，按需导入 ChatGPT、Claude、Codex、豆包、WorkBuddy，或手工添加应用。客户端注册时按回调地址归属应用，没有匹配应用的客户端无法注册。
+1. **准备应用目录**：在「OAuth 访问令牌」区的「应用」中点击「导入预设」，按需导入 ChatGPT、Claude、Claude Code、Codex、Cursor、VS Code、Gemini CLI、豆包、WorkBuddy 或「Local MCP clients」（兜底接住其他应用没认领的本机回环回调），也可以手工添加应用。客户端注册时按回调地址归属应用，没有匹配应用的客户端无法注册。回调规则的写法见下文。
 2. **准备登录与同意页**：在业务系统中提供一个页面，接收 Gateway 附带的 `request_id`，确认用户已登录后，用带 `oauth.consent` 权限的集成密钥把用户的同意或拒绝回传给 Gateway，再按返回的地址跳回客户端。不想接入自己的站点时，可以留空，使用内置确认页（用户用自己的 API Key 确认）。
-3. **转发授权路径**：反向代理把 `/oauth/*` 与 `/.well-known/oauth-authorization-server` 转发到 Proxy，与 `/mcp` 使用同一公开域名。
+3. **转发授权路径**：反向代理把 `/oauth/*`、`/.well-known/oauth-authorization-server*`、`/.well-known/oauth-protected-resource*` 与 `/mcp*` 转发到 Proxy，与 `/mcp` 使用同一公开域名。
 4. **保存设置**：选择「内置授权服务器」，填写「本 Gateway 的公开地址（issuer）」和「登录与同意页（可选）」，保存。
 5. **用真实客户端验收**：逐个完成授权、工具调用、刷新和撤销，确认请求日志中显示的应用名与所属用户正确。
 
-从外部授权服务器切换过来时，已有授权会在访问令牌过期后失效，用户需要重新授权。完整步骤见 [0036 迁移说明](https://github.com/OctaFuse/octafuse-gateway/blob/v2.20.0/docs/operators/migrations/0036-oauth-authorization-server.md)。
+从外部授权服务器切换过来时，已有授权会在访问令牌过期后失效，用户需要重新授权。完整步骤见 [0036 迁移说明](https://github.com/OctaFuse/octafuse-gateway/blob/v2.21.0/docs/operators/migrations/0036-oauth-authorization-server.md)。机密客户端、手工客户端和 CIMD 需要的表结构由 [0037 迁移说明](https://github.com/OctaFuse/octafuse-gateway/blob/v2.21.0/docs/operators/migrations/0037-oauth-client-credentials.md) 说明，升级时必须先执行。
+
+## 回调规则与应用归属
+
+应用的回调规则每行一条，可以写：
+
+| 写法 | 含义 |
+|------|------|
+| `https://chatgpt.com/connector_platform_oauth_redirect` | 具体地址，精确匹配 |
+| `http://127.0.0.1/callback`、`http://localhost/callback`、`http://[::1]/callback` | 本机回环，忽略端口，路径仍须一致 |
+| `cursor://anysphere.cursor-mcp/oauth/callback` | 自定义 scheme（桌面或命令行客户端），精确匹配 |
+| `https://*.workbuddy.cn` | 任意子域、任意路径；只允许 https，不匹配裸域名 |
+| `http://127.0.0.1/*` | 末尾 `*` 按路径前缀匹配 |
+
+通配只能写在 Admin 的应用规则里，客户端注册时提交的回调必须是具体地址。多个应用都覆盖同一回调时，先看客户端名称是否命中某个应用的名称关键字，再取匹配最精确的应用，具体地址优先于通配；仍无法区分则拒绝注册。所以「Local MCP clients」不会抢走 Codex、Claude Code 的注册。
+
+## 客户端类型
+
+| 类型 | 适用场景 | 说明 |
+|------|------|------|
+| 公开客户端 | 大多数桌面与命令行客户端 | 动态注册，必须带 PKCE（`S256`） |
+| 机密客户端 | 服务端托管的客户端 | 动态注册时声明 `client_secret_basic` 或 `client_secret_post`，注册响应里**只显示一次** `client_secret`；令牌与撤销端点都支持这两种认证方式，PKCE 可选 |
+| 手工客户端 | 不支持动态注册、要求填写固定 client_id / client_secret 的平台 | 在某个应用下点击「手工凭据」签发，可重置密钥或删除；不会被 7 天未使用清理 |
+| 元数据文档客户端（CIMD） | 较新的 MCP 客户端，`client_id` 是一个 https 地址 | 默认关闭；在「OAuth 2.0 授权登录」卡片中开启，或设置 `MCP_OAUTH_CIMD_ENABLED=true`。Gateway 会抓取该地址上的元数据，部署在可访问敏感内网的环境前请先阅读技术参考中的限制 |
+
+secret 只保存哈希，丢失后只能重置。手工客户端适合接入要求填写「服务端认证」信息的平台：把授权地址 `{issuer}/oauth/authorize`、令牌地址 `{issuer}/oauth/token`、scope `mcp`、`client_id` 和 `client_secret` 填到对方平台，并把对方给出的回调域名写进应用规则。
+
+## 接入新的 Agent
+
+1. 先确认客户端支持什么：动态注册、CIMD，还是只能填固定凭据。
+2. 动态注册或 CIMD：确认它的回调已被某个应用覆盖。本机回环回调默认落到「Local MCP clients」；需要单独统计或停用时，新建应用并写具体回调。
+3. 固定凭据：在对应应用下签发手工凭据，再按上表填到对方平台。
+4. 客户端里填写的 MCP 地址是 `{issuer}/mcp`，只接入一个服务时用 `{issuer}/mcp/服务标识`。
 
 ## 令牌、刷新与撤销
 
@@ -38,8 +70,9 @@ OAuth 只用于 MCP 入口，不是模型接口的通用登录方式，也不会
 
 ## 排查授权问题
 
-- 客户端提示无法注册：检查「应用」中是否有启用的应用，回调地址与客户端实际使用的一致。
+- 客户端提示无法注册：检查「应用」中是否有启用的应用，回调规则覆盖了客户端实际使用的地址。注册被拒时，Proxy 日志会记一条 `registration rejected`，包含客户端名称和回调，可据此补充应用规则。
+- 客户端报「OAuth 发现失败」：用 `curl` 逐个确认 `/.well-known/oauth-authorization-server`、`/.well-known/oauth-protected-resource` 和 `/mcp` 的 401 响应都经由公开域名到达 Proxy，且元数据里的 `issuer` 与 Admin 中填写的一致。
 - 跳转后停在同意页：确认同意页能读取 `request_id`，集成密钥具有 `oauth.consent` 权限；授权请求 10 分钟内有效，过期后需要从客户端重新发起。
 - 401 表示需要重新取得或刷新令牌；用 MCP 令牌调用聊天等其他接口会因作用域不匹配被拒绝（403）。
 
-端点、对象模型和同意页接口见 [OAuth 技术参考](https://github.com/OctaFuse/octafuse-gateway/blob/v2.20.0/docs/developers/architecture/mcp-gateway.md#oauth-授权)。
+端点、对象模型和同意页接口见 [OAuth 技术参考](https://github.com/OctaFuse/octafuse-gateway/blob/v2.21.0/docs/developers/architecture/mcp-gateway.md#oauth-授权)。

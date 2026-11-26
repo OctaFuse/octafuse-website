@@ -1,14 +1,14 @@
 ---
 title: "模型与官方目录"
 description: "导入模型、维护能力与目录价，比较官方变更，并区分静态目录与部署中的可调用模型。"
-gatewayRef: v2.20.0
+gatewayRef: v2.21.0
 ---
 
 模型（Models）维护客户端可识别的模型 ID、厂商、输入输出模态与目录价。供应商实际模型名在路由中映射，客户端不必跟着上游名称变化。
 
 ## 导入和配置
 
-1. 从[模型目录](/zh/catalog/models/)导入，或新建自定义模型。
+1. 从[模型目录](/zh/catalog/models/)导入，或新建自定义模型。导入弹窗默认加载全部模型，可以再按「模型厂商」筛选，并与功能分类、搜索和生命周期筛选组合使用。目录由管理后台从官网读取，内网部署见[供应商指南](/zh/docs/guides/providers/#内网与离线)。
 2. 核对模型类型：LLM、图片、语音识别、语音合成或向量；类型由模态和计费规则共同判定。
 3. 维护上下文、最大输出、发布日期、备注和目录价格。标签由管理员维护，导入不自动创建路由。
 4. 在[路由](/zh/docs/guides/routing/)中添加至少一个可用上游和已启用入口，再执行真实调用。
@@ -19,7 +19,7 @@ gatewayRef: v2.20.0
 
 ![模型官方目录逐项对比与同步](/screenshots/v2-15-0-model-official-sync.webp)
 
-已导入模型与官网静态目录属于不同数据：更新静态目录不会悄悄改写部署中的价格、标签或路由。
+已导入模型与官网目录属于不同数据：更新官网目录不会悄悄改写部署中的价格、标签或路由。
 
 ## 模型类型与计费
 
@@ -36,4 +36,4 @@ gatewayRef: v2.20.0
 - 你的网关 `GET /catalog/models`：公开发现有活跃路由的能力。
 - 用户 `GET /v1/models`：客户端模型列表；默认 LLM，其他类型使用 `kind=image/asr/tts/embedding` 等筛选。
 
-协议、模态和类型判定见 [模型类型参考](https://github.com/OctaFuse/octafuse-gateway/blob/v2.20.0/docs/developers/reference/model-kinds.md)；[接入客户端](/zh/docs/guides/clients/)说明模型 ID 和路由组的写法。
+协议、模态和类型判定见 [模型类型参考](https://github.com/OctaFuse/octafuse-gateway/blob/v2.21.0/docs/developers/reference/model-kinds.md)；[接入客户端](/zh/docs/guides/clients/)说明模型 ID 和路由组的写法。

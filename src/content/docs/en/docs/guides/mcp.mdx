@@ -1,7 +1,7 @@
 ---
 title: "MCP servers"
 description: "Connect remote MCP servers, review catalogs, price tool calls and expose a single server or aggregate interface."
-gatewayRef: v2.20.0
+gatewayRef: v2.21.0
 ---
 
 Use **MCP Servers** to connect remote Streamable HTTP services. Clients use `/mcp` for all enabled servers, or `/mcp/server-slug` for one server.
@@ -10,7 +10,7 @@ Use **MCP Servers** to connect remote Streamable HTTP services. Clients use `/mc
 
 1. Create a server with a slug, remote URL and required static headers. Supported remote-client JSON can prefill these fields.
 2. Test connectivity and manually sync tools, prompts and resources.
-3. Review the catalog. New items start disabled; changes to a published definition need approval before clients see them.
+3. Review the catalog. New items start disabled; changes to a published definition need approval before clients see them. After a sync you can compare tool definitions and parameter schemas item by item and accept, enable or skip each one; with many changes, accept definition changes or enable new items in bulk.
 4. Configure the server's default price, with optional per-tool overrides.
 5. Enable the intended items, then run the public catalog test to inspect the client's view.
 
@@ -37,4 +37,4 @@ Request logs identify MCP calls and OAuth applications. Missing valid tool resul
 - The public interface is stateless Streamable HTTP. Upstream-initiated sampling, elicitation and roots are unsupported.
 - JSON-RPC batch arrays are rejected; send individual requests.
 
-See the [MCP architecture reference](https://github.com/OctaFuse/octafuse-gateway/blob/v2.20.0/docs/developers/architecture/mcp-gateway.md) for lifecycle, naming and accounting.
+See the [MCP architecture reference](https://github.com/OctaFuse/octafuse-gateway/blob/v2.21.0/docs/developers/architecture/mcp-gateway.md) for lifecycle, naming and accounting.

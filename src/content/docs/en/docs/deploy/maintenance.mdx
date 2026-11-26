@@ -1,7 +1,7 @@
 ---
 title: "Maintenance mode"
 description: "Reject new inference work during a maintenance window, keep health checks and optionally freeze Admin writes."
-gatewayRef: v2.20.0
+gatewayRef: v2.21.0
 ---
 
 Use the **Maintenance mode** section of **System → Config** to set a window and message for a migration or cutover; the old Maintenance address redirects there. Enabling maintenance does not run database migrations for you.
@@ -26,4 +26,4 @@ Use the **Maintenance mode** section of **System → Config** to set a window an
 
 Configuration read failures allow traffic. Maintenance mode does not replace enforced database or network isolation. Database cutovers may copy maintenance state, so check it explicitly after switching.
 
-See the [maintenance reference](https://github.com/OctaFuse/octafuse-gateway/blob/v2.20.0/docs/operators/maintenance-mode.md) for exceptions, permissions and runtime details.
+See the [maintenance reference](https://github.com/OctaFuse/octafuse-gateway/blob/v2.21.0/docs/operators/maintenance-mode.md) for exceptions, permissions and runtime details.

@@ -1,10 +1,10 @@
 ---
 title: "Capabilities and limits"
-description: "Supported protocols, multimodal APIs and MCP in Gateway 2.20.0, with explicit configuration and runtime boundaries."
-gatewayRef: v2.20.0
+description: "Supported protocols, multimodal APIs and MCP in Gateway 2.21.0, with explicit configuration and runtime boundaries."
+gatewayRef: v2.21.0
 ---
 
-These guides describe **Gateway v2.20.0**. A catalog preset is a starting point. Actual availability depends on the model, provider endpoints, adapter and active request surface.
+These guides describe **Gateway v2.21.0**. A catalog preset is a starting point. Actual availability depends on the model, provider endpoints, adapter and active request surface.
 
 ## Supported capabilities
 
@@ -15,7 +15,7 @@ These guides describe **Gateway v2.20.0**. A catalog preset is a starting point.
 | Speech recognition and synthesis | OpenAI Audio and supported DashScope, MiniMax and ElevenLabs interfaces | Synchronous, asynchronous and WebSocket support depends on the adapter and model |
 | Embeddings | OpenAI Embeddings, Gemini embedContent / batchEmbedContents | Billed on input tokens reported by the upstream |
 | REST tools | `/v1/tools/*` | Search, fetch, deep search and AI detection require a configured engine |
-| MCP servers | `/mcp`, `/mcp/server-slug` | Aggregate reviewed remote Streamable HTTP servers; user keys and optional OAuth |
+| MCP servers | `/mcp`, `/mcp/server-slug` | Aggregate reviewed remote Streamable HTTP servers; user keys and optional OAuth (built-in or external authorization server) |
 
 ## Client interfaces, upstreams and presets
 
@@ -28,10 +28,10 @@ Importing a model does not create a route. Importing a provider does not supply 
 - Video generation and editing, and arbitrary protocol conversion, are outside the general capabilities of this release.
 - Realtime audio uses supported provider-native protocols, without a universal OpenAI Realtime conversion.
 - MCP upstreams use remote Streamable HTTP. The gateway does not host local stdio processes or automatically expose built-in REST tools as MCP.
-- MCP OAuth requires an integrated authorization server. The gateway validates access to protected resources.
+- MCP OAuth can use the Gateway's built-in authorization server (public, confidential, manual and CIMD clients) or an external one; your business system provides the sign-in and consent page, and accounts must map to gateway users.
 - Playground probes an upstream directly. Use Simulator or a real client to verify authentication, failover and charging.
 
-See the [provider coverage matrix](https://github.com/OctaFuse/octafuse-gateway/blob/v2.20.0/docs/developers/reference/native-provider-coverage.md) and [adapter reference](https://github.com/OctaFuse/octafuse-gateway/blob/v2.20.0/docs/developers/architecture/adapters-and-drivers.md).
+See the [provider coverage matrix](https://github.com/OctaFuse/octafuse-gateway/blob/v2.21.0/docs/developers/reference/native-provider-coverage.md) and [adapter reference](https://github.com/OctaFuse/octafuse-gateway/blob/v2.21.0/docs/developers/architecture/adapters-and-drivers.md).
 
 ## Next
 

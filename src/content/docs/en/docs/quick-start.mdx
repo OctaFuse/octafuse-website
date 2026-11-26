@@ -1,7 +1,7 @@
 ---
 title: "Quick start"
 description: "Start the gateway, connect one provider and complete a real model call with a user key."
-gatewayRef: v2.20.0
+gatewayRef: v2.21.0
 ---
 
 The goal is a complete **client → gateway → upstream → logs and charging** request. Pick a runtime, then follow the same configuration steps.
@@ -13,7 +13,7 @@ The goal is a complete **client → gateway → upstream → logs and charging**
 Install Docker and Compose, then clone the released version:
 
 ```bash
-git clone --branch v2.20.0 --depth 1 https://github.com/OctaFuse/octafuse-gateway.git
+git clone --branch v2.21.0 --depth 1 https://github.com/OctaFuse/octafuse-gateway.git
 cd octafuse-gateway
 docker compose -f docker/compose/quickstart.yml up --build
 ```
@@ -36,7 +36,7 @@ These credentials are for local examples. See [deployment options](/en/docs/depl
 
 ## 2. Configure one model
 
-1. Import a Provider you use, supply its upstream credential and check its protocol endpoints.
+1. Import a Provider you use, supply its upstream credential and check its protocol endpoints. The import list loads the official catalog by default, so the machine running Admin must reach `https://octafuse.dev`; see [Docker deployment](/en/docs/deploy/docker/) for internal networks.
 2. Import a model the account can call. This creates a model record, not a route.
 3. Add an upstream target under Routes, choose a compatible adapter and enter the upstream model name. Keep route group `default` initially.
 4. Test that target in Playground to verify credentials, endpoint and model access.
@@ -65,4 +65,4 @@ Playground's direct probes do not create these user request records. [Simulator]
 
 [Connect an SDK or IDE](/en/docs/guides/clients/) · [Routing and failover](/en/docs/guides/routing/) · [MCP](/en/docs/guides/mcp/) · [Production deployment](/en/docs/deploy/overview/)
 
-See the [canonical quickstart](https://github.com/OctaFuse/octafuse-gateway/blob/v2.20.0/docs/users/quickstart.md) for environment requirements.
+See the [canonical quickstart](https://github.com/OctaFuse/octafuse-gateway/blob/v2.21.0/docs/users/quickstart.md) for environment requirements.

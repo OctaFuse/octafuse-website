@@ -1,7 +1,7 @@
 ---
 title: "Playground"
 description: "Probe one upstream route or tool engine to validate credentials, protocol, request parameters and response."
-gatewayRef: v2.20.0
+gatewayRef: v2.21.0
 ---
 
 **Playground** checks whether one upstream works. It does not use the user charging path, consume user quota, write user request logs or exercise full routing and failover. The upstream itself may still charge for probes.
@@ -10,7 +10,7 @@ gatewayRef: v2.20.0
 
 1. Select an upstream route and check protocol, operation and upstream model name.
 2. Load a Chat, Responses, image, audio or embedding example; edit the body and headers needed.
-3. Send and inspect status, response, streaming events or multimodal output.
+3. Before sending, check the final headers and body previewed by the production merge rules in the request panel; each item shows whether it comes from the provider, the route or the protocol default. After sending, inspect status, response, streaming events or multimodal output, and the actual upstream request returned by the server.
 4. Re-test after changing configuration; do not rely on a result from an older draft.
 5. Use [Simulator](/en/docs/features/simulator/) for real user authentication, routing, charging and logs.
 

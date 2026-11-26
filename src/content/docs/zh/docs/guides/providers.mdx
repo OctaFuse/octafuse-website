@@ -1,22 +1,32 @@
 ---
 title: "供应商配置"
 description: "配置上游账号与协议端点，导入模板，并有选择地同步官方更新。"
-gatewayRef: v2.20.0
+gatewayRef: v2.21.0
 ---
 
 供应商（Providers）中的一条记录代表一个上游账号：协议端点、一份凭证和启用状态。同一平台的多个账号使用多条记录，再放进对应路由池。
 
 ## 导入并连接上游
 
-1. 从[供应商目录](/zh/catalog/providers/)选择普通按量、Coding / Token Plan 或私有兼容服务；套餐端点不要与按量模板混用。
+1. 从[供应商目录](/zh/catalog/providers/)选择普通按量、Coding / Token Plan 或私有兼容服务；套餐端点不要与按量模板混用。导入弹窗默认从官网目录加载，管理后台所在网络需要能访问 `https://octafuse.dev`；内网部署见下文「内网与离线」。
 2. 补齐真实凭证和项目、区域或资源名。普通 API Key 与 Vertex AI 的服务账号 JSON 是不同凭证类型。
 3. 按实际需要配置 OpenAI、Anthropic、Gemini、DashScope、MiniMax、火山方舟或 ElevenLabs 端点。
 4. Base 模式仅适合该上游覆盖相应能力的情况；部分支持时选择独立端点，避免派生出不存在的地址。
 5. 配好[模型与路由](/zh/docs/guides/routing/)后，用调试台验证单条上游，再验证真实代理调用。
 
+## 自定义请求参数
+
+在供应商编辑弹窗的「自定义参数」页签，可以按上游协议（OpenAI、Anthropic、Gemini 等）为这个账号下的所有路由设置默认请求头和请求体，例如统一的 `HTTP-Referer` 请求头或默认的 `max_tokens`。
+
+- 供应商参数是最低一层默认值：路由没有配置同一字段时继承供应商的值，路由配置了就覆盖供应商。每条路由只使用与自己上游协议一致的那一组。
+- 供应商层没有强制覆盖开关；是否强制覆盖客户端传入的值，仍在[路由](/zh/docs/guides/routing/)上设置。
+- 受保护的请求头（如 `Authorization`）和 `model` 字段仍由网关管理，不能配置。
+- 原生透传入口（DashScope、MiniMax、ElevenLabs、火山方舟的直连路径）不合并请求体默认值，但会应用配置的请求头。
+- 调试台会按线上相同的合并规则预览最终请求头和请求体，并标明每项来自供应商还是路由。
+
 ## 与官方模板比较更新
 
-管理员在供应商页点击「同步」手动触发：先比对官方模板与已导入供应商的差异，确认后才应用。出现差异时，按字段比较介绍与端点，选择采用官方值或保留本地值；保存前查看受影响的路由。导入新版本目录不会自动覆盖已有账号的凭证和配置。
+管理员在供应商页点击「同步」手动触发：先比对官方模板与已导入供应商的差异，确认后才应用。出现差异时，按字段比较介绍与端点，选择采用官方值或保留本地值；保存前查看受影响的路由。导入新版本目录不会自动覆盖已有账号的凭证和配置。供应商导入按模板英文名识别条目；目录刷新后如果旧页面里的选择已不存在，会提示重新加载目录再选择。
 
 模型的目录更新在[模型页](/zh/docs/guides/models/)单独处理。运行状态与余额检查见[供应商额度](/zh/docs/guides/provider-quotas/)。
 
@@ -24,7 +34,11 @@ gatewayRef: v2.20.0
 
 Gemini 端点支持 query-key 或 Bearer 鉴权；项目级 Vertex AI 使用服务账号换取访问令牌。导入项目级模板后替换项目与区域占位符，并按模板要求填写完整服务账号 JSON。
 
-原生 Gemini 内容生成使用统一的 `models.generate` 模板，流式和非流式在运行时选择对应 action。供应商端点、鉴权和 URL 覆盖的准确写法见 [配置参考](https://github.com/OctaFuse/octafuse-gateway/blob/v2.20.0/docs/users/configuration.md)。
+原生 Gemini 内容生成使用统一的 `models.generate` 模板，流式和非流式在运行时选择对应 action。供应商端点、鉴权和 URL 覆盖的准确写法见 [配置参考](https://github.com/OctaFuse/octafuse-gateway/blob/v2.21.0/docs/users/configuration.md)。
+
+## 内网与离线
+
+管理后台通过 HTTPS 读取官网目录，完整目录会在内存中缓存 5 分钟。缓存过期且刷新失败时，导入列表和同步差异预览仍可使用旧缓存；首次启动后目录接口不可达，导入和同步预览会返回 503，已保存的供应商、模型和路由不受影响，仍正常处理请求。无法访问官网时，把 Admin 的 `CATALOG_BASE_URL` 指向你自建的 HTTPS 目录镜像，配置方式见 [Docker 部署](/zh/docs/deploy/docker/)。
 
 ## 日常变更
 

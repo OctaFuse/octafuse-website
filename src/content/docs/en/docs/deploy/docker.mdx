@@ -1,7 +1,7 @@
 ---
 title: "Docker deployment"
 description: "Self-host with Postgres or MySQL, using matching images and an explicit migration order."
-gatewayRef: v2.20.0
+gatewayRef: v2.21.0
 ---
 
 Docker suits your own hosts, private networks and container platforms, with Postgres or MySQL. Start locally using [Quick start](/en/docs/quick-start/) or compare [deployment options](/en/docs/deploy/overview/).
@@ -26,6 +26,11 @@ Use matching Proxy, Admin and migrate image versions. Pin production tags or dig
 
 The local `admin / changeme` account is an example only. Keep database credentials, Admin passwords and upstream keys out of version control.
 
+## Catalog and sign-in settings in Admin
+
+- **Import catalog**: Admin reads the provider and model catalogs from `https://octafuse.dev` by default, so its network must allow outbound HTTPS. For internal or offline deployments, set the Admin process's `CATALOG_BASE_URL` to your own HTTPS catalog mirror. The mirror must serve `/api/catalog/providers`, `/api/catalog/models` and `/api/catalog/models-by-vendor/{vendor}`; `CATALOG_TIMEOUT_MS` (default 3000) and `CATALOG_TTL_MS` (default 300000) tune the timeout and cache lifetime. The bundled Compose templates do not pass these variables through; add them to the `environment` of `gateway-admin` when needed.
+- **Sign-in lockout**: after 5 failed Admin sign-ins from the same source, or 5 globally, new sign-in requests are cooled down for 30 minutes and return 429. The counters live in process memory and reset on restart; with several instances each one counts separately. Existing sessions, Admin API keys and the Proxy are unaffected. Automation that retries with a wrong password will trigger the lockout.
+
 ## Verify
 
 Check Proxy `/health`, sign in to Admin and send a real request with a dedicated test user. Verify logs, usage and quota changes. Test WebSocket operations separately when using realtime audio.
@@ -36,4 +41,4 @@ A running container and passing health check do not mean a model or tool is conf
 
 Read [upgrade notes](/en/docs/deploy/upgrades/), back up and plan a maintenance window. Apply pending migrations, then roll the same service version. Enable automatic migration on one deliberately chosen side rather than making several processes responsible for it.
 
-See the [Docker reference](https://github.com/OctaFuse/octafuse-gateway/blob/v2.20.0/docs/operators/deployment/docker.md) for Compose commands, image names, environment variables and hosting differences.
+See the [Docker reference](https://github.com/OctaFuse/octafuse-gateway/blob/v2.21.0/docs/operators/deployment/docker.md) for Compose commands, image names, environment variables and hosting differences.

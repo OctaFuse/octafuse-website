@@ -1,7 +1,7 @@
 ---
 title: "MCP OAuth authorization"
 description: "Let MCP clients sign in with your own accounts instead of an API key, using the built-in authorization server or an external one."
-gatewayRef: v2.20.0
+gatewayRef: v2.21.0
 ---
 
 OAuth fits when you offer the Gateway's MCP services to outside users and do not want them to paste an API key. A user clicks connect in ChatGPT, Claude, Codex or another client, signs in to your business system and approves, and the client receives a token that can only access MCP. Existing API-key access keeps working.
@@ -20,13 +20,45 @@ OAuth applies only to the MCP entry points. It does not authorize general model 
 
 ## Use the built-in authorization server
 
-1. **Prepare the application directory**: under Applications in the OAuth access tokens area, use Import preset to add ChatGPT, Claude, Codex, Doubao or WorkBuddy, or add an application manually. Clients are matched to an application by redirect URI at registration; clients with no matching application cannot register.
+1. **Prepare the application directory**: under Applications in the OAuth access tokens area, use Import preset to add ChatGPT, Claude, Claude Code, Codex, Cursor, VS Code, Gemini CLI, Doubao, WorkBuddy or Local MCP clients (a catch-all for loopback redirects that no other application claims), or add an application manually. Clients are matched to an application by redirect URI at registration; clients with no matching application cannot register. Redirect rule syntax is described below.
 2. **Prepare a sign-in and consent page**: provide a page in your business system that receives the `request_id` appended by the Gateway, confirms the user is signed in, reports the user's approval or denial to the Gateway with an integration key that has the `oauth.consent` permission, and redirects back to the client using the returned address. To skip your own site, leave it empty and use the built-in page, where users approve with their own API key.
-3. **Forward authorization paths**: have the reverse proxy forward `/oauth/*` and `/.well-known/oauth-authorization-server` to Proxy on the same public domain as `/mcp`.
+3. **Forward authorization paths**: have the reverse proxy forward `/oauth/*`, `/.well-known/oauth-authorization-server*`, `/.well-known/oauth-protected-resource*` and `/mcp*` to Proxy on the same public domain as `/mcp`.
 4. **Save**: select Built-in authorization server, fill in Public URL of this Gateway (issuer) and, optionally, Sign-in and consent page, then save.
 5. **Verify with real clients**: complete authorization, a tool call, refresh and revocation for each client, and check that request logs show the right application and user.
 
-When switching from an external server, existing grants stop working once their access tokens expire, and users must authorize again. See the [0036 migration notes](https://github.com/OctaFuse/octafuse-gateway/blob/v2.20.0/docs/operators/migrations/0036-oauth-authorization-server.md) for the full steps.
+When switching from an external server, existing grants stop working once their access tokens expire, and users must authorize again. See the [0036 migration notes](https://github.com/OctaFuse/octafuse-gateway/blob/v2.21.0/docs/operators/migrations/0036-oauth-authorization-server.md) for the full steps. The tables that confidential, manual and CIMD clients need are covered by the [0037 migration notes](https://github.com/OctaFuse/octafuse-gateway/blob/v2.21.0/docs/operators/migrations/0037-oauth-client-credentials.md); apply it before upgrading.
+
+## Redirect rules and application matching
+
+An application's redirect rules are one per line. You can write:
+
+| Form | Meaning |
+|------|------|
+| `https://chatgpt.com/connector_platform_oauth_redirect` | A specific address, matched exactly |
+| `http://127.0.0.1/callback`, `http://localhost/callback`, `http://[::1]/callback` | Loopback; the port is ignored, the path must still match |
+| `cursor://anysphere.cursor-mcp/oauth/callback` | A custom scheme (desktop or CLI clients), matched exactly |
+| `https://*.workbuddy.cn` | Any subdomain and path; https only, the bare domain does not match |
+| `http://127.0.0.1/*` | A trailing `*` matches by path prefix |
+
+Wildcards are allowed only in application rules in Admin; the redirect URIs a client submits at registration must be specific addresses. When several applications cover the same redirect URI, an application whose name keyword matches the client name wins, then the most specific match, with specific addresses beating wildcards. If it is still ambiguous, registration is rejected. This is why Local MCP clients does not take over Codex or Claude Code registrations.
+
+## Client types
+
+| Type | When to use it | Notes |
+|------|------|------|
+| Public client | Most desktop and CLI clients | Dynamic registration; PKCE (`S256`) is required |
+| Confidential client | Server-hosted clients | Declare `client_secret_basic` or `client_secret_post` at registration. The `client_secret` is shown **only once** in the response. The token and revocation endpoints accept both methods; PKCE is optional |
+| Manual client | Platforms that cannot register dynamically and ask for a fixed client_id / client_secret | Issue under an application with Manual credentials; the secret can be reset and the client deleted. It is not removed by the 7-day unused cleanup |
+| Client ID metadata document (CIMD) | Newer MCP clients whose `client_id` is an https URL | Off by default. Enable it on the OAuth 2.0 sign-in card or with `MCP_OAUTH_CIMD_ENABLED=true`. The Gateway fetches the metadata at that URL; read the limits in the technical reference before enabling it where the host can reach sensitive internal networks |
+
+Secrets are stored only as hashes, so a lost secret can only be reset. For a platform that asks for server-side authentication, enter the authorization URL `{issuer}/oauth/authorize`, the token URL `{issuer}/oauth/token`, scope `mcp`, the `client_id` and the `client_secret`, and add the redirect domain the platform gives you to the application rules.
+
+## Connect a new agent
+
+1. Check what the client supports: dynamic registration, CIMD, or only fixed credentials.
+2. Dynamic registration or CIMD: confirm an application covers its redirect URI. Loopback redirects land in Local MCP clients by default; create an application with specific redirect rules when you need separate statistics or want to disable it independently.
+3. Fixed credentials: issue Manual credentials under the matching application and enter them on the other platform as described above.
+4. The MCP address to enter in the client is `{issuer}/mcp`, or `{issuer}/mcp/server-slug` to connect a single server.
 
 ## Tokens, refresh and revocation
 
@@ -38,8 +70,9 @@ When switching from an external server, existing grants stop working once their 
 
 ## Troubleshooting
 
-- A client cannot register: check that an enabled application exists and its redirect URIs match what the client uses.
+- A client cannot register: check that an enabled application exists and its redirect rules cover the address the client uses. A rejected registration writes a `registration rejected` line to the Proxy log with the client name and redirect URIs, which you can use to add an application rule.
+- A client reports OAuth discovery failed: use `curl` to confirm that `/.well-known/oauth-authorization-server`, `/.well-known/oauth-protected-resource` and the 401 from `/mcp` all reach Proxy through the public domain, and that `issuer` in the metadata matches the value set in Admin.
 - The flow stops at the consent page: confirm the page reads `request_id` and the integration key has `oauth.consent`. Authorization requests last 10 minutes; start again from the client after they expire.
 - A 401 means the client needs a new or refreshed token. An MCP token is rejected (403) on chat and other endpoints because its scope is limited.
 
-See the [OAuth technical reference](https://github.com/OctaFuse/octafuse-gateway/blob/v2.20.0/docs/developers/architecture/mcp-gateway.md#oauth-授权) for endpoints, the object model and the consent API.
+See the [OAuth technical reference](https://github.com/OctaFuse/octafuse-gateway/blob/v2.21.0/docs/developers/architecture/mcp-gateway.md#oauth-授权) for endpoints, the object model and the consent API.

@@ -1,7 +1,7 @@
 ---
 title: "Account audit"
 description: "Reconcile budget and wallet changes, credit operations and user/key lifecycle events with requests."
-gatewayRef: v2.20.0
+gatewayRef: v2.21.0
 ---
 
 **Audit Logs** focuses on user, key and quota events. Combine it with [request logs](/en/docs/guides/request-logs/); it is not a complete audit trail of every provider or route configuration edit.
@@ -21,4 +21,4 @@ The list summarizes event, identity and quota change; details show before/after 
 
 A request may consume both pools, so inspect their changes separately. Wallet credit should carry a unique business reference. A periodic reset does not clear the wallet.
 
-Read [billing](/en/docs/guides/billing/) and the [audit reference](https://github.com/OctaFuse/octafuse-gateway/blob/v2.20.0/docs/developers/reference/user-audit-logs.md) for definitions.
+Read [billing](/en/docs/guides/billing/) and the [audit reference](https://github.com/OctaFuse/octafuse-gateway/blob/v2.21.0/docs/developers/reference/user-audit-logs.md) for definitions.

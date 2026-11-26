@@ -1,14 +1,14 @@
 ---
 title: "Models and catalog sync"
 description: "Import models, maintain modalities and prices, review official changes and distinguish presets from deployed availability."
-gatewayRef: v2.20.0
+gatewayRef: v2.21.0
 ---
 
 **Models** defines client-facing IDs, vendors, modalities and catalog pricing. Routes map these IDs to upstream model names so clients can use a stable name.
 
 ## Import and configure
 
-1. Import from the [model catalog](/en/catalog/models/) or create a custom model.
+1. Import from the [model catalog](/en/catalog/models/) or create a custom model. The import dialog loads all models by default; you can then filter by model vendor and combine it with the kind, search and lifecycle filters. Admin reads the catalog from the official site; see [Providers](/en/docs/guides/providers/#private-networks-and-offline) for internal deployments.
 2. Check its kind: LLM, image, ASR, TTS or embedding. Modalities and valid pricing rules determine the kind together.
 3. Review context, maximum output, release date, notes and pricing. Tags are administrator-managed; import does not create routes.
 4. Add a usable upstream and active surface under [Routes](/en/docs/guides/routing/), then make a real call.
@@ -19,7 +19,7 @@ Manually trigger **Sync**; it compares first and applies only after you confirm.
 
 ![Official model catalog comparison](/screenshots/v2-15-0-model-official-sync.webp)
 
-Imported records and the website catalog are different data sets. Refreshing static presets does not silently change deployed prices, tags or routes.
+Imported records and the website catalog are different data sets. Refreshing the official catalog does not silently change deployed prices, tags or routes.
 
 ## Kind and billing
 
@@ -36,4 +36,4 @@ Imported records and the website catalog are different data sets. Refreshing sta
 - Your gateway's public `GET /catalog/models`: capabilities with active routes.
 - User-authenticated `GET /v1/models`: LLMs by default, with `kind=image/asr/tts/embedding` and other filters.
 
-See the [model-kind reference](https://github.com/OctaFuse/octafuse-gateway/blob/v2.20.0/docs/developers/reference/model-kinds.md) and [client configuration](/en/docs/guides/clients/) for IDs and route groups.
+See the [model-kind reference](https://github.com/OctaFuse/octafuse-gateway/blob/v2.21.0/docs/developers/reference/model-kinds.md) and [client configuration](/en/docs/guides/clients/) for IDs and route groups.

@@ -1,22 +1,32 @@
 ---
 title: "Providers"
 description: "Configure upstream accounts and endpoints, import templates and selectively apply official updates."
-gatewayRef: v2.20.0
+gatewayRef: v2.21.0
 ---
 
 One **Provider** record represents one upstream account: protocol endpoints, one credential and activation state. Use separate records for multiple accounts on the same platform, then place them in route pools.
 
 ## Import and connect
 
-1. Choose a pay-as-you-go, Coding / Token Plan or private-compatible template from the [catalog](/en/catalog/providers/). Do not mix plan-specific and ordinary endpoints.
+1. Choose a pay-as-you-go, Coding / Token Plan or private-compatible template from the [catalog](/en/catalog/providers/). Do not mix plan-specific and ordinary endpoints. The import dialog loads the official catalog by default, so the network that runs Admin must reach `https://octafuse.dev`; see "Private networks and offline" below for internal deployments.
 2. Supply credentials and replace project, region or resource placeholders. API keys and Vertex AI service-account JSON are different credential types.
 3. Configure the OpenAI, Anthropic, Gemini, DashScope, MiniMax, Volcengine or ElevenLabs endpoints needed by the workload.
 4. Use a Base URL only when the upstream implements the relevant capabilities. Use individual endpoints for partial support.
 5. Configure [models and routes](/en/docs/guides/routing/), test the target in Playground, then verify a real Proxy call.
 
+## Custom request parameters
+
+On the Custom parameters tab of the provider dialog you can set default request headers and body per upstream protocol (OpenAI, Anthropic, Gemini and so on) for every route under that account, for example a shared `HTTP-Referer` header or a default `max_tokens`.
+
+- Provider parameters are the lowest layer: a route inherits a field when it does not set it, and overrides the provider when it does. Each route uses only the group that matches its own upstream protocol.
+- The provider layer has no force-override switch; forcing values over the client's remains a setting on the [route](/en/docs/guides/routing/).
+- Protected headers (such as `Authorization`) and the `model` field remain managed by the gateway and cannot be configured.
+- Native passthrough entries (DashScope, MiniMax, ElevenLabs and Volcengine direct paths) do not merge body defaults, but they do apply the configured headers.
+- Playground previews the final headers and body using the same merge rules as production and shows whether each item comes from the provider or the route.
+
 ## Review official template updates
 
-Administrators manually trigger **Sync** on the Providers page; it compares first and applies only after you confirm. Compare changed descriptions and endpoints field by field, choose official or local values, and inspect affected routes before applying. Importing a newer catalog does not overwrite account credentials and existing configuration automatically.
+Administrators manually trigger **Sync** on the Providers page; it compares first and applies only after you confirm. Compare changed descriptions and endpoints field by field, choose official or local values, and inspect affected routes before applying. Importing a newer catalog does not overwrite account credentials and existing configuration automatically. Provider import identifies entries by the template's English name; if a selection on an open page no longer exists after the catalog refreshes, you are asked to reload the catalog and select again.
 
 Review model changes separately under [Models](/en/docs/guides/models/). See [provider quotas](/en/docs/guides/provider-quotas/) for balances and subscription windows.
 
@@ -24,7 +34,11 @@ Review model changes separately under [Models](/en/docs/guides/models/). See [pr
 
 Gemini supports query-key and Bearer authentication. Project-scoped Vertex AI exchanges service-account credentials for an access token. Replace project and region placeholders and provide the complete service-account JSON required by that template.
 
-Native Gemini content generation uses a unified `models.generate` template; the runtime chooses streaming or non-streaming actions. See the [configuration reference](https://github.com/OctaFuse/octafuse-gateway/blob/v2.20.0/docs/users/configuration.md) for exact authentication and URL rules.
+Native Gemini content generation uses a unified `models.generate` template; the runtime chooses streaming or non-streaming actions. See the [configuration reference](https://github.com/OctaFuse/octafuse-gateway/blob/v2.21.0/docs/users/configuration.md) for exact authentication and URL rules.
+
+## Private networks and offline
+
+Admin reads the official catalog over HTTPS and caches the full catalog in memory for 5 minutes. If the cache has expired and a refresh fails, the import list and sync preview keep using the old cache. If the catalog API is unreachable right after startup, import and sync preview return 503; saved providers, models and routes are unaffected and continue to serve requests. When the official site is unreachable, point Admin's `CATALOG_BASE_URL` at your own HTTPS catalog mirror; see [Docker deployment](/en/docs/deploy/docker/) for the settings.
 
 ## Maintenance
 

@@ -1,7 +1,7 @@
 ---
 title: "Request flows and logs"
 description: "Locate a model or tool call by ID, filter by type, model and provider, and inspect failover, usage and accounting."
-gatewayRef: v2.20.0
+gatewayRef: v2.21.0
 ---
 
 **Request Logs**, in the Logs group of the sidebar, records real Proxy calls: model requests, REST tool calls and MCP tool calls (the former Invocations page is merged here). Direct Playground probes do not generate user request records; Simulator and real clients do.
@@ -41,4 +41,4 @@ Use [Audit Logs](/en/docs/guides/audit-logs/) for changes to the budget and wall
 
 Filter MCP calls by service; OAuth calls identify the application and charge its associated user. For Sticky, combine lookup, unbind and rebound information with cache-read usage and failover counts.
 
-One request explains one execution. Use [usage and reliability](/en/docs/guides/analytics/) for trends. See the [log API reference](https://github.com/OctaFuse/octafuse-gateway/blob/v2.20.0/docs/developers/api/admin.md) for fields.
+One request explains one execution. Use [usage and reliability](/en/docs/guides/analytics/) for trends. See the [log API reference](https://github.com/OctaFuse/octafuse-gateway/blob/v2.21.0/docs/developers/api/admin.md) for fields.
