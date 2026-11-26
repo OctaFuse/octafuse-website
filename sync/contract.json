@@ -18,9 +18,9 @@
 		}
 	},
 	"catalog": {
-		"providerPresets": "packages/admin/lib/provider-import-presets.json",
+		"providerSource": "catalog/providers.json",
+		"modelSourceDir": "catalog/models",
 		"modelVendors": "packages/admin/lib/model-vendors.json",
-		"modelPresetsDir": "packages/admin/lib/model-presets",
 		"targets": {
 			"providers": "src/data/catalog/providers.json",
 			"models": "src/data/catalog/models.json"

@@ -13,17 +13,13 @@ npm run build
 npm run preview
 ```
 
-两个仓库并排时：
-
-```bash
-npm run sync:gateway -- --gateway-dir ../octafuse-gateway
-npm run sync:gateway:check -- --gateway-dir ../octafuse-gateway
-```
+仅更新目录条目时，沿用 `sync/manifest.json` 中的 Gateway 版本生成目录并检查。生成、构建、发布和上线核对步骤见 [README「供应商和模型模板」](README.md#供应商和模型模板)。
 
 ## 边界
 
-- API、部署、迁移、架构、计费的单一事实来源是 `octafuse-gateway/docs`。官网只维护品牌、首页、导航、SEO、多语言，以及面向使用者的轻量指南。
-- 技术参考页和目录数据由 `sync/contract.json` 生成。新增技术文档先改 Gateway 仓库，再按需改同步契约。
-- Provider 权威数据在 Gateway 的 `packages/admin/lib/provider-import-presets.json`，Model 在 `packages/admin/lib/model-presets/*.json`。官网 `src/data/catalog/*.json` 只用于展示。
+- API、部署、迁移、架构、计费的技术文档维护在 `octafuse-gateway/docs`。官网维护品牌、首页、导航、SEO、多语言、轻量指南和公开目录模板。
+- 官网技术参考页按 `sync/contract.json` 生成。新增技术文档先改 Gateway 仓库，再按需改同步契约。
+- Gateway 管理后台默认从官网公开目录读取导入和同步模板。供应商模板维护在 `catalog/providers.json`，模型模板按厂商和模型类型维护在 `catalog/models/*.json`。
+- 生成脚本从官网工作区读取模板，从指定的 Gateway 版本读取厂商名称映射和技术参考资料。将模板和 `src/data/catalog/` 下对应的生成文件一起提交到官网 PR，通过官网的 Cloudflare Pages 流程发布。
 - 中文在 `src/content/docs/zh/`，英文在 `src/content/docs/en/`。改一边时核对另一边是否要同步。
 - 本仓库的 CI 不要去触发 gateway 的 Worker 或镜像发布。

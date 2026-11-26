@@ -82,28 +82,29 @@ src/content/docs/
 
 - API、部署、迁移、架构、计费、审计、时间语义：维护在 `octafuse-gateway`。
 - 官网正文：维护品牌、首页、导航、SEO、多语言，以及面向使用者的轻量任务指南。
-- 官网 [GitHub 技术参考](src/content/docs/zh/docs/github-reference.mdx) 与 Provider / Model Catalog 数据由 `sync/contract.json` 生成，避免手工维护旧路径或复制一份会漂移的预设。
+- 官网 [GitHub 技术参考](src/content/docs/zh/docs/github-reference.mdx) 根据 [同步契约](sync/contract.json) 生成。新增技术文档时，先更新 Gateway 文档，再按需把入口加入契约。
 
-两个仓库并排放置时，可本地刷新技术参考页：
+### 供应商和模型模板
+
+Gateway 管理后台默认从官网公开目录读取「导入」和「同步」使用的模板。两类模板都在本仓库维护。
+
+| 修改内容 | 编辑位置 |
+| --- | --- |
+| 供应商名称、协议端点、多语言介绍和链接 | [catalog/providers.json](catalog/providers.json) |
+| 模型 ID、上下文、输入输出模态和价格 | [catalog/models/](catalog/models/) 下对应厂商和模型类型的 JSON 文件，例如 [DeepSeek 模型](catalog/models/deepseek.json) |
+
+**生成与检查。** 修改模板后，在官网仓库根目录执行以下命令。仅更新目录条目时，沿用 [同步清单](sync/manifest.json) 中的 Gateway 版本。生成脚本从该版本读取厂商名称映射和技术参考资料，从官网工作区读取模板。
 
 ```bash
-npm run sync:gateway -- --gateway-dir ../octafuse-gateway
+gateway_ref=$(node -p "require('./sync/manifest.json').ref")
+npm run sync:gateway -- --ref "$gateway_ref"
+npm run sync:gateway:check -- --ref "$gateway_ref"
+npm run build && npm run check:site
 ```
 
-检查是否漂移但不写文件：
+**发布。** 将模板源文件与 [src/data/catalog/](src/data/catalog/) 下对应的生成文件一起提交到官网 PR。使用 Cloudflare Pages Git 集成时，合并到配置的生产分支后会自动构建发布。采用手动部署时，在 GitHub Actions 选择 [Pages deploy (Wrangler)](.github/workflows/pages-deploy.yml)，从生产分支运行并指定对应的 Pages 项目。
 
-```bash
-npm run sync:gateway:check -- --gateway-dir ../octafuse-gateway
-```
-
-新增技术文档时，先改 `octafuse-gateway/docs`；官网只在需要展示入口时更新 `sync/contract.json`。
-
-Catalog 的权威数据仍在 Gateway 仓库：
-
-- Provider：`packages/admin/lib/provider-import-presets.json`
-- Model：`packages/admin/lib/model-presets/*.json`
-
-官网生成的 `src/data/catalog/*.json` 只用于展示与公开下载。新增 Provider 或修正 Model 数据时，请在 Gateway 仓库修改并提交 PR，再运行同步。
+部署成功后，在对应 API 的 `items` 中按供应商 `name` 或模型 `id` 找到条目，核对本次改动。[供应商目录 API](https://octafuse.dev/api/catalog/providers) · [模型目录 API](https://octafuse.dev/api/catalog/models)
 
 Agent 指令见 [AGENTS.md](AGENTS.md)。
 
@@ -114,7 +115,7 @@ Agent 指令见 [AGENTS.md](AGENTS.md)。
 
 ## 内容维护与验收
 
-长期指南以 `gatewayRef` 标记核验过的正式版本；官网目录与技术参考由 `sync/manifest.json` 标记来源。发布新版本时，同时检查首页能力、受影响任务指南、中英文内容和截图，不能只增加更新文章。
+长期指南以 `gatewayRef` 标记核验过的正式版本；`sync/manifest.json` 记录生成官网目录与技术参考时使用的 Gateway 版本。发布新版本时，同时检查首页能力、受影响任务指南、中英文内容和截图，不能只增加更新文章。
 
 - 技术行为、字段与迁移先更新 Gateway 文档；官网保留任务摘要和对应版本的参考入口。
 - 更新 `sync/contract.json` 的正式版 ref。同步脚本会从该 ref 的独立快照读取，既不切换开发工作区，也不读取未提交文件。
@@ -122,4 +123,4 @@ Agent 指令见 [AGENTS.md](AGENTS.md)。
 - 执行 `npm run build && npm run check:site`。检查器逐页验证语言配对、唯一标题、站内链接、锚点、静态资源、目录协议与四个 JSON 地址的一致性。
 - 启动 `npm run dev`，逐页确认内容与截图，并在桌面和手机宽度检查导航、表格、代码块与目录筛选。
 
-公共目录 API `/api/catalog/models`、`/api/catalog/providers` 与 `/catalog/models.json`、`/catalog/providers.json` 在构建时生成同一份静态数据，不依赖运行时限流绑定。跨域与缓存头由 `public/_headers` 提供；客户端应缓存公开快照，数据来源以响应的 `source` 为准。
+公共目录 API `/api/catalog/models`、`/api/catalog/providers` 与 `/catalog/models.json`、`/catalog/providers.json` 在构建时生成同一份静态数据，不依赖运行时限流绑定。跨域与缓存头由 `public/_headers` 提供；客户端应缓存公开快照。响应中的 `source` 记录生成时引用的 Gateway 版本。

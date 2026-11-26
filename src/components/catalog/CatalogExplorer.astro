@@ -60,10 +60,11 @@ const { kind, locale } = Astro.props;
 const isProviders = kind === 'providers';
 const catalog = isProviders ? providerCatalog : modelCatalog;
 const items = catalog.items;
-const repo = `https://github.com/${catalog.source.repo}`;
+const gatewayRepo = `https://github.com/${catalog.source.repo}`;
+const siteRepo = 'https://github.com/OctaFuse/octafuse-website';
 const editRoot = isProviders
-	? `${repo}/edit/main/${providerCatalog.source_path}`
-	: `${repo}/tree/main/${modelCatalog.source_path}`;
+	? `${siteRepo}/edit/main/${providerCatalog.source_path}`
+	: `${siteRepo}/tree/main/${modelCatalog.source_path}`;
 
 const copy = {
 	zh: {
@@ -74,7 +75,7 @@ const copy = {
 		browseModels: 'Models',
 		customTitle: 'Catalog 是起点，不是限制',
 		customBody:
-			'这里展示的是 OctaFuse Gateway 当前内置、可在 Admin 中直接导入的静态预设。Gateway 仍支持创建任意自定义 Provider、Model 和兼容端点；未列出不代表不支持。',
+			'这里展示的是 OctaFuse Gateway 管理后台默认读取、可直接导入的预设目录。Gateway 仍支持创建任意自定义 Provider、Model 和兼容端点；未列出不代表不支持。',
 		customLink: '了解如何自定义配置',
 		searchProviders: '搜索 Provider、厂商或 Endpoint…',
 		searchModels: '搜索模型名称、ID 或厂商…',
@@ -129,13 +130,13 @@ const copy = {
 		imageOutput: '图片输出',
 		imageCache: '图片缓存',
 		dataAction: '数据',
-		priceNote: '目录价按 Gateway 静态预设展示；实际价格与可用性请以供应商为准。',
+		priceNote: '目录价按本站目录展示；实际价格与可用性请以供应商为准。',
 		contributeProvider: '把你的 Provider 加入 Catalog',
 		contributeProviderBody:
-			'在 Gateway 的 Provider 预设文件中补充名称、协议和 Endpoint，提交 PR 后即可进入下一次同步。',
+			'在本站 catalog/providers.json 中补充名称、协议和 Endpoint，并运行同步脚本生成目录，提交 PR 并发布后，Gateway 管理后台会在缓存刷新后读取。',
 		contributeModel: '发现 Model 数据有误？',
 		contributeModelBody:
-			'每张模型卡片都链接到对应预设文件。修正 ID、上下文、模态或目录价后，直接提交 PR。',
+			'每张模型卡片都链接到 catalog/models 下对应的预设文件。修正 ID、上下文、模态或目录价后，运行同步脚本并提交 PR。',
 		openContribution: '前往 GitHub 贡献',
 		dataTools: '数据与贡献',
 		currency: '币种',
@@ -148,7 +149,7 @@ const copy = {
 		browseModels: 'Models',
 		customTitle: 'A starting point, not a limitation',
 		customBody:
-			'This catalog lists the static presets currently bundled with OctaFuse Gateway for direct Admin import. Gateway still lets you create any custom Provider, Model, or compatible endpoint. Not listed does not mean unsupported.',
+			'This catalog lists the presets that the OctaFuse Gateway Admin reads by default for direct import. Gateway still lets you create any custom Provider, Model, or compatible endpoint. Not listed does not mean unsupported.',
 		customLink: 'Learn about custom configuration',
 		searchProviders: 'Search providers, vendors, or endpoints…',
 		searchModels: 'Search model names, IDs, or vendors…',
@@ -203,13 +204,13 @@ const copy = {
 		imageOutput: 'Image output',
 		imageCache: 'Image cache',
 		dataAction: 'Data',
-		priceNote: 'Catalog prices come from Gateway presets. Confirm current pricing and availability with the vendor.',
+		priceNote: 'Catalog prices come from the catalog on this website. Confirm current pricing and availability with the vendor.',
 		contributeProvider: 'Add your Provider to the Catalog',
 		contributeProviderBody:
-			'Add its name, protocols, and endpoints to the Gateway Provider preset file, then open a PR for the next catalog sync.',
+			'Add its name, protocols, and endpoints to catalog/providers.json in this repository, run the sync script to regenerate the catalog, and open a PR. After it is published, Gateway Admin picks it up when its cache refreshes.',
 		contributeModel: 'Found incorrect Model data?',
 		contributeModelBody:
-			'Every model card links to its preset file. Fix the ID, context, modalities, or catalog pricing and open a PR.',
+			'Every model card links to its preset file under catalog/models. Fix the ID, context, modalities, or catalog pricing, run the sync script, and open a PR.',
 		openContribution: 'Contribute on GitHub',
 		dataTools: 'Data and contributions',
 		currency: 'Currency',
@@ -501,7 +502,7 @@ function modalityLabel(modality: string) {
 }
 
 function contributionUrl(item: ProviderItem | ModelItem) {
-	return `${repo}/edit/main/${item.source_path}`;
+	return `${siteRepo}/edit/main/${item.source_path}`;
 }
 
 ---
@@ -530,7 +531,7 @@ function contributionUrl(item: ProviderItem | ModelItem) {
 		<div class="boundary-mark" aria-hidden="true">↗</div>
 		<div>
 			<strong>{t.customTitle}</strong>
-			<p class="catalog-source">{locale === 'zh' ? '来源版本' : 'Source release'}: <a href={`${repo}/tree/${catalog.source.ref}`}>{catalog.source.ref}</a></p>
+			<p class="catalog-source">{locale === 'zh' ? 'Gateway 版本' : 'Gateway release'}: <a href={`${gatewayRepo}/tree/${catalog.source.ref}`}>{catalog.source.ref}</a></p>
 			<p>{t.customBody}</p>
 		</div>
 		<a href={`/${locale}/docs/guides/${isProviders ? 'providers' : 'models'}/`}>{t.customLink} <span aria-hidden="true">→</span></a>

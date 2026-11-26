@@ -6,7 +6,7 @@
     "ref": "v2.20.0",
     "commit": "2bcee068b11ecfc5204405003a95464d2886c49b"
   },
-  "source_path": "packages/admin/lib/model-presets",
+  "source_path": "catalog/models",
   "count": 206,
   "items": [
     {
@@ -54,7 +54,7 @@
       },
       "vendor_label": "Alibaba Cloud",
       "kind": "asr",
-      "source_path": "packages/admin/lib/model-presets/aliyun-audio-asr.json"
+      "source_path": "catalog/models/aliyun-audio-asr.json"
     },
     {
       "id": "qwen-audio-3.1-asr-flash-streaming",
@@ -101,7 +101,7 @@
       },
       "vendor_label": "Alibaba Cloud",
       "kind": "asr",
-      "source_path": "packages/admin/lib/model-presets/aliyun-audio-asr.json"
+      "source_path": "catalog/models/aliyun-audio-asr.json"
     },
     {
       "id": "qwen-audio-3.1-asr-flash-filetrans",
@@ -148,7 +148,7 @@
       },
       "vendor_label": "Alibaba Cloud",
       "kind": "asr",
-      "source_path": "packages/admin/lib/model-presets/aliyun-audio-asr.json"
+      "source_path": "catalog/models/aliyun-audio-asr.json"
     },
     {
       "id": "qwen-audio-3.1-asr-flash",
@@ -195,7 +195,7 @@
       },
       "vendor_label": "Alibaba Cloud",
       "kind": "asr",
-      "source_path": "packages/admin/lib/model-presets/aliyun-audio-asr.json"
+      "source_path": "catalog/models/aliyun-audio-asr.json"
     },
     {
       "id": "qwen-audio-3.0-asr-flash-streaming",
@@ -234,7 +234,7 @@
       },
       "vendor_label": "Alibaba Cloud",
       "kind": "asr",
-      "source_path": "packages/admin/lib/model-presets/aliyun-audio-asr.json"
+      "source_path": "catalog/models/aliyun-audio-asr.json"
     },
     {
       "id": "qwen-audio-3.0-asr-flash-filetrans",
@@ -273,7 +273,7 @@
       },
       "vendor_label": "Alibaba Cloud",
       "kind": "asr",
-      "source_path": "packages/admin/lib/model-presets/aliyun-audio-asr.json"
+      "source_path": "catalog/models/aliyun-audio-asr.json"
     },
     {
       "id": "qwen-audio-3.0-asr-flash",
@@ -312,7 +312,7 @@
       },
       "vendor_label": "Alibaba Cloud",
       "kind": "asr",
-      "source_path": "packages/admin/lib/model-presets/aliyun-audio-asr.json"
+      "source_path": "catalog/models/aliyun-audio-asr.json"
     },
     {
       "id": "qwen3-asr-flash-realtime",
@@ -351,7 +351,7 @@
       },
       "vendor_label": "Alibaba Cloud",
       "kind": "asr",
-      "source_path": "packages/admin/lib/model-presets/aliyun-audio-asr.json"
+      "source_path": "catalog/models/aliyun-audio-asr.json"
     },
     {
       "id": "qwen3-asr-flash-filetrans",
@@ -390,7 +390,7 @@
       },
       "vendor_label": "Alibaba Cloud",
       "kind": "asr",
-      "source_path": "packages/admin/lib/model-presets/aliyun-audio-asr.json"
+      "source_path": "catalog/models/aliyun-audio-asr.json"
     },
     {
       "id": "qwen3-asr-flash",
@@ -429,7 +429,7 @@
       },
       "vendor_label": "Alibaba Cloud",
       "kind": "asr",
-      "source_path": "packages/admin/lib/model-presets/aliyun-audio-asr.json"
+      "source_path": "catalog/models/aliyun-audio-asr.json"
     },
     {
       "id": "fun-asr-realtime",
@@ -468,7 +468,7 @@
       },
       "vendor_label": "Alibaba Cloud",
       "kind": "asr",
-      "source_path": "packages/admin/lib/model-presets/aliyun-audio-asr.json"
+      "source_path": "catalog/models/aliyun-audio-asr.json"
     },
     {
       "id": "fun-asr",
@@ -507,7 +507,7 @@
       },
       "vendor_label": "Alibaba Cloud",
       "kind": "asr",
-      "source_path": "packages/admin/lib/model-presets/aliyun-audio-asr.json"
+      "source_path": "catalog/models/aliyun-audio-asr.json"
     },
     {
       "id": "qwen-audio-3.1-tts-flash",
@@ -552,7 +552,7 @@
       },
       "vendor_label": "Alibaba Cloud",
       "kind": "asr",
-      "source_path": "packages/admin/lib/model-presets/aliyun-audio-tts.json"
+      "source_path": "catalog/models/aliyun-audio-tts.json"
     },
     {
       "id": "qwen-audio-3.0-tts-plus",
@@ -591,7 +591,7 @@
       },
       "vendor_label": "Alibaba Cloud",
       "kind": "tts",
-      "source_path": "packages/admin/lib/model-presets/aliyun-audio-tts.json"
+      "source_path": "catalog/models/aliyun-audio-tts.json"
     },
     {
       "id": "qwen-audio-3.0-tts-flash",
@@ -630,7 +630,7 @@
       },
       "vendor_label": "Alibaba Cloud",
       "kind": "tts",
-      "source_path": "packages/admin/lib/model-presets/aliyun-audio-tts.json"
+      "source_path": "catalog/models/aliyun-audio-tts.json"
     },
     {
       "id": "cosyvoice-v1",
@@ -669,7 +669,7 @@
       },
       "vendor_label": "Alibaba Cloud",
       "kind": "tts",
-      "source_path": "packages/admin/lib/model-presets/aliyun-audio-tts.json"
+      "source_path": "catalog/models/aliyun-audio-tts.json"
     },
     {
       "id": "cosyvoice-v2",
@@ -708,7 +708,7 @@
       },
       "vendor_label": "Alibaba Cloud",
       "kind": "tts",
-      "source_path": "packages/admin/lib/model-presets/aliyun-audio-tts.json"
+      "source_path": "catalog/models/aliyun-audio-tts.json"
     },
     {
       "id": "cosyvoice-v3-flash",
@@ -747,7 +747,7 @@
       },
       "vendor_label": "Alibaba Cloud",
       "kind": "tts",
-      "source_path": "packages/admin/lib/model-presets/aliyun-audio-tts.json"
+      "source_path": "catalog/models/aliyun-audio-tts.json"
     },
     {
       "id": "cosyvoice-v3-plus",
@@ -786,7 +786,7 @@
       },
       "vendor_label": "Alibaba Cloud",
       "kind": "tts",
-      "source_path": "packages/admin/lib/model-presets/aliyun-audio-tts.json"
+      "source_path": "catalog/models/aliyun-audio-tts.json"
     },
     {
       "id": "cosyvoice-v3.5-flash",
@@ -826,7 +826,7 @@
       "released": "2026-02-27",
       "vendor_label": "Alibaba Cloud",
       "kind": "tts",
-      "source_path": "packages/admin/lib/model-presets/aliyun-audio-tts.json"
+      "source_path": "catalog/models/aliyun-audio-tts.json"
     },
     {
       "id": "cosyvoice-v3.5-plus",
@@ -866,7 +866,7 @@
       "released": "2026-02-27",
       "vendor_label": "Alibaba Cloud",
       "kind": "tts",
-      "source_path": "packages/admin/lib/model-presets/aliyun-audio-tts.json"
+      "source_path": "catalog/models/aliyun-audio-tts.json"
     },
     {
       "id": "qwen-audio-3.1-tts-next",
@@ -912,7 +912,7 @@
       "released": "2026-09-21",
       "vendor_label": "Alibaba Cloud",
       "kind": "asr",
-      "source_path": "packages/admin/lib/model-presets/aliyun-audio-tts.json"
+      "source_path": "catalog/models/aliyun-audio-tts.json"
     },
     {
       "id": "qwen-audio-3.1-tts-plus",
@@ -952,7 +952,7 @@
       "released": "2026-10-21",
       "vendor_label": "Alibaba Cloud",
       "kind": "tts",
-      "source_path": "packages/admin/lib/model-presets/aliyun-audio-tts.json"
+      "source_path": "catalog/models/aliyun-audio-tts.json"
     },
     {
       "id": "qwen3.7-text-embedding",
@@ -1001,7 +1001,7 @@
       },
       "vendor_label": "Alibaba Cloud",
       "kind": "embedding",
-      "source_path": "packages/admin/lib/model-presets/aliyun-embedding.json"
+      "source_path": "catalog/models/aliyun-embedding.json"
     },
     {
       "id": "text-embedding-v4",
@@ -1050,7 +1050,7 @@
       },
       "vendor_label": "Alibaba Cloud",
       "kind": "embedding",
-      "source_path": "packages/admin/lib/model-presets/aliyun-embedding.json"
+      "source_path": "catalog/models/aliyun-embedding.json"
     },
     {
       "id": "qwen3.7-text-embedding-flash",
@@ -1100,7 +1100,7 @@
       "released": "2026-09-01",
       "vendor_label": "Alibaba Cloud",
       "kind": "embedding",
-      "source_path": "packages/admin/lib/model-presets/aliyun-embedding.json"
+      "source_path": "catalog/models/aliyun-embedding.json"
     },
     {
       "id": "qwen-image-3.0-pro",
@@ -1157,7 +1157,7 @@
       "released": "2026-07-21",
       "vendor_label": "Alibaba Cloud",
       "kind": "image",
-      "source_path": "packages/admin/lib/model-presets/aliyun-image.json"
+      "source_path": "catalog/models/aliyun-image.json"
     },
     {
       "id": "qwen-image-3.0",
@@ -1206,7 +1206,7 @@
       "released": "2026-07-21",
       "vendor_label": "Alibaba Cloud",
       "kind": "image",
-      "source_path": "packages/admin/lib/model-presets/aliyun-image.json"
+      "source_path": "catalog/models/aliyun-image.json"
     },
     {
       "id": "qwen-image-2.1-pro",
@@ -1249,7 +1249,7 @@
       "released": "2026-10-02",
       "vendor_label": "Alibaba Cloud",
       "kind": "image",
-      "source_path": "packages/admin/lib/model-presets/aliyun-image.json"
+      "source_path": "catalog/models/aliyun-image.json"
     },
     {
       "id": "qwen-image-2.1-turbo",
@@ -1292,7 +1292,7 @@
       "released": "2026-10-09",
       "vendor_label": "Alibaba Cloud",
       "kind": "image",
-      "source_path": "packages/admin/lib/model-presets/aliyun-image.json"
+      "source_path": "catalog/models/aliyun-image.json"
     },
     {
       "id": "wan2.7-image-pro",
@@ -1335,7 +1335,7 @@
       "released": "2026-04-01",
       "vendor_label": "Alibaba Cloud",
       "kind": "image",
-      "source_path": "packages/admin/lib/model-presets/aliyun-image.json"
+      "source_path": "catalog/models/aliyun-image.json"
     },
     {
       "id": "wan2.7-image",
@@ -1378,7 +1378,7 @@
       "released": "2026-04-01",
       "vendor_label": "Alibaba Cloud",
       "kind": "image",
-      "source_path": "packages/admin/lib/model-presets/aliyun-image.json"
+      "source_path": "catalog/models/aliyun-image.json"
     },
     {
       "id": "qwen4-max",
@@ -1430,7 +1430,7 @@
       "released": "2026-11-16",
       "vendor_label": "Alibaba Cloud",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/aliyun.json"
+      "source_path": "catalog/models/aliyun.json"
     },
     {
       "id": "qwen4-max-preview",
@@ -1483,7 +1483,7 @@
       "retired": "2026-11-26",
       "vendor_label": "Alibaba Cloud",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/aliyun.json"
+      "source_path": "catalog/models/aliyun.json"
     },
     {
       "id": "qwen3.8-max",
@@ -1535,7 +1535,7 @@
       "released": "2026-08-01",
       "vendor_label": "Alibaba Cloud",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/aliyun.json"
+      "source_path": "catalog/models/aliyun.json"
     },
     {
       "id": "qwen3.8-max-prime",
@@ -1586,7 +1586,7 @@
       },
       "vendor_label": "Alibaba Cloud",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/aliyun.json"
+      "source_path": "catalog/models/aliyun.json"
     },
     {
       "id": "qwen3.8-2.4t-a95b",
@@ -1636,7 +1636,7 @@
       "released": "2026-08-01",
       "vendor_label": "Alibaba Cloud",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/aliyun.json"
+      "source_path": "catalog/models/aliyun.json"
     },
     {
       "id": "qwen3.8-27b",
@@ -1687,7 +1687,7 @@
       },
       "vendor_label": "Alibaba Cloud",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/aliyun.json"
+      "source_path": "catalog/models/aliyun.json"
     },
     {
       "id": "qwen3.8-omni-flash",
@@ -1739,7 +1739,7 @@
       },
       "vendor_label": "Alibaba Cloud",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/aliyun.json"
+      "source_path": "catalog/models/aliyun.json"
     },
     {
       "id": "qwen3.8-max-preview",
@@ -1791,7 +1791,7 @@
       "released": "2026-07-19",
       "vendor_label": "Alibaba Cloud",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/aliyun.json"
+      "source_path": "catalog/models/aliyun.json"
     },
     {
       "id": "qwen3.8-flash",
@@ -1843,7 +1843,7 @@
       "released": "2026-08-26",
       "vendor_label": "Alibaba Cloud",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/aliyun.json"
+      "source_path": "catalog/models/aliyun.json"
     },
     {
       "id": "qwen3.7-plus",
@@ -1910,7 +1910,7 @@
       "released": "2026-06-02",
       "vendor_label": "Alibaba Cloud",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/aliyun.json"
+      "source_path": "catalog/models/aliyun.json"
     },
     {
       "id": "qwen3.7-max",
@@ -1960,7 +1960,7 @@
       "released": "2026-05-20",
       "vendor_label": "Alibaba Cloud",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/aliyun.json"
+      "source_path": "catalog/models/aliyun.json"
     },
     {
       "id": "qwen3.7-flash",
@@ -2040,7 +2040,7 @@
       "released": "2026-07-15",
       "vendor_label": "Alibaba Cloud",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/aliyun.json"
+      "source_path": "catalog/models/aliyun.json"
     },
     {
       "id": "qwen3.6-plus",
@@ -2107,7 +2107,7 @@
       "released": "2026-04-02",
       "vendor_label": "Alibaba Cloud",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/aliyun.json"
+      "source_path": "catalog/models/aliyun.json"
     },
     {
       "id": "qwen3.6-max",
@@ -2171,7 +2171,7 @@
       "released": "2026-04-20",
       "vendor_label": "Alibaba Cloud",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/aliyun.json"
+      "source_path": "catalog/models/aliyun.json"
     },
     {
       "id": "qwen3.6-flash",
@@ -2238,7 +2238,7 @@
       "released": "2026-04-16",
       "vendor_label": "Alibaba Cloud",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/aliyun.json"
+      "source_path": "catalog/models/aliyun.json"
     },
     {
       "id": "qwen3.5-plus",
@@ -2313,7 +2313,7 @@
       "retired": "2027-01-19",
       "vendor_label": "Alibaba Cloud",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/aliyun.json"
+      "source_path": "catalog/models/aliyun.json"
     },
     {
       "id": "qwen3.5-flash",
@@ -2380,7 +2380,7 @@
       "released": "2026-02-16",
       "vendor_label": "Alibaba Cloud",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/aliyun.json"
+      "source_path": "catalog/models/aliyun.json"
     },
     {
       "id": "qwen3-vl-plus",
@@ -2460,7 +2460,7 @@
       "released": "2025-12-19",
       "vendor_label": "Alibaba Cloud",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/aliyun.json"
+      "source_path": "catalog/models/aliyun.json"
     },
     {
       "id": "qwen3.5-omni-plus",
@@ -2514,7 +2514,7 @@
       "released": "2026-03-15",
       "vendor_label": "Alibaba Cloud",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/aliyun.json"
+      "source_path": "catalog/models/aliyun.json"
     },
     {
       "id": "qwen3.5-omni-flash",
@@ -2568,7 +2568,7 @@
       "released": "2026-03-15",
       "vendor_label": "Alibaba Cloud",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/aliyun.json"
+      "source_path": "catalog/models/aliyun.json"
     },
     {
       "id": "claude-fable-5-2",
@@ -2620,7 +2620,7 @@
       "released": "2026-11-09",
       "vendor_label": "Anthropic",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/anthropic.json"
+      "source_path": "catalog/models/anthropic.json"
     },
     {
       "id": "claude-sonnet-5-5",
@@ -2672,7 +2672,7 @@
       "released": "2026-09-28",
       "vendor_label": "Anthropic",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/anthropic.json"
+      "source_path": "catalog/models/anthropic.json"
     },
     {
       "id": "claude-haiku-5-5",
@@ -2737,7 +2737,7 @@
       "released": "2026-10-07",
       "vendor_label": "Anthropic",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/anthropic.json"
+      "source_path": "catalog/models/anthropic.json"
     },
     {
       "id": "claude-opus-5-5",
@@ -2789,7 +2789,7 @@
       "released": "2026-09-22",
       "vendor_label": "Anthropic",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/anthropic.json"
+      "source_path": "catalog/models/anthropic.json"
     },
     {
       "id": "claude-fable-5-1",
@@ -2841,7 +2841,7 @@
       "released": "2026-09-01",
       "vendor_label": "Anthropic",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/anthropic.json"
+      "source_path": "catalog/models/anthropic.json"
     },
     {
       "id": "claude-fable-5",
@@ -2893,7 +2893,7 @@
       "released": "2026-06-09",
       "vendor_label": "Anthropic",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/anthropic.json"
+      "source_path": "catalog/models/anthropic.json"
     },
     {
       "id": "claude-sonnet-5",
@@ -2945,7 +2945,7 @@
       "released": "2026-06-30",
       "vendor_label": "Anthropic",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/anthropic.json"
+      "source_path": "catalog/models/anthropic.json"
     },
     {
       "id": "claude-opus-5",
@@ -2997,7 +2997,7 @@
       "released": "2026-07-24",
       "vendor_label": "Anthropic",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/anthropic.json"
+      "source_path": "catalog/models/anthropic.json"
     },
     {
       "id": "claude-opus-4.8",
@@ -3049,7 +3049,7 @@
       "released": "2026-05-28",
       "vendor_label": "Anthropic",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/anthropic.json"
+      "source_path": "catalog/models/anthropic.json"
     },
     {
       "id": "claude-opus-4.7",
@@ -3101,7 +3101,7 @@
       "released": "2026-04-16",
       "vendor_label": "Anthropic",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/anthropic.json"
+      "source_path": "catalog/models/anthropic.json"
     },
     {
       "id": "claude-opus-4.6",
@@ -3153,7 +3153,7 @@
       "released": "2026-02-05",
       "vendor_label": "Anthropic",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/anthropic.json"
+      "source_path": "catalog/models/anthropic.json"
     },
     {
       "id": "claude-sonnet-4.6",
@@ -3205,7 +3205,7 @@
       "released": "2026-02-17",
       "vendor_label": "Anthropic",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/anthropic.json"
+      "source_path": "catalog/models/anthropic.json"
     },
     {
       "id": "claude-haiku-4.5",
@@ -3257,7 +3257,7 @@
       "released": "2025-10-15",
       "vendor_label": "Anthropic",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/anthropic.json"
+      "source_path": "catalog/models/anthropic.json"
     },
     {
       "id": "doubao-seedream-5-0-flash",
@@ -3304,7 +3304,7 @@
       "released": "2026-09-15",
       "vendor_label": "ByteDance",
       "kind": "image",
-      "source_path": "packages/admin/lib/model-presets/bytedance-image.json"
+      "source_path": "catalog/models/bytedance-image.json"
     },
     {
       "id": "doubao-seedream-5-0-pro",
@@ -3363,7 +3363,7 @@
       "released": "2026-07-08",
       "vendor_label": "ByteDance",
       "kind": "image",
-      "source_path": "packages/admin/lib/model-presets/bytedance-image.json"
+      "source_path": "catalog/models/bytedance-image.json"
     },
     {
       "id": "doubao-seedream-5-0",
@@ -3407,7 +3407,7 @@
       "retired": "2026-11-24",
       "vendor_label": "ByteDance",
       "kind": "image",
-      "source_path": "packages/admin/lib/model-presets/bytedance-image.json"
+      "source_path": "catalog/models/bytedance-image.json"
     },
     {
       "id": "doubao-seed-2-0-mini-260215",
@@ -3480,7 +3480,7 @@
       "retired": "2026-10-22",
       "vendor_label": "ByteDance",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/bytedance.json"
+      "source_path": "catalog/models/bytedance.json"
     },
     {
       "id": "doubao-seed-2-0-mini-260428",
@@ -3554,7 +3554,7 @@
       "released": "2026-04-28",
       "vendor_label": "ByteDance",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/bytedance.json"
+      "source_path": "catalog/models/bytedance.json"
     },
     {
       "id": "doubao-seed-2-0-lite-260215",
@@ -3629,7 +3629,7 @@
       "retired": "2026-10-22",
       "vendor_label": "ByteDance",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/bytedance.json"
+      "source_path": "catalog/models/bytedance.json"
     },
     {
       "id": "doubao-seed-2-0-lite-260428",
@@ -3703,7 +3703,7 @@
       "released": "2026-04-28",
       "vendor_label": "ByteDance",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/bytedance.json"
+      "source_path": "catalog/models/bytedance.json"
     },
     {
       "id": "doubao-seed-2-0-pro-260215",
@@ -3777,7 +3777,7 @@
       "retired": "2026-11-24",
       "vendor_label": "ByteDance",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/bytedance.json"
+      "source_path": "catalog/models/bytedance.json"
     },
     {
       "id": "doubao-seed-2-1-pro-260628",
@@ -3829,7 +3829,7 @@
       "released": "2026-06-23",
       "vendor_label": "ByteDance",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/bytedance.json"
+      "source_path": "catalog/models/bytedance.json"
     },
     {
       "id": "doubao-seed-2-1-pro-260915",
@@ -3870,7 +3870,7 @@
       "released": "2026-09-15",
       "vendor_label": "ByteDance",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/bytedance.json"
+      "source_path": "catalog/models/bytedance.json"
     },
     {
       "id": "doubao-seed-2-1-lite-260915",
@@ -3912,7 +3912,7 @@
       "released": "2026-09-15",
       "vendor_label": "ByteDance",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/bytedance.json"
+      "source_path": "catalog/models/bytedance.json"
     },
     {
       "id": "doubao-seed-2-1-turbo-260628",
@@ -3964,7 +3964,7 @@
       "released": "2026-06-23",
       "vendor_label": "ByteDance",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/bytedance.json"
+      "source_path": "catalog/models/bytedance.json"
     },
     {
       "id": "doubao-seed-evolving",
@@ -4016,7 +4016,7 @@
       "released": "2026-06-23",
       "vendor_label": "ByteDance",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/bytedance.json"
+      "source_path": "catalog/models/bytedance.json"
     },
     {
       "id": "deepseek-v4.1-flash",
@@ -4119,7 +4119,7 @@
       "released": "2026-09-10",
       "vendor_label": "DeepSeek",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/deepseek.json"
+      "source_path": "catalog/models/deepseek.json"
     },
     {
       "id": "deepseek-v4-pro",
@@ -4221,7 +4221,7 @@
       "released": "2026-08-13",
       "vendor_label": "DeepSeek",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/deepseek.json"
+      "source_path": "catalog/models/deepseek.json"
     },
     {
       "id": "deepseek-v4-flash",
@@ -4324,7 +4324,7 @@
       "retired": "2026-09-10",
       "vendor_label": "DeepSeek",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/deepseek.json"
+      "source_path": "catalog/models/deepseek.json"
     },
     {
       "id": "deepseek-v3.2",
@@ -4374,7 +4374,7 @@
       "released": "2025-12-01",
       "vendor_label": "DeepSeek",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/deepseek.json"
+      "source_path": "catalog/models/deepseek.json"
     },
     {
       "id": "elevenlabs-scribe-v2",
@@ -4413,7 +4413,7 @@
       },
       "vendor_label": "ElevenLabs",
       "kind": "asr",
-      "source_path": "packages/admin/lib/model-presets/elevenlabs-audio-asr.json"
+      "source_path": "catalog/models/elevenlabs-audio-asr.json"
     },
     {
       "id": "elevenlabs-scribe-v2-medical",
@@ -4452,7 +4452,7 @@
       },
       "vendor_label": "ElevenLabs",
       "kind": "asr",
-      "source_path": "packages/admin/lib/model-presets/elevenlabs-audio-asr.json"
+      "source_path": "catalog/models/elevenlabs-audio-asr.json"
     },
     {
       "id": "elevenlabs-scribe-v2-realtime",
@@ -4491,7 +4491,7 @@
       },
       "vendor_label": "ElevenLabs",
       "kind": "asr",
-      "source_path": "packages/admin/lib/model-presets/elevenlabs-audio-asr.json"
+      "source_path": "catalog/models/elevenlabs-audio-asr.json"
     },
     {
       "id": "elevenlabs-v4",
@@ -4530,7 +4530,7 @@
       },
       "vendor_label": "ElevenLabs",
       "kind": "tts",
-      "source_path": "packages/admin/lib/model-presets/elevenlabs-audio-tts.json"
+      "source_path": "catalog/models/elevenlabs-audio-tts.json"
     },
     {
       "id": "elevenlabs-v4-turbo",
@@ -4569,7 +4569,7 @@
       },
       "vendor_label": "ElevenLabs",
       "kind": "tts",
-      "source_path": "packages/admin/lib/model-presets/elevenlabs-audio-tts.json"
+      "source_path": "catalog/models/elevenlabs-audio-tts.json"
     },
     {
       "id": "elevenlabs-v3",
@@ -4608,7 +4608,7 @@
       },
       "vendor_label": "ElevenLabs",
       "kind": "tts",
-      "source_path": "packages/admin/lib/model-presets/elevenlabs-audio-tts.json"
+      "source_path": "catalog/models/elevenlabs-audio-tts.json"
     },
     {
       "id": "elevenlabs-v3-conversational",
@@ -4647,7 +4647,7 @@
       },
       "vendor_label": "ElevenLabs",
       "kind": "tts",
-      "source_path": "packages/admin/lib/model-presets/elevenlabs-audio-tts.json"
+      "source_path": "catalog/models/elevenlabs-audio-tts.json"
     },
     {
       "id": "elevenlabs-multilingual-v2",
@@ -4686,7 +4686,7 @@
       },
       "vendor_label": "ElevenLabs",
       "kind": "tts",
-      "source_path": "packages/admin/lib/model-presets/elevenlabs-audio-tts.json"
+      "source_path": "catalog/models/elevenlabs-audio-tts.json"
     },
     {
       "id": "elevenlabs-flash-v2.5",
@@ -4725,7 +4725,7 @@
       },
       "vendor_label": "ElevenLabs",
       "kind": "tts",
-      "source_path": "packages/admin/lib/model-presets/elevenlabs-audio-tts.json"
+      "source_path": "catalog/models/elevenlabs-audio-tts.json"
     },
     {
       "id": "elevenlabs-flash-v2",
@@ -4764,7 +4764,7 @@
       },
       "vendor_label": "ElevenLabs",
       "kind": "tts",
-      "source_path": "packages/admin/lib/model-presets/elevenlabs-audio-tts.json"
+      "source_path": "catalog/models/elevenlabs-audio-tts.json"
     },
     {
       "id": "elevenlabs-turbo-v2.5",
@@ -4803,7 +4803,7 @@
       },
       "vendor_label": "ElevenLabs",
       "kind": "tts",
-      "source_path": "packages/admin/lib/model-presets/elevenlabs-audio-tts.json"
+      "source_path": "catalog/models/elevenlabs-audio-tts.json"
     },
     {
       "id": "gemini-embedding-2",
@@ -4852,7 +4852,7 @@
       },
       "vendor_label": "Google",
       "kind": "embedding",
-      "source_path": "packages/admin/lib/model-presets/google-embedding.json"
+      "source_path": "catalog/models/google-embedding.json"
     },
     {
       "id": "gemini-nano-banana-2.1",
@@ -4911,7 +4911,7 @@
       "released": "2026-10-06",
       "vendor_label": "Google",
       "kind": "image",
-      "source_path": "packages/admin/lib/model-presets/google-image.json"
+      "source_path": "catalog/models/google-image.json"
     },
     {
       "id": "gemini-3.1-flash-image",
@@ -4970,7 +4970,7 @@
       "released": "2026-05-28",
       "vendor_label": "Google",
       "kind": "image",
-      "source_path": "packages/admin/lib/model-presets/google-image.json"
+      "source_path": "catalog/models/google-image.json"
     },
     {
       "id": "gemini-3-pro-image-preview",
@@ -5030,7 +5030,7 @@
       "retired": "2026-06-25",
       "vendor_label": "Google",
       "kind": "image",
-      "source_path": "packages/admin/lib/model-presets/google-image.json"
+      "source_path": "catalog/models/google-image.json"
     },
     {
       "id": "gemini-3.1-flash-lite-image",
@@ -5089,7 +5089,7 @@
       "released": "2026-06-30",
       "vendor_label": "Google",
       "kind": "image",
-      "source_path": "packages/admin/lib/model-presets/google-image.json"
+      "source_path": "catalog/models/google-image.json"
     },
     {
       "id": "gemini-3-pro-image",
@@ -5148,7 +5148,7 @@
       "released": "2026-05-28",
       "vendor_label": "Google",
       "kind": "image",
-      "source_path": "packages/admin/lib/model-presets/google-image.json"
+      "source_path": "catalog/models/google-image.json"
     },
     {
       "id": "gemini-4-neon",
@@ -5202,7 +5202,7 @@
       "released": "2026-11-18",
       "vendor_label": "Google",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/google.json"
+      "source_path": "catalog/models/google.json"
     },
     {
       "id": "gemini-4-hydrogen",
@@ -5256,7 +5256,7 @@
       "released": "2026-11-12",
       "vendor_label": "Google",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/google.json"
+      "source_path": "catalog/models/google.json"
     },
     {
       "id": "gemini-4-carbon",
@@ -5310,7 +5310,7 @@
       "released": "2026-11-10",
       "vendor_label": "Google",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/google.json"
+      "source_path": "catalog/models/google.json"
     },
     {
       "id": "gemini-4-argon",
@@ -5364,7 +5364,7 @@
       "released": "2026-10-13",
       "vendor_label": "Google",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/google.json"
+      "source_path": "catalog/models/google.json"
     },
     {
       "id": "gemini-3.8-flash",
@@ -5418,7 +5418,7 @@
       "released": "2026-09-02",
       "vendor_label": "Google",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/google.json"
+      "source_path": "catalog/models/google.json"
     },
     {
       "id": "gemini-3.7-flash",
@@ -5472,7 +5472,7 @@
       "released": "2026-08-13",
       "vendor_label": "Google",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/google.json"
+      "source_path": "catalog/models/google.json"
     },
     {
       "id": "gemini-3.6-flash",
@@ -5526,7 +5526,7 @@
       "released": "2026-07-21",
       "vendor_label": "Google",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/google.json"
+      "source_path": "catalog/models/google.json"
     },
     {
       "id": "gemini-3.1-pro-preview",
@@ -5594,7 +5594,7 @@
       "released": "2026-02-19",
       "vendor_label": "Google",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/google.json"
+      "source_path": "catalog/models/google.json"
     },
     {
       "id": "gemini-3-flash-preview",
@@ -5648,7 +5648,7 @@
       "released": "2025-12-17",
       "vendor_label": "Google",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/google.json"
+      "source_path": "catalog/models/google.json"
     },
     {
       "id": "gemini-3.5-flash",
@@ -5702,7 +5702,7 @@
       "released": "2026-05-19",
       "vendor_label": "Google",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/google.json"
+      "source_path": "catalog/models/google.json"
     },
     {
       "id": "gemini-3.5-flash-lite",
@@ -5756,7 +5756,7 @@
       "released": "2026-07-21",
       "vendor_label": "Google",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/google.json"
+      "source_path": "catalog/models/google.json"
     },
     {
       "id": "gemini-3.1-flash-lite",
@@ -5811,7 +5811,7 @@
       "retired": "2027-05-07",
       "vendor_label": "Google",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/google.json"
+      "source_path": "catalog/models/google.json"
     },
     {
       "id": "gemini-2.5-pro",
@@ -5880,7 +5880,7 @@
       "retired": "2026-12-01",
       "vendor_label": "Google",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/google.json"
+      "source_path": "catalog/models/google.json"
     },
     {
       "id": "gemini-2.5-flash",
@@ -5935,7 +5935,7 @@
       "retired": "2026-12-01",
       "vendor_label": "Google",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/google.json"
+      "source_path": "catalog/models/google.json"
     },
     {
       "id": "gemini-2.5-flash-lite",
@@ -5989,7 +5989,7 @@
       "released": "2025-07-22",
       "vendor_label": "Google",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/google.json"
+      "source_path": "catalog/models/google.json"
     },
     {
       "id": "longcat-2.0",
@@ -6039,7 +6039,7 @@
       "released": "2026-06-30",
       "vendor_label": "Meituan LongCat",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/meituan.json"
+      "source_path": "catalog/models/meituan.json"
     },
     {
       "id": "minimax-asr-1.0",
@@ -6078,7 +6078,7 @@
       },
       "vendor_label": "MiniMax",
       "kind": "asr",
-      "source_path": "packages/admin/lib/model-presets/minimax-audio-asr.json"
+      "source_path": "catalog/models/minimax-audio-asr.json"
     },
     {
       "id": "minimax-speech-2.8-hd",
@@ -6117,7 +6117,7 @@
       },
       "vendor_label": "MiniMax",
       "kind": "tts",
-      "source_path": "packages/admin/lib/model-presets/minimax-audio-tts.json"
+      "source_path": "catalog/models/minimax-audio-tts.json"
     },
     {
       "id": "minimax-speech-2.8-turbo",
@@ -6156,7 +6156,7 @@
       },
       "vendor_label": "MiniMax",
       "kind": "tts",
-      "source_path": "packages/admin/lib/model-presets/minimax-audio-tts.json"
+      "source_path": "catalog/models/minimax-audio-tts.json"
     },
     {
       "id": "minimax-h3-image",
@@ -6213,7 +6213,7 @@
       "released": "2026-11-10",
       "vendor_label": "MiniMax",
       "kind": "image",
-      "source_path": "packages/admin/lib/model-presets/minimax-image.json"
+      "source_path": "catalog/models/minimax-image.json"
     },
     {
       "id": "minimax-h3-image-highspeed",
@@ -6270,7 +6270,7 @@
       "released": "2026-11-10",
       "vendor_label": "MiniMax",
       "kind": "image",
-      "source_path": "packages/admin/lib/model-presets/minimax-image.json"
+      "source_path": "catalog/models/minimax-image.json"
     },
     {
       "id": "minimax-image-01",
@@ -6310,7 +6310,7 @@
       },
       "vendor_label": "MiniMax",
       "kind": "image",
-      "source_path": "packages/admin/lib/model-presets/minimax-image.json"
+      "source_path": "catalog/models/minimax-image.json"
     },
     {
       "id": "minimax-image-01-live",
@@ -6350,7 +6350,7 @@
       },
       "vendor_label": "MiniMax",
       "kind": "image",
-      "source_path": "packages/admin/lib/model-presets/minimax-image.json"
+      "source_path": "catalog/models/minimax-image.json"
     },
     {
       "id": "minimax-m2.5",
@@ -6401,7 +6401,7 @@
       "retired": "2026-11-18",
       "vendor_label": "MiniMax",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/minimax.json"
+      "source_path": "catalog/models/minimax.json"
     },
     {
       "id": "minimax-m2.7",
@@ -6452,7 +6452,7 @@
       "retired": "2026-11-18",
       "vendor_label": "MiniMax",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/minimax.json"
+      "source_path": "catalog/models/minimax.json"
     },
     {
       "id": "minimax-m2.7-highspeed",
@@ -6502,7 +6502,7 @@
       },
       "vendor_label": "MiniMax",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/minimax.json"
+      "source_path": "catalog/models/minimax.json"
     },
     {
       "id": "minimax-m3",
@@ -6568,7 +6568,7 @@
       "released": "2026-06-01",
       "vendor_label": "MiniMax",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/minimax.json"
+      "source_path": "catalog/models/minimax.json"
     },
     {
       "id": "minimax-m3.1-flash",
@@ -6620,7 +6620,7 @@
       },
       "vendor_label": "MiniMax",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/minimax.json"
+      "source_path": "catalog/models/minimax.json"
     },
     {
       "id": "kimi-k2.5",
@@ -6673,7 +6673,7 @@
       "retired": "2026-08-31",
       "vendor_label": "Moonshot AI",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/moonshot.json"
+      "source_path": "catalog/models/moonshot.json"
     },
     {
       "id": "kimi-k2.6",
@@ -6725,7 +6725,7 @@
       "released": "2026-04-20",
       "vendor_label": "Moonshot AI",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/moonshot.json"
+      "source_path": "catalog/models/moonshot.json"
     },
     {
       "id": "kimi-k2.7-code",
@@ -6777,7 +6777,7 @@
       "released": "2026-06-12",
       "vendor_label": "Moonshot AI",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/moonshot.json"
+      "source_path": "catalog/models/moonshot.json"
     },
     {
       "id": "kimi-k2.7-code-highspeed",
@@ -6828,7 +6828,7 @@
       },
       "vendor_label": "Moonshot AI",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/moonshot.json"
+      "source_path": "catalog/models/moonshot.json"
     },
     {
       "id": "kimi-k3",
@@ -6880,7 +6880,7 @@
       "released": "2026-07-16",
       "vendor_label": "Moonshot AI",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/moonshot.json"
+      "source_path": "catalog/models/moonshot.json"
     },
     {
       "id": "kimi-k3.1-pro",
@@ -6932,7 +6932,7 @@
       "released": "2026-10-23",
       "vendor_label": "Moonshot AI",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/moonshot.json"
+      "source_path": "catalog/models/moonshot.json"
     },
     {
       "id": "kimi-k3.1-pro-highspeed",
@@ -6984,7 +6984,7 @@
       "released": "2026-10-23",
       "vendor_label": "Moonshot AI",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/moonshot.json"
+      "source_path": "catalog/models/moonshot.json"
     },
     {
       "id": "whisper-1",
@@ -7027,7 +7027,7 @@
       "retired": "2027-02-26",
       "vendor_label": "OpenAI",
       "kind": "asr",
-      "source_path": "packages/admin/lib/model-presets/openai-audio-asr.json"
+      "source_path": "catalog/models/openai-audio-asr.json"
     },
     {
       "id": "gpt-4o-mini-transcribe",
@@ -7077,7 +7077,7 @@
       "retired": "2027-02-26",
       "vendor_label": "OpenAI",
       "kind": "asr",
-      "source_path": "packages/admin/lib/model-presets/openai-audio-asr.json"
+      "source_path": "catalog/models/openai-audio-asr.json"
     },
     {
       "id": "gpt-4o-transcribe",
@@ -7127,7 +7127,7 @@
       "retired": "2027-02-26",
       "vendor_label": "OpenAI",
       "kind": "asr",
-      "source_path": "packages/admin/lib/model-presets/openai-audio-asr.json"
+      "source_path": "catalog/models/openai-audio-asr.json"
     },
     {
       "id": "gpt-4o-transcribe-diarize",
@@ -7177,7 +7177,7 @@
       "retired": "2027-02-26",
       "vendor_label": "OpenAI",
       "kind": "asr",
-      "source_path": "packages/admin/lib/model-presets/openai-audio-asr.json"
+      "source_path": "catalog/models/openai-audio-asr.json"
     },
     {
       "id": "gpt-realtime-whisper",
@@ -7219,7 +7219,7 @@
       },
       "vendor_label": "OpenAI",
       "kind": "asr",
-      "source_path": "packages/admin/lib/model-presets/openai-audio-asr.json"
+      "source_path": "catalog/models/openai-audio-asr.json"
     },
     {
       "id": "gpt-live-transcribe",
@@ -7259,7 +7259,7 @@
       },
       "vendor_label": "OpenAI",
       "kind": "asr",
-      "source_path": "packages/admin/lib/model-presets/openai-audio-asr.json"
+      "source_path": "catalog/models/openai-audio-asr.json"
     },
     {
       "id": "gpt-transcribe",
@@ -7299,7 +7299,7 @@
       },
       "vendor_label": "OpenAI",
       "kind": "asr",
-      "source_path": "packages/admin/lib/model-presets/openai-audio-asr.json"
+      "source_path": "catalog/models/openai-audio-asr.json"
     },
     {
       "id": "text-embedding-3-small",
@@ -7348,7 +7348,7 @@
       },
       "vendor_label": "OpenAI",
       "kind": "embedding",
-      "source_path": "packages/admin/lib/model-presets/openai-embedding.json"
+      "source_path": "catalog/models/openai-embedding.json"
     },
     {
       "id": "text-embedding-3-large",
@@ -7397,7 +7397,7 @@
       },
       "vendor_label": "OpenAI",
       "kind": "embedding",
-      "source_path": "packages/admin/lib/model-presets/openai-embedding.json"
+      "source_path": "catalog/models/openai-embedding.json"
     },
     {
       "id": "text-embedding-ada-002",
@@ -7446,7 +7446,7 @@
       },
       "vendor_label": "OpenAI",
       "kind": "embedding",
-      "source_path": "packages/admin/lib/model-presets/openai-embedding.json"
+      "source_path": "catalog/models/openai-embedding.json"
     },
     {
       "id": "gpt-image-2.6-flare",
@@ -7505,7 +7505,7 @@
       "released": "2026-11-04",
       "vendor_label": "OpenAI",
       "kind": "image",
-      "source_path": "packages/admin/lib/model-presets/openai-image.json"
+      "source_path": "catalog/models/openai-image.json"
     },
     {
       "id": "gpt-image-2.6-sunburst",
@@ -7564,7 +7564,7 @@
       "released": "2026-11-04",
       "vendor_label": "OpenAI",
       "kind": "image",
-      "source_path": "packages/admin/lib/model-presets/openai-image.json"
+      "source_path": "catalog/models/openai-image.json"
     },
     {
       "id": "gpt-image-2.5-flare",
@@ -7623,7 +7623,7 @@
       "released": "2026-09-08",
       "vendor_label": "OpenAI",
       "kind": "image",
-      "source_path": "packages/admin/lib/model-presets/openai-image.json"
+      "source_path": "catalog/models/openai-image.json"
     },
     {
       "id": "gpt-image-2.5-sunburst",
@@ -7682,7 +7682,7 @@
       "released": "2026-09-08",
       "vendor_label": "OpenAI",
       "kind": "image",
-      "source_path": "packages/admin/lib/model-presets/openai-image.json"
+      "source_path": "catalog/models/openai-image.json"
     },
     {
       "id": "gpt-image-2",
@@ -7742,7 +7742,7 @@
       "retired": "2027-02-10",
       "vendor_label": "OpenAI",
       "kind": "image",
-      "source_path": "packages/admin/lib/model-presets/openai-image.json"
+      "source_path": "catalog/models/openai-image.json"
     },
     {
       "id": "gpt-image-1.5",
@@ -7802,7 +7802,7 @@
       "retired": "2026-12-01",
       "vendor_label": "OpenAI",
       "kind": "image",
-      "source_path": "packages/admin/lib/model-presets/openai-image.json"
+      "source_path": "catalog/models/openai-image.json"
     },
     {
       "id": "gpt-image-1-mini",
@@ -7861,7 +7861,7 @@
       "retired": "2026-12-01",
       "vendor_label": "OpenAI",
       "kind": "image",
-      "source_path": "packages/admin/lib/model-presets/openai-image.json"
+      "source_path": "catalog/models/openai-image.json"
     },
     {
       "id": "gpt-6-astra",
@@ -7926,7 +7926,7 @@
       "released": "2026-09-04",
       "vendor_label": "OpenAI",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/openai.json"
+      "source_path": "catalog/models/openai.json"
     },
     {
       "id": "gpt-6-sol",
@@ -7991,7 +7991,7 @@
       "released": "2026-09-22",
       "vendor_label": "OpenAI",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/openai.json"
+      "source_path": "catalog/models/openai.json"
     },
     {
       "id": "gpt-6.1-sol",
@@ -8056,7 +8056,7 @@
       "released": "2026-09-29",
       "vendor_label": "OpenAI",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/openai.json"
+      "source_path": "catalog/models/openai.json"
     },
     {
       "id": "gpt-6.1-terra",
@@ -8121,7 +8121,7 @@
       "released": "2026-10-26",
       "vendor_label": "OpenAI",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/openai.json"
+      "source_path": "catalog/models/openai.json"
     },
     {
       "id": "gpt-6.2-astra",
@@ -8186,7 +8186,7 @@
       "released": "2026-11-17",
       "vendor_label": "OpenAI",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/openai.json"
+      "source_path": "catalog/models/openai.json"
     },
     {
       "id": "gpt-6.2-sol",
@@ -8251,7 +8251,7 @@
       "released": "2026-11-17",
       "vendor_label": "OpenAI",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/openai.json"
+      "source_path": "catalog/models/openai.json"
     },
     {
       "id": "gpt-6-luna",
@@ -8316,7 +8316,7 @@
       "released": "2026-09-22",
       "vendor_label": "OpenAI",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/openai.json"
+      "source_path": "catalog/models/openai.json"
     },
     {
       "id": "gpt-5.2",
@@ -8367,7 +8367,7 @@
       "released": "2025-12-11",
       "vendor_label": "OpenAI",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/openai.json"
+      "source_path": "catalog/models/openai.json"
     },
     {
       "id": "gpt-5.4",
@@ -8432,7 +8432,7 @@
       "released": "2026-03-05",
       "vendor_label": "OpenAI",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/openai.json"
+      "source_path": "catalog/models/openai.json"
     },
     {
       "id": "gpt-5.4-mini",
@@ -8483,7 +8483,7 @@
       "released": "2026-03-17",
       "vendor_label": "OpenAI",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/openai.json"
+      "source_path": "catalog/models/openai.json"
     },
     {
       "id": "gpt-5.4-nano",
@@ -8535,7 +8535,7 @@
       "retired": "2027-04-01",
       "vendor_label": "OpenAI",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/openai.json"
+      "source_path": "catalog/models/openai.json"
     },
     {
       "id": "gpt-5.5",
@@ -8600,7 +8600,7 @@
       "released": "2026-04-23",
       "vendor_label": "OpenAI",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/openai.json"
+      "source_path": "catalog/models/openai.json"
     },
     {
       "id": "gpt-5.6",
@@ -8665,7 +8665,7 @@
       "released": "2026-07-09",
       "vendor_label": "OpenAI",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/openai.json"
+      "source_path": "catalog/models/openai.json"
     },
     {
       "id": "gpt-5.6-sol",
@@ -8730,7 +8730,7 @@
       "released": "2026-07-09",
       "vendor_label": "OpenAI",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/openai.json"
+      "source_path": "catalog/models/openai.json"
     },
     {
       "id": "gpt-5.6-terra",
@@ -8795,7 +8795,7 @@
       "released": "2026-07-09",
       "vendor_label": "OpenAI",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/openai.json"
+      "source_path": "catalog/models/openai.json"
     },
     {
       "id": "gpt-5.6-luna",
@@ -8860,7 +8860,7 @@
       "released": "2026-07-09",
       "vendor_label": "OpenAI",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/openai.json"
+      "source_path": "catalog/models/openai.json"
     },
     {
       "id": "gpt-5.5-pro",
@@ -8925,7 +8925,7 @@
       "released": "2026-04-23",
       "vendor_label": "OpenAI",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/openai.json"
+      "source_path": "catalog/models/openai.json"
     },
     {
       "id": "gpt-5.4-pro",
@@ -8990,7 +8990,7 @@
       "released": "2026-03-05",
       "vendor_label": "OpenAI",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/openai.json"
+      "source_path": "catalog/models/openai.json"
     },
     {
       "id": "gpt-5.2-pro",
@@ -9041,7 +9041,7 @@
       "released": "2025-12-11",
       "vendor_label": "OpenAI",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/openai.json"
+      "source_path": "catalog/models/openai.json"
     },
     {
       "id": "step-3.7-flash",
@@ -9093,7 +9093,7 @@
       "released": "2026-05-29",
       "vendor_label": "StepFun",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/stepfun.json"
+      "source_path": "catalog/models/stepfun.json"
     },
     {
       "id": "step-5-preview",
@@ -9144,7 +9144,7 @@
       },
       "vendor_label": "StepFun",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/stepfun.json"
+      "source_path": "catalog/models/stepfun.json"
     },
     {
       "id": "step-3.5-flash",
@@ -9193,7 +9193,7 @@
       },
       "vendor_label": "StepFun",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/stepfun.json"
+      "source_path": "catalog/models/stepfun.json"
     },
     {
       "id": "step-1o-turbo-vision",
@@ -9244,7 +9244,7 @@
       },
       "vendor_label": "StepFun",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/stepfun.json"
+      "source_path": "catalog/models/stepfun.json"
     },
     {
       "id": "hy4-flash",
@@ -9295,7 +9295,7 @@
       "released": "2026-11-16",
       "vendor_label": "Tencent",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/tencent.json"
+      "source_path": "catalog/models/tencent.json"
     },
     {
       "id": "hy4",
@@ -9346,7 +9346,7 @@
       "released": "2026-11-04",
       "vendor_label": "Tencent",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/tencent.json"
+      "source_path": "catalog/models/tencent.json"
     },
     {
       "id": "hy4-preview",
@@ -9397,7 +9397,7 @@
       "retired": "2026-12-07",
       "vendor_label": "Tencent",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/tencent.json"
+      "source_path": "catalog/models/tencent.json"
     },
     {
       "id": "hy3",
@@ -9447,7 +9447,7 @@
       "released": "2026-07-06",
       "vendor_label": "Tencent",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/tencent.json"
+      "source_path": "catalog/models/tencent.json"
     },
     {
       "id": "hy3-preview",
@@ -9512,7 +9512,7 @@
       "retired": "2026-08-31",
       "vendor_label": "Tencent",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/tencent.json"
+      "source_path": "catalog/models/tencent.json"
     },
     {
       "id": "grok-imagine-image-2.0",
@@ -9595,7 +9595,7 @@
       "released": "2026-08-07",
       "vendor_label": "xAI (Grok)",
       "kind": "image",
-      "source_path": "packages/admin/lib/model-presets/xai-image.json"
+      "source_path": "catalog/models/xai-image.json"
     },
     {
       "id": "grok-imagine-image-quality",
@@ -9655,7 +9655,7 @@
       "retired": "2026-11-02",
       "vendor_label": "xAI (Grok)",
       "kind": "image",
-      "source_path": "packages/admin/lib/model-presets/xai-image.json"
+      "source_path": "catalog/models/xai-image.json"
     },
     {
       "id": "grok-build-0.1",
@@ -9719,7 +9719,7 @@
       },
       "vendor_label": "xAI (Grok)",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/xai.json"
+      "source_path": "catalog/models/xai.json"
     },
     {
       "id": "grok-4.20-0309-reasoning",
@@ -9784,7 +9784,7 @@
       "released": "2026-03-09",
       "vendor_label": "xAI (Grok)",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/xai.json"
+      "source_path": "catalog/models/xai.json"
     },
     {
       "id": "grok-4.20-0309-non-reasoning",
@@ -9848,7 +9848,7 @@
       },
       "vendor_label": "xAI (Grok)",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/xai.json"
+      "source_path": "catalog/models/xai.json"
     },
     {
       "id": "grok-4.7",
@@ -9913,7 +9913,7 @@
       "released": "2026-09-21",
       "vendor_label": "xAI (Grok)",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/xai.json"
+      "source_path": "catalog/models/xai.json"
     },
     {
       "id": "grok-4.6",
@@ -9978,7 +9978,7 @@
       "released": "2026-08-12",
       "vendor_label": "xAI (Grok)",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/xai.json"
+      "source_path": "catalog/models/xai.json"
     },
     {
       "id": "grok-4.5",
@@ -10043,7 +10043,7 @@
       "released": "2026-07-16",
       "vendor_label": "xAI (Grok)",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/xai.json"
+      "source_path": "catalog/models/xai.json"
     },
     {
       "id": "grok-4.3",
@@ -10108,7 +10108,7 @@
       "released": "2026-04-30",
       "vendor_label": "xAI (Grok)",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/xai.json"
+      "source_path": "catalog/models/xai.json"
     },
     {
       "id": "mimo-v2-omni",
@@ -10163,7 +10163,7 @@
       "retired": "2026-06-30",
       "vendor_label": "Xiaomi Mimo",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/xiaomi.json"
+      "source_path": "catalog/models/xiaomi.json"
     },
     {
       "id": "mimo-v2-pro",
@@ -10232,7 +10232,7 @@
       "retired": "2026-06-30",
       "vendor_label": "Xiaomi Mimo",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/xiaomi.json"
+      "source_path": "catalog/models/xiaomi.json"
     },
     {
       "id": "mimo-v2.5-pro",
@@ -10287,7 +10287,7 @@
       "retired": "2026-10-21",
       "vendor_label": "Xiaomi Mimo",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/xiaomi.json"
+      "source_path": "catalog/models/xiaomi.json"
     },
     {
       "id": "mimo-v2.5",
@@ -10342,7 +10342,7 @@
       "retired": "2026-10-21",
       "vendor_label": "Xiaomi Mimo",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/xiaomi.json"
+      "source_path": "catalog/models/xiaomi.json"
     },
     {
       "id": "mimo-v2.6-pro",
@@ -10395,7 +10395,7 @@
       "released": "2026-09-22",
       "vendor_label": "Xiaomi Mimo",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/xiaomi.json"
+      "source_path": "catalog/models/xiaomi.json"
     },
     {
       "id": "mimo-v2.6-flash",
@@ -10448,7 +10448,7 @@
       "released": "2026-09-22",
       "vendor_label": "Xiaomi Mimo",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/xiaomi.json"
+      "source_path": "catalog/models/xiaomi.json"
     },
     {
       "id": "mimo-v2.6-pro-ultraspeed",
@@ -10501,7 +10501,7 @@
       "released": "2026-09-22",
       "vendor_label": "Xiaomi Mimo",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/xiaomi.json"
+      "source_path": "catalog/models/xiaomi.json"
     },
     {
       "id": "glm-image",
@@ -10544,7 +10544,7 @@
       "released": "2026-01-14",
       "vendor_label": "Zhipu AI",
       "kind": "image",
-      "source_path": "packages/admin/lib/model-presets/zhipu-image.json"
+      "source_path": "catalog/models/zhipu-image.json"
     },
     {
       "id": "glm-5",
@@ -10601,7 +10601,7 @@
       "released": "2026-02-11",
       "vendor_label": "Zhipu AI",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/zhipu.json"
+      "source_path": "catalog/models/zhipu.json"
     },
     {
       "id": "glm-5-turbo",
@@ -10658,7 +10658,7 @@
       "released": "2026-03-15",
       "vendor_label": "Zhipu AI",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/zhipu.json"
+      "source_path": "catalog/models/zhipu.json"
     },
     {
       "id": "glm-5.1",
@@ -10715,7 +10715,7 @@
       "released": "2026-03-27",
       "vendor_label": "Zhipu AI",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/zhipu.json"
+      "source_path": "catalog/models/zhipu.json"
     },
     {
       "id": "glm-5.2",
@@ -10765,7 +10765,7 @@
       "released": "2026-06-13",
       "vendor_label": "Zhipu AI",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/zhipu.json"
+      "source_path": "catalog/models/zhipu.json"
     },
     {
       "id": "glm-5.3",
@@ -10815,7 +10815,7 @@
       "released": "2026-08-14",
       "vendor_label": "Zhipu AI",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/zhipu.json"
+      "source_path": "catalog/models/zhipu.json"
     },
     {
       "id": "glm-5.3-flash",
@@ -10868,7 +10868,7 @@
       "released": "2026-08-26",
       "vendor_label": "Zhipu AI",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/zhipu.json"
+      "source_path": "catalog/models/zhipu.json"
     },
     {
       "id": "glm-5.3-flashx",
@@ -10921,7 +10921,7 @@
       "released": "2026-09-18",
       "vendor_label": "Zhipu AI",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/zhipu.json"
+      "source_path": "catalog/models/zhipu.json"
     },
     {
       "id": "glm-5.3-flashx-legal",
@@ -10970,7 +10970,7 @@
       },
       "vendor_label": "Zhipu AI",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/zhipu.json"
+      "source_path": "catalog/models/zhipu.json"
     },
     {
       "id": "glm-5v-turbo",
@@ -11018,7 +11018,7 @@
       },
       "vendor_label": "Zhipu AI",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/zhipu.json"
+      "source_path": "catalog/models/zhipu.json"
     },
     {
       "id": "glm-ocr",
@@ -11068,7 +11068,7 @@
       },
       "vendor_label": "Zhipu AI",
       "kind": "llm",
-      "source_path": "packages/admin/lib/model-presets/zhipu.json"
+      "source_path": "catalog/models/zhipu.json"
     }
   ]
 }

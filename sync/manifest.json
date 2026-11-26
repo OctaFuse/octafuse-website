@@ -56,9 +56,10 @@
     "docs/maintainers/release-versioning.md",
     "docs/CONVENTIONS.md",
     "examples/quick-curl.md",
-    "packages/admin/lib/provider-import-presets.json",
-    "packages/admin/lib/model-vendors.json",
-    "packages/admin/lib/model-presets",
-    "packages/admin/lib/model-presets/*.json"
+    "packages/admin/lib/model-vendors.json"
+  ],
+  "local_files": [
+    "catalog/providers.json",
+    "catalog/models/*.json"
   ]
 }

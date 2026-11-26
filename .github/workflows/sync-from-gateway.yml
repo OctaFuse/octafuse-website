@@ -89,7 +89,7 @@ jobs:
 
             - [ ] Whitelisted paths match [sync/contract.json](sync/contract.json)
             - [ ] Generated pages under `src/content/docs/*/docs/github-reference.mdx` point to current gateway docs
-            - [ ] Provider and model catalog JSON under `src/data/catalog/` matches the Gateway import presets
+            - [ ] Provider and model catalog JSON under `src/data/catalog/` matches `catalog/providers.json` and `catalog/models/*.json`
             - [ ] Site guide pages under `src/content/docs/` updated only if summaries need refresh
             - [ ] English mirror pages reviewed for terminology (Proxy / Admin / Core, env var names)
 

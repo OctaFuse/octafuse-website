@@ -17,7 +17,7 @@ const ownedGatewayDirs = new Set();
 process.on('exit', () => {
 	for (const dir of ownedGatewayDirs) rmSync(dir, { recursive: true, force: true });
 });
-const localInputs = { providers: join(root, 'catalog/providers.json'), models: join(root, 'catalog/models') };
+const localInputs = { providers: join(root, contract.catalog.providerSource), models: join(root, contract.catalog.modelSourceDir) };
 for (const path of Object.values(localInputs)) {
 	if (!existsSync(path)) {
 		console.error(`Missing local catalog input: ${path}`);
@@ -65,11 +65,8 @@ const outputs = [
 					contract.catalog.targets.providers,
 					contract.catalog.targets.models,
 				],
-				files: [
-					...allItems(contract).map((item) => item.path),
-					...catalogSourcePaths(contract),
-					`${contract.catalog.modelPresetsDir}/*.json`,
-				],
+				files: [...allItems(contract).map((item) => item.path), contract.catalog.modelVendors],
+				local_files: [contract.catalog.providerSource, `${contract.catalog.modelSourceDir}/*.json`],
 			},
 			null,
 			2,
@@ -155,14 +152,6 @@ function allItems(data) {
 	return data.sections.flatMap((section) => section.items);
 }
 
-function catalogSourcePaths(data) {
-	return [
-		data.catalog.providerPresets,
-		data.catalog.modelVendors,
-		data.catalog.modelPresetsDir,
-	];
-}
-
 function renderCatalogOutputs(data, gatewayPath, localPath, source) {
 	const vendorRows = readArray(join(gatewayPath, data.catalog.modelVendors));
 	const vendorLabels = new Map(vendorRows.map((row) => [row.key, row.label]));
@@ -192,7 +181,7 @@ function renderCatalogOutputs(data, gatewayPath, localPath, source) {
 		protocols: Object.keys(row.endpoints ?? {}).filter((protocol) => Boolean(row.endpoints[protocol])).sort(),
 		endpoints: row.endpoints ?? {},
 		description: row.description != null && String(row.description).trim() ? String(row.description).trim() : null,
-		source_path: data.catalog.providerPresets,
+		source_path: data.catalog.providerSource,
 	}));
 
 	const modelFiles = readdirSync(localPath.models)
@@ -206,7 +195,7 @@ function renderCatalogOutputs(data, gatewayPath, localPath, source) {
 			i18n: row.i18n ?? null,
 			vendor_label: vendorLabels.get(row.vendor) ?? row.vendor ?? 'Other',
 			kind: resolveModelKind(row),
-			source_path: `${data.catalog.modelPresetsDir}/${file}`,
+			source_path: `${data.catalog.modelSourceDir}/${file}`,
 		})),
 	);
 	if (modelRows.length === 0) throw new Error(`Empty model catalog at ${localPath.models}`);
@@ -218,7 +207,7 @@ function renderCatalogOutputs(data, gatewayPath, localPath, source) {
 				schema_version: 2,
 				catalog: 'providers',
 				source,
-				source_path: data.catalog.providerPresets,
+				source_path: data.catalog.providerSource,
 				count: providerRows.length,
 				items: providerRows,
 			}),
@@ -229,7 +218,7 @@ function renderCatalogOutputs(data, gatewayPath, localPath, source) {
 				schema_version: 2,
 				catalog: 'models',
 				source,
-				source_path: data.catalog.modelPresetsDir,
+				source_path: data.catalog.modelSourceDir,
 				count: modelRows.length,
 				items: modelRows,
 			}),
