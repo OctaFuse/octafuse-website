@@ -17,6 +17,13 @@ const ownedGatewayDirs = new Set();
 process.on('exit', () => {
 	for (const dir of ownedGatewayDirs) rmSync(dir, { recursive: true, force: true });
 });
+const localInputs = { providers: join(root, 'catalog/providers.json'), models: join(root, 'catalog/models') };
+for (const path of Object.values(localInputs)) {
+	if (!existsSync(path)) {
+		console.error(`Missing local catalog input: ${path}`);
+		process.exit(1);
+	}
+}
 const gatewayDir = resolveGatewayDir(args.gatewayDir, ref);
 const commit = git(gatewayDir, ['rev-parse', 'HEAD']).trim();
 const blobBase = `https://github.com/${repo}/blob/${ref}`;
@@ -26,10 +33,7 @@ for (const item of allItems(contract)) {
 	const file = join(gatewayDir, item.path);
 	if (!existsSync(file)) missing.push(item.path);
 }
-for (const path of catalogSourcePaths(contract)) {
-	const file = join(gatewayDir, path);
-	if (!existsSync(file)) missing.push(path);
-}
+if (!existsSync(join(gatewayDir, contract.catalog.modelVendors))) missing.push(contract.catalog.modelVendors);
 
 if (missing.length) {
 	console.error(`Gateway sync contract references missing files at ${gatewayDir}:`);
@@ -46,7 +50,7 @@ const outputs = [
 		target: contract.pages.en.target,
 		content: renderPage('en', contract, { ref, commit, blobBase }),
 	},
-	...renderCatalogOutputs(contract, gatewayDir, { repo, ref, commit }),
+	...renderCatalogOutputs(contract, gatewayDir, localInputs, { repo, ref, commit }),
 	{
 		target: 'sync/manifest.json',
 		content: `${JSON.stringify(
@@ -159,11 +163,11 @@ function catalogSourcePaths(data) {
 	];
 }
 
-function renderCatalogOutputs(data, gatewayPath, source) {
-	const vendorRows = readJson(join(gatewayPath, data.catalog.modelVendors));
+function renderCatalogOutputs(data, gatewayPath, localPath, source) {
+	const vendorRows = readArray(join(gatewayPath, data.catalog.modelVendors));
 	const vendorLabels = new Map(vendorRows.map((row) => [row.key, row.label]));
 
-	const providerRows = readJson(join(gatewayPath, data.catalog.providerPresets)).map((row, index) => ({
+	const providerRows = readArray(localPath.providers).map((row, index) => ({
 		catalog_key: String(index),
 		name: String(row.name ?? '').trim(),
 		vendor_key: String(row.vendor_key ?? 'other').trim() || 'other',
@@ -191,11 +195,12 @@ function renderCatalogOutputs(data, gatewayPath, source) {
 		source_path: data.catalog.providerPresets,
 	}));
 
-	const modelFiles = readdirSync(join(gatewayPath, data.catalog.modelPresetsDir))
+	const modelFiles = readdirSync(localPath.models)
 		.filter((file) => file.endsWith('.json'))
 		.sort();
+	if (modelFiles.length === 0) throw new Error(`No model preset JSON found in ${localPath.models}`);
 	const modelRows = modelFiles.flatMap((file) =>
-		readJson(join(gatewayPath, data.catalog.modelPresetsDir, file)).map((row) => ({
+		readArray(join(localPath.models, file), { allowEmpty: true }).map((row) => ({
 			...row,
 			description: row.description ?? row.i18n?.en ?? null,
 			i18n: row.i18n ?? null,
@@ -204,6 +209,7 @@ function renderCatalogOutputs(data, gatewayPath, source) {
 			source_path: `${data.catalog.modelPresetsDir}/${file}`,
 		})),
 	);
+	if (modelRows.length === 0) throw new Error(`Empty model catalog at ${localPath.models}`);
 
 	return [
 		{
@@ -267,8 +273,16 @@ function resolveModelKind(row) {
 	return 'llm';
 }
 
-function readJson(path) {
-	return JSON.parse(readFileSync(path, 'utf8'));
+function readArray(path, { allowEmpty = false } = {}) {
+	let value;
+	try {
+		value = JSON.parse(readFileSync(path, 'utf8'));
+	} catch (error) {
+		throw new Error(`Failed to read JSON at ${path}: ${error.message}`);
+	}
+	if (!Array.isArray(value)) throw new Error(`Expected a JSON array at ${path}`);
+	if (!allowEmpty && value.length === 0) throw new Error(`Empty JSON array at ${path}`);
+	return value;
 }
 
 function stableJson(value) {
