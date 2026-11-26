@@ -3,8 +3,8 @@
   "catalog": "models",
   "source": {
     "repo": "OctaFuse/octafuse-gateway",
-    "ref": "v2.20.0",
-    "commit": "2bcee068b11ecfc5204405003a95464d2886c49b"
+    "ref": "v2.21.0",
+    "commit": "284f608dc51bb663a67baf3c11f78ea41b537b6b"
   },
   "source_path": "catalog/models",
   "count": 206,

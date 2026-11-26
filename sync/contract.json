@@ -1,7 +1,7 @@
 {
 	"source": {
 		"repo": "OctaFuse/octafuse-gateway",
-		"defaultRef": "v2.19.0"
+		"defaultRef": "v2.21.0"
 	},
 	"pages": {
 		"zh": {

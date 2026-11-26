@@ -3,8 +3,8 @@
   "catalog": "providers",
   "source": {
     "repo": "OctaFuse/octafuse-gateway",
-    "ref": "v2.20.0",
-    "commit": "2bcee068b11ecfc5204405003a95464d2886c49b"
+    "ref": "v2.21.0",
+    "commit": "284f608dc51bb663a67baf3c11f78ea41b537b6b"
   },
   "source_path": "catalog/providers.json",
   "count": 69,
@@ -2356,7 +2356,7 @@
       "catalog_key": "53",
       "name": "Modelink",
       "vendor_key": "modelink",
-      "vendor_label": "modelink",
+      "vendor_label": "Modelink",
       "i18n": {
         "zh": {
           "name": "Modelink",
