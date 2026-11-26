@@ -1,0 +1,143 @@
+[
+	{
+		"id": "doubao-seedream-5-0-flash",
+		"display_name": "Doubao Seedream 5.0 Flash",
+		"description": "A fast, cost-efficient Seedream model for high-volume image generation, editing, transparent backgrounds, and layer decomposition.",
+		"i18n": {
+			"en": "A fast, cost-efficient Seedream model for high-volume image generation, editing, transparent backgrounds, and layer decomposition.",
+			"zh": "面向高频生图场景的 Seedream 极速模型，支持文生图、图生图、透明背景编辑与图层拆分。",
+			"ja": "枚数の多い画像生成向けの、Seedream の高速モデルです。テキストからの生成、画像からの生成、透明背景の編集、レイヤー分解に対応します。",
+			"ko": "생성량이 많은 이미지용 Seedream 고속 모델입니다. 텍스트 투 이미지, 이미지 투 이미지, 투명 배경 편집, 레이어 분리를 지원합니다."
+		},
+		"vendor": "bytedance",
+		"context_window": null,
+		"max_tokens": null,
+		"suggested_provider_model_name": {
+			"volcengine-ark": "doubao-seedream-5-0-flash-260915",
+			"byteplus": "dola-seedream-5-0-flash-260915"
+		},
+		"pricing": {
+			"usd": {
+				"image_billing_mode": "per_image",
+				"image": {
+					"default": 0.018,
+					"uncertain_result_policy": "requested"
+				}
+			},
+			"cny": {
+				"image_billing_mode": "per_image",
+				"image": {
+					"default": 0.12,
+					"uncertain_result_policy": "requested"
+				}
+			}
+		},
+		"modalities": {
+			"input": [
+				"text",
+				"image"
+			],
+			"output": [
+				"image"
+			]
+		},
+		"released": "2026-09-15"
+	},
+	{
+		"id": "doubao-seedream-5-0-pro",
+		"display_name": "Doubao Seedream 5.0 Pro",
+		"description": "A premium Seedream model for high-fidelity image generation and professional visual creation.",
+		"i18n": {
+			"en": "A premium Seedream model for high-fidelity image generation and professional visual creation.",
+			"zh": "面向高保真图片生成与专业视觉创作的 Seedream 高质量模型。",
+			"ja": "忠実度の高い画像生成と、プロ向けのビジュアル制作に使う Seedream です。",
+			"ko": "충실도 높은 이미지 생성과 전문 비주얼 제작용 Seedream입니다."
+		},
+		"vendor": "bytedance",
+		"context_window": null,
+		"max_tokens": null,
+		"pricing": {
+			"usd": {
+				"image_billing_mode": "per_image",
+				"image": {
+					"default": 0.09,
+					"by_size": {
+						"1k": 0.045,
+						"1.5k": 0.045,
+						"2k": 0.09
+					},
+					"input": {
+						"default": 0.003
+					},
+					"uncertain_result_policy": "requested"
+				}
+			},
+			"cny": {
+				"image_billing_mode": "per_image",
+				"image": {
+					"default": 0.6,
+					"by_size": {
+						"1k": 0.3,
+						"1.5k": 0.3,
+						"2k": 0.6
+					},
+					"input": {
+						"default": 0.02
+					},
+					"uncertain_result_policy": "requested"
+				}
+			}
+		},
+		"modalities": {
+			"input": [
+				"text",
+				"image"
+			],
+			"output": [
+				"image"
+			]
+		},
+		"released": "2026-07-08"
+	},
+	{
+		"id": "doubao-seedream-5-0",
+		"display_name": "Doubao Seedream 5.0",
+		"description": "A Seedream model for general image generation, editing, and visual design workflows.",
+		"i18n": {
+			"en": "A Seedream model for general image generation, editing, and visual design workflows.",
+			"zh": "适合通用图片生成、编辑与视觉设计工作流的 Seedream 模型。",
+			"ja": "一般的な画像生成、編集、ビジュアルデザインの流れに使う Seedream です。",
+			"ko": "일반적인 이미지 생성, 편집, 비주얼 디자인 흐름용 Seedream입니다."
+		},
+		"vendor": "bytedance",
+		"context_window": null,
+		"max_tokens": null,
+		"pricing": {
+			"usd": {
+				"image_billing_mode": "per_image",
+				"image": {
+					"default": 0.035,
+					"uncertain_result_policy": "requested"
+				}
+			},
+			"cny": {
+				"image_billing_mode": "per_image",
+				"image": {
+					"default": 0.22,
+					"uncertain_result_policy": "requested"
+				}
+			}
+		},
+		"modalities": {
+			"input": [
+				"text",
+				"image"
+			],
+			"output": [
+				"image"
+			]
+		},
+		"released": "2026-01-28",
+		"retired": "2026-11-24"
+	}
+]

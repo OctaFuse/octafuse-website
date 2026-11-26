@@ -7,7 +7,7 @@
     "commit": "2bcee068b11ecfc5204405003a95464d2886c49b"
   },
   "source_path": "packages/admin/lib/model-presets",
-  "count": 201,
+  "count": 206,
   "items": [
     {
       "id": "qwen-audio-3.1-asr-flash-message",
@@ -1381,27 +1381,27 @@
       "source_path": "packages/admin/lib/model-presets/aliyun-image.json"
     },
     {
-      "id": "qwen4-max-preview",
-      "display_name": "Qwen4 Max Preview",
-      "description": "Next-generation flagship multimodal Qwen preview for coding, office productivity, frontend design, and complex agentic tasks. Accepts text, image, and video input, with a 1M context window and about 393K max output shared by thinking and the answer. Thinking is on by default and adjustable with reasoning_effort (low / medium / xhigh, default xhigh); reasoning_effort and thinking_budget cannot be set together. Available only through Token Plan, not pay-as-you-go; the preview runs until 2026-11-25 24:00 (UTC+8) and the model is retired afterwards. Prices are aligned to the previous same-tier model qwen3.8-max for now; Alibaba has not published list prices for Qwen4-Max, so update them at general availability.",
+      "id": "qwen4-max",
+      "display_name": "Qwen4 Max",
+      "description": "Next-generation flagship multimodal Qwen model (2.4T-parameter MoE) for coding, office productivity, frontend design, and complex agentic tasks. Accepts text, image, and video input, with a 1M context window, about 128K max output, and up to about 256K for thinking plus the answer. Thinking is on by default and adjustable with reasoning_effort (low / high / xhigh, default high; none turns it off); reasoning_effort and thinking_budget cannot be set together. Supports function calling, structured outputs, explicit and implicit caching, and OpenAI Chat Completions, Responses, and Anthropic Messages protocols. Cache write is the 5-minute list price.",
       "i18n": {
-        "en": "Next-generation flagship multimodal Qwen preview for coding, office productivity, frontend design, and complex agentic tasks. Accepts text, image, and video input, with a 1M context window and about 393K max output shared by thinking and the answer. Thinking is on by default and adjustable with reasoning_effort (low / medium / xhigh, default xhigh); reasoning_effort and thinking_budget cannot be set together. Available only through Token Plan, not pay-as-you-go; the preview runs until 2026-11-25 24:00 (UTC+8) and the model is retired afterwards. Prices are aligned to the previous same-tier model qwen3.8-max for now; Alibaba has not published list prices for Qwen4-Max, so update them at general availability.",
-        "zh": "千问新一代旗舰多模态预览模型，面向编程、办公、前端设计与复杂智能体任务。支持文本、图片和视频输入，上下文 1M，最大输出约 393K（思考与回答共享）。默认开启深度思考，可用 reasoning_effort（low / medium / xhigh，默认 xhigh）调节；reasoning_effort 与 thinking_budget 不能同时设置。仅在 Token Plan 订阅中提供，不支持按量计费；预览期至 2026-11-25 24:00（UTC+8），之后下线。价格暂按同档位上一版 qwen3.8-max 的刊例对齐，官方尚未公布 Qwen4-Max 的刊例价，正式版发布后更新。",
-        "ja": "次世代フラッグシップのマルチモーダル Qwen プレビューモデルで、コーディング、オフィス業務、フロントエンド設計、複雑なエージェント作業に向きます。テキスト・画像・動画を入力でき、コンテキストは 1M、最大出力は約 393K（思考と回答で共有）です。思考は既定でオンで、reasoning_effort（low / medium / xhigh、既定は xhigh）で調整できます。reasoning_effort と thinking_budget は同時に指定できません。Token Plan のサブスクリプションでのみ提供され、従量課金は使えません。プレビュー期間は 2026-11-25 24:00（UTC+8）までで、その後は終了します。価格は当面、同じ階層の前世代 qwen3.8-max の定価に合わせています。Qwen4-Max の定価は未公表のため、正式版の公開後に更新してください。",
-        "ko": "차세대 플래그십 멀티모달 Qwen 프리뷰 모델로, 코딩, 오피스 업무, 프런트엔드 디자인, 복잡한 에이전트 작업에 적합합니다. 텍스트·이미지·동영상 입력을 지원하며 컨텍스트는 1M, 최대 출력은 약 393K(사고와 답변이 공유)입니다. 사고는 기본으로 켜져 있고 reasoning_effort(low / medium / xhigh, 기본값 xhigh)로 조절할 수 있습니다. reasoning_effort와 thinking_budget은 동시에 설정할 수 없습니다. Token Plan 구독으로만 제공되며 종량제는 지원하지 않습니다. 프리뷰 기간은 2026-11-25 24:00(UTC+8)까지이며 이후 종료됩니다. 가격은 우선 같은 등급의 이전 모델 qwen3.8-max 정가에 맞췄습니다. Qwen4-Max 정가가 아직 공개되지 않았으므로 정식 출시 후 갱신하세요."
+        "en": "Next-generation flagship multimodal Qwen model (2.4T-parameter MoE) for coding, office productivity, frontend design, and complex agentic tasks. Accepts text, image, and video input, with a 1M context window, about 128K max output, and up to about 256K for thinking plus the answer. Thinking is on by default and adjustable with reasoning_effort (low / high / xhigh, default high; none turns it off); reasoning_effort and thinking_budget cannot be set together. Supports function calling, structured outputs, explicit and implicit caching, and OpenAI Chat Completions, Responses, and Anthropic Messages protocols. Cache write is the 5-minute list price.",
+        "zh": "千问新一代旗舰多模态模型（2.4 万亿参数 MoE），面向编程、办公、前端设计与复杂智能体任务。支持文本、图片和视频输入，上下文 1M，最大输出约 128K，思考与回答合计最长约 256K。默认开启深度思考，可用 reasoning_effort（low / high / xhigh，默认 high；none 关闭）调节；reasoning_effort 与 thinking_budget 不能同时设置。支持 Function Calling、结构化输出、显式与隐式缓存，兼容 OpenAI Chat Completions、Responses 与 Anthropic Messages 协议。缓存写入价为 5 分钟档刊例价。",
+        "ja": "次世代フラッグシップのマルチモーダル Qwen モデル（総パラメータ 2.4兆の MoE）で、コーディング、オフィス業務、フロントエンド設計、複雑なエージェント作業に向きます。テキスト・画像・動画を入力でき、コンテキストは 1M、最大出力は約 128K、思考と回答の合計は最長で約 256K です。思考は既定でオンで、reasoning_effort（low / high / xhigh、既定は high。none でオフ）で調整できます。reasoning_effort と thinking_budget は同時に指定できません。Function Calling、構造化出力、明示的・暗黙的キャッシュに対応し、OpenAI Chat Completions、Responses、Anthropic Messages プロトコルと互換です。キャッシュ書き込み価格は 5 分枠の定価です。",
+        "ko": "차세대 플래그십 멀티모달 Qwen 모델(총 파라미터 2.4조 MoE)로, 코딩, 오피스 업무, 프런트엔드 디자인, 복잡한 에이전트 작업에 적합합니다. 텍스트·이미지·동영상 입력을 지원하며 컨텍스트는 1M, 최대 출력은 약 128K, 사고와 답변의 합계는 최대 약 256K입니다. 사고는 기본으로 켜져 있고 reasoning_effort(low / high / xhigh, 기본값 high, none이면 끔)로 조절할 수 있습니다. reasoning_effort와 thinking_budget은 동시에 설정할 수 없습니다. Function Calling, 구조화 출력, 명시적·암시적 캐시를 지원하고 OpenAI Chat Completions, Responses, Anthropic Messages 프로토콜과 호환됩니다. 캐시 쓰기 가격은 5분 구간 정가입니다."
       },
       "vendor": "aliyun",
       "context_window": 1000000,
-      "max_tokens": 393216,
+      "max_tokens": 128000,
       "pricing": {
         "usd": {
           "tiers": [
             {
               "upto": null,
-              "input_price": 2,
-              "output_price": 6,
-              "cache_read_price": 0.25,
-              "cache_write_price": 2.5
+              "input_price": 1.5,
+              "output_price": 4.5,
+              "cache_read_price": 0.075,
+              "cache_write_price": 1.875
             }
           ]
         },
@@ -1409,10 +1409,62 @@
           "tiers": [
             {
               "upto": null,
-              "input_price": 12,
-              "output_price": 36,
-              "cache_read_price": 1.5,
-              "cache_write_price": 15
+              "input_price": 10,
+              "output_price": 30,
+              "cache_read_price": 0.5,
+              "cache_write_price": 12.5
+            }
+          ]
+        }
+      },
+      "modalities": {
+        "input": [
+          "text",
+          "image",
+          "video"
+        ],
+        "output": [
+          "text"
+        ]
+      },
+      "released": "2026-11-16",
+      "vendor_label": "Alibaba Cloud",
+      "kind": "llm",
+      "source_path": "packages/admin/lib/model-presets/aliyun.json"
+    },
+    {
+      "id": "qwen4-max-preview",
+      "display_name": "Qwen4 Max Preview",
+      "description": "Next-generation flagship multimodal Qwen preview for coding, office productivity, frontend design, and complex agentic tasks. Accepts text, image, and video input, with a 1M context window and about 384K max output shared by thinking and the answer. Thinking is on by default and adjustable with reasoning_effort (low / medium / xhigh, default xhigh); reasoning_effort and thinking_budget cannot be set together. Available only through Token Plan, not pay-as-you-go; the preview runs until 2026-11-25 24:00 (UTC+8) and the model is retired afterwards. Prices follow the list prices of the general-availability qwen4-max (the preview itself is not billed per token).",
+      "i18n": {
+        "en": "Next-generation flagship multimodal Qwen preview for coding, office productivity, frontend design, and complex agentic tasks. Accepts text, image, and video input, with a 1M context window and about 384K max output shared by thinking and the answer. Thinking is on by default and adjustable with reasoning_effort (low / medium / xhigh, default xhigh); reasoning_effort and thinking_budget cannot be set together. Available only through Token Plan, not pay-as-you-go; the preview runs until 2026-11-25 24:00 (UTC+8) and the model is retired afterwards. Prices follow the list prices of the general-availability qwen4-max (the preview itself is not billed per token).",
+        "zh": "千问新一代旗舰多模态预览模型，面向编程、办公、前端设计与复杂智能体任务。支持文本、图片和视频输入，上下文 1M，最大输出约 384K（思考与回答共享）。默认开启深度思考，可用 reasoning_effort（low / medium / xhigh，默认 xhigh）调节；reasoning_effort 与 thinking_budget 不能同时设置。仅在 Token Plan 订阅中提供，不支持按量计费；预览期至 2026-11-25 24:00（UTC+8），之后下线。价格与正式版 qwen4-max 的刊例价一致（预览版本身不按 token 计费）。",
+        "ja": "次世代フラッグシップのマルチモーダル Qwen プレビューモデルで、コーディング、オフィス業務、フロントエンド設計、複雑なエージェント作業に向きます。テキスト・画像・動画を入力でき、コンテキストは 1M、最大出力は約 384K（思考と回答で共有）です。思考は既定でオンで、reasoning_effort（low / medium / xhigh、既定は xhigh）で調整できます。reasoning_effort と thinking_budget は同時に指定できません。Token Plan のサブスクリプションでのみ提供され、従量課金は使えません。プレビュー期間は 2026-11-25 24:00（UTC+8）までで、その後は終了します。価格は正式版 qwen4-max の定価と同じです（プレビュー自体は token 課金ではありません）。",
+        "ko": "차세대 플래그십 멀티모달 Qwen 프리뷰 모델로, 코딩, 오피스 업무, 프런트엔드 디자인, 복잡한 에이전트 작업에 적합합니다. 텍스트·이미지·동영상 입력을 지원하며 컨텍스트는 1M, 최대 출력은 약 384K(사고와 답변이 공유)입니다. 사고는 기본으로 켜져 있고 reasoning_effort(low / medium / xhigh, 기본값 xhigh)로 조절할 수 있습니다. reasoning_effort와 thinking_budget은 동시에 설정할 수 없습니다. Token Plan 구독으로만 제공되며 종량제는 지원하지 않습니다. 프리뷰 기간은 2026-11-25 24:00(UTC+8)까지이며 이후 종료됩니다. 가격은 정식판 qwen4-max의 정가와 같습니다(프리뷰 자체는 토큰 과금이 아닙니다)."
+      },
+      "vendor": "aliyun",
+      "context_window": 1000000,
+      "max_tokens": 384000,
+      "pricing": {
+        "usd": {
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 1.5,
+              "output_price": 4.5,
+              "cache_read_price": 0.075,
+              "cache_write_price": 1.875
+            }
+          ]
+        },
+        "cny": {
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 10,
+              "output_price": 30,
+              "cache_read_price": 0.5,
+              "cache_write_price": 12.5
             }
           ]
         }
@@ -5099,6 +5151,60 @@
       "source_path": "packages/admin/lib/model-presets/google-image.json"
     },
     {
+      "id": "gemini-4-neon",
+      "display_name": "Gemini 4 Neon",
+      "description": "Google's frontier-level Gemini model that balances depth and speed for complex coding, multimodal enterprise workflows, and long-running agents. Input, thinking, and output share a 1M window; synchronous output defaults to 64K, and long decode can reach 1M. Thinking level is low, medium, high (default), or xhigh and cannot be turned off. Official list price is $3 / $15 per 1M tokens with implicit cache at $0.15. 人民币价为美元刊例价 ×7 的换算占位价，非官方人民币刊例。",
+      "i18n": {
+        "en": "Google's frontier-level Gemini model that balances depth and speed for complex coding, multimodal enterprise workflows, and long-running agents. Input, thinking, and output share a 1M window; synchronous output defaults to 64K, and long decode can reach 1M. Thinking level is low, medium, high (default), or xhigh and cannot be turned off. Official list price is $3 / $15 per 1M tokens with implicit cache at $0.15. 人民币价为美元刊例价 ×7 的换算占位价，非官方人民币刊例。",
+        "zh": "兼顾推理深度与响应速度的前沿 Gemini 模型，面向复杂编码、多模态企业工作流与长时间运行的 Agent。输入、思考与输出共用 1M 窗口；同步输出默认 64K，长解码最高可达 1M。思考档位为 low、medium、high（默认）或 xhigh，不能关闭。官方刊例为每 1M token 输入 $3、输出 $15，隐式缓存 $0.15。人民币价为美元刊例价 ×7 的换算占位价，非官方人民币刊例。",
+        "ja": "推論の深さと速度のバランスをとった、最先端の Gemini モデルです。複雑なコーディング、マルチモーダルな業務ワークフロー、長時間動作するエージェントに向いています。入力と思考と出力は 1M のウィンドウを共有します。同期出力の初期値は 64K で、長いデコードは最大 1M です。思考レベルは low、medium、high（初期値）、xhigh で、オフにはできません。公式定価は 1M トークンあたり入力 $3、出力 $15、暗黙キャッシュ $0.15 です。人民币价为美元刊例价 ×7 的换算占位价，非官方人民币刊例。",
+        "ko": "추론 깊이와 속도의 균형을 맞춘 최첨단 Gemini 모델로, 복잡한 코딩, 멀티모달 기업 워크플로, 장시간 실행되는 에이전트에 적합합니다. 입력, 사고, 출력은 1M 창을 공유합니다. 동기 출력 기본값은 64K이고 긴 디코드는 최대 1M입니다. 사고 수준은 low, medium, high(기본값), xhigh이며 끌 수 없습니다. 공식 정가는 1M 토큰당 입력 $3, 출력 $15, 암시적 캐시 $0.15입니다. 人民币价为美元刊例价 ×7 的换算占位价，非官方人民币刊例。"
+      },
+      "vendor": "google",
+      "context_window": 1000000,
+      "max_tokens": 64000,
+      "pricing": {
+        "usd": {
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 3,
+              "output_price": 15,
+              "cache_read_price": 0.15,
+              "cache_write_price": null
+            }
+          ]
+        },
+        "cny": {
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 21,
+              "output_price": 105,
+              "cache_read_price": 1.05,
+              "cache_write_price": null
+            }
+          ]
+        }
+      },
+      "modalities": {
+        "input": [
+          "text",
+          "image",
+          "audio",
+          "video",
+          "file"
+        ],
+        "output": [
+          "text"
+        ]
+      },
+      "released": "2026-11-18",
+      "vendor_label": "Google",
+      "kind": "llm",
+      "source_path": "packages/admin/lib/model-presets/google.json"
+    },
+    {
       "id": "gemini-4-hydrogen",
       "display_name": "Gemini 4 Hydrogen",
       "description": "Google's fast Gemini model for everyday coding and agentic workflows, adapted from Gemini 4 Carbon. Input, thinking, and output share a 1M window; synchronous output defaults to 64K, and long decode can reach 1M. Thinking level is low, medium, high (default), or xhigh. Official list price is a flat $1.50 / $7.50 per 1M tokens across the whole window, with implicit cache at $0.075. 人民币价为美元刊例价 ×7 的换算占位价，非官方人民币刊例。",
@@ -8018,6 +8124,136 @@
       "source_path": "packages/admin/lib/model-presets/openai.json"
     },
     {
+      "id": "gpt-6.2-astra",
+      "display_name": "GPT-6.2 Astra",
+      "description": "An upgrade to GPT-6 Astra for the hardest professional work: coding in existing codebases, computer use, and documents, slides, and spreadsheets that follow templates. The API rejects reasoning.effort none; start from medium. Tool calling requires the Responses API; Chat Completions supports requests without tools. temperature, top_p, and logprobs are not supported. CNY prices are a placeholder converted from the USD list price at ×7, not an official CNY list price.",
+      "i18n": {
+        "en": "An upgrade to GPT-6 Astra for the hardest professional work: coding in existing codebases, computer use, and documents, slides, and spreadsheets that follow templates. The API rejects reasoning.effort none; start from medium. Tool calling requires the Responses API; Chat Completions supports requests without tools. temperature, top_p, and logprobs are not supported. CNY prices are a placeholder converted from the USD list price at ×7, not an official CNY list price.",
+        "zh": "GPT-6 Astra 的升级型号，面向最难的专业工作：在既有代码库里编程、计算机使用，以及按模板生成文档、幻灯片和表格。API 拒绝 reasoning.effort 为 none 的请求，建议从 medium 起步。带工具调用必须走 Responses API；Chat Completions 仅支持不带工具的请求。不支持 temperature、top_p 和 logprobs。人民币价为美元刊例价 ×7 的换算占位价，非官方人民币刊例。",
+        "ja": "GPT-6 Astra の改良版で、最も難しい専門的な仕事向けです。既存コードベースでのコーディング、コンピュータ操作、テンプレートに沿った文書・スライド・表計算の作成に向いています。reasoning.effort が none のリクエストは API に拒否されるため、medium から始めてください。ツール呼び出しは Responses API が必須です。Chat Completions はツールなしのリクエストだけです。temperature、top_p、logprobs は非対応です。人民元価格はドル建ての定価を ×7 した仮の価格で、公式の人民元定価ではありません。",
+        "ko": "GPT-6 Astra의 상위 모델로, 가장 어려운 전문 작업에 맞습니다. 기존 코드베이스에서의 코딩, 컴퓨터 사용, 템플릿을 따르는 문서·슬라이드·스프레드시트 작성에 적합합니다. reasoning.effort가 none인 요청은 API가 거부하므로 medium부터 시작하세요. 도구 호출은 Responses API가 필수입니다. Chat Completions는 도구 없는 요청만 됩니다. temperature, top_p, logprobs는 지원하지 않습니다. 위안화 가격은 달러 정가에 ×7을 한 임시 가격이며, 공식 위안화 정가가 아닙니다."
+      },
+      "vendor": "openai",
+      "context_window": 1050000,
+      "max_tokens": 128000,
+      "pricing": {
+        "usd": {
+          "tiers": [
+            {
+              "upto": 272000,
+              "input_price": 8,
+              "output_price": 40,
+              "cache_read_price": 0.4,
+              "cache_write_price": 10
+            },
+            {
+              "upto": null,
+              "input_price": 16,
+              "output_price": 60,
+              "cache_read_price": 0.8,
+              "cache_write_price": 20
+            }
+          ]
+        },
+        "cny": {
+          "tiers": [
+            {
+              "upto": 272000,
+              "input_price": 56,
+              "output_price": 280,
+              "cache_read_price": 2.8,
+              "cache_write_price": 70
+            },
+            {
+              "upto": null,
+              "input_price": 112,
+              "output_price": 420,
+              "cache_read_price": 5.6,
+              "cache_write_price": 140
+            }
+          ]
+        }
+      },
+      "modalities": {
+        "input": [
+          "text",
+          "image"
+        ],
+        "output": [
+          "text"
+        ]
+      },
+      "released": "2026-11-17",
+      "vendor_label": "OpenAI",
+      "kind": "llm",
+      "source_path": "packages/admin/lib/model-presets/openai.json"
+    },
+    {
+      "id": "gpt-6.2-sol",
+      "display_name": "GPT-6.2 Sol",
+      "description": "An upgrade to GPT-6.1 Sol for everyday coding, writing, and agent workflows at lower cost, with token efficiency close to Astra on real-codebase coding. The API rejects reasoning.effort none; start from medium. Tool calling requires the Responses API; Chat Completions supports requests without tools. temperature, top_p, and logprobs are not supported. CNY prices are a placeholder converted from the USD list price at ×7, not an official CNY list price.",
+      "i18n": {
+        "en": "An upgrade to GPT-6.1 Sol for everyday coding, writing, and agent workflows at lower cost, with token efficiency close to Astra on real-codebase coding. The API rejects reasoning.effort none; start from medium. Tool calling requires the Responses API; Chat Completions supports requests without tools. temperature, top_p, and logprobs are not supported. CNY prices are a placeholder converted from the USD list price at ×7, not an official CNY list price.",
+        "zh": "GPT-6.1 Sol 的升级型号，面向日常编程、写作与 Agent 工作流，成本更低，在真实代码库编程上接近 Astra。API 拒绝 reasoning.effort 为 none 的请求，建议从 medium 起步。带工具调用必须走 Responses API；Chat Completions 仅支持不带工具的请求。不支持 temperature、top_p 和 logprobs。人民币价为美元刊例价 ×7 的换算占位价，非官方人民币刊例。",
+        "ja": "GPT-6.1 Sol の改良版で、日常的なコーディング、文章作成、エージェントの流れ向けに、低コストで使えます。実際のコードベースでのコーディングでは Astra に近づいています。reasoning.effort が none のリクエストは API に拒否されるため、medium から始めてください。ツール呼び出しは Responses API が必須です。Chat Completions はツールなしのリクエストだけです。temperature、top_p、logprobs は非対応です。人民元価格はドル建ての定価を ×7 した仮の価格で、公式の人民元定価ではありません。",
+        "ko": "GPT-6.1 Sol의 상위 모델로, 일상적인 코딩, 글쓰기, 에이전트 흐름에 낮은 비용으로 쓸 수 있습니다. 실제 코드베이스 코딩에서는 Astra에 가깝습니다. reasoning.effort가 none인 요청은 API가 거부하므로 medium부터 시작하세요. 도구 호출은 Responses API가 필수입니다. Chat Completions는 도구 없는 요청만 됩니다. temperature, top_p, logprobs는 지원하지 않습니다. 위안화 가격은 달러 정가에 ×7을 한 임시 가격이며, 공식 위안화 정가가 아닙니다."
+      },
+      "vendor": "openai",
+      "context_window": 1050000,
+      "max_tokens": 128000,
+      "pricing": {
+        "usd": {
+          "tiers": [
+            {
+              "upto": 272000,
+              "input_price": 2,
+              "output_price": 10,
+              "cache_read_price": 0.1,
+              "cache_write_price": 2.5
+            },
+            {
+              "upto": null,
+              "input_price": 4,
+              "output_price": 15,
+              "cache_read_price": 0.2,
+              "cache_write_price": 5
+            }
+          ]
+        },
+        "cny": {
+          "tiers": [
+            {
+              "upto": 272000,
+              "input_price": 14,
+              "output_price": 70,
+              "cache_read_price": 0.7,
+              "cache_write_price": 17.5
+            },
+            {
+              "upto": null,
+              "input_price": 28,
+              "output_price": 105,
+              "cache_read_price": 1.4,
+              "cache_write_price": 35
+            }
+          ]
+        }
+      },
+      "modalities": {
+        "input": [
+          "text",
+          "image"
+        ],
+        "output": [
+          "text"
+        ]
+      },
+      "released": "2026-11-17",
+      "vendor_label": "OpenAI",
+      "kind": "llm",
+      "source_path": "packages/admin/lib/model-presets/openai.json"
+    },
+    {
       "id": "gpt-6-luna",
       "display_name": "GPT-6 Luna",
       "description": "OpenAI's most efficient GPT-6 model for focused, high-volume tasks. reasoning.effort supports none, low, medium (default), high, xhigh, and max. Built-in tools and function calling should use the Responses API; Chat Completions supports function calling only when reasoning_effort is none.",
@@ -9011,6 +9247,57 @@
       "source_path": "packages/admin/lib/model-presets/stepfun.json"
     },
     {
+      "id": "hy4-flash",
+      "display_name": "Hy4 flash",
+      "description": "Tencent's most cost-efficient Hy model (224B total parameters including 64B Engram parameters, 12B active) for high-frequency, large-scale daily work such as deep search, document processing, slide generation, simple frontend work, and Computer Use. It inherits Hy4's visual understanding and agent abilities, with a 1M context window and about 64K max output. Thinking is on by default (reasoning_effort high; thinking can be turned off). Supports function calling, structured outputs, caching, and OpenAI Chat Completions, Responses, and Anthropic Messages protocols. For long-horizon software engineering and other complex tasks, prefer Hy4. Prices are list prices, not the limited-time 50% TokenHub discount.",
+      "i18n": {
+        "en": "Tencent's most cost-efficient Hy model (224B total parameters including 64B Engram parameters, 12B active) for high-frequency, large-scale daily work such as deep search, document processing, slide generation, simple frontend work, and Computer Use. It inherits Hy4's visual understanding and agent abilities, with a 1M context window and about 64K max output. Thinking is on by default (reasoning_effort high; thinking can be turned off). Supports function calling, structured outputs, caching, and OpenAI Chat Completions, Responses, and Anthropic Messages protocols. For long-horizon software engineering and other complex tasks, prefer Hy4. Prices are list prices, not the limited-time 50% TokenHub discount.",
+        "zh": "腾讯混元迄今性价比最高的 Hy 模型（总参数 224B，其中 64B 为 Engram 参数，激活参数 12B），适合深度搜索、文档处理、PPT 生成、简单前端展示、Computer Use 等高频、规模化的日常工作。沿用 Hy4 的视觉理解与 Agent 能力，上下文 1M，最大输出约 64K。默认开启深度思考（reasoning_effort 为 high，可关闭）。支持 Function Calling、结构化输出、缓存，兼容 OpenAI Chat Completions、Responses 与 Anthropic Messages 协议。长程软件工程等复杂任务建议使用 Hy4。价格为刊例价，未计入 TokenHub 的限时 5 折。",
+        "ja": "Tencent の Hy モデルの中で最もコスト効率の高いモデル（総パラメータ 224B、うち 64B は Engram パラメータ、アクティブ 12B）で、ディープ検索、文書処理、スライド作成、簡単なフロントエンド、Computer Use など、頻度が高く大規模な日常業務に向きます。Hy4 の画像理解とエージェント能力を引き継ぎ、コンテキストは 1M、最大出力は約 64K です。思考は既定でオン（reasoning_effort は high、オフにも可）。Function Calling、構造化出力、キャッシュに対応し、OpenAI Chat Completions、Responses、Anthropic Messages プロトコルと互換です。長く続くソフトウェア開発など難しいタスクには Hy4 をおすすめします。価格は定価で、TokenHub の期間限定 50% オフは含みません。",
+        "ko": "Tencent Hy 모델 중 비용 효율이 가장 높은 모델(총 파라미터 224B, 그중 64B는 Engram 파라미터, 활성 12B)로, 딥 서치, 문서 처리, 슬라이드 생성, 간단한 프런트엔드, Computer Use 같은 빈도가 높고 규모가 큰 일상 업무에 적합합니다. Hy4의 이미지 이해와 에이전트 능력을 이어받았고 컨텍스트는 1M, 최대 출력은 약 64K입니다. 사고는 기본으로 켜져 있고(reasoning_effort는 high, 끌 수 있음), Function Calling, 구조화 출력, 캐시를 지원하며 OpenAI Chat Completions, Responses, Anthropic Messages 프로토콜과 호환됩니다. 길게 이어지는 소프트웨어 엔지니어링 같은 복잡한 작업에는 Hy4를 권장합니다. 가격은 정가이며 TokenHub의 기간 한정 50% 할인은 반영하지 않았습니다."
+      },
+      "vendor": "tencent",
+      "context_window": 1000000,
+      "max_tokens": 64000,
+      "pricing": {
+        "usd": {
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 0.07,
+              "output_price": 0.281,
+              "cache_read_price": 0.003,
+              "cache_write_price": null
+            }
+          ]
+        },
+        "cny": {
+          "tiers": [
+            {
+              "upto": null,
+              "input_price": 0.5,
+              "output_price": 2,
+              "cache_read_price": 0.02,
+              "cache_write_price": null
+            }
+          ]
+        }
+      },
+      "modalities": {
+        "input": [
+          "text",
+          "image"
+        ],
+        "output": [
+          "text"
+        ]
+      },
+      "released": "2026-11-16",
+      "vendor_label": "Tencent",
+      "kind": "llm",
+      "source_path": "packages/admin/lib/model-presets/tencent.json"
+    },
+    {
       "id": "hy4",
       "display_name": "Hy4",
       "description": "Tencent's flagship Hy4 general-availability model, a broad upgrade over Hy4 preview with stronger agentic capabilities and better results on long-horizon, real-world productivity tasks. Hy4 adds visual understanding for the first time and offers a 1M context window for agentic, coding, and productivity workloads.",
@@ -9107,6 +9394,7 @@
         ]
       },
       "released": "2026-08-28",
+      "retired": "2026-12-07",
       "vendor_label": "Tencent",
       "kind": "llm",
       "source_path": "packages/admin/lib/model-presets/tencent.json"
