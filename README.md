@@ -55,7 +55,7 @@ npm run preview
 | --- | --- | --- |
 | [`.github/workflows/site-ci.yml`](.github/workflows/site-ci.yml) | `pull_request`、推送到 `main` | `npm ci` + `npm run build`，校验静态站 |
 | [`.github/workflows/pages-deploy.yml`](.github/workflows/pages-deploy.yml) | 仅 `workflow_dispatch` | 可选：用 Wrangler 将 `dist/` 推到 Pages（需仓库 Secrets，见下） |
-| [`.github/workflows/sync-from-gateway.yml`](.github/workflows/sync-from-gateway.yml) | 手动 | 从 gateway 白名单生成技术参考页，**不**触发 gateway CI |
+| [`.github/workflows/sync-from-gateway.yml`](.github/workflows/sync-from-gateway.yml) | 手动 | 按指定 Gateway 版本刷新技术参考和厂商名称映射，从官网模板生成公开目录 |
 
 在 GitHub 本仓库 **Settings → Secrets and variables → Actions** 中按需配置（仅在使用 Wrangler 手动部署时需要）：
 
@@ -86,7 +86,7 @@ src/content/docs/
 
 ### 供应商和模型模板
 
-Gateway 管理后台默认从官网公开目录读取「导入」和「同步」使用的模板。两类模板都在本仓库维护。
+Gateway 管理后台通过目录 API 读取「导入」和「同步」使用的模板，默认访问 `https://octafuse.dev`。两类模板都在本仓库维护。内网镜像配置见 [Gateway 目录说明](https://github.com/OctaFuse/octafuse-gateway/blob/main/docs/developers/reference/provider-import-presets.md#数据来源)。
 
 | 修改内容 | 编辑位置 |
 | --- | --- |

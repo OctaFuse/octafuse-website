@@ -4,7 +4,7 @@ description: "Start with a successful call, then configure models, multimodal AP
 gatewayRef: v2.20.0
 ---
 
-Choose the task you want to complete. These guides target **Gateway v2.20.0**; import catalogs also identify their source revision. Canonical APIs, migrations and architecture live in the [GitHub technical reference](/en/docs/github-reference/).
+Choose the task you want to complete. These guides target **Gateway v2.20.0**. Canonical APIs, migrations and architecture live in the [GitHub technical reference](/en/docs/github-reference/).
 
 ## Choose your path
 
@@ -29,7 +29,7 @@ Investigate failures or delays using the [request flow and timeline](/en/docs/gu
 
 ## Three different catalogs
 
-- The [website import catalog](/en/catalog/models/) contains static presets from a released version, without your credentials or deployment configuration.
+- Gateway Admin uses the website catalog API by default to import and sync [providers](/en/catalog/providers/) and [models](/en/catalog/models/).
 - Your gateway's public `GET /catalog/models` discovers capabilities with active routes.
 - Your gateway's authenticated `GET /v1/models` is for clients, supports type filters and uses a user key.
 

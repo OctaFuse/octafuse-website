@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       gateway_ref:
-        description: octafuse-gateway git ref (branch, tag, or SHA)
+        description: Gateway ref for technical references and vendor names (branch, tag, or SHA)
         required: false
         default: main
         type: string
@@ -83,7 +83,7 @@ jobs:
           commit-message: "chore(sync): refresh gateway docs reference @ ${{ inputs.gateway_ref }}"
           title: "chore(sync): gateway docs reference @ ${{ inputs.gateway_ref }}"
           body: |
-            Automated refresh from [octafuse-gateway](https://github.com/OctaFuse/octafuse-gateway) ref `${{ inputs.gateway_ref }}`.
+            Regenerated the provider and model catalogs from this repository’s `catalog/providers.json` and `catalog/models/*.json`. Technical references and vendor names use [octafuse-gateway](https://github.com/OctaFuse/octafuse-gateway) at `${{ inputs.gateway_ref }}`.
 
             ## Review checklist
 

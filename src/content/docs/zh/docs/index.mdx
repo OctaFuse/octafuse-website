@@ -4,7 +4,7 @@ description: "从第一次调用开始，按模型、多模态、MCP、用户计
 gatewayRef: v2.20.0
 ---
 
-先选择要完成的任务。本版指南以 **Gateway v2.20.0** 为基线；模型与供应商目录也标注其来源版本。API、迁移和架构细节以 [GitHub 技术参考](/zh/docs/github-reference/) 为准。
+先选择要完成的任务。本版指南以 **Gateway v2.20.0** 为基线。API、迁移和架构细节以 [GitHub 技术参考](/zh/docs/github-reference/) 为准。
 
 ## 从哪里开始
 
@@ -29,7 +29,7 @@ gatewayRef: v2.20.0
 
 ## 三种目录不要混用
 
-- [官网模型与供应商目录](/zh/catalog/models/)：正式版本内置的静态导入预设，不包含你的真实凭证与部署配置。
+- 管理后台默认从官网目录 API 导入和同步[供应商](/zh/catalog/providers/)与[模型](/zh/catalog/models/)。
 - 你的网关 `GET /catalog/models`：按已启用路由发现对外能力，无需用户密钥。
 - 你的网关 `GET /v1/models`：使用用户密钥，面向客户端发现模型；可按类型筛选。
 

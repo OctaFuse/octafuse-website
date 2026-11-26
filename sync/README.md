@@ -24,7 +24,7 @@ npm run sync:gateway:check -- --gateway-dir ../octafuse-gateway
 
 ## GitHub 同步
 
-`.github/workflows/sync-from-gateway.yml` 可手动触发，传入明确的正式版本 ref 后会刷新技术参考页和 `sync/manifest.json`，并按需打开 PR。
+`.github/workflows/sync-from-gateway.yml` 可手动触发，从所选官网分支的 `catalog/` 读取模板并重新生成公开目录。传入的 Gateway ref 用于技术参考页和厂商名称映射。工作流同时更新 `sync/manifest.json`，有差异时可创建 PR。
 
 ## 维护规则
 
@@ -40,4 +40,4 @@ npm run sync:gateway:check -- --gateway-dir ../octafuse-gateway
 
 ## 目录数据
 
-供应商和模型的导入目录不再从 Gateway 仓库同步，而是在本仓库维护：`catalog/providers.json` 与 `catalog/models/*.json`。`npm run sync:gateway` 读取它们生成 `src/data/catalog/*.json`，并从指定的 Gateway 版本读取厂商名称映射（`packages/admin/lib/model-vendors.json`）。Gateway 管理后台默认读取 `https://octafuse.dev/api/catalog/*`。步骤见 [README「供应商和模型模板」](../README.md#供应商和模型模板)。
+目录生成时，厂商名称映射来自所选 Gateway 版本的 `packages/admin/lib/model-vendors.json`。模板编辑与发布步骤见 [README「供应商和模型模板」](../README.md#供应商和模型模板)。
